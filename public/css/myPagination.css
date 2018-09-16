@@ -1,0 +1,40 @@
+.myPagination ul.pagination {
+    float: right !important;
+    margin: 0 .7em;
+}
+
+.myPagination ul.pagination > li > a,
+.myPagination ul.pagination > li > span {
+    color: #fa5555;
+}
+
+.myPagination ul.pagination > li > a:hover,
+.myPagination ul.pagination > li > a:focus,
+.myPagination ul.pagination > li > span:hover,
+.myPagination ul.pagination > li > span:focus {
+    color: #fff;
+    background-color: #fa5555;
+    border-color: #fa5555;
+}
+
+.myPagination ul.pagination > .active > a,
+.myPagination ul.pagination > .active > a:hover,
+.myPagination ul.pagination > .active > a:focus,
+.myPagination ul.pagination > .active > span,
+.myPagination ul.pagination > .active > span:hover,
+.myPagination ul.pagination > .active > span:focus {
+    color: #fff;
+    background-color: #fa5555;
+    border-color: #fa5555;
+}
+
+.myPagination ul.pagination > .disabled > span,
+.myPagination ul.pagination > .disabled > span:hover,
+.myPagination ul.pagination > .disabled > span:focus,
+.myPagination ul.pagination > .disabled > a,
+.myPagination ul.pagination > .disabled > a:hover,
+.myPagination ul.pagination > .disabled > a:focus {
+    color: #777777;
+    background-color: #fff;
+    border-color: #ddd;
+}

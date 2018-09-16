@@ -1,0 +1,51 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <defs>
+        <style>
+            .cls-1,.cls-15,.cls-18,.cls-2{fill:none}.cls-2{clip-rule:evenodd}.cls-3{clip-path:url(#clip-path)}.cls-4{clip-path:url(#clip-path-2)}.cls-5{clip-path:url(#clip-path-3)}.cls-6{clip-path:url(#clip-path-5)}.cls-7{clip-path:url(#clip-path-6)}.cls-8{clip-path:url(#clip-path-7)}.cls-9{clip-path:url(#clip-path-8)}.cls-10{clip-path:url(#clip-path-9)}.cls-11{clip-path:url(#clip-path-10)}.cls-12{clip-path:url(#clip-path-11)}.cls-13{clip-path:url(#clip-path-12)}.cls-14{clip-path:url(#clip-path-13)}.cls-15,.cls-16,.cls-18{stroke:#2657a7}.cls-15,.cls-16,.cls-17,.cls-18{stroke-linecap:round;stroke-miterlimit:10}.cls-15{stroke-width:1.14px}.cls-16,.cls-17{fill:#fff}.cls-16,.cls-18{stroke-width:.99px}.cls-17{stroke:#a8d6f3}
+        </style>
+        <clipPath id="clip-path">
+            <rect class="cls-1" x="-471.47" y="-463.59" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-2">
+            <path class="cls-2"
+                  d="M-164-461.88v88.52a1.92 1.92 0 0 0 1.92 1.92h88.52a1.92 1.92 0 0 0 1.92-1.92v-88.52a1.92 1.92 0 0 0-1.92-1.92h-88.52a1.92 1.92 0 0 0-1.92 1.92zm.43 0a1.49 1.49 0 0 1 1.49-1.49h88.52a1.49 1.49 0 0 1 1.49 1.49v88.52a1.49 1.49 0 0 1-1.49 1.49h-88.52a1.49 1.49 0 0 1-1.49-1.49v-88.52zm-8.94-10.43h109.38v109.37H-172.5v-109.37z"/>
+        </clipPath>
+        <clipPath id="clip-path-3">
+            <rect class="cls-1" x="-163.78" y="-463.59" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-5">
+            <rect class="cls-1" x="-61.64" y="-463.59" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-6">
+            <rect class="cls-1" x="-471.47" y="-297.61" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-7">
+            <rect class="cls-1" x="-471.47" y="-158.02" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-8">
+            <rect class="cls-1" x="-266.34" y="-297.61" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-9">
+            <rect class="cls-1" x="-368.9" y="-463.59" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-10">
+            <rect class="cls-1" x="-368.9" y="-297.61" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-11">
+            <rect class="cls-1" x="-163.78" y="-297.61" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-12">
+            <rect class="cls-1" x="-60.79" y="-297.61" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+        <clipPath id="clip-path-13">
+            <rect class="cls-1" x="-266.34" y="-463.59" width="91.92" height="91.92" rx="1.7" ry="1.7"/>
+        </clipPath>
+    </defs>
+    <title>ic-ecommerce</title>
+    <path class="cls-15" d="M8.79 18.39l1.01 3.88h16.75M7.36 12.93l.8 3.04M3.34 8.1h2.75l.68 2.59"/>
+    <path class="cls-16" d="M8.66 10.48l2.76 10.08h14.65l2.19-10.08H8.66z"/>
+    <circle class="cls-16" cx="13.11" cy="25.67" r="1.83"/>
+    <circle class="cls-16" cx="24.3" cy="25.67" r="1.83"/>
+    <path class="cls-17" d="M13.84 10.48v10.03M18.46 10.48v10.03M23 10.48v10.03M10.04 15.25h16.84"/>
+    <path class="cls-18" d="M8.66 10.48l2.76 10.08h14.65l2.19-10.08H8.66z"/>
+</svg>

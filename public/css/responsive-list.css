@@ -1,0 +1,198 @@
+#responsive {
+    width: 100%;
+    height: 100%;
+}
+
+#responsive-list-content {
+    float: left;
+    width: 100%;
+    height: 100%;
+}
+
+#responsive-list-content img {
+    width: 100%;
+    height: 101%;
+}
+
+#responsive-list-content ul {
+    list-style: none;
+}
+
+#responsive-list-content li {
+    float: left;
+    border: 1px solid #939ca3;
+    width: 33.3%;
+    position: relative;
+    list-style: none;
+    z-index: 1;
+    background-size: 32px 32px;
+    background-position: 95% 50%;
+    background-repeat: no-repeat;
+    /* Colors Hover */
+}
+
+#responsive-list-content h2 {
+    font-size: 20px;
+    float: left;
+    width: 83%;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    margin-top: 20px;
+    margin-right: 20px;
+}
+
+#responsive-list-content h2 b {
+    float: left;
+    width: 100%;
+}
+
+#card-back-text h2 {
+    font-size: 22px;
+    float: right;
+    width: 100%;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+#card-back-text h2 b {
+    float: right;
+    width: 100%;
+    color: #fff;
+}
+
+#responsive-list-content p {
+    line-height: 1.3em;
+    color: #3d3d3d;
+    width: 90%;
+    float: left;
+    margin-right: 20px;
+}
+
+.close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: #fff;
+    color: #111;
+    text-decoration: none;
+    font-size: 20px;
+    padding: 10px 20px;
+}
+
+#responsive .active {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#responsive .active .all-content {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+}
+
+#responsive .active .all-content h1 {
+    font-size: 80px;
+    width: 50%;
+}
+
+#responsive-list-content li:hover .card-front {
+    -moz-transform: rotateX(50deg);
+    -ms-transform: rotateX(50deg);
+    -webkit-transform: rotateX(50deg);
+    transform: rotateX(50deg);
+    -moz-transform: perspective(1000) rotateX(50deg);
+    -webkit-transform: perspective(1000) rotateX(50deg);
+    transform: perspective(1000) rotateX(50deg);
+}
+
+#responsive-list-content li:hover .card-back {
+    z-index: 950;
+    -moz-transform: rotateX(0deg);
+    -ms-transform: rotateX(0deg);
+    -webkit-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    -moz-transform: perspective(1000) rotateX(0deg);
+    -webkit-transform: perspective(1000) rotateX(0deg);
+    transform: perspective(1000) rotateX(0deg);
+}
+
+#responsive-list-content li:nth-child(1) .card-back, #responsive-list-content li:nth-child(4) .card-back,
+#responsive-list-content li:nth-child(7) .card-back, #responsive-list-content li:nth-child(10) .card-back,
+#responsive-list-content li:nth-child(13) .card-back, #responsive-list-content li:nth-child(16) .card-back {
+    background: #00ADB5;
+}
+
+#responsive-list-content li:nth-child(2) .card-back, #responsive-list-content li:nth-child(5) .card-back,
+#responsive-list-content li:nth-child(8) .card-back, #responsive-list-content li:nth-child(11) .card-back,
+#responsive-list-content li:nth-child(14) .card-back, #responsive-list-content li:nth-child(17) .card-back {
+    background: #64979C;
+}
+
+#responsive-list-content li:nth-child(3) .card-back, #responsive-list-content li:nth-child(6) .card-back,
+#responsive-list-content li:nth-child(9) .card-back, #responsive-list-content li:nth-child(12) .card-back,
+#responsive-list-content li:nth-child(15) .card-back, #responsive-list-content li:nth-child(18) .card-back {
+    background: #FA5555;
+}
+
+#responsive-list-content .card-front,
+#responsive-list-content .card-back {
+    text-align: right;
+    -moz-backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -moz-transition: -moz-transform 400ms;
+    -o-transition: -o-transform 400ms;
+    -webkit-transition: -webkit-transform 400ms;
+    transition: transform 400ms;
+    display: block;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+#responsive-list-content .card-front {
+    -moz-transform: perspective(1000) rotateX(0);
+    -webkit-transform: perspective(1000) rotateX(0);
+    transform: perspective(1000) rotateX(0);
+    z-index: 900;
+}
+
+#responsive-list-content .card-back {
+    -moz-transform: rotateX(-180deg);
+    -webkit-transform: rotateX(-180deg);
+    transform: rotateX(-180deg);
+    z-index: 800;
+}
+
+@media screen and (max-width: 992px) {
+    #responsive-list-content h2, #card-back-text h2 {
+        font-size: 20px;
+    }
+
+    #responsive-list-content li {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #responsive-list-content h2, #card-back-text h2 {
+        font-size: 20px;
+    }
+
+    #responsive-list-content li {
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #responsive-list-content h2, #card-back-text h2 {
+        font-size: 12px;
+        width: 75%;
+    }
+
+    #responsive-list-content li {
+        width: 50%;
+    }
+}

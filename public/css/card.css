@@ -1,0 +1,269 @@
+/*job vacancies*/
+.card {
+    display: block;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    transition: box-shadow .25s;
+}
+
+.card .stats {
+    font-size: 15px;
+}
+.card:hover {
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.img-card {
+    width: 100%;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    display: block;
+    overflow: hidden;
+}
+
+.img-card img {
+    width: 100%;
+    object-fit: cover;
+    transition: all .25s ease;
+}
+
+.card-content {
+    padding: 15px;
+    text-align: left;
+}
+
+.card-content small {
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+.card-content p {
+    text-transform: none;
+    font-size: 13px;
+}
+
+.card-content table {
+    font-size: 16px;
+    margin-top: 30px;
+}
+
+.card-content table tr > td {
+    padding-bottom: .5em;
+}
+
+.card-title, .card-title h4 {
+    margin-top: 0;
+    margin-bottom: .25em;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.card-title a {
+    color: #000;
+    text-decoration: none !important;
+}
+
+.card-read-more {
+    border-top: 1px solid #D4D4D4;
+}
+
+.card-read-more a, .card-read-more button {
+    text-decoration: none !important;
+    padding: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #FA5555;
+}
+
+/*recommended companies*/
+.Card {
+    position: relative;
+    width: 100%;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+.Card:hover .Card-thumbnailOverlay {
+    opacity: 1;
+}
+
+.Card .Card-thumbnail {
+    width: 100%;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    position: relative;
+    height: 0;
+    padding-bottom: 100%;
+    overflow: hidden;
+    background: #4A4A4A;
+}
+
+.Card .Card-thumbnailImage {
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.Card .Card-thumbnailOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: 0.2s all;
+}
+
+.Card .Card-Btn {
+    display: inline-block;
+    width: 120px;
+    padding: 8px;
+    line-height: 27px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+    color: #fff;
+    background: transparent;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    outline: 0;
+    transition: 0.15s background;
+    cursor: pointer;
+}
+
+.Card .Card-Btn:hover, .Card .Card-Btn:focus {
+    background: #00ADB5;
+    border: 2px solid #00ADB5;
+}
+
+/*best vacancies*/
+figure.snip1104 {
+    position: relative;
+    float: left;
+    overflow: hidden;
+    margin-bottom: 20px;
+    width: 100%;
+    background: #000000;
+    color: #ffffff;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+}
+
+figure.snip1104 * {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
+}
+
+figure.snip1104 img {
+    max-width: 100%;
+    position: relative;
+    opacity: 0.4;
+}
+
+figure.snip1104 figcaption {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+figure.snip1104 h3 {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    display: inline-block;
+    background: #000000;
+    -webkit-transform: skew(-10deg) rotate(-10deg) translate(0, -50%);
+    transform: skew(-10deg) rotate(-10deg) translate(0, -50%);
+    padding: 12px 5px;
+    margin: 0;
+    top: 50%;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+figure.snip1104 h3 span {
+    font-weight: 800;
+}
+
+figure.snip1104:before {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    content: '';
+    background: #ffffff;
+    position: absolute;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    -webkit-transform: rotate(110deg) translateY(-50%);
+    transform: rotate(110deg) translateY(-50%);
+}
+
+figure.snip1104 a {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    z-index: 1;
+}
+
+figure.snip1104.blue {
+    background: #123851;
+}
+
+figure.snip1104.blue h3 {
+    background: #0a212f;
+}
+
+figure.snip1104.red {
+    background: #581a14;
+}
+
+figure.snip1104.red h3 {
+    background: #36100c;
+}
+
+figure.snip1104.yellow {
+    background: #7f5006;
+}
+
+figure.snip1104.yellow h3 {
+    background: #583804;
+}
+
+figure.snip1104:hover img,
+figure.snip1104.hover img {
+    opacity: 1;
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+figure.snip1104:hover h3,
+figure.snip1104.hover h3 {
+    -webkit-transform: skew(-10deg) rotate(-10deg) translate(-150%, -50%);
+    transform: skew(-10deg) rotate(-10deg) translate(-150%, -50%);
+}
+
+figure.snip1104:hover:before,
+figure.snip1104.hover:before {
+    -webkit-transform: rotate(110deg) translateY(-150%);
+    transform: rotate(110deg) translateY(-150%);
+}

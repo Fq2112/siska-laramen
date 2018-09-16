@@ -1,0 +1,201 @@
+.download-cards {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.download-card {
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 2em);
+    background: #fff;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+    margin: 0 1em 2em 1em;
+    transition: box-shadow .25s;
+}
+
+.download-card a {
+    text-decoration: none;
+}
+
+.download-card:hover {
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+@media (min-width: 700px) {
+    .download-cards[data-view='grid-view'] .download-card {
+        float: left;
+        width: calc(50% - 2em);
+    }
+
+    .download-cards[data-view='grid-view'] .download-card:nth-child(3) {
+        clear: both;
+    }
+
+    .download-cards[data-view='grid-view'] .download-card:nth-child(4) {
+        clear: initial;
+    }
+}
+
+@media (min-width: 1000px) {
+    .download-cards[data-view='grid-view'] .download-card {
+        width: calc((100% / 4) - 2em);
+    }
+
+    .download-cards[data-view='grid-view'] .download-card:nth-child(3) {
+        clear: initial;
+    }
+
+    .download-cards[data-view='grid-view'] .download-card:nth-child(4) {
+        clear: both;
+    }
+}
+
+.download-card__icon-box {
+    display: flex;
+    align-items: center;
+    background: #f1f1f1;
+    text-align: center;
+}
+
+@media (min-width: 700px) {
+    .download-card__icon-box {
+        justify-content: center;
+    }
+}
+
+.download-card__icon-box img {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.download-cards[data-view='list-view'] .download-card__icon-box {
+    width: 200px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.download-cards[data-view="list-view"] .download-card__content-box {
+    padding-left: calc(200px + 1em);
+}
+
+.download-cards[data-view='list-view'] .card-read-more {
+    padding-left: 10em;
+}
+
+.download-card__content-box {
+    padding: 1em;
+    flex: 1;
+}
+
+.download-card__content-box__catagory {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 10px;
+    margin: 0 0 2em;
+}
+
+.download-card__content-box__catagory::before {
+    font-family: "Font Awesome 5 Free";
+    content: '\f017  ';
+    color: #fa5555;
+}
+
+.download-card__content-box__title {
+    line-height: 1;
+    margin: 0 0 .5em;
+    font-size: 18px;
+}
+
+.download-card__content-box__description {
+    line-height: 1.5;
+    padding: 0;
+    margin: 0 0 1em;
+    clear: both;
+    color: #929292;
+    font-size: 16px;
+}
+
+.download-card__content-box .button {
+    position: absolute;
+    bottom: 2em;
+    margin: 0;
+    color: #ff4500;
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.dc-view-switcher {
+    margin: 0 1.4em;
+    text-align: right;
+}
+
+.dc-view-switcher label {
+    font-weight: normal;
+    font-size: 17px;
+}
+
+.dc-view-switcher > button {
+    font-family: 'fontAwesome';
+    background: transparent no-repeat 0 0;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    vertical-align: middle;
+    color: gray;
+    opacity: 0.3;
+    outline: none;
+    transition: opacity .4s ease;
+}
+
+.dc-view-switcher > button[data-trigger="list-view"]::before {
+    content: "\f00b";
+}
+
+.dc-view-switcher > button[data-trigger="grid-view"]::before {
+    content: "\f00a";
+}
+
+.dc-view-switcher > button[data-trigger="filter"]::before {
+    content: "\f0b0";
+}
+
+.dc-view-switcher > button[data-trigger].active {
+    opacity: 1;
+    color: #fa5555;
+}
+
+@media (max-width: 700px) {
+    .download-cards[data-view='list-view'] .download-card__icon-box {
+        width: 100px;
+    }
+
+    .download-cards[data-view="list-view"] .download-card__content-box {
+        padding-left: calc(100px + 1em);
+    }
+
+    .download-cards[data-view='list-view'] .card-read-more {
+        padding-left: 5em;
+    }
+
+    .download-cards[data-view='grid-view'] .download-card {
+        width: calc((100% / 2) - 2em);
+    }
+
+    .dc-view-switcher {
+        margin: 0;
+    }
+
+    .dc-view-switcher > button {
+        font-family: "Font Awesome 5 Free";
+    }
+}

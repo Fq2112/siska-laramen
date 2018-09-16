@@ -1,0 +1,64 @@
+.to-top {
+    position: fixed;
+    right: 1%;
+    bottom: -7.5%;
+    height: 15px;
+    width: 40px;
+    padding: 3px 5px;
+    font-size: 10px;
+    font-weight: bold;
+    color: transparent;
+    opacity: 0.5;
+    z-index: 3;
+    visibility: hidden;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    -webkit-transition: all 0.25s ease-in-out;
+    transition: all 0.25s ease-in-out;
+    background-color: #858585;
+}
+
+.to-top:hover, .to-top:focus {
+    opacity: 1;
+    text-decoration: none;
+}
+
+.to-top:focus {
+    outline: thin dotted;
+}
+
+.to-top::before,
+.to-top::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top: 0;
+}
+
+.to-top::before {
+    top: -20px;
+    z-index: 4;
+    border-bottom: 20px solid #858585;
+}
+
+.to-top::after {
+    bottom: 0;
+    z-index: 5;
+    border-bottom: 20px solid #505050;
+}
+
+.to-top:hover,
+.to-top:focus {
+    height: 40px;
+    color: #212223;
+}
+
+.show-to-top {
+    display: block;
+    bottom: 1.25%;
+    visibility: visible;
+}
