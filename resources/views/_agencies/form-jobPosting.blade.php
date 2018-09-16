@@ -29,7 +29,7 @@
                                     </ul>
                                     <form action="{{route('submit.job.posting')}}" method="post" id="pm-form">
                                         {{csrf_field()}}
-                                        <input type="hidden" name="uCode" id="input_uCode">
+                                        <input type="hidden" name="uCode" id="input_uCode" value="0">
                                         <fieldset class="text-center" id="vacancy_setup">
                                             <h2 class="fs-title">Vacancy Setup</h2>
                                             <h3 class="fs-subtitle">
@@ -396,9 +396,17 @@
                                                                 <td>&emsp;</td>
                                                                 <td align="right">
                                                                     <strong id="toPay"
-                                                                            style="color: #00ADB5;font-size: 18px"></strong>
+                                                                            style="font-size: 18px;color: #00adb5"></strong>
                                                                 </td>
                                                             </tr>
+                                                            @if($pm->payment_category_id == 1)
+                                                                <tr>
+                                                                    <td colspan="3" align="right"
+                                                                        style="font-size:12px;color:#fa5555;font-weight:bold;">
+                                                                        Transfer right up to the last 3 digits
+                                                                </td>
+                                                            </tr>
+                                                            @endif
                                                         </table>
                                                     </div>
                                                 </div>
@@ -435,9 +443,10 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <a href="{{route('agency.vacancy.status')}}" target="_blank">
+                                                <a href="{{route('invoice.job.posting',['id' =>
+                                                encrypt(session('confirmAgency')->id)])}}" target="_blank">
                                                     <input type="button" class="btn-upload"
-                                                           value="Redirect me to the Vacancy Status page"></a>
+                                                           value="Click here to get your invoice"></a>
                                             </fieldset>
                                         </form>
                                     @endif
@@ -456,8 +465,6 @@
     <script>
         var price = ("{{$plan->price}}" / "{{$plan->price <= 998999 ? 1000 : 1000000}}"), subtotal;
         price = price.toFixed({{$plan->price <= 998999 ? 0 : 1}});
-
-        $("#input_uCode").val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
 
         subtotal = thousandSeparator("{{$plan->price}}");
         $(".subtotal").text("Rp" + subtotal + ",00");
@@ -652,6 +659,7 @@
                     'You will receive an email about your payment details as soon as you finish the current step.' +
                     '</div></div></div>'
                 );
+                $("#input_uCode").val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
 
             } else if (id == 3) {
                 $("#pm-11").prop("checked", true).trigger('change');
@@ -809,16 +817,25 @@
         $(".countdown-h2").html('<sub>Expired <strong>Time</strong>: {{$expDay." at ".$expTime}}</sub>');
 
         var billsub = '{{\App\Plan::find(old('plans_id'))->price}}', rpbillSub = thousandSeparator(billsub),
-            code = '{{old('uCode')}}', billTotal = 0;
-        $("#subtotal").text("Rp" + rpbillSub + ",00");
+            code = '{{old('uCode')}}', billTotal = 0, $strTotal, $first, $last;
+        $("#subtotal").text("Rp" + rpbillSub);
         @if(\App\PaymentMethod::find($confirm->payment_method_id)->payment_category_id == 1)
-        $("#uCode").text("-Rp" + code + ",00");
+        $("#uCode").text("-Rp" + code);
         billTotal += parseInt(parseInt(billsub) - code);
+        if (billTotal < 1000000) {
+            $first = thousandSeparator(billTotal).substr(0, 4);
+        }
+        else {
+            $first = thousandSeparator(billTotal).substr(0, 6);
+        }
+        $last = thousandSeparator(billTotal).substr(thousandSeparator(billTotal).length - 3);
+        $strTotal = "Rp" + $first + "<span style='border:1px solid #fa5555;'>" + $last + "</span>";
         @else
-        $("#uCode").text("-Rp0,00");
+        $("#uCode").text("-Rp0");
         billTotal += parseInt(billsub);
+        $strTotal = "Rp" + thousandSeparator(billTotal);
         @endif
-        $("#toPay").text("Rp" + thousandSeparator(billTotal) + ",00");
+        $("#toPay").html($strTotal);
 
         var Countdown = {
             $el: $('.countdown'),
@@ -1087,6 +1104,7 @@
                 document.getElementById('file-drag').style.display = 'none';
             }
         }
+
         ekUpload();
 
         $(window).on('beforeunload', function () {

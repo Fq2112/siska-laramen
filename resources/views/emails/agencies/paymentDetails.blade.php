@@ -510,7 +510,10 @@
                                                                 }
                                                                 $last = substr($total, -3);
                                                             @endphp
-                                                            <small><a href="{{route('invoice.job.posting',['id'=>$data['confirmAgency']->id])}}" style="text-decoration: none;color: #00adb5"><strong>{{'#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id}}</strong></a></small>
+                                                            <small>
+                                                                <a href="{{route('invoice.job.posting',['id'=>encrypt($data['confirmAgency']->id)])}}"
+                                                                   style="text-decoration: none;color: #00adb5"><strong>{{'#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id}}</strong></a>
+                                                            </small>
                                                             <hr class="hr-divider">
                                                             <table>
                                                                 <tr>
@@ -533,13 +536,19 @@
                                                                     <td>Amount to Transfer</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
+                                                                        @if($data['payment_category']->id == 1)
                                                                         <strong style="font-size: 18px;color: #00adb5">Rp{{$first}}<span style="border:1px solid #fa5555;">{{$last}}</span></strong>
+                                                                        @else
+                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
+                                                                        @endif
                                                                     </td>
                                                                 </tr>
+                                                                @if($data['payment_category']->id == 1)
                                                                 <tr>
                                                                     <td colspan="3" align="right" style="font-size:12px;color:#fa5555;font-weight:bold;">
                                                                         Transfer right up to the last 3 digits</td>
                                                                 </tr>
+                                                                @endif
                                                             </table>
                                                         </td>
                                                     </tr>
