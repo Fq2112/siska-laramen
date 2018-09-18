@@ -20,6 +20,7 @@ use App\Plan;
 use App\Provinces;
 use App\Salaries;
 use App\Seekers;
+use App\Support\RomanConverter;
 use App\Tingkatpend;
 use App\User;
 use App\Vacancies;
@@ -178,10 +179,11 @@ class AgencyController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
-        foreach ((array)$request->vacancy_id as $select) {
+        $vac_ids = (array)$request->vacancy_id;
+        foreach ($vac_ids as $vac_id) {
             $confirmAgency = ConfirmAgency::create([
                 'agency_id' => $agency->id,
-                'vacancy_id' => $select,
+                'vacancy_id' => $vac_id,
                 'plans_id' => $request->plans_id,
                 'payment_method_id' => $request->pm_id,
                 'cc_number' => $request->number,
@@ -191,8 +193,7 @@ class AgencyController extends Controller
             ]);
         }
 
-        $this->paymentDetailsMail($confirmAgency, $request);
-//        PDF::loadHTML('_agencies.inv-jobPosting',compact('confirmAgency'))->save(storage_path('public/'));
+        $this->paymentDetailsMail($confirmAgency, $request, $vac_ids);
 
         return back()->withInput(Input::all())->with([
             'jobPosting' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted as soon as your payment is completed.',
@@ -200,31 +201,47 @@ class AgencyController extends Controller
         ]);
     }
 
-    private function paymentDetailsMail($confirmAgency, $request)
+    private function paymentDetailsMail($confirmAgency, $request, $vac_ids)
     {
         $pm = PaymentMethod::find($confirmAgency->payment_method_id);
         $pc = PaymentCategory::find($pm->payment_category_id);
         $pl = Plan::find($confirmAgency->plans_id);
         $total = $pl->price - $request->uCode;
 
-        $data = array(
+        $data = [
             'confirmAgency' => $confirmAgency,
             'payment_method' => $pm,
             'payment_category' => $pc,
             'plans' => $pl,
             'uCode' => $request->uCode,
+            'payment_code' => $request->payment_code,
             'total_payment' => $total,
-        );
+            'vacancy_id' => $vac_ids,
+        ];
         event(new VacancyPaymentDetails($data));
     }
 
-    public function invoiceJobPosting($id)
+    public function invoiceJobPosting($id, Request $request)
     {
-        $data = ConfirmAgency::find(decrypt($id));
-        /*$pdf = PDF::loadView('_agencies.inv-jobPosting', compact('data'));
+        $confirmAgency = ConfirmAgency::find(decrypt($id));
+        $vacancies = Vacancies::whereIn('id', (array)decrypt($request->vc))->get();
+        $agency = Agencies::find($confirmAgency->agency_id);
+        $user = User::find($agency->user_id);
 
-        return $pdf->stream();*/
-        return view('_agencies.inv-jobPosting',compact('data'));
+        $pm = PaymentMethod::find($confirmAgency->payment_method_id);
+        $pc = PaymentCategory::find($pm->payment_category_id);
+        $pl = Plan::find($confirmAgency->plans_id);
+        $uCode = decrypt($request->uc);
+        $payment_code = decrypt($request->pc);
+        $total = $pl->price - $uCode;
+
+        $date = Carbon::parse($confirmAgency->created_at);
+        $romanDate = RomanConverter::numberToRoman($date->format('y')) . '/' .
+            RomanConverter::numberToRoman($date->format('m'));
+        $invoice = 'INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
+
+        return view('_agencies.inv-jobPosting', compact('confirmAgency', 'vacancies', 'agency', 'user',
+            'pm', 'pc', 'pl', 'uCode', 'payment_code', 'total', 'invoice'));
     }
 
     public function uploadPaymentProof(Request $request)

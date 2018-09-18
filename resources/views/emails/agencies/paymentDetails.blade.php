@@ -511,8 +511,15 @@
                                                                 $last = substr($total, -3);
                                                             @endphp
                                                             <small>
-                                                                <a href="{{route('invoice.job.posting',['id'=>encrypt($data['confirmAgency']->id)])}}"
-                                                                   style="text-decoration: none;color: #00adb5"><strong>{{'#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id}}</strong></a>
+                                                                <a href="{{route('invoice.job.posting',
+                                                                ['id' => encrypt($data['confirmAgency']->id),
+                                                                'uc'=> encrypt($data['uCode']),
+                                                                'pc' => encrypt($data['payment_code']),
+                                                                'vc' => encrypt($data['vacancy_id'])])}}"
+                                                                   style="text-decoration: none;color: #00adb5">
+                                                                    <strong>{{'#INV/'.$data['confirmAgency']->created_at
+                                                                    ->format('Ymd').'/'.$romanDate.'/'.
+                                                                    $data['confirmAgency']->id}}</strong></a>
                                                             </small>
                                                             <hr class="hr-divider">
                                                             <table>
@@ -591,7 +598,7 @@
                                                                                 <br>
                                                                                 a/n {{$data['payment_method']->account_name}}
                                                                             @elseif($data['payment_category']->id == 4)
-                                                                                <strong style="font-size: 16px">{{str_random(15)}}</strong>
+                                                                                <strong style="font-size: 16px;text-transform: uppercase">{{$data['payment_code']}}</strong>
                                                                                 <br>Payment Code
                                                                             @endif
                                                                         </small>

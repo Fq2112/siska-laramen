@@ -164,18 +164,18 @@
                        href="{{Auth::user()->isSeeker() ? route('seeker.dashboard') : route('agency.dashboard')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-tachometer-alt"></i>&nbsp;Dashboard</a></li>
+                @if(Auth::user()->isAgency())
+                    <li><a id="external"
+                           style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                           href="{{route('agency.vacancy.status')}}"
+                           onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                            <i class="fa fa-briefcase"></i>&nbsp;Vacancy Status</a></li>
+                @endif
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{Auth::user()->isSeeker() ? route('seeker.edit.profile') : route('agency.edit.profile')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-user-edit"></i>&nbsp;Edit Profile</a></li>
-                @if(Auth::user()->isAgency())
-                    <li><a id="external"
-                           style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
-                           href="{{route('agency.vacancy.show')}}"
-                           onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                            <i class="fa fa-briefcase"></i>&nbsp;Vacancy Setup</a></li>
-                @endif
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{Auth::user()->isSeeker() ? route('seeker.settings') : route('agency.settings')}}"

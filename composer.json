@@ -12,8 +12,8 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "true/punycode": "~2.0",
-        "vlucas/phpdotenv": "~2.2",
-        "tymon/jwt-auth": "^0.5.12"
+        "tymon/jwt-auth": "^0.5.12",
+        "vlucas/phpdotenv": "~2.2"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

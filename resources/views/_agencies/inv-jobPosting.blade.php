@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Invoice #INV/20180916/XVIII/IX/123456</title>
+    <title>Invoice #{{$invoice}}</title>
     <style>
         body {
             font-family: open sans, tahoma, sans-serif;
@@ -9,7 +9,7 @@
             -webkit-print-color-adjust: exact;
         }
 
-        @if($data->isPaid == true)
+        @if($confirmAgency->isPaid == true)
         .container {
             background: url({{asset('images/paid_stamp.png')}}) center no-repeat;
             background-size: contain;
@@ -29,26 +29,17 @@
             text-decoration: none;
         }
 
-        .unpaid {
-            color: #fa5555;
+        .paid {
+            color: #00adb5;
         }
 
-        .paid {
-            color: #00ADB5;
+        .unpaid {
+            color: #fa5555;
         }
     </style>
 </head>
 <body onload="window.print()">
 <div class="container">
-    @php
-        $agency = \App\Agencies::find($data->agency_id);
-        $user = \App\User::find($agency->user_id);
-        $date = $data->created_at;
-        $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')) . '/' . \App\Support\RomanConverter::numberToRoman($date->format('m'));
-        $pm = \App\PaymentMethod::find($data->payment_method_id);
-        $pc = \App\PaymentCategory::find($pm->payment_category_id);
-        $pl = \App\Plan::find($data->plans_id);
-    @endphp
     <table width="790" cellspacing="0" cellpadding="0" class="container" style="width: 790px; padding: 20px;">
         <tr>
             <td>
@@ -59,7 +50,8 @@
                             <img src="http://i66.tinypic.com/2iux5ph.png" alt="SISKA" width="200">
                         </td>
                         <td style="text-align: right; padding-right: 15px;">
-                            <a href="javascript:window.print()" class="{{$data->isPaid == true ? 'paid' : 'unpaid'}}">
+                            <a href="javascript:window.print()"
+                               class="{{$confirmAgency->isPaid == true ? 'paid' : 'unpaid'}}">
                                 <span style="vertical-align: middle;font-weight: 600">Print</span>
                                 <img src="https://ecs7.tokopedia.net/img/print.png" alt="Print"
                                      style="vertical-align: middle;">
@@ -129,9 +121,7 @@
                                                 <td style="width: 80px; font-weight: 600; padding: 3px 20px 3px 0;"
                                                     width="80">Number
                                                 </td>
-                                                <td style="padding: 3px 0;">
-                                                    {{'INV/'.$data->created_at->format('Ymd').'/'.$romanDate.'/'.$data->id}}
-                                                </td>
+                                                <td style="padding: 3px 0;">{{$invoice}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -146,7 +136,7 @@
                                                 <td style="width: 80px; font-weight: 600; padding: 3px 20px 3px 0;"
                                                     width="80">Date
                                                 </td>
-                                                <td style="padding: 3px 0;">{{$data->created_at->format('j F Y')}}</td>
+                                                <td style="padding: 3px 0;">{{$confirmAgency->created_at->format('j F Y')}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -161,7 +151,7 @@
                                                 <td style="width: 80px; font-weight: 600; padding: 3px 20px 3px 0;"
                                                     width="80">Due Date
                                                 </td>
-                                                <td style="padding: 3px 0;">{{$data->created_at->addDay()->format('j F Y')}}</td>
+                                                <td style="padding: 3px 0;">{{$confirmAgency->created_at->addDay()->format('j F Y')}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -194,9 +184,11 @@
                             <table style="width: 100%; border-collapse: collapse;" width="100%"
                                    cellspacing="0" cellpadding="0">
                                 <tbody>
-                                <tr><td>Vacancy A</td></tr>
-                                <tr><td>Vacancy B</td></tr>
-                                <tr><td>Vacancy C</td></tr>
+                                @foreach($vacancies as $vacancy)
+                                    <tr>
+                                        <td style="text-align: left; padding: .5em 0">{{$vacancy->judul}}</td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </td>
@@ -206,8 +198,10 @@
                             Rp{{number_format($pl->price,2,",",".")}}</td>
                     </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
-                        <td colspan="4" style="width: 270px;font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
-                            Subtotal</td>
+                        <td colspan="4"
+                            style="width: 270px;font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
+                            Subtotal
+                        </td>
                         <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
                             width="115">Rp{{number_format($pl->price,2,",",".")}}</td>
                     </tr>
@@ -218,17 +212,21 @@
                     <tbody>
                     <tr style="font-size: 13px;">
                         <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">
-                            Unique Code</td>
+                            Unique Code
+                        </td>
                         <td colspan="2" style="width: 120px;padding: 8px 5px">&ndash;</td>
                         <td style="width: 115px; padding: 8px 5px;" width="115">&ndash;</td>
                         <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
-                            -Rp100</td>
+                            -Rp{{$uCode}}
+                        </td>
                     </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
                         <td colspan="4" style="font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
-                            Subtotal</td>
+                            Subtotal
+                        </td>
                         <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
-                            width="115">-Rp100</td>
+                            width="115">-Rp{{$uCode}}
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -239,11 +237,12 @@
                         <td width="65%" valign="top" style="width: 65%; vertical-align: top; padding-left: 5px;">
                             <table width="100%" cellspacing="0" cellpadding="0"
                                    style="width: 100%; border-collapse: collapse;">
-                                <tr bgcolor="#F1F1F1" class="{{$data->isPaid == true ? 'paid' : 'unpaid'}}"
+                                <tr bgcolor="#F1F1F1"
+                                    class="{{$confirmAgency->isPaid == true ? 'paid' : 'unpaid'}}"
                                     style="font-size: 15px; background-color: rgba(0,0,0,0.1);">
                                     <td style="padding: 15px 0 15px 30px; font-weight: 600;">Total</td>
                                     <td style="padding: 15px 30px 15px 0; font-weight: 600; text-align: right;">
-                                        Rp1.799.900
+                                        Rp{{number_format($total,2,",",".")}}
                                     </td>
                                 </tr>
                             </table>
@@ -272,7 +271,8 @@
                             <table>
                                 <tr>
                                     <td width="50%">
-                                        <img src="{{asset('images/paymentMethod/'.$pm->logo)}}" style="width: 90%;"
+                                        <img src="{{asset('images/paymentMethod/'.$pm->logo)}}"
+                                             style="width: 90%;"
                                              alt="{{$pm->name}}">
                                     </td>
                                     <td>
@@ -281,7 +281,7 @@
                                                 {{number_format($pm->account_number,0," "," ")}}</strong>
                                             <br>a/n {{$pm->account_name}}
                                         @elseif($pc->id == 4)
-                                            <strong style="font-size: 18px">{{str_random(15)}}</strong>
+                                            <strong style="font-size: 18px;text-transform: uppercase">{{$payment_code}}</strong>
                                             <br>Payment Code
                                         @endif
                                     </td>

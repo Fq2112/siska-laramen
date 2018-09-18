@@ -29,7 +29,8 @@
                                     </ul>
                                     <form action="{{route('submit.job.posting')}}" method="post" id="pm-form">
                                         {{csrf_field()}}
-                                        <input type="hidden" name="uCode" id="input_uCode" value="0">
+                                        <input type="hidden" name="uCode" id="input_uCode">
+                                        <input type="hidden" name="payment_code" id="payment_code">
                                         <fieldset class="text-center" id="vacancy_setup">
                                             <h2 class="fs-title">Vacancy Setup</h2>
                                             <h3 class="fs-subtitle">
@@ -250,170 +251,174 @@
                                         </fieldset>
                                     </form>
                                     @if(session('confirmAgency'))
-                                        @php $pm = \App\PaymentMethod::find(session('confirmAgency')->payment_method_id);@endphp
-                                        <form id="file-upload-form" method="post" enctype="multipart/form-data">
-                                            {{csrf_field()}}
-                                            {{ method_field('put') }}
-                                            <div style="display: none">
-                                                <select class="selectpicker" id="vac_id" name="vac_id[]" multiple>
-                                                    @foreach($vacancies as $vacancy)
-                                                        <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
-                                                    @endforeach
-                                                </select>
+                                        @php $pm = \App\PaymentMethod::find(session('confirmAgency')->payment_method_id)
+                                        @endphp
+                                        <fieldset id="proceeds" style="margin: 0 4%">
+                                            <div class="row">
+                                                <div class="col-lg-12 alert alert-info">
+                                                    <div class="countdown">
+                                                        <div class="bloc-time hours" data-init-value="24">
+                                                            <span class="count-title">Hours</span>
+                                                            <div class="figure hours hours-1">
+                                                                <span class="top">2</span>
+                                                                <span class="top-back"><span>2</span></span>
+                                                                <span class="bottom">2</span>
+                                                                <span class="bottom-back"><span>2</span></span>
+                                                            </div>
+
+                                                            <div class="figure hours hours-2">
+                                                                <span class="top">4</span>
+                                                                <span class="top-back"><span>4</span></span>
+                                                                <span class="bottom">4</span>
+                                                                <span class="bottom-back"><span>4</span></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="bloc-time min" data-init-value="0">
+                                                            <span class="count-title">Minutes</span>
+
+                                                            <div class="figure min min-1">
+                                                                <span class="top">0</span>
+                                                                <span class="top-back"><span>0</span></span>
+                                                                <span class="bottom">0</span>
+                                                                <span class="bottom-back"><span>0</span></span>
+                                                            </div>
+
+                                                            <div class="figure min min-2">
+                                                                <span class="top">0</span>
+                                                                <span class="top-back"><span>0</span></span>
+                                                                <span class="bottom">0</span>
+                                                                <span class="bottom-back"><span>0</span></span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="bloc-time sec" data-init-value="0">
+                                                            <span class="count-title">Seconds</span>
+
+                                                            <div class="figure sec sec-1">
+                                                                <span class="top">0</span>
+                                                                <span class="top-back"><span>0</span></span>
+                                                                <span class="bottom">0</span>
+                                                                <span class="bottom-back"><span>0</span></span>
+                                                            </div>
+
+                                                            <div class="figure sec sec-2">
+                                                                <span class="top">0</span>
+                                                                <span class="top-back"><span>0</span></span>
+                                                                <span class="bottom">0</span>
+                                                                <span class="bottom-back"><span>0</span></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h2 class="countdown-h2"></h2>
+                                                </div>
                                             </div>
-                                            <fieldset id="proceeds" style="margin: 0 4%">
-                                                <div class="row">
-                                                    <div class="col-lg-12 alert alert-info">
-                                                        <div class="countdown">
-                                                            <div class="bloc-time hours" data-init-value="24">
-                                                                <span class="count-title">Hours</span>
-                                                                <div class="figure hours hours-1">
-                                                                    <span class="top">2</span>
-                                                                    <span class="top-back"><span>2</span></span>
-                                                                    <span class="bottom">2</span>
-                                                                    <span class="bottom-back"><span>2</span></span>
-                                                                </div>
-
-                                                                <div class="figure hours hours-2">
-                                                                    <span class="top">4</span>
-                                                                    <span class="top-back"><span>4</span></span>
-                                                                    <span class="bottom">4</span>
-                                                                    <span class="bottom-back"><span>4</span></span>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="bloc-time min" data-init-value="0">
-                                                                <span class="count-title">Minutes</span>
-
-                                                                <div class="figure min min-1">
-                                                                    <span class="top">0</span>
-                                                                    <span class="top-back"><span>0</span></span>
-                                                                    <span class="bottom">0</span>
-                                                                    <span class="bottom-back"><span>0</span></span>
-                                                                </div>
-
-                                                                <div class="figure min min-2">
-                                                                    <span class="top">0</span>
-                                                                    <span class="top-back"><span>0</span></span>
-                                                                    <span class="bottom">0</span>
-                                                                    <span class="bottom-back"><span>0</span></span>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="bloc-time sec" data-init-value="0">
-                                                                <span class="count-title">Seconds</span>
-
-                                                                <div class="figure sec sec-1">
-                                                                    <span class="top">0</span>
-                                                                    <span class="top-back"><span>0</span></span>
-                                                                    <span class="bottom">0</span>
-                                                                    <span class="bottom-back"><span>0</span></span>
-                                                                </div>
-
-                                                                <div class="figure sec sec-2">
-                                                                    <span class="top">0</span>
-                                                                    <span class="top-back"><span>0</span></span>
-                                                                    <span class="bottom">0</span>
-                                                                    <span class="bottom-back"><span>0</span></span>
-                                                                </div>
-                                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12 alert alert-warning text-center"
+                                                     style="font-size: 16px">
+                                                    Make sure not to inform payment details and proof
+                                                    <strong>to any party</strong> except SISKA.
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-7" id="stats_payment">
+                                                    @if($pm->payment_category_id == 1)
+                                                        <small>Banking Details</small>
+                                                    @elseif($pm->payment_category_id == 4)
+                                                        <small>Convenience Store Details</small>
+                                                    @endif
+                                                    <hr class="hr-divider">
+                                                    <div class="media">
+                                                        <div class="media-left media-middle">
+                                                            <img width="128" class="media-object"
+                                                                 src="{{asset('images/paymentMethod/'.$pm->logo)}}">
                                                         </div>
-                                                        <h2 class="countdown-h2"></h2>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12 alert alert-warning text-center"
-                                                         style="font-size: 16px">
-                                                        Make sure not to inform payment details and proof
-                                                        <strong>to any party</strong> except SISKA.
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-7" id="stats_payment">
-                                                        @if($pm->payment_category_id == 1)
-                                                            <small>Banking Details</small>
-                                                        @elseif($pm->payment_category_id == 4)
-                                                            <small>Convenience Store Details</small>
-                                                        @endif
-                                                        <hr class="hr-divider">
-                                                        <div class="media">
-                                                            <div class="media-left media-middle">
-                                                                <img width="128" class="media-object"
-                                                                     src="{{asset('images/paymentMethod/'.$pm->logo)}}">
-                                                            </div>
-                                                            <div class="media-body">
-                                                                <blockquote style="font-size: 12px;color: #7f7f7f">
-                                                                    <ul class="list-inline">
-                                                                        <li>
-                                                                            <a class="tag tag-plans"
-                                                                               style="font-size: 16px">
-                                                                                @if($pm->payment_category_id == 1)
-                                                                                    <strong>{{number_format($pm
+                                                        <div class="media-body">
+                                                            <blockquote style="font-size: 12px;color: #7f7f7f">
+                                                                <ul class="list-inline">
+                                                                    <li>
+                                                                        <a class="tag tag-plans"
+                                                                           style="font-size: 16px">
+                                                                            @if($pm->payment_category_id == 1)
+                                                                                <strong>{{number_format($pm
                                                                                     ->account_number,0," "," ")}}
-                                                                                    </strong>
-                                                                                @elseif($pm->payment_category_id == 4)
-                                                                                    <strong style="text-transform: uppercase">
-                                                                                        {{str_random(15)}}</strong>
-                                                                                @endif
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag tag-plans">
-                                                                                @if($pm->payment_category_id == 1)
-                                                                                    a/n <strong>{{$pm->account_name}}
-                                                                                    </strong>
-                                                                                @elseif($pm->payment_category_id == 4)
-                                                                                    <strong>{{$pm->name}}</strong>
-                                                                                    Payment Code
-                                                                                @endif
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </blockquote>
-                                                            </div>
+                                                                                </strong>
+                                                                            @elseif($pm->payment_category_id == 4)
+                                                                                <strong style="text-transform: uppercase">
+                                                                                    {{old('payment_code')}}</strong>
+                                                                            @endif
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="tag tag-plans">
+                                                                            @if($pm->payment_category_id == 1)
+                                                                                a/n <strong>{{$pm->account_name}}
+                                                                                </strong>
+                                                                            @elseif($pm->payment_category_id == 4)
+                                                                                <strong>{{$pm->name}}</strong>
+                                                                                Payment Code
+                                                                            @endif
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </blockquote>
                                                         </div>
                                                     </div>
-                                                    <div class="col-lg-5" id="stats_billing">
-                                                        <small>Billing Details</small>
-                                                        <hr class="hr-divider">
-                                                        <table id="stats-billing" style="font-size: 16px">
-                                                            <tr>
-                                                                <td>
-                                                                    <strong style="text-transform: uppercase">{{\App\Plan::find(old('plans_id'))
-                                                                    ->name}}</strong> Package
-                                                                </td>
-                                                                <td>&emsp;</td>
-                                                                <td align="right"><strong id="subtotal"></strong></td>
-                                                            </tr>
-                                                            <tr style="border-bottom: 1px solid #ccc">
-                                                                <td>Unique Code</td>
-                                                                <td>&emsp;</td>
-                                                                <td align="right"><strong id="uCode"></strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Amount to {{$pm->payment_category_id == 1 ?
-                                                            'Transfer' : 'Pay'}}</td>
-                                                                <td>&emsp;</td>
-                                                                <td align="right">
-                                                                    <strong id="toPay"
-                                                                            style="font-size: 18px;color: #00adb5"></strong>
-                                                                </td>
-                                                            </tr>
-                                                            @if($pm->payment_category_id == 1)
-                                                                <tr>
-                                                                    <td colspan="3" align="right"
-                                                                        style="font-size:12px;color:#fa5555;font-weight:bold;">
-                                                                        Transfer right up to the last 3 digits
-                                                                </td>
-                                                            </tr>
-                                                            @endif
-                                                        </table>
-                                                    </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <small>Payment Proof</small>
-                                                        <hr class="hr-divider">
+                                                <div class="col-lg-5" id="stats_billing">
+                                                    <small>Billing Details</small>
+                                                    <hr class="hr-divider">
+                                                    <table id="stats-billing" style="font-size: 16px">
+                                                        <tr>
+                                                            <td>
+                                                                <strong style="text-transform: uppercase">{{\App\Plan::find(old('plans_id'))
+                                                                    ->name}}</strong> Package
+                                                            </td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right"><strong id="subtotal"></strong></td>
+                                                        </tr>
+                                                        <tr style="border-bottom: 1px solid #ccc">
+                                                            <td>Unique Code</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right"><strong id="uCode"></strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Amount to {{$pm->payment_category_id == 1 ?
+                                                            'Transfer' : 'Pay'}}</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong id="toPay"
+                                                                        style="font-size: 18px;color: #00adb5"></strong>
+                                                            </td>
+                                                        </tr>
+                                                        @if($pm->payment_category_id == 1)
+                                                            <tr>
+                                                                <td colspan="3" align="right"
+                                                                    style="font-size:12px;color:#fa5555;font-weight:bold;">
+                                                                    Transfer right up to the last 3 digits
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <small>Payment Proof</small>
+                                                    <hr class="hr-divider">
+                                                    <form id="file-upload-form" method="post"
+                                                          enctype="multipart/form-data">
+                                                        {{csrf_field()}}
+                                                        {{ method_field('put') }}
+                                                        <div style="display: none">
+                                                            <select class="selectpicker" id="vac_id" name="vac_id[]"
+                                                                    multiple>
+                                                                @foreach($vacancies as $vacancy)
+                                                                    <option value="{{$vacancy->id}}">{{$vacancy->judul}}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
                                                         <div class="uploader">
                                                             <input id="file-upload" type="file" name="payment_proof"
                                                                    accept="image/*">
@@ -441,14 +446,17 @@
                                                                 </div>
                                                             </label>
                                                         </div>
-                                                    </div>
+                                                    </form>
                                                 </div>
-                                                <a href="{{route('invoice.job.posting',['id' =>
-                                                encrypt(session('confirmAgency')->id)])}}" target="_blank">
-                                                    <input type="button" class="btn-upload"
-                                                           value="Click here to get your invoice"></a>
-                                            </fieldset>
-                                        </form>
+                                            </div>
+                                            <a href="{{route('invoice.job.posting', [
+                                            'id' => encrypt(session('confirmAgency')->id),
+                                            'uc'=> encrypt(old('uCode')),
+                                            'pc' => encrypt(old('payment_code')),
+                                            'vc' => encrypt((array)old('vacancy_id'))])}}" target="_blank">
+                                                <input type="button" class="btn-upload" value="Get your invoice here!">
+                                            </a>
+                                        </fieldset>
                                     @endif
                                 </div>
                             </div>
@@ -634,7 +642,8 @@
 
         function paymentCategory(id) {
             var $pm_1 = $("#pm-details-1"), $pm_2 = $("#pm-details-2"), $pm_3 = $("#pm-11"),
-                $pm_4 = $("#pm-details-4"), $pm_5 = $("#pm-details-5");
+                $pm_4 = $("#pm-details-4"), $pm_5 = $("#pm-details-5"),
+                $input_ucode = $("#input_uCode"), $payment_code = $("#payment_code");
 
             $pm_1.html("");
             $pm_2.html("");
@@ -650,6 +659,8 @@
             $(".jp-card-name").html("Your Name");
             $(".jp-card-expiry").html("MM/YYYY");
             $(".jp-card-cvc").html("•••");
+            $input_ucode.val(0);
+            $payment_code.val("");
 
             if (id == 1) {
                 $pm_1.html(
@@ -659,7 +670,7 @@
                     'You will receive an email about your payment details as soon as you finish the current step.' +
                     '</div></div></div>'
                 );
-                $("#input_uCode").val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
+                $input_ucode.val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
 
             } else if (id == 3) {
                 $("#pm-11").prop("checked", true).trigger('change');
@@ -672,6 +683,7 @@
                     'You will receive an email about your payment details as soon as you finish the current step.' +
                     '</div></div></div>'
                 );
+                $payment_code.val('{{str_random(15)}}');
             }
         }
 
