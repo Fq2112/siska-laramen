@@ -72,7 +72,6 @@ class UserSeeder extends Seeder
                     ]);
                     Seekers::create([
                         'user_id' => $user->id,
-                        'background' => 'c2.jpg',
                         'phone' => $faker->phoneNumber,
                         'address' => $faker->address,
                         'zip_code' => $faker->postcode,

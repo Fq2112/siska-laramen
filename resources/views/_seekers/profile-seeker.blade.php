@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Seeker Profile of '.$user->name.' | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Profile | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
@@ -13,9 +13,9 @@
                     <div class="slider" style="cursor: pointer">
                         <div id="carousel-example" class="carousel slide carousel-fullscreen" data-ride="carousel">
                             <div class="carousel-inner">
-                                @if($seeker->background == ""||$seeker->background == "c2.jpg")
+                                @if($seeker->background == "")
                                     <div class="item show_background"
-                                         style="background-image: url({{asset('images/carousel/c2.jpg')}});">
+                                         style="background-image: url({{asset('images/carousel/c0.png')}});">
                                         <div class="carousel-overlay"></div>
                                     </div>
                                 @else

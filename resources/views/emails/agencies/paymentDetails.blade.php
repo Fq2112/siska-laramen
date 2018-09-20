@@ -514,8 +514,7 @@
                                                                 <a href="{{route('invoice.job.posting',
                                                                 ['id' => encrypt($data['confirmAgency']->id),
                                                                 'uc'=> encrypt($data['uCode']),
-                                                                'pc' => encrypt($data['payment_code']),
-                                                                'vc' => encrypt($data['vacancy_id'])])}}"
+                                                                'pc' => encrypt($data['payment_code'])])}}"
                                                                    style="text-decoration: none;color: #00adb5">
                                                                     <strong>{{'#INV/'.$data['confirmAgency']->created_at
                                                                     ->format('Ymd').'/'.$romanDate.'/'.

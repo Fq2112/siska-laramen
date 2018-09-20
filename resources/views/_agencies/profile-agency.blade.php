@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Agency Profile of '.$user->name.' | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Profile | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
@@ -16,21 +16,23 @@
                             <div class="carousel-inner">
                                 @if(\App\Gallery::where('agency_id',$agency->id)->count())
                                     @foreach(\App\Gallery::where('agency_id',$agency->id)->get() as $row)
-                                        @if($row->image == 'c1.jpg'||$row->image == 'c2.jpg'||
-                                        $row->image == 'c3.jpg')
-                                            <div class="item"
-                                                 style="background-image: url({{
+                                        @if($row->image == 'c1.jpg'||$row->image == 'c2.jpg'|| $row->image == 'c3.jpg')
+                                            <div class="item" style="background-image: url({{
                                                  asset('images/carousel/'.$row->image)}});">
                                                 <div class="carousel-overlay"></div>
                                             </div>
                                         @else
-                                            <div class="item"
-                                                 style="background-image: url({{
+                                            <div class="item" style="background-image: url({{
                                                  asset('storage/users/agencies/galleries/'.$row->image)}});">
                                                 <div class="carousel-overlay"></div>
                                             </div>
                                         @endif
                                     @endforeach
+                                @else
+                                    <div class="item"
+                                         style="background-image: url({{asset('images/carousel/c0.png')}})">
+                                        <div class="carousel-overlay"></div>
+                                    </div>
                                 @endif
                             </div>
                         </div>

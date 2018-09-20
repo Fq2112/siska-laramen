@@ -149,6 +149,27 @@
                                                        ('account/agency/dashboard/invited_seeker') ? 'active' : '' }}">
                                                         Invited Seeker<span class="badge">{{\App\Invitation::where
                                                         ('agency_id',$agency->id)->count()}}</span></a></li>
+                                                <li>
+                                                    <label class="tree-toggle nav-header glyphicon-icon-rpad">
+                                                        <span class="fa fa-briefcase m5"
+                                                              style="font-size:22px;padding-right: 5px"></span>Job
+                                                        Vacancy
+                                                        <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
+                                                        </span>
+                                                    </label>
+                                                    <ul class="nav nav-list tree bullets">
+                                                        <li><a href="{{route('agency.vacancy.status')}}"
+                                                               class="{{ \Illuminate\Support\Facades\Request::is
+                                                       ('account/agency/vacancy/status') ? 'active' : '' }}">
+                                                                Vacancy Status<span class="badge">
+                                                                    {{\App\ConfirmAgency::where('agency_id',$agency->id)
+                                                                    ->count()}}</span></a></li>
+                                                        <li><a href="{{route('agency.vacancy.show')}}"
+                                                               class="{{ \Illuminate\Support\Facades\Request::is
+                                                       ('account/agency/vacancy') ? 'active' : '' }}">
+                                                                Vacancy Setup</a></li>
+                                                    </ul>
+                                                </li>
                                             </ul>
                                         </li>
                                         <li class="divider"></li>
@@ -168,27 +189,6 @@
                                                        class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/agency/settings') ? 'active' : '' }}">
                                                         Change Password</a></li>
-                                                <li>
-                                                    <label class="tree-toggle nav-header glyphicon-icon-rpad">
-                                                        <span class="fa fa-briefcase m5"
-                                                              style="font-size:22px;padding-right: 5px"></span>Job
-                                                        Vacancy
-                                                        <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
-                                                        </span>
-                                                    </label>
-                                                    <ul class="nav nav-list tree bullets">
-                                                        <li><a href="{{route('agency.vacancy.status')}}"
-                                                               class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/vacancy/status') ? 'active' : '' }}">
-                                                                Vacancy Status<span class="badge">
-                                                            {{\App\Vacancies::where('agency_id',$agency->id)->count()}}
-                                                        </span></a></li>
-                                                        <li><a href="{{route('agency.vacancy.show')}}"
-                                                               class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/vacancy') ? 'active' : '' }}">
-                                                                Vacancy Setup</a></li>
-                                                    </ul>
-                                                </li>
                                             </ul>
                                         </li>
                                     </ul>

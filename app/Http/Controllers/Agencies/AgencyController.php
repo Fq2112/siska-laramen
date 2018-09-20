@@ -179,21 +179,18 @@ class AgencyController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
-        $vac_ids = (array)$request->vacancy_id;
-        foreach ($vac_ids as $vac_id) {
-            $confirmAgency = ConfirmAgency::create([
-                'agency_id' => $agency->id,
-                'vacancy_id' => $vac_id,
-                'plans_id' => $request->plans_id,
-                'payment_method_id' => $request->pm_id,
-                'cc_number' => $request->number,
-                'cc_name' => $request->name,
-                'cc_expiry' => $request->expiry,
-                'cc_cvc' => $request->cvc,
-            ]);
-        }
+        $confirmAgency = ConfirmAgency::create([
+            'agency_id' => $agency->id,
+            'vacancy_ids' => $request->vacancy_id,
+            'plans_id' => $request->plans_id,
+            'payment_method_id' => $request->pm_id,
+            'cc_number' => $request->number,
+            'cc_name' => $request->name,
+            'cc_expiry' => $request->expiry,
+            'cc_cvc' => $request->cvc,
+        ]);
 
-        $this->paymentDetailsMail($confirmAgency, $request, $vac_ids);
+        $this->paymentDetailsMail($confirmAgency, $request);
 
         return back()->withInput(Input::all())->with([
             'jobPosting' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted as soon as your payment is completed.',
@@ -201,7 +198,7 @@ class AgencyController extends Controller
         ]);
     }
 
-    private function paymentDetailsMail($confirmAgency, $request, $vac_ids)
+    private function paymentDetailsMail($confirmAgency, $request)
     {
         $pm = PaymentMethod::find($confirmAgency->payment_method_id);
         $pc = PaymentCategory::find($pm->payment_category_id);
@@ -216,7 +213,6 @@ class AgencyController extends Controller
             'uCode' => $request->uCode,
             'payment_code' => $request->payment_code,
             'total_payment' => $total,
-            'vacancy_id' => $vac_ids,
         ];
         event(new VacancyPaymentDetails($data));
     }
@@ -224,7 +220,8 @@ class AgencyController extends Controller
     public function invoiceJobPosting($id, Request $request)
     {
         $confirmAgency = ConfirmAgency::find(decrypt($id));
-        $vacancies = Vacancies::whereIn('id', (array)decrypt($request->vc))->get();
+        $vac_ids = ConfirmAgency::where('id', decrypt($id))->pluck('vacancy_ids')->toArray();
+        $vacancies = Vacancies::whereIn('id', $vac_ids[0])->get();
         $agency = Agencies::find($confirmAgency->agency_id);
         $user = User::find($agency->user_id);
 
@@ -246,31 +243,20 @@ class AgencyController extends Controller
 
     public function uploadPaymentProof(Request $request)
     {
-        $user = Auth::user();
-        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-
-        $vac_ids = '';
-        foreach ((array)$request->vac_id as $select) {
-            $vac_ids .= $select . ', ';
-        }
-        $vac_ids = explode(",", substr($vac_ids, 0, -2));
-        $confirmAgencies = ConfirmAgency::where('agency_id', $agency->id)->whereIn('vacancy_id', $vac_ids)
-            ->where('isPaid', false)->get();
+        $confirmAgency = ConfirmAgency::find($request->confirmAgency_id);
 
         $payment_proof = $request->file('payment_proof');
         $name = $payment_proof->getClientOriginalName();
 
-        foreach ($confirmAgencies as $confirmAgency) {
-            if ($confirmAgency->payment_proof != '') {
-                Storage::delete('public/users/agencies/payment/' . $confirmAgency->payment_proof);
-            }
-
-            $request->payment_proof->storeAs('public/users/agencies/payment', $name);
-
-            $confirmAgency->update([
-                'payment_proof' => $name
-            ]);
+        if ($confirmAgency->payment_proof != '') {
+            Storage::delete('public/users/agencies/payment/' . $confirmAgency->payment_proof);
         }
+
+        $request->payment_proof->storeAs('public/users/agencies/payment', $name);
+
+        $confirmAgency->update([
+            'payment_proof' => $name
+        ]);
 
         return $name;
     }

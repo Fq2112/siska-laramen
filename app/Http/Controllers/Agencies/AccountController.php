@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Agencies;
 
 use App\Agencies;
+use App\ConfirmAgency;
 use App\FungsiKerja;
 use App\Gallery;
 use App\Industri;
@@ -196,9 +197,34 @@ class AccountController extends Controller
         }
     }
 
-    public function showVacancyStatus()
+    public function showVacancyStatus(Request $request)
     {
-        return 'vacancy status here...';
+        $user = Auth::user();
+        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+
+        $time = $request->time;
+        if ($request->has('time')) {
+            if ($time == 2) {
+                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)
+                    ->whereDate('created_at', Carbon::today())
+                    ->orderByDesc('id')->paginate(5);
+            } elseif ($time == 3) {
+                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)
+                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
+                    ->orderByDesc('id')->paginate(5);
+            } elseif ($time == 4) {
+                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)
+                    ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
+                    ->orderByDesc('id')->paginate(5);
+            } else {
+                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
+            }
+        } else {
+            $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
+        }
+
+        return view('auth.agencies.dashboard-vacancyStatus', compact('user', 'agency', 'time',
+            'confirmAgency'));
     }
 
     public function showVacancy()
@@ -214,8 +240,8 @@ class AccountController extends Controller
         $job_types = JobType::all();
         $salaries = Salaries::all();
 
-        return view('auth.agencies.editVacancy', compact('user', 'agency', 'vacancies', 'provinces',
-            'job_functions', 'industries', 'job_levels', 'job_types', 'salaries'));
+        return view('auth.agencies.dashboard-vacancyEdit', compact('user', 'agency', 'vacancies',
+            'provinces', 'job_functions', 'industries', 'job_levels', 'job_types', 'salaries'));
     }
 
     public function createVacancy(Request $request)

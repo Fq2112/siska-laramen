@@ -410,15 +410,8 @@
                                                           enctype="multipart/form-data">
                                                         {{csrf_field()}}
                                                         {{ method_field('put') }}
-                                                        <div style="display: none">
-                                                            <select class="selectpicker" id="vac_id" name="vac_id[]"
-                                                                    multiple>
-                                                                @foreach($vacancies as $vacancy)
-                                                                    <option value="{{$vacancy->id}}">{{$vacancy->judul}}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                        <input type="hidden" name="confirmAgency_id"
+                                                               value="{{session('confirmAgency')->id}}">
                                                         <div class="uploader">
                                                             <input id="file-upload" type="file" name="payment_proof"
                                                                    accept="image/*">
@@ -452,8 +445,7 @@
                                             <a href="{{route('invoice.job.posting', [
                                             'id' => encrypt(session('confirmAgency')->id),
                                             'uc'=> encrypt(old('uCode')),
-                                            'pc' => encrypt(old('payment_code')),
-                                            'vc' => encrypt((array)old('vacancy_id'))])}}" target="_blank">
+                                            'pc' => encrypt(old('payment_code'))])}}" target="_blank">
                                                 <input type="button" class="btn-upload" value="Get your invoice here!">
                                             </a>
                                         </fieldset>

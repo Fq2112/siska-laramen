@@ -18,7 +18,7 @@ class CreateGalleriesTable extends Migration
             $table->integer('agency_id')->unsigned();
             $table->foreign('agency_id')->references('id')->on('agencies')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->string('image');
+            $table->text('image');
             $table->timestamps();
         });
     }

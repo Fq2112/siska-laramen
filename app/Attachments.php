@@ -8,7 +8,5 @@ class Attachments extends Model
 {
     protected $table = 'attachments';
 
-    protected $fillable = [
-        'seeker_id', 'files'
-    ];
+    protected $guarded = ['id'];
 }

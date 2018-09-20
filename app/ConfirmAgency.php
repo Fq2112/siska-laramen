@@ -13,6 +13,8 @@ class ConfirmAgency extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = ['vacancy_ids' => 'array'];
+
     protected $dates = ['deleted_at'];
 
     public function GetAgency()
