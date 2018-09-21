@@ -11,14 +11,16 @@
 
         @if($confirmAgency->isPaid == true)
         .container {
-            background: url({{asset('images/paid_stamp.png')}}) center no-repeat;
+            background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .9)),
+            url({{asset('images/stamp_paid.png')}}) center no-repeat;
             background-size: contain;
             width: 790px;
         }
 
         @else
         .container {
-            background: url({{asset('images/unpaid_stamp.png')}}) center no-repeat;
+            background: linear-gradient(rgba(255, 255, 255, .9), rgba(255, 255, 255, .9)),
+            url({{asset('images/stamp_unpaid.png')}}) center no-repeat;
             background-size: contain;
             width: 790px;
         }
@@ -217,7 +219,7 @@
                         <td colspan="2" style="width: 120px;padding: 8px 5px">&ndash;</td>
                         <td style="width: 115px; padding: 8px 5px;" width="115">&ndash;</td>
                         <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
-                            -Rp{{$uCode}}
+                            -Rp{{$payment_code}}
                         </td>
                     </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
@@ -225,7 +227,7 @@
                             Subtotal
                         </td>
                         <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
-                            width="115">-Rp{{$uCode}}
+                            width="115">-Rp{{$payment_code}}
                         </td>
                     </tr>
                     </tbody>
@@ -281,7 +283,7 @@
                                                 {{number_format($pm->account_number,0," "," ")}}</strong>
                                             <br>a/n {{$pm->account_name}}
                                         @elseif($pc->id == 4)
-                                            <strong style="font-size: 18px;text-transform: uppercase">{{$payment_code}}</strong>
+                                            <strong style="font-size: 18px;text-transform: uppercase">{{$confirmAgency->payment_code}}</strong>
                                             <br>Payment Code
                                         @endif
                                     </td>

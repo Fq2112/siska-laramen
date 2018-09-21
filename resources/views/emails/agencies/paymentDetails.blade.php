@@ -511,10 +511,8 @@
                                                                 $last = substr($total, -3);
                                                             @endphp
                                                             <small>
-                                                                <a href="{{route('invoice.job.posting',
-                                                                ['id' => encrypt($data['confirmAgency']->id),
-                                                                'uc'=> encrypt($data['uCode']),
-                                                                'pc' => encrypt($data['payment_code'])])}}"
+                                                                <a href="{{route('invoice.job.posting', ['id' =>
+                                                                encrypt($data['confirmAgency']->id)])}}"
                                                                    style="text-decoration: none;color: #00adb5">
                                                                     <strong>{{'#INV/'.$data['confirmAgency']->created_at
                                                                     ->format('Ymd').'/'.$romanDate.'/'.
@@ -536,24 +534,28 @@
                                                                     <td>Unique Code</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <strong>-Rp{{$data['uCode']}}</strong></td>
+                                                                        <strong>-Rp{{$data['payment_code']}}</strong>
+                                                                    </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td>Amount to Transfer</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         @if($data['payment_category']->id == 1)
-                                                                        <strong style="font-size: 18px;color: #00adb5">Rp{{$first}}<span style="border:1px solid #fa5555;">{{$last}}</span></strong>
+                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$first}}
+                                                                                <span style="border:1px solid #fa5555;">{{$last}}</span></strong>
                                                                         @else
                                                                             <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
                                                                         @endif
                                                                     </td>
                                                                 </tr>
                                                                 @if($data['payment_category']->id == 1)
-                                                                <tr>
-                                                                    <td colspan="3" align="right" style="font-size:12px;color:#fa5555;font-weight:bold;">
-                                                                        Transfer right up to the last 3 digits</td>
-                                                                </tr>
+                                                                    <tr>
+                                                                        <td colspan="3" align="right"
+                                                                            style="font-size:12px;color:#fa5555;font-weight:bold;">
+                                                                            Transfer right up to the last 3 digits
+                                                                        </td>
+                                                                    </tr>
                                                                 @endif
                                                             </table>
                                                         </td>
@@ -597,8 +599,9 @@
                                                                                 <br>
                                                                                 a/n {{$data['payment_method']->account_name}}
                                                                             @elseif($data['payment_category']->id == 4)
-                                                                                <strong style="font-size: 16px;text-transform: uppercase">{{$data['payment_code']}}</strong>
-                                                                                <br>Payment Code
+                                                                                <strong style="font-size: 16px">
+                                                                                    {{$data['confirmAgency']->payment_code}}
+                                                                                </strong><br>Payment Code
                                                                             @endif
                                                                         </small>
                                                                     </td>

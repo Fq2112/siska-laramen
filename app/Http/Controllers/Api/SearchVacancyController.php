@@ -33,7 +33,7 @@ class SearchVacancyController extends Controller
             })->get()->pluck('id')->toArray();
 
             $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
-                ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->paginate(12)
+                ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->where('isPost', true)->paginate(12)
                 ->appends($request->only(['q', 'loc']))->toArray();
 
             // sorting
@@ -42,18 +42,18 @@ class SearchVacancyController extends Controller
                 if ($sort == 'latest') {
                     $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
-                        ->orderBy('updated_at', 'desc')->paginate(12)
+                        ->orderBy('updated_at', 'desc')->where('isPost', true)->paginate(12)
                         ->appends($request->only(['q', 'loc']))->toArray();
 
                 } elseif ($sort == 'highest_salary') {
                     $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
-                        ->orderBy('salary_id', 'desc')->paginate(12)
+                        ->orderBy('salary_id', 'desc')->where('isPost', true)->paginate(12)
                         ->appends($request->only(['q', 'loc']))->toArray();
 
                 } else {
                     $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
-                        ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->paginate(12)
+                        ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->where('isPost', true)->paginate(12)
                         ->appends($request->only(['q', 'loc']))->toArray();
                 }
             }
@@ -76,7 +76,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('salary_id', $salaries)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has('jobfunc_ids')) {
                     $jf_select = $input['jobfunc_ids'];
@@ -91,7 +91,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('fungsikerja_id', $fungsikerja)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has('industry_ids')) {
                     $in_select = $input['industry_ids'];
@@ -106,7 +106,7 @@ class SearchVacancyController extends Controller
                         ->wherein('industry_id', $industries)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->wherein('industry_id', $industries)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has('degrees_ids')) {
                     $de_select = $input['degrees_ids'];
@@ -121,7 +121,7 @@ class SearchVacancyController extends Controller
                         ->wherein('tingkatpend_id', $degrees)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->wherein('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has('majors_ids')) {
                     $ma_select = $input['majors_ids'];
@@ -136,7 +136,7 @@ class SearchVacancyController extends Controller
                         ->wherein('jurusanpend_id', $majors)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->wherein('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
 
                 // 12, 13, 14, 15 (2 filters)
@@ -161,7 +161,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'industry_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -184,7 +184,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('salary_id', $salaries)->whereIn('industry_id', $industries)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('industry_id', $industries)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'degrees_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -207,7 +207,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('salary_id', $salaries)->whereIn('tingkatpend_id', $degrees)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'majors_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -230,7 +230,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('salary_id', $salaries)->whereIn('jurusanpend_id', $majors)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 // 23, 24, 25
                 if ($request->has(['jobfunc_ids', 'industry_ids'])) {
@@ -254,7 +254,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('industry_id', $industries)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('industry_id', $industries)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['jobfunc_ids', 'degrees_ids'])) {
                     $jf_select = $input['jobfunc_ids'];
@@ -277,7 +277,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('tingkatpend_id', $degrees)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['jobfunc_ids', 'majors_ids'])) {
                     $jf_select = $input['jobfunc_ids'];
@@ -300,7 +300,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('jurusanpend_id', $majors)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 // 34, 35
                 if ($request->has(['industry_ids', 'degrees_ids'])) {
@@ -324,7 +324,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['industry_ids', 'majors_ids'])) {
                     $in_select = $input['industry_ids'];
@@ -347,7 +347,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('industry_id', $industries)->whereIn('jurusanpend_id', $majors)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('industry_id', $industries)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 // 45
                 if ($request->has(['degrees_ids', 'majors_ids'])) {
@@ -371,7 +371,7 @@ class SearchVacancyController extends Controller
                         ->whereIn('tingkatpend_id', $degrees)->whereIn('jurusanpend_id', $majors)
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('tingkatpend_id', $degrees)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
 
                 // 123, 124, 125, 134, 135, 145 (3 filters)
@@ -406,7 +406,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->whereIn('industry_id', $industries)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'jobfunc_ids', 'degrees_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -439,7 +439,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'jobfunc_ids', 'majors_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -472,7 +472,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'industry_ids', 'degrees_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -505,7 +505,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('industry_id', $industries)
                         ->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'industry_ids', 'majors_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -538,7 +538,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('industry_id', $industries)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'degrees_ids', 'majors_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -571,7 +571,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('tingkatpend_id', $degrees)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 // 234, 235, 245
                 if ($request->has(['jobfunc_ids', 'industry_ids', 'degrees_ids'])) {
@@ -605,7 +605,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('industry_id', $industries)
                         ->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['jobfunc_ids', 'industry_ids', 'majors_ids'])) {
                     $jf_select = $input['jobfunc_ids'];
@@ -638,7 +638,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('industry_id', $industries)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['jobfunc_ids', 'degrees_ids', 'majors_ids'])) {
                     $jf_select = $input['jobfunc_ids'];
@@ -671,7 +671,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('tingkatpend_id', $degrees)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 // 345
                 if ($request->has(['industry_ids', 'degrees_ids', 'majors_ids'])) {
@@ -705,7 +705,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
 
                 // 1234, 1235, 1345 (4 filters)
@@ -748,7 +748,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'jobfunc_ids', 'industry_ids', 'majors_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -789,7 +789,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->whereIn('industry_id', $industries)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 if ($request->has(['salary_ids', 'industry_ids', 'degrees_ids', 'majors_ids'])) {
                     $sal_select = $input['salary_ids'];
@@ -830,7 +830,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('salary_id', $salaries)->whereIn('industry_id', $industries)
                         ->whereIn('tingkatpend_id', $degrees)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
                 // 2345
                 if ($request->has(['jobfunc_ids', 'industry_ids', 'degrees_ids', 'majors_ids'])) {
@@ -872,7 +872,7 @@ class SearchVacancyController extends Controller
                         ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
                         ->whereIn('fungsikerja_id', $fungsikerja)->whereIn('industry_id', $industries)
                         ->whereIn('tingkatpend_id', $degrees)->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
 
                 // 12345 (5 filters)
@@ -925,12 +925,12 @@ class SearchVacancyController extends Controller
                         ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
                         ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
+                        ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
             }
 
         } else {
-            $result = Vacancies::paginate(12)->toArray();
+            $result = Vacancies::where('isPost', true)->paginate(12)->toArray();
         }
         $result = $this->array_vacancies($result);
         return $result;

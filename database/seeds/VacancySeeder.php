@@ -40,7 +40,8 @@ class VacancySeeder extends Seeder
                 'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
                 'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
                 'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id'))
+                'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                'isPost' => true
             ]);
         }
     }

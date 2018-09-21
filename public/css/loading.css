@@ -7143,7 +7143,7 @@
     color: #fdc02f;
 }
 
-.bookmark label, .invitation label {
+.bookmark label, .invitation label, .upload label {
     box-shadow: 0 0 0 0 rgba(0, 173, 181, 0.5);
 }
 
@@ -7155,13 +7155,17 @@
     content: "\f0e0";
 }
 
-.bookmark input:checked + label, .invitation input:checked + label {
+.upload label:after {
+    content: "\f093"
+}
+
+.bookmark input:checked + label, .invitation input:checked + label, .upload input:checked + label {
     background-color: #00ADB5;
     border-color: #00ADB5;
     box-shadow: 0 0 0 0.5em rgba(13, 165, 142, 0);
 }
 
-.bookmark input:checked + label:after, .invitation input:checked + label:after {
+.bookmark input:checked + label:after, .invitation input:checked + label:after, .upload input:checked + label:after {
     color: #00ADB5;
 }
 

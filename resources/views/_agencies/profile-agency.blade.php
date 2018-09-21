@@ -178,7 +178,8 @@
                                                                     <a href="{{route('detail.vacancy',['id'=>$row->id])}}">
                                                                         {{$row->judul}}</a>
                                                                     <span class="pull-right" style="color: #FA5555">
-                                                                        {{$row->created_at->format('j F Y')}}</span>
+                                                                        {{$row->isPost == true ? $row->created_at
+                                                                        ->format('j F Y') : 'NOT POSTED YET'}}</span>
                                                                 </small>
                                                                 <blockquote style="font-size: 12px;color: #7f7f7f"
                                                                             class="ulTinyMCE">

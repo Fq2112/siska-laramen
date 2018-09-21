@@ -296,6 +296,15 @@ h3.filter-heading {
     border-left-color: #fa5555;
 }
 
+.tag-plans:hover {
+    background-color: #00ADB5;
+    color: white;
+}
+
+.tag-plans:hover::after {
+    border-left-color: #00ADB5;
+}
+
 .tag:hover .tag-icon {
     display: none;
 }

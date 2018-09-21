@@ -29,7 +29,6 @@
                                     </ul>
                                     <form action="{{route('submit.job.posting')}}" method="post" id="pm-form">
                                         {{csrf_field()}}
-                                        <input type="hidden" name="uCode" id="input_uCode">
                                         <input type="hidden" name="payment_code" id="payment_code">
                                         <fieldset class="text-center" id="vacancy_setup">
                                             <h2 class="fs-title">Vacancy Setup</h2>
@@ -344,8 +343,8 @@
                                                                                     ->account_number,0," "," ")}}
                                                                                 </strong>
                                                                             @elseif($pm->payment_category_id == 4)
-                                                                                <strong style="text-transform: uppercase">
-                                                                                    {{old('payment_code')}}</strong>
+                                                                                <strong>{{session('confirmAgency')
+                                                                                ->payment_code}}</strong>
                                                                             @endif
                                                                         </a>
                                                                     </li>
@@ -442,10 +441,8 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            <a href="{{route('invoice.job.posting', [
-                                            'id' => encrypt(session('confirmAgency')->id),
-                                            'uc'=> encrypt(old('uCode')),
-                                            'pc' => encrypt(old('payment_code'))])}}" target="_blank">
+                                            <a href="{{route('invoice.job.posting', ['id' =>
+                                            encrypt(session('confirmAgency')->id)])}}" target="_blank">
                                                 <input type="button" class="btn-upload" value="Get your invoice here!">
                                             </a>
                                         </fieldset>
@@ -634,8 +631,7 @@
 
         function paymentCategory(id) {
             var $pm_1 = $("#pm-details-1"), $pm_2 = $("#pm-details-2"), $pm_3 = $("#pm-11"),
-                $pm_4 = $("#pm-details-4"), $pm_5 = $("#pm-details-5"),
-                $input_ucode = $("#input_uCode"), $payment_code = $("#payment_code");
+                $pm_4 = $("#pm-details-4"), $pm_5 = $("#pm-details-5"), $payment_code = $("#payment_code");
 
             $pm_1.html("");
             $pm_2.html("");
@@ -651,8 +647,7 @@
             $(".jp-card-name").html("Your Name");
             $(".jp-card-expiry").html("MM/YYYY");
             $(".jp-card-cvc").html("•••");
-            $input_ucode.val(0);
-            $payment_code.val("");
+            $payment_code.val(0);
 
             if (id == 1) {
                 $pm_1.html(
@@ -662,7 +657,7 @@
                     'You will receive an email about your payment details as soon as you finish the current step.' +
                     '</div></div></div>'
                 );
-                $input_ucode.val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
+                $payment_code.val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
 
             } else if (id == 3) {
                 $("#pm-11").prop("checked", true).trigger('change');
@@ -821,7 +816,7 @@
         $(".countdown-h2").html('<sub>Expired <strong>Time</strong>: {{$expDay." at ".$expTime}}</sub>');
 
         var billsub = '{{\App\Plan::find(old('plans_id'))->price}}', rpbillSub = thousandSeparator(billsub),
-            code = '{{old('uCode')}}', billTotal = 0, $strTotal, $first, $last;
+            code = '{{session('confirmAgency')->payment_code}}', billTotal = 0, $strTotal, $first, $last;
         $("#subtotal").text("Rp" + rpbillSub);
         @if(\App\PaymentMethod::find($confirm->payment_method_id)->payment_category_id == 1)
         $("#uCode").text("-Rp" + code);

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateConfirmAgenciesTable extends Migration
+class CreateConfirmAgencies extends Migration
 {
     /**
      * Run the migrations.
@@ -25,6 +25,7 @@ class CreateConfirmAgenciesTable extends Migration
             $table->integer('payment_method_id')->unsigned();
             $table->foreign('payment_method_id')->references('id')->on('payment_method')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->string('payment_code');
             $table->string('cc_number')->nullable();
             $table->string('cc_name')->nullable();
             $table->string('cc_expiry', '9')->nullable();

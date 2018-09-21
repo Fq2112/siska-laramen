@@ -76,15 +76,21 @@
                                 <li data-placement="left" data-toggle="tooltip" id="bm">
                                     <form method="post" action="{{route('bookmark.vacancy')}}" id="form-bookmark">
                                         {{csrf_field()}}
+                                        @if($vacancy->isPost == false)
+                                            <small><em>This vacancy is not posted yet&hellip;</em></small>
+                                        @endif
                                         <div class="anim-icon anim-icon-md bookmark ld ld-breath">
                                             <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
-                                            <input type="checkbox" id="bookmark">
-                                            <label for="bookmark"></label>
+                                            <input type="checkbox" id="bookmark" {{$vacancy->isPost == false ?
+                                            'disabled' : ''}}>
+                                            <label for="bookmark" style="cursor: {{$vacancy->isPost == false ?
+                                            'not-allowed' : 'pointer'}}"></label>
                                         </div>
                                     </form>
                                 </li>
                                 <li class="ld ld-heartbeat" id="apply" data-placement="top" data-toggle="tooltip">
-                                    <button type="button" class="btn btn-danger btn-block">
+                                    <button type="button" class="btn btn-danger btn-block"
+                                            {{$vacancy->isPost == false ? 'disabled' : ''}}>
                                         <i class="fa fa-paper-plane"></i>&ensp;<strong>Apply</strong>
                                     </button>
                                 </li>
@@ -176,7 +182,8 @@
                                                     <td><i class="fa fa-calendar"></i></td>
                                                     <td>&nbsp;Posted On</td>
                                                     <td>
-                                                        : {{$vacancy->created_at->format('j F Y')}}
+                                                        : {{$vacancy->isPost == true ? $vacancy->created_at
+                                                        ->format('j F Y') : '-'}}
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -273,7 +280,8 @@
                                                                     <a href="{{route('detail.vacancy',['id'=>$row->id])}}">
                                                                         {{$row->judul}}</a>
                                                                     <span class="pull-right" style="color: #FA5555">
-                                                                        {{$row->created_at->format('j F Y')}}</span>
+                                                                        {{$row->isPost == true ? $row->created_at
+                                                                        ->format('j F Y') : 'NOT POSTED YET'}}</span>
                                                                 </small>
                                                                 <blockquote style="font-size: 12px;color: #7f7f7f">
                                                                     <ul class="list-inline">
@@ -637,7 +645,7 @@
 
         // apply validation
         var $btnApply = $("#apply button"), $btnBookmark = $("#bm");
-        $btnBookmark.attr('title', 'Bookmark this vacancy');
+        $btnBookmark.attr('title', '{{$vacancy->isPost == true ? 'Bookmark this vacancy' : ''}}');
         @auth
         @if(Auth::user()->isSeeker())
         @php

@@ -184,13 +184,14 @@ class AgencyController extends Controller
             'vacancy_ids' => $request->vacancy_id,
             'plans_id' => $request->plans_id,
             'payment_method_id' => $request->pm_id,
+            'payment_code' => strtoupper($request->payment_code),
             'cc_number' => $request->number,
             'cc_name' => $request->name,
             'cc_expiry' => $request->expiry,
             'cc_cvc' => $request->cvc,
         ]);
 
-        $this->paymentDetailsMail($confirmAgency, $request);
+        $this->paymentDetailsMail($confirmAgency);
 
         return back()->withInput(Input::all())->with([
             'jobPosting' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted as soon as your payment is completed.',
@@ -198,26 +199,30 @@ class AgencyController extends Controller
         ]);
     }
 
-    private function paymentDetailsMail($confirmAgency, $request)
+    private function paymentDetailsMail($confirmAgency)
     {
         $pm = PaymentMethod::find($confirmAgency->payment_method_id);
         $pc = PaymentCategory::find($pm->payment_category_id);
         $pl = Plan::find($confirmAgency->plans_id);
-        $total = $pl->price - $request->uCode;
+        if ($pc->id == 1) {
+            $payment_code = $confirmAgency->payment_code;
+        } else {
+            $payment_code = 0;
+        }
+        $total = $pl->price - $payment_code;
 
         $data = [
             'confirmAgency' => $confirmAgency,
             'payment_method' => $pm,
             'payment_category' => $pc,
             'plans' => $pl,
-            'uCode' => $request->uCode,
-            'payment_code' => $request->payment_code,
+            'payment_code' => $payment_code,
             'total_payment' => $total,
         ];
         event(new VacancyPaymentDetails($data));
     }
 
-    public function invoiceJobPosting($id, Request $request)
+    public function invoiceJobPosting($id)
     {
         $confirmAgency = ConfirmAgency::find(decrypt($id));
         $vac_ids = ConfirmAgency::where('id', decrypt($id))->pluck('vacancy_ids')->toArray();
@@ -228,9 +233,12 @@ class AgencyController extends Controller
         $pm = PaymentMethod::find($confirmAgency->payment_method_id);
         $pc = PaymentCategory::find($pm->payment_category_id);
         $pl = Plan::find($confirmAgency->plans_id);
-        $uCode = decrypt($request->uc);
-        $payment_code = decrypt($request->pc);
-        $total = $pl->price - $uCode;
+        if ($pc->id == 1) {
+            $payment_code = $confirmAgency->payment_code;
+        } else {
+            $payment_code = 0;
+        }
+        $total = $pl->price - $payment_code;
 
         $date = Carbon::parse($confirmAgency->created_at);
         $romanDate = RomanConverter::numberToRoman($date->format('y')) . '/' .
@@ -238,7 +246,7 @@ class AgencyController extends Controller
         $invoice = 'INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
 
         return view('_agencies.inv-jobPosting', compact('confirmAgency', 'vacancies', 'agency', 'user',
-            'pm', 'pc', 'pl', 'uCode', 'payment_code', 'total', 'invoice'));
+            'pm', 'pc', 'pl', 'payment_code', 'total', 'invoice'));
     }
 
     public function uploadPaymentProof(Request $request)
@@ -259,5 +267,17 @@ class AgencyController extends Controller
         ]);
 
         return $name;
+    }
+
+    public function deleteJobPosting($id)
+    {
+        $confirmAgency = ConfirmAgency::find(decrypt($id));
+        $date = Carbon::parse($confirmAgency->created_at);
+        $romanDate = RomanConverter::numberToRoman($date->format('y')) . '/' .
+            RomanConverter::numberToRoman($date->format('m'));
+        $invoice = '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
+        $confirmAgency->delete();
+
+        return back()->with('delete', 'Invoice ' . $invoice . ' is successfully deleted!');
     }
 }

@@ -243,15 +243,6 @@
     filter: brightness(1.2) grayscale(.5) opacity(.9);
 }
 
-.tag-plans:hover {
-    background-color: #00ADB5;
-    color: white;
-}
-
-.tag-plans:hover::after {
-    border-left-color: #00ADB5;
-}
-
 /* countdown */
 .countdown-h2 {
     margin-bottom: 0;

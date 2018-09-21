@@ -23,6 +23,11 @@ use App\Http\Controllers\Controller;
 
 class AccountController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'agency']);
+    }
+
     public function showDashboard(Request $request)
     {
         return 'agency dashboard here';

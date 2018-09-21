@@ -21,7 +21,7 @@ class VacanciesAPIController extends Controller
 {
     public function loadVacancies()
     {
-        $vacancies = Vacancies::all()->toArray();
+        $vacancies = Vacancies::where('isPost', true)->get()->toArray();
         $vacancies = $this->array_vacancies($vacancies);
 
         return $vacancies;
@@ -37,10 +37,12 @@ class VacanciesAPIController extends Controller
             ->get()->pluck('vacancy_id')->toArray();
 
         if (count($favVacancy) >= 8) {
-            $vacancies = Vacancies::whereIn('id', $favVacancy)->orderByDesc('id')->take(8)->get()->toArray();
+            $vacancies = Vacancies::whereIn('id', $favVacancy)->where('isPost', true)->orderByDesc('id')
+                ->take(8)->get()->toArray();
 
         } else {
-            $vacancies = Vacancies::orderByDesc('salary_id')->take(8)->get()->toArray();
+            $vacancies = Vacancies::orderByDesc('salary_id')->where('isPost', true)
+                ->take(8)->get()->toArray();
         }
 
         $vacancies = $this->array_vacancies($vacancies);
@@ -50,7 +52,7 @@ class VacanciesAPIController extends Controller
 
     public function loadLateVacancies()
     {
-        $vacancies = Vacancies::orderBy('updated_at', 'desc')->take(12)->get()->toArray();
+        $vacancies = Vacancies::orderBy('updated_at', 'desc')->where('isPost', true)->take(12)->get()->toArray();
         $vacancies = $this->array_vacancies($vacancies);
 
         return $vacancies;
