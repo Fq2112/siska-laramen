@@ -449,6 +449,20 @@
                                 <td width="2" bgcolor="#f7f7f7"></td>
                                 <td width="2" bgcolor="#f3f3f3"></td>
                                 <td width="660" valign="top" bgcolor="#fff">
+                                    @php
+                                        $date = $data['confirmAgency']->created_at;
+                                        $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')).'/'.
+                                        \App\Support\RomanConverter::numberToRoman($date->format('m'));
+                                        $invoice = '#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.
+                                        $romanDate.'/'.$data['confirmAgency']->id;
+                                        $total = number_format($data['total_payment'],0,"",".");
+                                        if($data['total_payment'] < 1000000){
+                                            $first = substr($total,0,4);
+                                        } else{
+                                            $first = substr($total,0,6);
+                                        }
+                                        $last = substr($total, -3);
+                                    @endphp
                                     <table bgcolor="#fff" border="0" cellspacing="0" cellpadding="0" class="full-width"
                                            style="border-top: 2px solid #f3f3f3">
                                         <tbody>
@@ -476,7 +490,7 @@
                                                                 <strong style="font-size: 22px">
                                                                     Please, complete your payment immediately</strong>
                                                                 <br>Checkout was successfully
-                                                                on {{$data['confirmAgency']->created_at->format('l,j F Y')}}
+                                                                on {{$data['confirmAgency']->created_at->format('l, j F Y')}}
                                                                 at {{$data['confirmAgency']->created_at->format('H:i')}}
                                                             </small>
                                                         </td>
@@ -499,24 +513,11 @@
                                                        style="margin-left: 1em">
                                                     <tr>
                                                         <td>
-                                                            @php
-                                                                $date = $data['confirmAgency']->created_at;
-                                                                $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')) . '/' . \App\Support\RomanConverter::numberToRoman($date->format('m'));
-                                                                $total = number_format($data['total_payment'],0,"",".");
-                                                                if($data['total_payment'] < 1000000){
-                                                                    $first = substr($total,0,4);
-                                                                } else{
-                                                                    $first = substr($total,0,6);
-                                                                }
-                                                                $last = substr($total, -3);
-                                                            @endphp
                                                             <small>
                                                                 <a href="{{route('invoice.job.posting', ['id' =>
                                                                 encrypt($data['confirmAgency']->id)])}}"
                                                                    style="text-decoration: none;color: #00adb5">
-                                                                    <strong>{{'#INV/'.$data['confirmAgency']->created_at
-                                                                    ->format('Ymd').'/'.$romanDate.'/'.
-                                                                    $data['confirmAgency']->id}}</strong></a>
+                                                                    <strong>{{$invoice}}</strong></a>
                                                             </small>
                                                             <hr class="hr-divider">
                                                             <table>
@@ -569,8 +570,10 @@
                                                         <td>
                                                             <small><strong>Payment Deadline</strong></small>
                                                             <hr class="hr-divider">
-                                                            <span>{{$data['confirmAgency']->created_at->addDay()->format('l,j F Y')}}
-                                                                at {{$data['confirmAgency']->created_at->addDay()->format('H:i')}}</span>
+                                                            <span>{{$data['confirmAgency']->created_at->addDay()
+                                                            ->format('l, j F Y').' at '.
+                                                            $data['confirmAgency']->created_at->addDay()->format('H:i')}}
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -640,7 +643,10 @@
                                         <tr>
                                             <td>
                                                 <div class="alert alert-info text-center">
-                                                    <a href="{{route('agency.vacancy.status')}}" target="_blank"
+                                                    <a href="{{route('agency.vacancy.status',[
+                                                    'id'=>$data['confirmAgency']->id,
+                                                    'image'=>$data['confirmAgency']->payment_proof,
+                                                    'invoice'=>$invoice])}}" target="_blank"
                                                        style="color: #00ADB5;text-decoration: none">
                                                         <strong>Upload Payment Proof</strong></a> to speed up
                                                     verification

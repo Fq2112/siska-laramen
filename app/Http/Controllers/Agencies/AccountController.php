@@ -227,9 +227,12 @@ class AccountController extends Controller
         } else {
             $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
         }
+        $req_id = $request->id;
+        $req_image = $request->image;
+        $req_invoice = $request->invoice;
 
         return view('auth.agencies.dashboard-vacancyStatus', compact('user', 'agency', 'time',
-            'confirmAgency'));
+            'confirmAgency', 'req_id', 'req_image', 'req_invoice'));
     }
 
     public function showVacancy()

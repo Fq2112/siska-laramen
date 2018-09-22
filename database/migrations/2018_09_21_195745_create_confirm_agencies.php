@@ -33,7 +33,7 @@ class CreateConfirmAgencies extends Migration
             $table->text('payment_proof')->nullable();
 
             $table->boolean('isPaid')->default(false);
-            $table->date('date_payment')->nullable();
+            $table->dateTime('date_payment')->nullable();
             $table->integer('admin_id')->unsigned()->nullable();
             $table->foreign('admin_id')->references('id')->on('admins')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');

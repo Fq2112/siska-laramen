@@ -6,6 +6,7 @@
     <link href="{{ asset('css/myPagination.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myCheckbox.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/fileUploader.css') }}" rel="stylesheet">
     <style>
         .well {
             background: #006269;

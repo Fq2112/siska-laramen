@@ -278,6 +278,7 @@ class AgencyController extends Controller
         $invoice = '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
         $confirmAgency->delete();
 
-        return back()->with('delete', 'Invoice ' . $invoice . ' is successfully deleted!');
+        return redirect()->route('agency.vacancy.status')
+            ->with('delete', 'Invoice ' . $invoice . ' is successfully deleted!');
     }
 }
