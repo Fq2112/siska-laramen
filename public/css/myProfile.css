@@ -169,12 +169,8 @@
     width: 70%;
 }
 
-#applyModal .modal-dialog {
+#applyModal .modal-dialog, #inviteModal .modal-dialog {
     width: 60%;
-}
-
-#resumeModal .modal-dialog, #avaModal .modal-dialog, #inviteModal .modal-dialog {
-    width: 45%;
 }
 
 #applyModal a, #resumeModal a, #inviteModal a {

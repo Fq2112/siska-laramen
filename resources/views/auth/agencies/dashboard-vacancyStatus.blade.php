@@ -45,7 +45,6 @@
                                     $pm = \App\PaymentMethod::find($row->payment_method_id);
                                     $pc = \App\PaymentCategory::find($pm->payment_category_id);
                                     $date = \Carbon\Carbon::parse($row->created_at);
-                                    $now = \Carbon\Carbon::now();
                                     $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')) . '/' .
                                     \App\Support\RomanConverter::numberToRoman($date->format('m'));
                                     $invoice = '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $row->id;
@@ -107,7 +106,7 @@
                                                 {{\Carbon\Carbon::parse($row->date_payment)->format('l, j F Y').' at '.
                                                 \Carbon\Carbon::parse($row->date_payment)->format('H:i')}}
                                             </small>
-                                            @if($now < $row->created_at->addDay())
+                                            @if(now() <= $row->created_at->addDay())
                                                 <a href="{{route('delete.job.posting',['id'=>encrypt($row->id)])}}"
                                                    class="delete-jobPosting">
                                                     <div class="anim-icon anim-icon-md apply ld ld-heartbeat"

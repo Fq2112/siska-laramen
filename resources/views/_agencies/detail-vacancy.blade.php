@@ -73,11 +73,21 @@
                                 </li>
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
-                                <li data-placement="left" data-toggle="tooltip" id="bm">
+                                <li data-placement="right" data-toggle="tooltip" id="bm">
                                     <form method="post" action="{{route('bookmark.vacancy')}}" id="form-bookmark">
                                         {{csrf_field()}}
                                         @if($vacancy->isPost == false)
-                                            <small><em>This vacancy is not posted yet&hellip;</em></small>
+                                            <small><em>This vacancy hasn't posted yet&hellip;</em></small>
+                                        @elseif(now() < $vacancy->recruitmentDate_start || is_null($vacancy
+                                        ->recruitmentDate_start))
+                                            <small>
+                                                <em>The recruitment date of this vacancy hasn't started yet&hellip;</em>
+                                            </small>
+                                        @elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
+                                        ->recruitmentDate_end))
+                                            <small>
+                                                <em>The recruitment date of this vacancy has been ended&hellip;</em>
+                                            </small>
                                         @endif
                                         <div class="anim-icon anim-icon-md bookmark ld ld-breath">
                                             <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
@@ -686,13 +696,15 @@
                 });
             });
         }
-
         google.maps.event.addDomListener(window, 'load', init);
 
 
         // apply validation
         var $btnApply = $("#apply button"), $btnBookmark = $("#bm");
         $btnBookmark.attr('title', '{{$vacancy->isPost == true ? 'Bookmark this vacancy' : ''}}');
+        @if(now() < $vacancy->recruitmentDate_start || now() > $vacancy->recruitmentDate_end || is_null($vacancy->recruitmentDate_start) || is_null($vacancy->recruitmentDate_end))
+        $btnApply.prop('disabled', true);
+        @endif
         @auth
         @if(Auth::user()->isSeeker())
         @php

@@ -122,6 +122,13 @@
     </style>
 @endpush
 @section('content')
+    @php
+        $acc = \App\Accepting::whereIn('vacancy_id',$agency->vacancies->pluck('id')->toArray())->where('isApply',true)->count();
+        $rec = \App\Seekers::all()->count();
+        $inv = \App\Invitation::where('agency_id',$agency->id)->count();
+        $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)->count();
+        $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count();
+    @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
             <div class="wrapper_container">
@@ -142,14 +149,24 @@
                                                 </span>
                                             </label>
                                             <ul class="nav nav-list tree bullets">
-                                                <li><a href="#" class="{{ \Illuminate\Support\Facades\Request::is
-                                                ('account/agency/dashboard/application_received') ? 'active' : '' }}">
-                                                        Application Received<span class="badge">0</span></a></li>
+                                                <li><a href="{{route('agency.dashboard')}}"
+                                                       class="{{ \Illuminate\Support\Facades\Request::is
+                                                       ('account/agency/dashboard/application_received') ? 'active' : '' }}">
+                                                        Application Received<span
+                                                                class="badge">{{$acc > 999 ? '999+' : $acc}}</span></a>
+                                                </li>
+                                                <li><a href="{{route('agency.recommended.seeker')}}"
+                                                       class="{{ \Illuminate\Support\Facades\Request::is
+                                                       ('account/agency/dashboard/recommended_seeker') ? 'active' : '' }}">
+                                                        Recommended Seeker<span
+                                                                class="badge">{{$rec > 999 ? '999+' : $rec}}</span></a>
+                                                </li>
                                                 <li><a href="{{route('agency.invited.seeker')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/agency/dashboard/invited_seeker') ? 'active' : '' }}">
-                                                        Invited Seeker<span class="badge">{{\App\Invitation::where
-                                                        ('agency_id',$agency->id)->count()}}</span></a></li>
+                                                        Invited Seeker<span
+                                                                class="badge">{{$inv > 999 ? '999+' : $inv}}</span></a>
+                                                </li>
                                                 <li>
                                                     <label class="tree-toggle nav-header glyphicon-icon-rpad">
                                                         <span class="fa fa-briefcase m5"
@@ -163,13 +180,13 @@
                                                                class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/agency/vacancy/status') ? 'active' : '' }}">
                                                                 Vacancy Status<span class="badge">
-                                                                    {{\App\ConfirmAgency::where('agency_id',$agency->id)
-                                                                    ->where('isPaid',false)->count()}}</span></a></li>
+                                                                    {{$confirm > 999 ? '999+' : $confirm}}</span></a>
+                                                        </li>
                                                         <li><a href="{{route('agency.vacancy.show')}}"
                                                                class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/agency/vacancy') ? 'active' : '' }}">
                                                                 Vacancy Setup<span
-                                                                        class="badge">{{\App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count()}}</span></a>
+                                                                        class="badge">{{$vac > 999 ? '999+' : $vac}}</span></a>
                                                         </li>
                                                     </ul>
                                                 </li>

@@ -53,7 +53,7 @@
                                                 <li><a href="{{route('seeker.dashboard')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/application_status') ? 'active' : '' }}">Application
                                                         Status <span class="badge">
-                                                            {{$totalApp}}</span></a>
+                                                            {{$totalApp > 999 ? '999+' : $totalApp }}</span></a>
                                                 </li>
                                                 <li><a href="{{route('seeker.invitation.interview')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/interview') ? 'active' : '' }}">Interview
@@ -66,13 +66,14 @@
                                                 </li>
                                                 <li><a href="{{route('seeker.invitation.toApply')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/to_apply') ? 'active' : '' }}">Invitation
-                                                        to Apply<span class="badge"
-                                                                      style="background: #FA5555;">{{($totalInvToApply)}}</span></a>
+                                                        to Apply<span class="badge" style="background: #FA5555;">
+                                                            {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}
+                                                        </span></a>
                                                 </li>
                                                 <li><a href="{{route('seeker.bookmarked.vacancy')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/bookmarked_vacancy') ? 'active' : '' }}">Bookmarked
                                                         Vacancy<span class="badge">
-                                                            {{($totalBook)}}</span></a></li>
+                                                            {{$totalBook > 999 ? '999+' : $totalBook}}</span></a></li>
                                             </ul>
                                         </li>
                                         <li class="divider"></li>
