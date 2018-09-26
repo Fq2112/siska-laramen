@@ -179,19 +179,19 @@
                                             <hr>
                                             <table class="stats">
                                                 <tr>
-                                                    <td><i class="fa fa-calendar"></i></td>
-                                                    <td>&nbsp;Posted On</td>
-                                                    <td>
-                                                        : {{$vacancy->isPost == true ? $vacancy->created_at
-                                                        ->format('j F Y') : '-'}}
-                                                    </td>
+                                                    <td><i class="fa fa-comments"></i></td>
+                                                    <td>&nbsp;Interview Date</td>
+                                                    <td>: {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
+                                                    ($vacancy->interview_date)->format('l, j F Y') : '-'}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="fa fa-clock"></i></td>
-                                                    <td>&nbsp;Last Update</td>
-                                                    <td>
-                                                        : {{$vacancy->updated_at->diffForHumans()}}
-                                                    </td>
+                                                    <td><i class="fa fa-users"></i></td>
+                                                    <td>&nbsp;Recruitment Date</td>
+                                                    <td style="text-transform: none">: {{$vacancy->recruitmentDate_start &&
+                                                    $vacancy->recruitmentDate_end != "" ? \Carbon\Carbon::parse
+                                                    ($vacancy->recruitmentDate_start)->format('d-m-Y')." to ".
+                                                    \Carbon\Carbon::parse($vacancy->recruitmentDate_end)
+                                                    ->format('d-m-Y') : '-'}}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -262,7 +262,7 @@
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
                                             @foreach(\App\Vacancies::where('agency_id',$vacancy->agency_id)
-                                            ->orderBy('updated_at','desc')->get() as $row)
+                                            ->where('isPost',true)->orderByDesc('id')->get() as $row)
                                                 <div class="row">
                                                     <div class="col-lg-12">
                                                         <div class="media">
@@ -279,9 +279,8 @@
                                                                 <small class="media-heading">
                                                                     <a href="{{route('detail.vacancy',['id'=>$row->id])}}">
                                                                         {{$row->judul}}</a>
-                                                                    <span class="pull-right" style="color: #FA5555">
-                                                                        {{$row->isPost == true ? $row->created_at
-                                                                        ->format('j F Y') : 'NOT POSTED YET'}}</span>
+                                                                    <sub style="color: #fa5555;text-transform: none">&ndash; {{$row->updated_at
+                                                                            ->diffForHumans()}}</sub>
                                                                 </small>
                                                                 <blockquote style="font-size: 12px;color: #7f7f7f">
                                                                     <ul class="list-inline">
@@ -331,6 +330,33 @@
                                                                             </a>
                                                                         </li>
                                                                     </ul>
+                                                                    <table style="font-size: 12px;margin-top: -.5em">
+                                                                        <tr>
+                                                                            <td><i class="fa fa-comments"></i>
+                                                                            </td>
+                                                                            <td>&nbsp;Interview Date</td>
+                                                                            <td>:
+                                                                                {{$row->interview_date != "" ?
+                                                                                \Carbon\Carbon::parse
+                                                                                ($row->interview_date)
+                                                                                ->format('l, j F Y') : '-'}}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><i class="fa fa-users"></i></td>
+                                                                            <td>&nbsp;Recruitment Date</td>
+                                                                            <td>:
+                                                                                {{$row->recruitmentDate_start &&
+                                                                                $row->recruitmentDate_end != "" ?
+                                                                                \Carbon\Carbon::parse
+                                                                                ($row->recruitmentDate_start)
+                                                                                ->format('j F Y')." - ".
+                                                                                \Carbon\Carbon::parse
+                                                                                ($row->recruitmentDate_end)
+                                                                                ->format('j F Y') : '-'}}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
                                                                 </blockquote>
                                                             </div>
                                                         </div>
@@ -383,11 +409,10 @@
                                             </div>
                                             <div class="media-body">
                                                 <small class="media-heading" style="font-size: 17px;">
-                                                    <a href="{{route('detail.vacancy',['id'=>$row->id])}}"
+                                                    <a href="{{route('detail.vacancy',['id'=>$vacancy->id])}}"
                                                        style="color: #00ADB5">
-                                                        {{$row->judul}}</a>
-                                                    <span class="pull-right" style="color: #FA5555">
-                                                                        {{$row->created_at->format('j F Y')}}</span>
+                                                        {{$vacancy->judul}}</a>
+                                                    <sub style="color: #fa5555;text-transform: none">&ndash; {{$vacancy->updated_at->diffForHumans()}}</sub>
                                                 </small>
                                                 <blockquote style="font-size: 16px;color: #7f7f7f">
                                                     <ul class="list-inline">
@@ -437,6 +462,28 @@
                                                             </a>
                                                         </li>
                                                     </ul>
+                                                    <table style="font-size: 12px;margin-top: -.5em">
+                                                        <tr>
+                                                            <td><i class="fa fa-comments"></i>
+                                                            </td>
+                                                            <td>&nbsp;Interview Date</td>
+                                                            <td>:
+                                                                {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
+                                                                ($vacancy->interview_date)->format('l, j F Y') : '-'}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="fa fa-users"></i></td>
+                                                            <td>&nbsp;Recruitment Date</td>
+                                                            <td>:
+                                                                {{$vacancy->recruitmentDate_start &&
+                                                                $vacancy->recruitmentDate_end != "" ?
+                                                                \Carbon\Carbon::parse($vacancy->recruitmentDate_start)
+                                                                ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                                ($vacancy->recruitmentDate_end)->format('j F Y') : '-'}}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </blockquote>
                                             </div>
                                         </div>

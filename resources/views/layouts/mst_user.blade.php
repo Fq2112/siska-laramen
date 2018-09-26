@@ -55,6 +55,7 @@
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/myBtn-myInput.css')}}">
     <link rel="stylesheet" href="{{asset('css/additional.css')}}">
+    <link rel="stylesheet" href="{{asset('css/stickyAlert.css')}}">
     <link rel="stylesheet" href="{{asset('css/card.css')}}">
     <link rel="stylesheet" href="{{ asset('css/downloadCard-gridList.css') }}">
     <link rel="stylesheet" href="{{asset('css/carousel.css')}}">
@@ -732,6 +733,7 @@
 @include('layouts.partials._scripts')
 @include('layouts.partials._alert')
 @include('layouts.partials._confirm')
+@include('layouts.partials.auth.notif_alert')
 @stack('scripts')
 </body>
 </html>

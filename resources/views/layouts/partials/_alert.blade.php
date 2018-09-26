@@ -65,14 +65,14 @@
     });
     @elseif(session('update'))
     swal({
-        title: 'Profile Settings',
+        title: 'Success!',
         text: '{{ session('update') }}',
         type: 'success',
         timer: '3500'
     });
     @elseif(session('delete'))
     swal({
-        title: 'Profile Settings',
+        title: 'Success!',
         text: '{{ session('delete') }}',
         type: 'success',
         timer: '3500'

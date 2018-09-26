@@ -164,11 +164,13 @@
                                                        ('account/agency/vacancy/status') ? 'active' : '' }}">
                                                                 Vacancy Status<span class="badge">
                                                                     {{\App\ConfirmAgency::where('agency_id',$agency->id)
-                                                                    ->count()}}</span></a></li>
+                                                                    ->where('isPaid',false)->count()}}</span></a></li>
                                                         <li><a href="{{route('agency.vacancy.show')}}"
                                                                class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/agency/vacancy') ? 'active' : '' }}">
-                                                                Vacancy Setup</a></li>
+                                                                Vacancy Setup<span
+                                                                        class="badge">{{\App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count()}}</span></a>
+                                                        </li>
                                                     </ul>
                                                 </li>
                                             </ul>

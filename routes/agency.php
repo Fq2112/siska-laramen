@@ -138,7 +138,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
 
     Route::group(['prefix' => 'dashboard'], function () {
 
-        Route::get('application_review', [
+        Route::get('application_received', [
             'uses' => 'AccountController@showDashboard',
             'as' => 'agency.dashboard'
         ]);

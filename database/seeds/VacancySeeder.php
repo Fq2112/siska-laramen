@@ -41,7 +41,8 @@ class VacancySeeder extends Seeder
                 'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
                 'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
                 'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                'isPost' => true
+                'isPost' => true,
+                'active_period' => now()->addDays(30)
             ]);
         }
     }

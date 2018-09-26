@@ -239,7 +239,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-        $vacancies = Vacancies::where('agency_id', $agency->id)->orderByDesc('id')->get();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->orderByDesc('isPost')->orderByDesc('id')->get();
 
         $provinces = Provinces::all();
         $job_functions = FungsiKerja::all();
@@ -271,8 +271,6 @@ class AccountController extends Controller
             'tingkatpend_id' => $request->tingkatpend_id,
             'jurusanpend_id' => $request->jurusanpend_id,
             'fungsikerja_id' => $request->fungsikerja_id,
-            'interview' => $request->interview,
-            'aktif_sampai' => Carbon::parse($request->created_at)->addDays(+30),
         ]);
 
         return back()->with('add', 'Successfully added a vacancy (' . $request->judul . ')!');
@@ -280,7 +278,7 @@ class AccountController extends Controller
 
     public function editVacancy($id)
     {
-        $findVacancy = Vacancies::find(decrypt($id));
+        $findVacancy = Vacancies::find($id);
         return $findVacancy;
     }
 
@@ -289,27 +287,33 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
-        $findVacancy = Vacancies::find(decrypt($id));
+        $findVacancy = Vacancies::find($id);
+        if ($request->check_form == 'vacancy') {
+            $findVacancy->update([
+                'judul' => $request->judul,
+                'cities_id' => $request->cities_id,
+                'syarat' => $request->syarat,
+                'tanggungjawab' => $request->tanggungjawab,
+                'pengalaman' => 'At least ' . $request->pengalaman . ' years',
+                'jobtype_id' => $request->jobtype_id,
+                'industry_id' => $request->industri_id,
+                'joblevel_id' => $request->joblevel_id,
+                'salary_id' => $request->salary_id,
+                'agency_id' => $agency->id,
+                'tingkatpend_id' => $request->tingkatpend_id,
+                'jurusanpend_id' => $request->jurusanpend_id,
+                'fungsikerja_id' => $request->fungsikerja_id,
+            ]);
 
-        $findVacancy->update([
-            'judul' => $request->judul,
-            'cities_id' => $request->cities_id,
-            'syarat' => $request->syarat,
-            'tanggungjawab' => $request->tanggungjawab,
-            'pengalaman' => 'At least ' . $request->pengalaman . ' years',
-            'jobtype_id' => $request->jobtype_id,
-            'industry_id' => $request->industri_id,
-            'joblevel_id' => $request->joblevel_id,
-            'salary_id' => $request->salary_id,
-            'agency_id' => $agency->id,
-            'tingkatpend_id' => $request->tingkatpend_id,
-            'jurusanpend_id' => $request->jurusanpend_id,
-            'fungsikerja_id' => $request->fungsikerja_id,
-            'interview' => $request->interview,
-            'aktif_sampai' => Carbon::parse($request->created_at)->addDays(+30),
-        ]);
+        } elseif ($request->check_form == 'schedule') {
+            $findVacancy->update([
+                'interview_date' => $request->interview_date,
+                'recruitmentDate_start' => $request->recruitmentDate_start,
+                'recruitmentDate_end' => $request->recruitmentDate_end,
+            ]);
+        }
 
-        return back()->with('update', '' . $request->judul . ' is successfully updated!');
+        return back()->with('update', '' . $findVacancy->judul . ' is successfully updated!');
     }
 
     public function deleteVacancy($id, $judul)

@@ -344,7 +344,7 @@
     text-decoration: none;
 }
 
-#compareModal .modal-dialog, #applyInvModal .modal-dialog, #uploadModal .modal-dialog {
+#compareModal .modal-dialog, #applyInvModal .modal-dialog, #uploadModal .modal-dialog, #formModal .modal-dialog {
     width: 60%;
 }
 
@@ -352,11 +352,11 @@
     text-decoration: none;
 }
 
-#applyInvModal .modal-footer .card-read-more {
+#applyInvModal .modal-footer .card-read-more, #formModal .modal-footer .card-read-more {
     margin: -1em;
 }
 
-#applyInvModal .modal-footer .card-read-more button:hover {
+#applyInvModal .modal-footer .card-read-more button:hover, #formModal .modal-footer .card-read-more button:hover {
     color: #fff;
     border-radius: 0 0 4px 4px;
 }
