@@ -249,7 +249,6 @@
             } else {
                 $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended vacancies matched ' + title);
             }
-            $("#total_rec").text(data.total);
             $.each(data.data, function (i, val) {
                 $('[data-toggle="tooltip"]').tooltip();
 
