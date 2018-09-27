@@ -73,28 +73,37 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
         $vacancies = Vacancies::where('agency_id', $agency->id)->get();
-        $degrees = Tingkatpend::all();
-        $majors = Jurusanpend::all();
 
         $keyword = $request->q;
-        $total_exp = $request->total_exp;
-        $degree = $request->degree;
-        $major = $request->major;
         $page = $request->page;
 
         return view('auth.agencies.dashboard-recommendedSeeker', compact('user', 'agency', 'vacancies',
-            'degrees', 'majors', 'keyword', 'total_exp', 'degree', 'major', 'page'));
+            'keyword', 'page'));
     }
 
     public function getRecommendedSeeker(Request $request)
     {
-        $keyword = $request->q;
-        $total_exp = $request->total_exp;
-        $degree = $request->degree;
-        $major = $request->major;
+        $user = Auth::user();
+        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)->get();
 
-        $result = User::where('name', 'like', '%' . $keyword . '%')->where('role', 'seeker')->paginate(5)
-            ->appends($request->only('q'))->toArray();
+        foreach ($vacancies as $vacancy) {
+            $reqExp[] = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
+            $reqEdu[] = $vacancy->tingkatpend_id;
+        }
+
+        $keyword = $request->q;
+        $result = Seekers::whereHas('user', function ($query) use ($keyword) {
+            $query->where('name', 'like', '%' . $keyword . '%');
+        })->whereHas('educations', function ($query) use ($reqEdu) {
+            foreach ($reqEdu as $edu) {
+                $query->orWhere('tingkatpend_id', '>=', $edu);
+            }
+        })->where(function ($query) use ($reqExp) {
+            foreach ($reqExp as $exp) {
+                $query->orWhere('total_exp', '>=', $exp);
+            }
+        })->paginate(6)->appends($request->only('q'))->toArray();
 
         $result = $this->array_seekers($result);
         return $result;
@@ -104,29 +113,28 @@ class AccountController extends Controller
     {
         $i = 0;
         foreach ($result['data'] as $row) {
-            if ($row['ava'] == "seeker.png" || $row['ava'] == "") {
+            $userSeeker = User::find($row['user_id']);
+            if ($userSeeker->ava == "seeker.png" || $userSeeker->ava == "") {
                 $filename = asset('images/seeker.png');
             } else {
-                $filename = asset('storage/users/' . $row['ava']);
+                $filename = asset('storage/users/' . $userSeeker->ava);
             }
-            $seeker = Seekers::where('user_id', $row['id'])->firstOrFail();
-            $job_title = Experience::where('seeker_id', $seeker->id)->where('end_date', null)
+            $job_title = Experience::where('seeker_id', $row['id'])->where('end_date', null)
                 ->orderby('id', 'desc')->take(1);
-            $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
+            $last_edu = Education::where('seeker_id', $row['id'])->wherenotnull('end_period')
                 ->orderby('tingkatpend_id', 'desc')->take(1);
-
-            $ava['seeker'] = array('ava' => $filename, 'name' => $row['name'], 'email' => $row['email'],
-                'id' => $seeker->id, 'low' => $seeker->lowest_salary / 1000000, 'high' => $seeker->highest_salary / 1000000);
+            $ava['seeker'] = array('ava' => $filename, 'name' => $userSeeker->name, 'email' => $userSeeker->email,
+                'id' => $row['id'], 'low' => $row['lowest_salary'] / 1000000, 'high' => $row['highest_salary'] / 1000000);
             $exp = array('jobTitle' => $job_title->count() ? 'Current Title: ' . $job_title->first()->job_title :
                 'Current Status: Looking for a Job');
-            $totalExp = array('total_exp' => is_null($seeker->total_exp) ? 0 : $seeker->total_exp);
+            $totalExp = array('total_exp' => is_null($row['total_exp']) ? 0 : $row['total_exp']);
             $edu['edu'] = array(
                 'last_deg' => $last_edu->count() ? Tingkatpend::find($last_edu->first()->tingkatpend_id)->name : '-',
                 'last_maj' => $last_edu->count() ? Jurusanpend::find($last_edu->first()->jurusanpend_id)->name : '-'
             );
-            $created_at = array('created_at' => Carbon::parse($seeker->created_at)->format('j F Y'));
-            $update_at = array('updated_at' => $seeker->updated_at->diffForHumans());
-            $inv = array('inv' => Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->first());
+            $created_at = array('created_at' => Carbon::parse($row['created_at'])->format('j F Y'));
+            $update_at = array('updated_at' => Carbon::parse($row['updated_at'])->diffForHumans());
+            $inv = array('inv' => Invitation::where('seeker_id', $row['id'])->where('isInvite', true)->first());
 
             $result['data'][$i] = array_replace($ava, $result['data'][$i], $exp, $totalExp, $edu, $created_at, $update_at, $inv);
             $i = $i + 1;

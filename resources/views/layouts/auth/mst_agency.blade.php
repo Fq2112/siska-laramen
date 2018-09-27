@@ -124,10 +124,24 @@
 @section('content')
     @php
         $acc = \App\Accepting::whereIn('vacancy_id',$agency->vacancies->pluck('id')->toArray())->where('isApply',true)->count();
-        $rec = \App\Seekers::all()->count();
         $inv = \App\Invitation::where('agency_id',$agency->id)->count();
         $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)->count();
-        $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count();
+        $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')
+        ->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count();
+
+        foreach (\App\Vacancies::where('agency_id', $agency->id)->where('isPost',true)->get() as $vacancy){
+            $reqExp[] = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
+            $reqEdu[] = $vacancy->tingkatpend_id;
+        }
+        $rec = \App\Seekers::whereHas('educations',function ($query) use ($reqEdu){
+            foreach ($reqEdu as $edu){
+                $query->orWhere('tingkatpend_id','>=',$edu);
+            }
+        })->where(function ($query) use ($reqExp){
+            foreach($reqExp as $exp){
+                $query->orWhere('total_exp','>=',$exp);
+            }
+        })->count();
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
@@ -158,8 +172,8 @@
                                                 <li><a href="{{route('agency.recommended.seeker')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/agency/dashboard/recommended_seeker') ? 'active' : '' }}">
-                                                        Recommended Seeker<span
-                                                                class="badge">{{$rec > 999 ? '999+' : $rec}}</span></a>
+                                                        Recommended Seeker<span class="badge">
+                                                            {{$rec > 999 ? '999+' : $rec}}</span></a>
                                                 </li>
                                                 <li><a href="{{route('agency.invited.seeker')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is

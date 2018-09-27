@@ -1,6 +1,7 @@
 @section('title', ''.$user->name.'\'s Dashboard &ndash; Recommended Seeker | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_agency')
 @push('styles')
+
     <style>
         .card-read-more button {
             color: #00ADB5;
@@ -19,7 +20,9 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <h4 style="margin-bottom: 10px">Recommended Seeker</h4>
-                            <small>Here is our recommended seekers.</small>
+                            <small>Here is our recommended seekers based on your vacancy's requirements of work
+                                experience and education degree requirement.
+                            </small>
                             <hr>
                         </div>
                     </div>
@@ -34,7 +37,8 @@
                                                placeholder="Search by Seeker's Name&hellip;"
                                                value="{{!empty($keyword) ? $keyword : ''}}">
                                         <span class="input-group-btn">
-                                            <button type="reset" class="btn btn-info btn-lg" id="btn_reset">
+                                            <button type="reset" class="btn btn-info btn-lg"
+                                                    id="btn_reset" onclick="resetFilter()">
                                                 <span class="glyphicon glyphicon-remove">
                                                     <span class="sr-only">Close</span>
                                                 </span>
@@ -108,10 +112,11 @@
             event.preventDefault();
             loadSeeker();
         });
-        $("#btn_reset").on("click", function () {
-            $("#txt_keyword").val('');
-            $("#cari").trigger("click");
-        });
+
+        function resetFilter() {
+            $("#txt_keyword").removeAttr('value');
+            setTimeout(loadSeeker, 100);
+        }
 
         function loadSeeker() {
             var keyword = $("#txt_keyword").val();
@@ -208,26 +213,37 @@
         });
 
         function successLoad(data, keyword, page) {
-            var title, $result = '', pagination = '', $page = '', $class, $style, $attr;
+            var title, $result = '', pagination = '', $page = '', $class, $style, $attr, $label, $salary;
 
             title = 'for <strong>"' + keyword + '"</strong>';
-            if ($.trim(data.total)) {
-                total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
-                    '<strong>' + data.total + '</strong>)';
+            if (data.total != 0) {
+                if ($.trim(data.total)) {
+                    total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
+                        '<strong>' + data.total + '</strong>)';
+                } else {
+                    total = '';
+                }
+                $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended seekers matched ' + title + total);
             } else {
-                total = '';
+                $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended seekers matched ' + title);
             }
-            $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended seekers matched ' + title + total);
 
             $.each(data.data, function (i, val) {
                 if (val.inv == null) {
                     $class = ' ld ld-breath';
                     $style = '#00adb5';
                     $attr = '';
+                    $label = 'INVITE'
                 } else {
                     $class = '';
                     $style = '#393e46';
                     $attr = 'disabled';
+                    $label = 'INVITED'
+                }
+                if (val.seeker.low == 0 || val.seeker.high == 0) {
+                    $salary = 'Anything';
+                } else {
+                    $salary = 'IDR ' + val.seeker.low + ' to ' + val.seeker.high + ' millions';
                 }
                 $result +=
                     '<div class="media">' +
@@ -245,14 +261,14 @@
                     '<button class="btn btn-danger btn-block' + $class + '"' +
                     'onclick="inviteSeeker(' + val.seeker.id + ')" ' +
                     'style="border: none;background: ' + $style + '"' + $attr + '>' +
-                    '<i class="fa fa-envelope"></i>&ensp;INVITE</button></div>' +
+                    '<i class="fa fa-envelope"></i>&ensp;' + $label + '</button></div>' +
                     '<ul class="list-inline">' +
                     '<li><a class="tag"><i class="fa fa-user-tie"></i>' +
                     '&ensp;' + val.jobTitle + '</a></li>' +
                     '<li><a class="tag"><i class="fa fa-briefcase"></i>' +
                     '&ensp;Work Experience: ' + val.total_exp + ' years</a></li>' +
                     '<li><a class="tag"><i class="fa fa-hand-holding-usd"></i>&ensp;' +
-                    'Expected Salary: IDR ' + val.seeker.low + ' to ' + val.seeker.high + ' millions</a></li>' +
+                    'Expected Salary: ' + $salary + '</a></li>' +
                     '<li><a class="tag"><i class="fa fa-graduation-cap"></i>&ensp;' +
                     'Latest Degree: ' + val.edu.last_deg + '</a></li>' +
                     '<li><a class="tag"><i class="fa fa-user-graduate"></i>&ensp;' +

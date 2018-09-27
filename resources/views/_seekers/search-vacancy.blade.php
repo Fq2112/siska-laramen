@@ -543,8 +543,7 @@
         });
 
         function successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors, page) {
-
-            // title search result
+            var title;
             if ((keyword != "") && (location != "")) {
                 title = 'for <strong>"' + keyword + '"</strong> in <strong>"' + location + '"</strong>'
             } else if (location == "") {
@@ -552,13 +551,17 @@
             } else {
                 title = 'in <strong>"' + location + '"</strong>'
             }
-            if ($.trim(data.total)) {
-                total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
-                    '<strong>' + data.total + '</strong>)';
+            if (data.total != 0) {
+                if ($.trim(data.total)) {
+                    total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
+                        '<strong>' + data.total + '</strong>)';
+                } else {
+                    total = '';
+                }
+                $('#show-result').html('Showing <strong>' + data.total + '</strong> opportunities matched ' + title + total);
             } else {
-                total = '';
+                $('#show-result').html('Showing <strong>' + data.total + '</strong> opportunities matched ' + title);
             }
-            $('#show-result').html('Showing <strong>' + data.total + '</strong> opportunities matched ' + title + total);
 
             // sort
             var sort_opt1 = $("#filter-bar .option-1"), sort_opt2 = $("#filter-bar .option-2"),

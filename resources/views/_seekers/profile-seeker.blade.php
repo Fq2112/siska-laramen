@@ -69,7 +69,7 @@
                                                     " to " + high + " millions";
                                             </script>
                                         @else
-                                            &nbsp;Anything
+                                            <i class='fa fa-hand-holding-usd'></i> &nbsp;Anything
                                         @endif
                                     </a></li>
                                 <li data-placement="bottom" data-toggle="tooltip" title="Latest Degree">
