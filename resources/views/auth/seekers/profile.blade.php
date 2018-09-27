@@ -587,7 +587,7 @@
                                                         @if($seeker->birthday != "")
                                                             {{$seeker->birthday}}
                                                         @else
-                                                            -
+                                                            Birthday (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -598,7 +598,7 @@
                                                         @if($seeker->gender != "")
                                                             {{$seeker->gender}}
                                                         @else
-                                                            -
+                                                            Gender (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -609,7 +609,7 @@
                                                         @if($seeker->relationship != "")
                                                             {{$seeker->relationship}}
                                                         @else
-                                                            -
+                                                            Relationship Status (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -620,7 +620,7 @@
                                                         @if($seeker->nationality != "")
                                                             {{$seeker->nationality}}
                                                         @else
-                                                            -
+                                                            Nationality (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -631,7 +631,7 @@
                                                         @if($seeker->website != "")
                                                             {{$seeker->website}}
                                                         @else
-                                                            -
+                                                            Personal Website (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -647,7 +647,7 @@
                                                                 document.getElementById("expected_salary2").innerText = "IDR " + low + " to " + high + " millions";
                                                             </script>
                                                         @else
-                                                            Anything
+                                                            Expected Salary (anything)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -861,7 +861,7 @@
                                                         @if($seeker->phone != "")
                                                             {{$seeker->phone}}
                                                         @else
-                                                            -
+                                                            Phone number (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -872,7 +872,7 @@
                                                         @if($seeker->address != "")
                                                             {{$seeker->address}}
                                                         @else
-                                                            -
+                                                            Address (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -883,7 +883,7 @@
                                                         @if($seeker->zip_code != "")
                                                             {{$seeker->zip_code}}
                                                         @else
-                                                            -
+                                                            ZIP/Post Code (-)
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -904,9 +904,9 @@
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-phone"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-phone"></i>
+                                                            </span>
                                                             <input placeholder="08123xxxxxxx"
                                                                    type="text" maxlength="13"
                                                                    class="form-control" name="phone"

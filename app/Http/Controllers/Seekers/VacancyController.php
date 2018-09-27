@@ -68,7 +68,7 @@ class VacancyController extends Controller
         $degrees = Tingkatpend::find($vacancy->tingkatpend_id);
         $majors = Jurusanpend::find($vacancy->jurusanpend_id);
 
-        return view('_seekers.detail-vacancy', compact('provinces', 'vacancy', 'carousels', 'agency', 'user',
+        return view('_agencies.detail-vacancy', compact('provinces', 'vacancy', 'carousels', 'agency', 'user',
             'city', 'salary', 'jobfunc', 'joblevel', 'industry', 'degrees', 'majors'));
     }
 

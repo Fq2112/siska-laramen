@@ -54,7 +54,8 @@ class AgencyController extends Controller
         $agency = Agencies::find($id);
         $user = User::find($agency->user_id);
         $industry = Industri::find($agency->industri_id);
-        $vacancies = Vacancies::where('agency_id', $agency->id)->orderBy('updated_at', 'desc')->get();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)
+            ->orderBy('updated_at', 'desc')->get();
         $likes = FavoriteAgency::where('agency_id', $agency->id)->where('isFavorite', true)->count();
 
         return view('_agencies.profile-agency', compact('provinces', 'agency', 'user', 'industry',
@@ -278,6 +279,7 @@ class AgencyController extends Controller
         $invoice = '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
         $confirmAgency->delete();
 
-        return back()->with('delete', 'Invoice ' . $invoice . ' is successfully deleted!');
+        return redirect()->route('agency.vacancy.status')
+            ->with('delete', 'Invoice ' . $invoice . ' is successfully deleted!');
     }
 }

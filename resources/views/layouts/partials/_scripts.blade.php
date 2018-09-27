@@ -1,6 +1,5 @@
 <script>
     $(document).ready(function () {
-
         $('.carousel-indicators:nth-child(1)').addClass('active');
         $('.item:nth-child(1)').addClass('active');
 
@@ -33,6 +32,12 @@
 
         $('.tree-toggle').click(function () {
             $(this).parent().children('ul.tree').toggle(200);
+        });
+
+        $('.alert-banner-close').on('click', function () {
+            $('.alert-banner').fadeOut("slow", function () {
+                $(this).remove();
+            });
         });
 
         var editor_config = {
@@ -70,7 +75,6 @@
                 });
             }
         };
-
         tinymce.init(editor_config);
 
         @if(session('success')||session('error')||session('logout')||session('expire'))

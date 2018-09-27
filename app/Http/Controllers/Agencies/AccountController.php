@@ -2,16 +2,22 @@
 
 namespace App\Http\Controllers\Agencies;
 
+use App\Accepting;
 use App\Agencies;
 use App\ConfirmAgency;
+use App\Education;
+use App\Experience;
 use App\FungsiKerja;
 use App\Gallery;
 use App\Industri;
 use App\Invitation;
 use App\JobLevel;
 use App\JobType;
+use App\Jurusanpend;
 use App\Provinces;
 use App\Salaries;
+use App\Seekers;
+use App\Tingkatpend;
 use App\User;
 use App\Vacancies;
 use Carbon\Carbon;
@@ -30,7 +36,132 @@ class AccountController extends Controller
 
     public function showDashboard(Request $request)
     {
-        return 'agency dashboard here';
+        $user = Auth::user();
+        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+        $vac_ids = $agency->vacancies->pluck('id')->toArray();
+
+        $time = $request->time;
+        if ($request->has('time')) {
+            if ($time == 2) {
+                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
+                    ->where('isApply', true)->whereDate('created_at', Carbon::today())
+                    ->orderByDesc('id')->paginate(5);
+            } elseif ($time == 3) {
+                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
+                    ->where('isApply', true)
+                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
+                    ->orderByDesc('id')->paginate(5);
+            } elseif ($time == 4) {
+                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
+                    ->where('isApply', true)
+                    ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
+                    ->orderByDesc('id')->paginate(5);
+            } else {
+                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
+                    ->where('isApply', true)->orderByDesc('id')->paginate(5);
+            }
+        } else {
+            $acc = Accepting::whereIn('vacancy_id', $vac_ids)
+                ->where('isApply', true)->orderByDesc('id')->paginate(5);
+        }
+
+        return view('auth.agencies.dashboard', compact('user', 'agency', 'acc', 'time'));
+    }
+
+    public function recommendedSeeker(Request $request)
+    {
+        $user = Auth::user();
+        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->get();
+        $degrees = Tingkatpend::all();
+        $majors = Jurusanpend::all();
+
+        $keyword = $request->q;
+        $total_exp = $request->total_exp;
+        $degree = $request->degree;
+        $major = $request->major;
+        $page = $request->page;
+
+        return view('auth.agencies.dashboard-recommendedSeeker', compact('user', 'agency', 'vacancies',
+            'degrees', 'majors', 'keyword', 'total_exp', 'degree', 'major', 'page'));
+    }
+
+    public function getRecommendedSeeker(Request $request)
+    {
+        $keyword = $request->q;
+        $total_exp = $request->total_exp;
+        $degree = $request->degree;
+        $major = $request->major;
+
+        $result = User::where('name', 'like', '%' . $keyword . '%')->where('role', 'seeker')->paginate(5)
+            ->appends($request->only('q'))->toArray();
+
+        $result = $this->array_seekers($result);
+        return $result;
+    }
+
+    private function array_seekers($result)
+    {
+        $i = 0;
+        foreach ($result['data'] as $row) {
+            if ($row['ava'] == "seeker.png" || $row['ava'] == "") {
+                $filename = asset('images/seeker.png');
+            } else {
+                $filename = asset('storage/users/' . $row['ava']);
+            }
+            $seeker = Seekers::where('user_id', $row['id'])->firstOrFail();
+            $job_title = Experience::where('seeker_id', $seeker->id)->where('end_date', null)
+                ->orderby('id', 'desc')->take(1);
+            $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
+                ->orderby('tingkatpend_id', 'desc')->take(1);
+
+            $ava['seeker'] = array('ava' => $filename, 'name' => $row['name'], 'email' => $row['email'],
+                'id' => $seeker->id, 'low' => $seeker->lowest_salary / 1000000, 'high' => $seeker->highest_salary / 1000000);
+            $exp = array('jobTitle' => $job_title->count() ? 'Current Title: ' . $job_title->first()->job_title :
+                'Current Status: Looking for a Job');
+            $totalExp = array('total_exp' => is_null($seeker->total_exp) ? 0 : $seeker->total_exp);
+            $edu['edu'] = array(
+                'last_deg' => $last_edu->count() ? Tingkatpend::find($last_edu->first()->tingkatpend_id)->name : '-',
+                'last_maj' => $last_edu->count() ? Jurusanpend::find($last_edu->first()->jurusanpend_id)->name : '-'
+            );
+            $created_at = array('created_at' => Carbon::parse($seeker->created_at)->format('j F Y'));
+            $update_at = array('updated_at' => $seeker->updated_at->diffForHumans());
+            $inv = array('inv' => Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->first());
+
+            $result['data'][$i] = array_replace($ava, $result['data'][$i], $exp, $totalExp, $edu, $created_at, $update_at, $inv);
+            $i = $i + 1;
+        }
+
+        return $result;
+    }
+
+    public function detailRecommendedSeeker($id)
+    {
+        $seeker = Seekers::find($id);
+        $userSeeker = User::find($seeker->user_id);
+        if ($userSeeker->ava == "seeker.png" || $userSeeker->ava == "") {
+            $filename = asset('images/seeker.png');
+        } else {
+            $filename = asset('storage/users/' . $userSeeker->ava);
+        }
+        $job_title = Experience::where('seeker_id', $id)->where('end_date', null)
+            ->orderby('id', 'desc')->take(1);
+        $last_edu = Education::where('seeker_id', $id)->wherenotnull('end_period')
+            ->orderby('tingkatpend_id', 'desc')->take(1);
+
+        $ava['user'] = array('ava' => $filename, 'name' => $userSeeker->name, 'email' => $userSeeker->email);
+        $exp = array('jobTitle' => $job_title->count() ? 'Current Title: ' . $job_title->first()->job_title :
+            'Current Status: Looking for a Job');
+        $totalExp = array('total_exp' => is_null($seeker->total_exp) ? 0 : $seeker->total_exp);
+        $edu['edu'] = array(
+            'last_deg' => $last_edu->count() ? Tingkatpend::find($last_edu->first()->tingkatpend_id)->name : '-',
+            'last_maj' => $last_edu->count() ? Jurusanpend::find($last_edu->first()->jurusanpend_id)->name : '-'
+        );
+        $created_at = array('created_at' => Carbon::parse($userSeeker->created_at)->format('j F Y'));
+        $update_at = array('updated_at' => $userSeeker->updated_at->diffForHumans());
+        $result = array_replace($ava, $seeker->toArray(), $exp, $totalExp, $edu, $created_at, $update_at);
+
+        return $result;
     }
 
     public function invitedSeeker(Request $request)
@@ -227,16 +358,19 @@ class AccountController extends Controller
         } else {
             $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
         }
+        $req_id = $request->id;
+        $req_image = $request->image;
+        $req_invoice = $request->invoice;
 
         return view('auth.agencies.dashboard-vacancyStatus', compact('user', 'agency', 'time',
-            'confirmAgency'));
+            'confirmAgency', 'req_id', 'req_image', 'req_invoice'));
     }
 
     public function showVacancy()
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-        $vacancies = Vacancies::where('agency_id', $agency->id)->orderByDesc('id')->get();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->orderByDesc('isPost')->orderByDesc('id')->get();
 
         $provinces = Provinces::all();
         $job_functions = FungsiKerja::all();
@@ -268,8 +402,6 @@ class AccountController extends Controller
             'tingkatpend_id' => $request->tingkatpend_id,
             'jurusanpend_id' => $request->jurusanpend_id,
             'fungsikerja_id' => $request->fungsikerja_id,
-            'interview' => $request->interview,
-            'aktif_sampai' => Carbon::parse($request->created_at)->addDays(+30),
         ]);
 
         return back()->with('add', 'Successfully added a vacancy (' . $request->judul . ')!');
@@ -277,7 +409,7 @@ class AccountController extends Controller
 
     public function editVacancy($id)
     {
-        $findVacancy = Vacancies::find(decrypt($id));
+        $findVacancy = Vacancies::find($id);
         return $findVacancy;
     }
 
@@ -286,27 +418,33 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
-        $findVacancy = Vacancies::find(decrypt($id));
+        $findVacancy = Vacancies::find($id);
+        if ($request->check_form == 'vacancy') {
+            $findVacancy->update([
+                'judul' => $request->judul,
+                'cities_id' => $request->cities_id,
+                'syarat' => $request->syarat,
+                'tanggungjawab' => $request->tanggungjawab,
+                'pengalaman' => 'At least ' . $request->pengalaman . ' years',
+                'jobtype_id' => $request->jobtype_id,
+                'industry_id' => $request->industri_id,
+                'joblevel_id' => $request->joblevel_id,
+                'salary_id' => $request->salary_id,
+                'agency_id' => $agency->id,
+                'tingkatpend_id' => $request->tingkatpend_id,
+                'jurusanpend_id' => $request->jurusanpend_id,
+                'fungsikerja_id' => $request->fungsikerja_id,
+            ]);
 
-        $findVacancy->update([
-            'judul' => $request->judul,
-            'cities_id' => $request->cities_id,
-            'syarat' => $request->syarat,
-            'tanggungjawab' => $request->tanggungjawab,
-            'pengalaman' => 'At least ' . $request->pengalaman . ' years',
-            'jobtype_id' => $request->jobtype_id,
-            'industry_id' => $request->industri_id,
-            'joblevel_id' => $request->joblevel_id,
-            'salary_id' => $request->salary_id,
-            'agency_id' => $agency->id,
-            'tingkatpend_id' => $request->tingkatpend_id,
-            'jurusanpend_id' => $request->jurusanpend_id,
-            'fungsikerja_id' => $request->fungsikerja_id,
-            'interview' => $request->interview,
-            'aktif_sampai' => Carbon::parse($request->created_at)->addDays(+30),
-        ]);
+        } elseif ($request->check_form == 'schedule') {
+            $findVacancy->update([
+                'interview_date' => $request->interview_date,
+                'recruitmentDate_start' => $request->recruitmentDate_start,
+                'recruitmentDate_end' => $request->recruitmentDate_end,
+            ]);
+        }
 
-        return back()->with('update', '' . $request->judul . ' is successfully updated!');
+        return back()->with('update', '' . $findVacancy->judul . ' is successfully updated!');
     }
 
     public function deleteVacancy($id, $judul)

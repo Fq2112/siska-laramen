@@ -1077,8 +1077,8 @@
                                                                         have in order to offer it for this Job Seeker.
                                                                     </p>
                                                                     <div class="input-group">
-                                                                <span class="input-group-addon">
-                                                                    <i class="fa fa-briefcase"></i></span>
+                                                                        <span class="input-group-addon">
+                                                                            <i class="fa fa-briefcase"></i></span>
                                                                         <select class="form-control selectpicker"
                                                                                 name="vacancy_id" data-container="body"
                                                                                 id="vacancy_id" required>
@@ -1089,11 +1089,18 @@
                                                                             \App\Agencies::where
                                                                             ('user_id',Auth::user()->id)->first()->id)
                                                                             ->get() as $vacancy)
-                                                                                <option value="{{$vacancy->id}}">
+                                                                                <option value="{{$vacancy->id}}"
+                                                                                        {{$vacancy->isPost == false ?
+                                                                                        'disabled' : ''}}>
                                                                                     {{$vacancy->judul}}</option>
                                                                             @endforeach
                                                                         </select>
                                                                     </div>
+                                                                    <small style="font-size: 10px;color: #00ADB5;float: left">
+                                                                        P.S.: You're only permitted to select your
+                                                                        vacancy
+                                                                        that has been posted.
+                                                                    </small>
                                                                 </div>
                                                             </div>
                                                         </blockquote>
@@ -1136,7 +1143,7 @@
                 } else {
                     swal({
                         title: 'ATTENTION!',
-                        text: 'Please select one vacancy in order to offer it for this Job Seeker.',
+                        text: 'Please select one of your vacancies in order to offer it for this Job Seeker.',
                         type: 'warning',
                         timer: '3500'
                     });

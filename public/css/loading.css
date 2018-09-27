@@ -7143,7 +7143,7 @@
     color: #fdc02f;
 }
 
-.bookmark label, .invitation label, .upload label {
+.bookmark label, .invitation label, .upload label, .compare label, .accept label, .compare label {
     box-shadow: 0 0 0 0 rgba(0, 173, 181, 0.5);
 }
 
@@ -7159,13 +7159,23 @@
     content: "\f093"
 }
 
-.bookmark input:checked + label, .invitation input:checked + label, .upload input:checked + label {
+.compare label:after {
+    content: "\f200";
+}
+
+.accept label:after {
+    content: "\f1d8";
+}
+
+.bookmark input:checked + label, .invitation input:checked + label, .upload input:checked + label,
+.compare input:checked + label, .accept input:checked + label {
     background-color: #00ADB5;
     border-color: #00ADB5;
     box-shadow: 0 0 0 0.5em rgba(13, 165, 142, 0);
 }
 
-.bookmark input:checked + label:after, .invitation input:checked + label:after, .upload input:checked + label:after {
+.bookmark input:checked + label:after, .invitation input:checked + label:after, .upload input:checked + label:after,
+.compare input:checked + label:after, .accept input:checked + label:after {
     color: #00ADB5;
 }
 

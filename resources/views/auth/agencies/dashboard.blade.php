@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Invited Seeker | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Application Received | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_agency')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
@@ -7,8 +7,8 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h4 style="margin-bottom: 10px">Invited Seeker</h4>
-                            <small>Here is your invited seekers.</small>
+                            <h4 style="margin-bottom: 10px">Application Received</h4>
+                            <small>Here is your application received.</small>
                             <hr>
                         </div>
                     </div>
@@ -25,25 +25,48 @@
                         </div>
                         <div class="col-lg-9 to-animate">
                             <small class="pull-right">
-                                @if(count($invited) > 1)
-                                    Showing <strong>{{count($invited)}}</strong> invited seekers
-                                @elseif(count($invited) == 1)
-                                    Showing an invited seeker
+                                @if(count($acc) > 1)
+                                    Showing <strong>{{count($acc)}}</strong> application received
+                                @elseif(count($acc) == 1)
+                                    Showing an application received
                                 @else
-                                    <em>There seems to be none of the invited seeker was found&hellip;</em>
+                                    <em>There seems to be none of the application received was found&hellip;</em>
                                 @endif
                             </small>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            @foreach($invited as $row)
+                            @foreach($acc as $row)
                                 @php
                                     $vacancy = \App\Vacancies::find($row->vacancy_id);
                                     $seeker = \App\Seekers::find($row->seeker_id);
                                     $userSeeker = \App\User::find($seeker->user_id);
+
+                                    $attachments = \App\Attachments::where('seeker_id', $seeker->id)
+                                    ->orderby('created_at', 'desc')->get();
+
+                                    $experiences = \App\Experience::where('seeker_id', $seeker->id)
+                                    ->orderby('id', 'desc')->get();
+
+                                    $educations = \App\Education::where('seeker_id', $seeker->id)
+                                    ->orderby('tingkatpend_id', 'desc')->get();
+
+                                    $trainings = \App\Training::where('seeker_id', $seeker->id)
+                                    ->orderby('id', 'desc')->get();
+
+                                    $organizations = \App\Organization::where('seeker_id', $seeker->id)
+                                    ->orderby('id', 'desc')->get();
+
+                                    $languages = \App\Languages::where('seeker_id', $seeker->id)
+                                    ->orderby('id', 'desc')->get();
+
+                                    $skills = \App\Skills::where('seeker_id', $seeker->id)->orderby('id', 'desc')
+                                    ->get();
+
                                     $job_title = \App\Experience::where('seeker_id', $seeker->id)
                                     ->where('end_date', null)->orderby('id', 'desc')->take(1);
+
                                     $last_edu = \App\Education::where('seeker_id', $seeker->id)
                                     ->wherenotnull('end_period')->orderby('tingkatpend_id', 'desc')->take(1);
                                 @endphp
@@ -68,21 +91,20 @@
                                                style="color: #fa5555">
                                                 <sub>&ndash; {{$vacancy->judul}}</sub></a>
                                             <span class="pull-right" style="color: #00ADB5">
-                                                Invited on {{\Carbon\Carbon::parse($row->created_at)->format('j F Y')}}
+                                                Applied on {{\Carbon\Carbon::parse($row->created_at)->format('j F Y')}}
                                             </span>
                                         </small>
                                         <blockquote style="font-size: 16px;color: #7f7f7f">
-                                            <form class="pull-right to-animate-2" id="form-invitation-{{$row->id}}"
-                                                  method="post" action="{{route('invite.seeker')}}">
+                                            <form class="pull-right to-animate-2" id="form-acc-{{$row->id}}"
+                                                  method="post" action="#">
                                                 {{csrf_field()}}
-                                                <input type="hidden" name="seeker_id" value="{{$seeker->id}}">
-                                                <div class="anim-icon anim-icon-md invitation ld ld-breath"
-                                                     onclick="abortInvitation('{{$row->id}}','{{$userSeeker->name}}')"
-                                                     data-toggle="tooltip" data-placement="bottom" title="Abort"
+                                                <div class="anim-icon anim-icon-md accept ld ld-breath"
+                                                     onclick="acceptApplication('{{$row->id}}','{{$userSeeker->name}}',
+                                                             '{{$vacancy->judul}}')"
+                                                     data-toggle="tooltip" data-placement="bottom" title="Accept"
                                                      style="font-size: 25px">
-                                                    <input type="hidden" name="invitation_id" value="{{$row->id}}">
                                                     <input type="checkbox" checked>
-                                                    <label for="invitation"></label>
+                                                    <label for="accept"></label>
                                                 </div>
                                             </form>
                                             <ul class="list-inline">
@@ -112,7 +134,6 @@
                                                                 document.getElementById("salary-{{$row->id}}").innerHTML = "<i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary: IDR " + low + " to " + high + " millions";
                                                             </script>
                                                         @else
-                                                            <i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary:
                                                             Anything
                                                         @endif
                                                     </a>
@@ -165,7 +186,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 to-animate-2 myPagination">
-                            {{$invited->links()}}
+                            {{$acc->links()}}
                         </div>
                     </div>
                 </div>
@@ -175,14 +196,14 @@
 @endsection
 @push('scripts')
     <script>
-        function abortInvitation(id, name) {
+        function acceptApplication(id, name, title) {
             swal({
-                title: 'Are you sure to abort ' + name + '?',
-                text: "You won't be able to revert this invitation!",
+                title: 'Are you sure to accept ' + name + ' for ' + title + '?',
+                text: "You won't be able to revert this action!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#fa5555',
-                confirmButtonText: 'Yes, abort it!',
+                confirmButtonText: 'Yes, accept this seeker!',
                 showLoaderOnConfirm: true,
 
                 preConfirm: function () {

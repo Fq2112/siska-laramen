@@ -138,9 +138,24 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
 
     Route::group(['prefix' => 'dashboard'], function () {
 
-        Route::get('application_review', [
+        Route::get('application_received', [
             'uses' => 'AccountController@showDashboard',
             'as' => 'agency.dashboard'
+        ]);
+
+        Route::get('recommended_seeker', [
+            'uses' => 'AccountController@recommendedSeeker',
+            'as' => 'agency.recommended.seeker'
+        ]);
+
+        Route::get('recommended_seeker/seekers', [
+            'uses' => 'AccountController@getRecommendedSeeker',
+            'as' => 'get.recommended.seeker'
+        ]);
+
+        Route::get('recommended_seeker/{id}', [
+            'uses' => 'AccountController@detailRecommendedSeeker',
+            'as' => 'detail.recommended.seeker'
         ]);
 
         Route::get('invited_seeker', [

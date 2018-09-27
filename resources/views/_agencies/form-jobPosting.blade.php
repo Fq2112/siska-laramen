@@ -3,6 +3,8 @@
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMultiStepForm.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/countdown.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/fileUploader.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cc.css') }}" rel="stylesheet">
 @endpush
 @section('content')

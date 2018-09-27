@@ -4,6 +4,28 @@
         .card-title a {
             color: #7f7f7f;
         }
+
+        .media-object {
+            cursor: pointer;
+            -webkit-transition: all 100ms ease-in;
+            -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+            -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
+            -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
+            filter: brightness(1.8) grayscale(1) opacity(.7);
+        }
+
+        .media-object:hover {
+            -webkit-filter: none;
+            -moz-filter: none;
+            filter: none;
+        }
+
+        #formModal .login .box .form input[type="text"], .login .box .form input[type="email"], .login .box .form input[type="password"] {
+            border: 1px solid #ccc;
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 0;
+        }
     </style>
 @endpush
 @extends('layouts.auth.mst_agency')
@@ -18,6 +40,7 @@
                                 <form action="{{route('agency.vacancy.create')}}" method="post" id="form-vacancy">
                                     {{csrf_field()}}
                                     <input type="hidden" name="_method">
+                                    <input type="hidden" name="check_form" value="vacancy">
                                     <div class="card-content">
                                         <div class="card-title">
                                             <small id="show_vacancy_settings">
@@ -42,23 +65,32 @@
                                                         <div class="row">
                                                             <div class="col-lg-12">
                                                                 <div class="media">
+                                                                    <div class="media-left media-middle">
+                                                                        <img class="media-object" width="128"
+                                                                             src="{{asset('images/edit_date.png')}}"
+                                                                             data-toggle="tooltip" title="Edit Schedule"
+                                                                             data-placement="bottom"
+                                                                             onclick="editVacancySchedule('{{$row->id}}',
+                                                                                     '{{$row->isPost}}')">
+                                                                    </div>
                                                                     <div class="media-body">
                                                                         <small class="media-heading">
                                                                             <a href="{{route('detail.vacancy',
-                                                                        ['id'=>$row->id])}}" style="color: #00ADB5">
+                                                                            ['id'=>$row->id])}}" style="color: #00ADB5">
                                                                                 {{$row->judul}}</a>
+                                                                            <sub style="color: #fa5555;text-transform: none">&ndash; {{$row->updated_at
+                                                                            ->diffForHumans()}}</sub>
                                                                             <span class="pull-right">
                                                                             <a style="color: #00ADB5;cursor: pointer;"
-                                                                               onclick="editVacancy('{{encrypt
-                                                                               ($row->id)}}')">Edit&ensp;<i
-                                                                                        class="fa fa-edit"></i></a>
+                                                                               onclick="editVacancy('{{$row->id}}')">
+                                                                                Edit&ensp;<i class="fa fa-edit"></i></a>
                                                                             <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
                                                                             <a href="{{route('agency.vacancy.delete',
                                                                             ['id' => encrypt($row->id),
                                                                             'judul' => $row->judul])}}"
                                                                                class="delete-vacancy"
-                                                                               style="color: #FA5555;"><i
-                                                                                        class="fa fa-eraser"></i>&ensp;Delete</a>
+                                                                               style="color: #FA5555;">
+                                                                                <i class="fa fa-eraser"></i>&ensp;Delete</a>
                                                                         </span>
                                                                         </small>
                                                                         <blockquote
@@ -125,31 +157,50 @@
                                                                                     </a>
                                                                                 </li>
                                                                             </ul>
-                                                                            <table class="stats"
-                                                                                   style="font-size: 12px;margin-top: -.5em">
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-calendar"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Posted On</td>
-                                                                                    <td>
-                                                                                        : {{$row->created_at
-                                                                                    ->format('j F Y')}}
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-clock"></i></td>
-                                                                                    <td>&nbsp;Last Update</td>
-                                                                                    <td>
-                                                                                        : {{$row->updated_at
-                                                                                    ->diffForHumans()}}
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </table>
-                                                                            <hr class="hr-divider">
                                                                             <small>Requirements</small>
                                                                             {!! $row->syarat !!}
                                                                             <small>Responsibilities</small>
                                                                             {!! $row->tanggungjawab !!}
+                                                                            <hr class="hr-divider">
+                                                                            <table class="stats"
+                                                                                   style="font-size: 12px;margin-top: -.5em">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <i class="fa fa-calendar-check"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Active Period</td>
+                                                                                    <td>:
+                                                                                        {{$row->active_period != "" ?
+                                                                                        "until ".\Carbon\Carbon::parse
+                                                                                        ($row->active_period)
+                                                                                        ->format('j F Y') : '-'}}
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td><i class="fa fa-comments"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Interview Date</td>
+                                                                                    <td>:
+                                                                                        {{$row->interview_date != "" ?
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->interview_date)
+                                                                                        ->format('l, j F Y') : '-'}}
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td><i class="fa fa-users"></i></td>
+                                                                                    <td>&nbsp;Recruitment Date</td>
+                                                                                    <td>: {{$row->recruitmentDate_start
+                                                                                        && $row->recruitmentDate_end !=
+                                                                                        "" ? \Carbon\Carbon::parse
+                                                                                        ($row->recruitmentDate_start)
+                                                                                        ->format('j F Y')." - ".
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->recruitmentDate_end)
+                                                                                        ->format('j F Y') : '-'}}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
                                                                         </blockquote>
                                                                     </div>
                                                                 </div>
@@ -378,8 +429,7 @@
                                                 </div>
                                                 <div class="row form-group" id="btn_cancel_vacancy">
                                                     <div class="col-lg-12">
-                                                        <input type="reset" value="CANCEL"
-                                                               class="btn btn-default">
+                                                        <input type="reset" value="CANCEL" class="btn btn-default">
                                                     </div>
                                                 </div>
                                             </div>
@@ -397,6 +447,17 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal to-animate login" id="formModal" style="font-family: 'PT Sans', Arial, serif">
+        <div class="modal-dialog login animated">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="vacancy_title"></h4>
+                </div>
+                <div id="schedule_settings"></div>
             </div>
         </div>
     </div>

@@ -70,13 +70,19 @@
                                             <sub>&ndash;
                                                 <a href="{{route('agency.profile',['id'=>$agency->id])}}">
                                                     {{$userAgency->name}}</a></sub>
+                                            <span class="pull-right" style="color: #fa5555">
+                                                Applied on {{Carbon\Carbon::parse($row->created_at)->format('j F Y')}}
+                                            </span>
                                         </small>
                                         <blockquote style="font-size: 12px;color: #7f7f7f">
-                                                <span class="pull-right to-animate-2" style="color: #FA5555">
-                                                <a class="btn btn-danger btn-block ld ld-breath"
-                                                   onclick="showCompare('{{$vacancy->id}}')"
-                                                   style="background: #fa5555;border: none;"><i
-                                                            class="fa fa-chart-pie"></i> COMPARE</a></span>
+                                            <div class="pull-right to-animate-2">
+                                                <div class="anim-icon anim-icon-md compare ld ld-breath"
+                                                     onclick="showCompare('{{$vacancy->id}}')" data-toggle="tooltip"
+                                                     title="Compare" data-placement="bottom" style="font-size: 25px">
+                                                    <input type="checkbox" checked>
+                                                    <label for="compare"></label>
+                                                </div>
+                                            </div>
                                             <ul class="list-inline">
                                                 <li>
                                                     <a class="tag" target="_blank"
@@ -130,25 +136,61 @@
                                                     </a>
                                                 </li>
                                             </ul>
-                                            <small>Applied on
-                                                {{Carbon\Carbon::parse($row->created_at)->format('j F Y')}}</small>
-                                            <form class="to-animate" id="form-apply-{{$vacancy->id}}"
-                                                  method="post" action="{{route('apply.vacancy')}}">
-                                                {{csrf_field()}}
-                                                <div class="anim-icon anim-icon-md apply ld ld-heartbeat"
-                                                     id="{{$vacancy->id}}" onclick="abortApplication(id)"
-                                                     data-toggle="tooltip" data-placement="right"
-                                                     title="Click here to abort this application!"
-                                                     style="font-size: 15px">
-                                                    <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
-                                                    <input type="checkbox" checked>
-                                                    <label for="apply"></label>
-                                                </div>
-                                            </form>
-                                            <small class="to-animate-2">
-                                                P.S.: Job Seekers are only permitted to abort their application
-                                                before the recruitment ends.
-                                            </small>
+                                            <table style="font-size: 14px;margin-top: -.5em">
+                                                <tr>
+                                                    <td><i class="fa fa-comments"></i>
+                                                    </td>
+                                                    <td>&nbsp;Interview Date</td>
+                                                    <td>:
+                                                        {{$vacancy->interview_date != "" ?
+                                                        \Carbon\Carbon::parse
+                                                        ($vacancy->interview_date)
+                                                        ->format('l, j F Y') : '-'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="fa fa-users"></i></td>
+                                                    <td>&nbsp;Recruitment Date</td>
+                                                    <td>:
+                                                        {{$vacancy->recruitmentDate_start &&
+                                                        $vacancy->recruitmentDate_end != "" ?
+                                                        \Carbon\Carbon::parse
+                                                        ($vacancy->recruitmentDate_start)
+                                                        ->format('j F Y')." - ".
+                                                        \Carbon\Carbon::parse
+                                                        ($vacancy->recruitmentDate_end)
+                                                        ->format('j F Y') : '-'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="fa fa-clock"></i>
+                                                    </td>
+                                                    <td>&nbsp;Last Update</td>
+                                                    <td>:
+                                                        {{$vacancy->updated_at->diffForHumans()}}
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            @if(today() <= $vacancy->recruitmentDate_end)
+                                                <hr style="margin-bottom: 0">
+                                                <form class="to-animate" id="form-apply-{{$vacancy->id}}"
+                                                      method="post" action="{{route('apply.vacancy')}}">
+                                                    {{csrf_field()}}
+                                                    <div class="anim-icon anim-icon-md apply ld ld-heartbeat"
+                                                         onclick="abortApplication('{{$vacancy->id}}','{{$vacancy->judul}}')"
+                                                         data-toggle="tooltip" data-placement="right"
+                                                         title="Click here to abort this application!"
+                                                         style="font-size: 15px">
+                                                        <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
+                                                        <input type="checkbox" checked>
+                                                        <label for="apply"></label>
+                                                    </div>
+                                                </form>
+                                                <small class="to-animate-2">
+                                                    P.S.: Job Seekers are only permitted to abort their application
+                                                    before the recruitment ends.
+                                                </small>
+                                            @endif
                                         </blockquote>
                                     </div>
                                 </div>
@@ -195,9 +237,25 @@
             $("#form-time")[0].submit();
         });
 
-        function abortApplication(id) {
-            $("#" + id + ' input[type=checkbox]').prop('checked', false);
-            $("#form-apply-" + id)[0].submit();
+        function abortApplication(id, title) {
+            swal({
+                title: 'Are you sure to abort ' + title + '?',
+                text: "You won't be able to revert this application!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, abort it!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        $("#" + id + ' input[type=checkbox]').prop('checked', false);
+                        $("#form-apply-" + id)[0].submit();
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
         }
 
         function showCompare(id) {
