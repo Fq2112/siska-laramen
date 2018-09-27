@@ -115,7 +115,6 @@ class SeekerController extends Controller
         $provinces = Provinces::all();
         $user = Auth::user();
         $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
-
         $job_title = Experience::where('seeker_id', $seeker->id)->where('end_date', null)
             ->orderby('id', 'desc')->take(1);
 
@@ -282,6 +281,138 @@ class SeekerController extends Controller
 
         return view('auth.seekers.dashboard-toApply', compact('user', 'provinces', 'seeker',
             'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'invToApply'));
+    }
+
+    public function recommendedVacancy(Request $request)
+    {
+        $user = Auth::user();
+        $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
+        $vacancies = Vacancies::where('isPost', true)->get();
+        $provinces = Provinces::all();
+        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+
+        $keyword = $request->q;
+        $page = $request->page;
+
+        return view('auth.seekers.dashboard-recommendedVacancy', compact('user', 'seeker', 'vacancies',
+            'provinces', 'totalApp', 'totalBook', 'totalInvToApply', 'keyword', 'page'));
+    }
+
+    public function getRecommendedVacancy(Request $request)
+    {
+        $user = Auth::user();
+        $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
+
+        foreach ($seeker->educations as $education) {
+            $degrees[] = $education->tingkatpend_id;
+        }
+
+        $keyword = $request->q;
+        $agency = Agencies::whereHas('user', function ($query) use ($keyword) {
+            $query->where('name', 'like', '%' . $keyword . '%');
+        })->get()->pluck('id')->toArray();
+        if ($seeker->total_exp == "") {
+            $totalExp = 0;
+        } else {
+            $totalExp = $seeker->total_exp;
+        }
+        $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->where('isPost', true)
+            ->where('pengalaman', '<=', $totalExp)->where(function ($query) use ($degrees) {
+                foreach ($degrees as $degree) {
+                    $query->orWhere('tingkatpend_id', '<=', $degree);
+                }
+            })->orwhereIn('agency_id', $agency)->where('isPost', true)
+            ->where('pengalaman', '<=', $totalExp)->where(function ($query) use ($degrees) {
+                foreach ($degrees as $degree) {
+                    $query->orWhere('tingkatpend_id', '<=', $degree);
+                }
+            })->paginate(6)->appends($request->only('q'))->toArray();
+
+        $result = $this->array_vacancies($result);
+        return $result;
+    }
+
+    private function array_vacancies($result)
+    {
+        $i = 0;
+        foreach ($result['data'] as $vacancy) {
+            if (substr(Cities::find($vacancy['cities_id'])->name, 0, 2) == "Ko") {
+                $cities = substr(Cities::find($vacancy['cities_id'])->name, 5);
+            } else {
+                $cities = substr(Cities::find($vacancy['cities_id'])->name, 10);
+            }
+
+            $userAgency = User::findOrFail(Agencies::findOrFail($vacancy['agency_id'])->user_id);
+            if ($userAgency->ava == "agency.png" || $userAgency->ava == "") {
+                $filename = asset('images/agency.png');
+            } else {
+                $filename = asset('storage/users/' . $userAgency->ava);
+            }
+
+            $city = array('city' => $cities);
+            $degrees = array('degrees' => Tingkatpend::findOrFail($vacancy['tingkatpend_id'])->name);
+            $majors = array('majors' => Jurusanpend::findOrFail($vacancy['jurusanpend_id'])->name);
+            $jobfunc = array('job_func' => FungsiKerja::findOrFail($vacancy['fungsikerja_id'])->nama);
+            $industry = array('industry' => Industri::findOrFail($vacancy['industry_id'])->nama);
+            $jobtype = array('job_type' => JobType::findOrFail($vacancy['jobtype_id'])->name);
+            $joblevel = array('job_level' => JobLevel::findOrFail($vacancy['joblevel_id'])->name);
+            $salary = array('salary' => Salaries::findOrFail($vacancy['salary_id'])->name);
+            $ava['user'] = array('ava' => $filename, 'name' => $userAgency->name, 'id' => $vacancy['agency_id']);
+            $interview = array('interview_date' => is_null($vacancy['interview_date']) ? '-' :
+                Carbon::parse($vacancy['interview_date'])->format('l, j F Y'));
+            $startDate = array('recruitmentDate_start' => is_null($vacancy['recruitmentDate_start']) ? '-' :
+                Carbon::parse($vacancy['recruitmentDate_start'])->format('j F Y'));
+            $endDate = array('recruitmentDate_end' => is_null($vacancy['recruitmentDate_end']) ? '-' :
+                Carbon::parse($vacancy['recruitmentDate_end'])->format('j F Y'));
+            $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
+                $vacancy['updated_at'])->diffForHumans());
+            $acc = array('acc' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->first());
+
+            $result['data'][$i] = array_replace($ava, $result['data'][$i], $city, $degrees, $majors, $jobfunc,
+                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc);
+            $i = $i + 1;
+        }
+
+        return $result;
+    }
+
+    public function detailRecommendedVacancy($id)
+    {
+        $vacancy = Vacancies::find($id);
+        $userAgency = User::findOrFail(Agencies::findOrFail($vacancy->agency_id)->user_id);
+        if ($userAgency->ava == "agency.png" || $userAgency->ava == "") {
+            $filename = asset('images/agency.png');
+        } else {
+            $filename = asset('storage/users/' . $userAgency->ava);
+        }
+        if (substr(Cities::find($vacancy->cities_id)->name, 0, 2) == "Ko") {
+            $cities = substr(Cities::find($vacancy->cities_id)->name, 5);
+        } else {
+            $cities = substr(Cities::find($vacancy->cities_id)->name, 10);
+        }
+        $city = array('city' => $cities);
+        $degrees = array('degrees' => Tingkatpend::findOrFail($vacancy->tingkatpend_id)->name);
+        $majors = array('majors' => Jurusanpend::findOrFail($vacancy->jurusanpend_id)->name);
+        $jobfunc = array('job_func' => FungsiKerja::findOrFail($vacancy->fungsikerja_id)->nama);
+        $industry = array('industry' => Industri::findOrFail($vacancy->industry_id)->nama);
+        $jobtype = array('job_type' => JobType::findOrFail($vacancy->jobtype_id)->name);
+        $joblevel = array('job_level' => JobLevel::findOrFail($vacancy->joblevel_id)->name);
+        $salary = array('salary' => Salaries::findOrFail($vacancy->salary_id)->name);
+        $ava['user'] = array('ava' => $filename, 'name' => $userAgency->name, 'id' => $vacancy->agency_id);
+        $interview = array('interview_date' => is_null($vacancy->interview_date) ? '-' :
+            Carbon::parse($vacancy->interview_date)->format('l, j F Y'));
+        $recruitment = array('recruitment_date' => is_null($vacancy->recruitmentDate_start) &&
+        is_null($vacancy->recruitmentDate_end) ? '-' : Carbon::parse($vacancy->recruitmentDate_start)
+                ->format('j F Y') . ' - ' . Carbon::parse($vacancy->recruitmentDate_end)->format('j F Y'));
+        $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
+            $vacancy->updated_at)->diffForHumans());
+
+        $result = array_replace($ava, $vacancy->toArray(), $city, $degrees, $majors, $jobfunc,
+            $industry, $jobtype, $joblevel, $salary, $interview, $recruitment, $update_at);
+
+        return $result;
     }
 
     public function showBookmark()

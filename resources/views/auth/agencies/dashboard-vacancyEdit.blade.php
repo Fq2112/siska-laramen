@@ -153,7 +153,10 @@
                                                                                 <li>
                                                                                     <a class="tag">
                                                                                         <i class="fa fa-briefcase"></i>
-                                                                                        &ensp;{{$row->pengalaman}}
+                                                                                        &ensp;At least
+                                                                                        {{$row->pengalaman > 1 ?
+                                                                                        $row->pengalaman.' years' :
+                                                                                        $row->pengalaman.' year'}}
                                                                                     </a>
                                                                                 </li>
                                                                             </ul>

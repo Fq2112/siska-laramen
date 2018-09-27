@@ -90,7 +90,8 @@
                 <a class="navbar-brand"
                    href="{{Auth::check() && Auth::user()->isAgency() ? route('home-agency') : route('home-seeker')}}">
                     SISKA</a>
-                @if(Auth::guest() || !Auth::user()->isAgency() ||
+                @if(Auth::guest() || Auth::user()->isSeeker() &&
+                !\Illuminate\Support\Facades\Request::is('account/dashboard/recommended_vacancy') ||
                 Auth::user()->isAgency() && \Illuminate\Support\Facades\Request::is('search*'))
                     <form class="navbar-form search-form form-horizontal" role="search"
                           action="{{route('search.vacancy')}}">

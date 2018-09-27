@@ -47,7 +47,7 @@
     font-size: 15px;
 }
 
-#custom-search-input #lokasi {
+#custom-search-input #lokasi, #custom-search-input #btn_more {
     margin: 2px 0 0 0;
     background: none;
     box-shadow: none;
@@ -86,7 +86,8 @@
     border-left: solid 1px #FA5555;
 }
 
-#custom-search-input #lokasi:hover, #custom-search-input #lokasi:focus {
+#custom-search-input #lokasi:hover, #custom-search-input #lokasi:focus,
+#custom-search-input #btn_more:hover, #custom-search-input #btn_more:focus {
     border-right: solid 1px #FA5555;
 }
 

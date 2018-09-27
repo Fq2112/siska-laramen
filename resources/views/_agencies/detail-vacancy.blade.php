@@ -69,26 +69,45 @@
                                         <i class="fa fa-money-bill-wave"></i>&ensp;IDR {{$salary->name}}</a>
                                 </li>
                                 <li>
-                                    <a><i class="fa fa-briefcase"></i>&ensp;{{$vacancy->pengalaman}}</a>
+                                    <a><i class="fa fa-briefcase"></i>&ensp;At least {{$vacancy->pengalaman > 1 ?
+                                    $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}</a>
                                 </li>
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
-                                <li data-placement="right" data-toggle="tooltip" id="bm">
+                                @php
+                                    $content = '';
+                                    if($vacancy->isPost == false){
+                                        $content = 'This vacancy hasn\'t posted yet.';
+                                        $placement = 'right';
+                                        $style = 'inline-block';
+                                    } else{
+                                        $placement = 'left';
+                                        $style = 'none';
+                                    }
+                                    if(now() < $vacancy->recruitmentDate_start || is_null($vacancy
+                                    ->recruitmentDate_start)){
+                                        $content = 'The recruitment date of this vacancy hasn\'t started yet.';
+                                        $placement = 'right';
+                                        $style = 'inline-block';
+                                    } elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
+                                    ->recruitmentDate_end)){
+                                        $content = 'The recruitment date of this vacancy has been ended.';
+                                        $placement = 'right';
+                                        $style = 'inline-block';
+                                    } else {
+                                        $placement = 'left';
+                                        $style = 'none';
+                                    }
+                                @endphp
+                                <li data-placement="{{$placement}}"
+                                    data-toggle="tooltip" id="bm">
                                     <form method="post" action="{{route('bookmark.vacancy')}}" id="form-bookmark">
                                         {{csrf_field()}}
-                                        @if($vacancy->isPost == false)
-                                            <small><em>This vacancy hasn't posted yet&hellip;</em></small>
-                                        @elseif(now() < $vacancy->recruitmentDate_start || is_null($vacancy
-                                        ->recruitmentDate_start))
-                                            <small>
-                                                <em>The recruitment date of this vacancy hasn't started yet&hellip;</em>
-                                            </small>
-                                        @elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
-                                        ->recruitmentDate_end))
-                                            <small>
-                                                <em>The recruitment date of this vacancy has been ended&hellip;</em>
-                                            </small>
-                                        @endif
+                                        <div class="anim-icon anim-icon-md info" style="display: {{$style}};">
+                                            <input type="checkbox" id="info">
+                                            <label for="info" style="cursor: help" data-toggle="popover"
+                                                   data-placement="top" title="FYI" data-content="{{$content}}"></label>
+                                        </div>
                                         <div class="anim-icon anim-icon-md bookmark ld ld-breath">
                                             <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
                                             <input type="checkbox" id="bookmark" {{$vacancy->isPost == false ?
@@ -166,7 +185,9 @@
                                                     <td>&nbsp;</td>
                                                     <td>
                                                         <span data-placement="right" data-toggle="tooltip"
-                                                              title="Work Experience">{{$vacancy->pengalaman}}</span>
+                                                              title="Work Experience">At least
+                                                            {{$vacancy->pengalaman > 1 ? $vacancy->pengalaman.' years' :
+                                                            $vacancy->pengalaman.' year'}}</span>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -336,7 +357,9 @@
                                                                         <li>
                                                                             <a class="tag">
                                                                                 <i class="fa fa-briefcase"></i>
-                                                                                &ensp;{{$vacancy->pengalaman}}
+                                                                                &ensp;At least {{$vacancy->pengalaman > 1 ?
+                                                                                $vacancy->pengalaman.' years' :
+                                                                                $vacancy->pengalaman.' year'}}
                                                                             </a>
                                                                         </li>
                                                                     </ul>
@@ -468,7 +491,9 @@
                                                         <li>
                                                             <a class="tag">
                                                                 <i class="fa fa-briefcase"></i>
-                                                                &ensp;{{$vacancy->pengalaman}}
+                                                                &ensp;At least {{$vacancy->pengalaman > 1 ?
+                                                                $vacancy->pengalaman.' years' :
+                                                                $vacancy->pengalaman.' year'}}
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -696,13 +721,14 @@
                 });
             });
         }
-        google.maps.event.addDomListener(window, 'load', init);
 
+        google.maps.event.addDomListener(window, 'load', init);
 
         // apply validation
         var $btnApply = $("#apply button"), $btnBookmark = $("#bm");
         $btnBookmark.attr('title', '{{$vacancy->isPost == true ? 'Bookmark this vacancy' : ''}}');
-        @if(now() < $vacancy->recruitmentDate_start || now() > $vacancy->recruitmentDate_end || is_null($vacancy->recruitmentDate_start) || is_null($vacancy->recruitmentDate_end))
+        @if(now() < $vacancy->recruitmentDate_start || now() > $vacancy->recruitmentDate_end ||
+        is_null($vacancy->recruitmentDate_start) || is_null($vacancy->recruitmentDate_end))
         $btnApply.prop('disabled', true);
         @endif
         @auth
@@ -758,8 +784,8 @@
             @if(Auth::user()->isSeeker())
             $("#applyModal").modal('show');
             $("#btn-apply button").click(function () {
-                @if(count($edu) == 0 || count($exp) == 0 || is_null($seeker->phone) || is_null($seeker->address)
-                    || is_null($seeker->birthday) || is_null($seeker->gender))
+                @if(count($edu) == 0 || count($exp) == 0 || $seeker->phone == "" || $seeker->address == "" ||
+                $seeker->birthday == "" || $seeker->gender == "")
                 $("#resumeModal").modal('show');
                 @else
                 @if($seeker->total_exp < $reqExp)

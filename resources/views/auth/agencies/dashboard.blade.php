@@ -42,31 +42,8 @@
                                     $vacancy = \App\Vacancies::find($row->vacancy_id);
                                     $seeker = \App\Seekers::find($row->seeker_id);
                                     $userSeeker = \App\User::find($seeker->user_id);
-
-                                    $attachments = \App\Attachments::where('seeker_id', $seeker->id)
-                                    ->orderby('created_at', 'desc')->get();
-
-                                    $experiences = \App\Experience::where('seeker_id', $seeker->id)
-                                    ->orderby('id', 'desc')->get();
-
-                                    $educations = \App\Education::where('seeker_id', $seeker->id)
-                                    ->orderby('tingkatpend_id', 'desc')->get();
-
-                                    $trainings = \App\Training::where('seeker_id', $seeker->id)
-                                    ->orderby('id', 'desc')->get();
-
-                                    $organizations = \App\Organization::where('seeker_id', $seeker->id)
-                                    ->orderby('id', 'desc')->get();
-
-                                    $languages = \App\Languages::where('seeker_id', $seeker->id)
-                                    ->orderby('id', 'desc')->get();
-
-                                    $skills = \App\Skills::where('seeker_id', $seeker->id)->orderby('id', 'desc')
-                                    ->get();
-
                                     $job_title = \App\Experience::where('seeker_id', $seeker->id)
                                     ->where('end_date', null)->orderby('id', 'desc')->take(1);
-
                                     $last_edu = \App\Education::where('seeker_id', $seeker->id)
                                     ->wherenotnull('end_period')->orderby('tingkatpend_id', 'desc')->take(1);
                                 @endphp
@@ -134,6 +111,7 @@
                                                                 document.getElementById("salary-{{$row->id}}").innerHTML = "<i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary: IDR " + low + " to " + high + " millions";
                                                             </script>
                                                         @else
+                                                            <i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary:
                                                             Anything
                                                         @endif
                                                     </a>

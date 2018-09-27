@@ -128,7 +128,9 @@
                                                                 <li>
                                                                     <a class="tag">
                                                                         <i class="fa fa-briefcase"></i>
-                                                                        &ensp;{{$vacancy->pengalaman}}
+                                                                        &ensp;At least {{$vacancy->pengalaman > 1 ?
+                                                                        $vacancy->pengalaman.' years' :
+                                                                        $vacancy->pengalaman.' year'}}
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -226,13 +228,18 @@
 @push('scripts')
     <script>
         function showapplyInvModal(id, title) {
-            var today = new Date().toJSON().slice(0, 10);
+            var today = new Date().toJSON().slice(0, 10), $pengalaman;
             $.ajax({
                 url: "{{ url('account/dashboard/application_status/compare') }}" + '/' + id,
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
                     if (today >= data.recruitmentDate_start && today <= data.recruitmentDate_end) {
+                        if (data.pengalaman > 1) {
+                            $pengalaman = 'At least ' + data.pengalaman + ' years';
+                        } else {
+                            $pengalaman = 'At least ' + data.pengalaman + ' year';
+                        }
                         $('#applyInvModalBody').html(
                             '<div class="media">' +
                             '<div class="media-left media-middle">' +
@@ -264,7 +271,7 @@
                             '<li><a class="tag" target="_blank" ' +
                             'href="{{route('search.vacancy',['majors_ids' => ''])}}/' + data.jurusanpend_id + '">' +
                             '<i class="fa fa-user-graduate"></i>&ensp;' + data.majors + '</a></li>' +
-                            '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + data.pengalaman + '</a></li>' +
+                            '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
                             '</ul></blockquote></div></div>'
                         );
                         $("#applyInvModal").modal('show');

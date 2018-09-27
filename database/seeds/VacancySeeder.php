@@ -32,7 +32,7 @@ class VacancySeeder extends Seeder
                     '</li></ul>',
                 'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
                     '</li></ul>',
-                'pengalaman' => 'At least ' . $faker->randomDigitNotNull . ' years',
+                'pengalaman' => $faker->randomDigitNotNull,
                 'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
                 'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
                 'industry_id' => rand(Industri::min('id'), Industri::max('id')),

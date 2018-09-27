@@ -543,7 +543,7 @@
         });
 
         function successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors, page) {
-            var title;
+            var title, $pengalaman;
             if ((keyword != "") && (location != "")) {
                 title = 'for <strong>"' + keyword + '"</strong> in <strong>"' + location + '"</strong>'
             } else if (location == "") {
@@ -582,10 +582,14 @@
                 sort_opt2.removeClass('active');
                 sort_opt1.addClass('active');
             }
-
             // result list
             $result = '';
             $.each(data.data, function (i, val) {
+                if (val.pengalaman > 1) {
+                    $pengalaman = 'At least ' + val.pengalaman + ' years';
+                } else {
+                    $pengalaman = 'At least ' + val.pengalaman + ' year';
+                }
                 $result +=
                     '<article class="download-card">' +
                     '<a href="{{route('agency.profile',['id' => ''])}}/' + val.agency_id + '">' +
@@ -609,7 +613,7 @@
                     '<td>' + val.salary + '</td></tr>' +
                     '<tr><td><i class="fas fa-briefcase"></i></td>' +
                     '<td>&nbsp;</td>' +
-                    '<td>' + val.pengalaman + '</td></tr>' +
+                    '<td>' + $pengalaman + '</td></tr>' +
                     '</tbody></table></div></div>' +
                     '<div class="card-read-more">' +
                     '<a href="{{route('detail.vacancy',['id' => ''])}}/' + val.id + '" class="btn btn-link btn-block">' +

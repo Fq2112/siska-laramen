@@ -6,6 +6,9 @@
     <link href="{{ asset('css/myPagination.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myCheckbox.css') }}" rel="stylesheet">
     <style>
+        .site-wrapper {
+            min-height: 563px;
+        }
         .site-wrapper_left-col .logo:before {
             content: '{{substr($user->name,0,1)}}';
         }
@@ -70,10 +73,27 @@
                                                             {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}
                                                         </span></a>
                                                 </li>
-                                                <li><a href="{{route('seeker.bookmarked.vacancy')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/bookmarked_vacancy') ? 'active' : '' }}">Bookmarked
-                                                        Vacancy<span class="badge">
+                                                <li>
+                                                    <label class="tree-toggle nav-header glyphicon-icon-rpad">
+                                                        <span class="fa fa-briefcase m5"
+                                                              style="font-size:22px;padding-right: 5px"></span>Job
+                                                        Vacancy
+                                                        <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
+                                                        </span>
+                                                    </label>
+                                                    <ul class="nav nav-list tree bullets">
+                                                        <li><a href="{{route('seeker.recommended.vacancy')}}"
+                                                               class="{{ \Illuminate\Support\Facades\Request::is
+                                                       ('account/dashboard/recommended_vacancy') ? 'active' : '' }}">
+                                                                Recommended Vacancy
+                                                                <span class="badge" id="total_rec"></span></a>
+                                                        </li>
+                                                        <li><a href="{{route('seeker.bookmarked.vacancy')}}"
+                                                               class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/bookmarked_vacancy') ? 'active' : '' }}">Bookmarked
+                                                                Vacancy<span class="badge">
                                                             {{$totalBook > 999 ? '999+' : $totalBook}}</span></a></li>
+                                                    </ul>
+                                                </li>
                                             </ul>
                                         </li>
                                         <li class="divider"></li>

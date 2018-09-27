@@ -212,6 +212,21 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.invitation.toApply'
             ]);
 
+            Route::get('recommended_vacancy', [
+                'uses' => 'SeekerController@recommendedVacancy',
+                'as' => 'seeker.recommended.vacancy'
+            ]);
+
+            Route::get('recommended_vacancy/vacancies', [
+                'uses' => 'SeekerController@getRecommendedVacancy',
+                'as' => 'get.recommended.vacancy'
+            ]);
+
+            Route::get('recommended_vacancy/{id}', [
+                'uses' => 'SeekerController@detailRecommendedVacancy',
+                'as' => 'detail.recommended.vacancy'
+            ]);
+
             Route::get('bookmarked_vacancy', [
                 'uses' => 'SeekerController@showBookmark',
                 'as' => 'seeker.bookmarked.vacancy'

@@ -1,7 +1,6 @@
 @section('title', ''.$user->name.'\'s Dashboard &ndash; Recommended Seeker | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_agency')
 @push('styles')
-
     <style>
         .card-read-more button {
             color: #00ADB5;

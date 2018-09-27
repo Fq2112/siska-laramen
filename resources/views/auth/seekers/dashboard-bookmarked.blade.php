@@ -117,7 +117,8 @@
                                                 <li>
                                                     <a class="tag">
                                                         <i class="fa fa-briefcase"></i>
-                                                        &ensp;{{$vacancy->pengalaman}}
+                                                        &ensp;At least {{$vacancy->pengalaman > 1 ?
+                                                        $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
                                                     </a>
                                                 </li>
                                             </ul>

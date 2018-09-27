@@ -126,7 +126,8 @@
                                                 <li>
                                                     <a class="tag">
                                                         <i class="fa fa-briefcase"></i>
-                                                        &ensp;{{$vacancy->pengalaman}}
+                                                        &ensp;At least {{$vacancy->pengalaman > 1 ?
+                                                        $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
                                                     </a>
                                                 </li>
                                                 <li>
@@ -267,7 +268,12 @@
                     var $eduEqual = (data.edu_equal / data.total_app) * 100,
                         $eduHigher = (data.edu_higher / data.total_app) * 100,
                         $expEqual = (data.exp_equal / data.total_app) * 100,
-                        $expHigher = (data.exp_higher / data.total_app) * 100;
+                        $expHigher = (data.exp_higher / data.total_app) * 100, $pengalaman;
+                    if (data.pengalaman > 1) {
+                        $pengalaman = 'At least ' + data.pengalaman + ' years';
+                    } else {
+                        $pengalaman = 'At least ' + data.pengalaman + ' year';
+                    }
                     $('#compare').html(
                         '<div class="media">' +
                         '<div class="media-left media-middle">' +
@@ -299,7 +305,7 @@
                         '<li><a class="tag" target="_blank" ' +
                         'href="{{route('search.vacancy',['majors_ids' => ''])}}/' + data.jurusanpend_id + '">' +
                         '<i class="fa fa-user-graduate"></i>&ensp;' + data.majors + '</a></li>' +
-                        '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + data.pengalaman + '</a></li>' +
+                        '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
                         '</ul>' +
                         '<hr>' +
                         '<table><tr style="font-size: 14px">' +

@@ -505,8 +505,14 @@
 
             $('#vacancy_id option:selected').each(function (i, selected) {
                 $.get('{{route('get.vacancyReviewData',['vacancy'=>''])}}/' + $id, function (data) {
+                    var $pengalaman;
                     $result = '';
                     $.each(data, function (i, val) {
+                        if (val.pengalaman > 1) {
+                            $pengalaman = 'At least ' + val.pengalaman + ' years';
+                        } else {
+                            $pengalaman = 'At least ' + val.pengalaman + ' year';
+                        }
                         $result +=
                             '<div class="media">' +
                             '<div class="media-left media-middle">' +
@@ -538,7 +544,7 @@
                             '<li><a class="tag" target="_blank" ' +
                             'href="{{route('search.vacancy',['majors_ids' => ''])}}/' + val.jurusanpend_id + '">' +
                             '<i class="fa fa-user-graduate"></i>&ensp;' + val.majors + '</a></li>' +
-                            '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + val.pengalaman +
+                            '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman +
                             '</a></li></ul><small>Requirements</small>' + val.syarat +
                             '<small>Responsibilities</small>' + val.tanggungjawab + '</blockquote>' +
                             '</div></div><hr class="hr-divider">'

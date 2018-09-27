@@ -7125,7 +7125,7 @@
     animation: ld-slot-px 6s infinite linear;
 }
 
-.star label {
+.star label, .info label {
     box-shadow: 0 0 0 0 rgba(253, 192, 47, 0.5);
 }
 
@@ -7133,13 +7133,17 @@
     content: "\f005";
 }
 
-.star input:checked + label {
+.info label:after {
+    content: "\f129";
+}
+
+.star input:checked + label, .info input:checked + label {
     background-color: #fdc02f;
     border-color: #fdc02f;
     box-shadow: 0 0 0 0.5em rgba(253, 192, 47, 0);
 }
 
-.star input:checked + label:after {
+.star input:checked + label:after, .info input:checked + label:after {
     color: #fdc02f;
 }
 

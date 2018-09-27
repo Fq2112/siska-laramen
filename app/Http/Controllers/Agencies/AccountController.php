@@ -401,7 +401,7 @@ class AccountController extends Controller
             'cities_id' => $request->cities_id,
             'syarat' => $request->syarat,
             'tanggungjawab' => $request->tanggungjawab,
-            'pengalaman' => 'At least ' . $request->pengalaman . ' years',
+            'pengalaman' => $request->pengalaman,
             'jobtype_id' => $request->jobtype_id,
             'industry_id' => $request->industri_id,
             'joblevel_id' => $request->joblevel_id,
