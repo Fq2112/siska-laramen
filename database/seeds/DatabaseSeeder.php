@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             SalarySeeder::class,
             VacancySeeder::class,
             PaymentMethodSeeder::class,
+            ConfirmSeeder::class,
         ]);
     }
 }
