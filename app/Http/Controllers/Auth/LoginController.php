@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
 use Illuminate\Validation\Rule;
 
 class LoginController extends Controller
@@ -40,12 +41,12 @@ class LoginController extends Controller
             $user = User::where('email',$request->email)->firstOrFail();
 
             if(!Hash::check($request->password, $user->password)) {
-                return back()->with([
+                return back()->withInput(Input::all())->with([
                     'error' => 'Your email or password is incorrect.'
                 ]);
             }
             if($user->status == false){
-                return back()->with([
+                return back()->withInput(Input::all())->with([
                     'error' => 'Your account has not been activated! Please activate first.'
                 ]);
             }
@@ -67,7 +68,7 @@ class LoginController extends Controller
             }
         }
         catch (ModelNotFoundException $e) {
-            return back()->with([
+            return back()->withInput(Input::all())->with([
                 'error' => 'Your email or password is incorrect.'
             ]);
         }
