@@ -70,8 +70,8 @@
                                                      data-toggle="tooltip" data-placement="bottom"
                                                      title="Unmark" style="font-size: 25px">
                                                     <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
-                                                    <input type="checkbox" checked>
-                                                    <label for="bookmark"></label>
+                                                    <input id="bookmark{{$vacancy->id}}" type="checkbox" checked>
+                                                    <label for="bookmark{{$vacancy->id}}"></label>
                                                 </div>
                                             </form>
                                             <ul class="list-inline">
@@ -185,16 +185,15 @@
                 confirmButtonColor: '#fa5555',
                 confirmButtonText: 'Yes, unmark it!',
                 showLoaderOnConfirm: true,
-
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        $("#" + id + ' input[type=checkbox]').prop('checked', false);
-                        $("#form-bookmark-" + id)[0].submit();
-                    });
-                },
-                allowOutsideClick: false
+                allowOutsideClick: false,
+            }).then(function () {
+                $("#bookmark" + id).prop('checked', false);
+                $("#form-bookmark-" + id)[0].submit();
+            }, function (dismiss) {
+                if (dismiss == 'cancel') {
+                    $("#bookmark" + id).prop('checked', true);
+                }
             });
-            return false;
         }
     </script>
 @endpush

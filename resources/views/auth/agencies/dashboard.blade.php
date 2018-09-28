@@ -80,8 +80,8 @@
                                                              '{{$vacancy->judul}}')"
                                                      data-toggle="tooltip" data-placement="bottom" title="Accept"
                                                      style="font-size: 25px">
-                                                    <input type="checkbox" checked>
-                                                    <label for="accept"></label>
+                                                    <input id="accept{{$row->id}}" type="checkbox" checked>
+                                                    <label for="accept{{$row->id}}"></label>
                                                 </div>
                                             </form>
                                             <ul class="list-inline">
@@ -183,16 +183,15 @@
                 confirmButtonColor: '#fa5555',
                 confirmButtonText: 'Yes, accept this seeker!',
                 showLoaderOnConfirm: true,
-
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        $("#" + id + ' input[type=checkbox]').prop('checked', false);
-                        $("#form-invitation-" + id)[0].submit();
-                    });
-                },
-                allowOutsideClick: false
+                allowOutsideClick: false,
+            }).then(function () {
+                $("#accept" + id).prop('checked', false);
+                $("#form-acc-" + id)[0].submit();
+            }, function (dismiss) {
+                if (dismiss == 'cancel') {
+                    $("#accept" + id).prop('checked', true);
+                }
             });
-            return false;
         }
 
         $("#form-time select").on('change', function () {

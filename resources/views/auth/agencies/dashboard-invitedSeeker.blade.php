@@ -81,8 +81,8 @@
                                                      data-toggle="tooltip" data-placement="bottom" title="Abort"
                                                      style="font-size: 25px">
                                                     <input type="hidden" name="invitation_id" value="{{$row->id}}">
-                                                    <input type="checkbox" checked>
-                                                    <label for="invitation"></label>
+                                                    <input id="invitation{{$row->id}}" type="checkbox" checked>
+                                                    <label for="invitation{{$row->id}}"></label>
                                                 </div>
                                             </form>
                                             <ul class="list-inline">
@@ -184,16 +184,15 @@
                 confirmButtonColor: '#fa5555',
                 confirmButtonText: 'Yes, abort it!',
                 showLoaderOnConfirm: true,
-
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        $("#" + id + ' input[type=checkbox]').prop('checked', false);
-                        $("#form-invitation-" + id)[0].submit();
-                    });
-                },
-                allowOutsideClick: false
+                allowOutsideClick: false,
+            }).then(function () {
+                $("#invitation" + id).prop('checked', false);
+                $("#form-invitation-" + id)[0].submit();
+            }, function (dismiss) {
+                if (dismiss == 'cancel') {
+                    $("#invitation" + id).prop('checked', true);
+                }
             });
-            return false;
         }
 
         $("#form-time select").on('change', function () {

@@ -79,8 +79,8 @@
                                                 <div class="anim-icon anim-icon-md compare ld ld-breath"
                                                      onclick="showCompare('{{$vacancy->id}}')" data-toggle="tooltip"
                                                      title="Compare" data-placement="bottom" style="font-size: 25px">
-                                                    <input type="checkbox" checked>
-                                                    <label for="compare"></label>
+                                                    <input id="compare{{$vacancy->id}}" type="checkbox" checked>
+                                                    <label for="compare{{$vacancy->id}}"></label>
                                                 </div>
                                             </div>
                                             <ul class="list-inline">
@@ -178,13 +178,14 @@
                                                       method="post" action="{{route('apply.vacancy')}}">
                                                     {{csrf_field()}}
                                                     <div class="anim-icon anim-icon-md apply ld ld-heartbeat"
-                                                         onclick="abortApplication('{{$vacancy->id}}','{{$vacancy->judul}}')"
+                                                         onclick="abortApplication('{{$vacancy->id}}',
+                                                                 '{{$vacancy->judul}}')"
                                                          data-toggle="tooltip" data-placement="right"
                                                          title="Click here to abort this application!"
                                                          style="font-size: 15px">
                                                         <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
-                                                        <input type="checkbox" checked>
-                                                        <label for="apply"></label>
+                                                        <input id="apply{{$vacancy->id}}" type="checkbox" checked>
+                                                        <label for="apply{{$vacancy->id}}"></label>
                                                     </div>
                                                 </form>
                                                 <small class="to-animate-2">
@@ -247,16 +248,15 @@
                 confirmButtonColor: '#fa5555',
                 confirmButtonText: 'Yes, abort it!',
                 showLoaderOnConfirm: true,
-
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        $("#" + id + ' input[type=checkbox]').prop('checked', false);
-                        $("#form-apply-" + id)[0].submit();
-                    });
-                },
-                allowOutsideClick: false
+                allowOutsideClick: false,
+            }).then(function () {
+                $("#apply" + id).prop('checked', false);
+                $("#form-apply-" + id)[0].submit();
+            }, function (dismiss) {
+                if (dismiss == 'cancel') {
+                    $("#apply" + id).prop('checked', true);
+                }
             });
-            return false;
         }
 
         function showCompare(id) {
@@ -343,7 +343,11 @@
                         '<span data-toggle="tooltip" data-placement="bottom" title="Higher Experience"></span>' +
                         '</div></td></tr></table></blockquote></div></div>'
                     );
+                    $("#compare" + id).prop('checked', false);
                     $("#compareModal").modal('show');
+                    $(document).on('hide.bs.modal', '#compareModal', function (event) {
+                        $("#compare" + id).prop('checked', true);
+                    });
                     $('[data-toggle="tooltip"]').tooltip();
                     $('.counter-count').each(function () {
                         $(this).prop('Counter', 0).animate({

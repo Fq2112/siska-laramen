@@ -78,8 +78,8 @@
                                                      data-toggle="tooltip" data-placement="bottom" title="Payment Proof"
                                                      style="font-size: 25px">
                                                     <input type="hidden" name="confirmAgency_id" value="{{$row->id}}">
-                                                    <input type="checkbox" checked>
-                                                    <label for="upload"></label>
+                                                    <input id="upload{{$row->id}}" type="checkbox" checked>
+                                                    <label for="upload{{$row->id}}"></label>
                                                 </div>
                                             </form>
                                             <ul class="list-inline">
@@ -106,15 +106,15 @@
                                                 {{\Carbon\Carbon::parse($row->date_payment)->format('l, j F Y').' at '.
                                                 \Carbon\Carbon::parse($row->date_payment)->format('H:i')}}
                                             </small>
-                                            @if(now() <= $row->created_at->addDay())
+                                            @if($row->isPaid == false && now() <= $row->created_at->addDay())
                                                 <a href="{{route('delete.job.posting',['id'=>encrypt($row->id)])}}"
-                                                   class="delete-jobPosting">
+                                                   onclick="deleteJobPosting('{{$row->id}}','{{$invoice}}')">
                                                     <div class="anim-icon anim-icon-md apply ld ld-heartbeat"
                                                          data-toggle="tooltip" data-placement="right"
                                                          title="Click here to abort this order!"
                                                          style="font-size: 15px">
-                                                        <input type="checkbox" checked>
-                                                        <label for="apply"></label>
+                                                        <input id="apply{{$row->id}}" type="checkbox" checked>
+                                                        <label for="apply{{$row->id}}"></label>
                                                     </div>
                                                 </a>
                                                 <small class="to-animate-2">
@@ -191,10 +191,14 @@
                 'aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div></div></label></div></form>'
             );
             $("#invoice").html('<strong>' + invoice + '</strong> &ndash; PAYMENT PROOF');
+            $("#upload" + id).prop('checked', false);
             $("#uploadModal").modal('show');
             if (image != "") {
                 setImage(image);
             }
+            $(document).on('hide.bs.modal', '#uploadModal', function (event) {
+                $("#upload" + id).prop('checked', true);
+            });
             ekUpload(id);
         }
 
@@ -346,6 +350,26 @@
             $('#response').removeClass("hidden");
             $('#notimage').addClass("hidden");
             $('#file-image').removeClass("hidden").attr('src', '{{asset('storage/users/agencies/payment/')}}/' + image);
+        }
+
+        function deleteJobPosting(id, invoice) {
+            swal({
+                title: 'Are you sure to delete ' + invoice + '?',
+                text: "You won't be able to revert this action!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, delete it!',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+            }).then(function () {
+                $("#apply" + id).prop('checked', false);
+                window.location.href = linkURL;
+            }, function (dismiss) {
+                if (dismiss == 'cancel') {
+                    $("#apply" + id).prop('checked', true);
+                }
+            });
         }
     </script>
 @endpush

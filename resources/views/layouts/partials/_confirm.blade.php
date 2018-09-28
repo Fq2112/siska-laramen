@@ -1,5 +1,5 @@
 <script>
-    $(".delete-attachments, .delete-exp, .delete-edu, .delete-cert, .delete-org, .delete-lang, .delete-skill, .delete-vacancy, .delete-jobPosting").on('click', function () {
+    $(".delete-attachments, .delete-exp, .delete-edu, .delete-cert, .delete-org, .delete-lang, .delete-skill, .delete-vacancy").on('click', function () {
         var linkURL = $(this).attr("href");
         swal({
             title: 'Are you sure?',

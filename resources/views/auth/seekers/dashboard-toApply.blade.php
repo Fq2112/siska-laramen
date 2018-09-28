@@ -81,8 +81,9 @@
                                                                              '{{$vacancy->judul}}')"
                                                                      data-toggle="tooltip" title="Apply"
                                                                      data-placement="bottom" style="font-size: 25px">
-                                                                    <input type="checkbox" checked>
-                                                                    <label for="apply"></label>
+                                                                    <input id="apply{{$vacancy->id}}"
+                                                                           type="checkbox" checked>
+                                                                    <label for="apply{{$vacancy->id}}"></label>
                                                                 </div>
                                                             </div>
                                                             <ul class="list-inline">
@@ -274,7 +275,11 @@
                             '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
                             '</ul></blockquote></div></div>'
                         );
+                        $("#apply" + id).prop('checked', false);
                         $("#applyInvModal").modal('show');
+                        $(document).on('hide.bs.modal', '#applyInvModal', function (event) {
+                            $("#apply" + id).prop('checked', true);
+                        });
                         $("#vacancy_id").val(data.id);
 
                     } else if (today < data.recruitmentDate_start) {

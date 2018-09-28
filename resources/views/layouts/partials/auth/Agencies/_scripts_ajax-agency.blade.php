@@ -248,7 +248,8 @@
                             '<div class="input-group">' +
                             '<span class="input-group-addon">' +
                             '<i class="fa fa-comments"></i></span>' +
-                            '<input class="form-control datepicker" type="text" maxlength="10" ' +
+                            '<input style="background-color: #fff" class="form-control datepicker" ' +
+                            'type="text" maxlength="10" ' +
                             'placeholder="yyyy-mm-dd" name="interview_date" id="interview_date" ' +
                             'value="' + $interview + '" required></div></div></div>' +
                             '<div class="row form-group" style="margin-bottom: 0">' +
@@ -257,7 +258,8 @@
                             '<div class="input-group">' +
                             '<span class="input-group-addon">' +
                             '<i class="fa fa-hourglass-start"></i></span>' +
-                            '<input class="form-control datepicker" type="text" maxlength="10" ' +
+                            '<input style="background-color: #fff" class="form-control datepicker" ' +
+                            'type="text" maxlength="10" ' +
                             'placeholder="yyyy-mm-dd" name="recruitmentDate_start" id="recruitmentDate_start" ' +
                             'value="' + $start + '" required></div></div>' +
                             '<div class="col-lg-6">' +
@@ -265,7 +267,8 @@
                             '<div class="input-group">' +
                             '<span class="input-group-addon">' +
                             '<i class="fa fa-hourglass-end"></i></span>' +
-                            '<input class="form-control datepicker" type="text" maxlength="10" ' +
+                            '<input style="background-color: #fff" class="form-control datepicker" ' +
+                            'type="text" maxlength="10" ' +
                             'placeholder="yyyy-mm-dd" name="recruitmentDate_end" id="recruitmentDate_end" ' +
                             'value="' + $end + '" required></div></div></div>' +
                             '<div class="row form-group">' +
