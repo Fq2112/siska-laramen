@@ -35,10 +35,12 @@
 @endpush
 @section('content')
     @php
-        if(Illuminate\Support\Facades\Request::is('account/dashboard/recommended_vacancy')){
+        if($seeker->educations->count()){
             foreach ($seeker->educations as $education) {
                 $degrees[] = $education->tingkatpend_id;
             }
+        } else{
+            $degrees = array();
         }
         if ($seeker->total_exp == "") {
             $totalExp = 0;

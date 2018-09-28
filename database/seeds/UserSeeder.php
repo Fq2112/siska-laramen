@@ -92,6 +92,7 @@ class UserSeeder extends Seeder
                         'name' => $faker->firstName . ' ' . $faker->lastName,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
+                        'role' => 'admin'
                     ]);
                 }
             }

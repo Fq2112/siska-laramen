@@ -19,17 +19,19 @@ class RedirectIfAuthenticated
     {
         if (Auth::guard($guard)->check()) {
             if($guard == 'web'){
-                if(Auth::user()->isRoot()){
+                if (Auth::user()->isSeeker()) {
                     return redirect()->route('home-seeker');
-                }
-                elseif(Auth::user()->isAdmin()){
-                    return redirect()->route('home-seeker');
-                }
-                elseif(Auth::user()->isSeeker()){
-                    return redirect()->route('home-seeker');
-                }
-                elseif(Auth::user()->isAgency()){
+
+                } elseif (Auth::user()->isAgency()) {
                     return redirect()->route('home-agency');
+                }
+
+            } elseif ($guard == 'admin') {
+                if (Auth::guard('admin')->user()->isRoot()) {
+                    return redirect()->route('home-admin');
+
+                } elseif (Auth::guard('admin')->user()->isAdmin()) {
+                    return redirect()->route('home-admin');
                 }
             }
         }

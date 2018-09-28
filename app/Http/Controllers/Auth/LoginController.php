@@ -38,14 +38,14 @@ class LoginController extends Controller
         $request->remember = (is_null($request->remember)) ? false : $request->remember;
 
         try {
-            $user = User::where('email',$request->email)->firstOrFail();
+            $user = User::where('email', $request->email)->firstOrFail();
 
-            if(!Hash::check($request->password, $user->password)) {
+            if (!Hash::check($request->password, $user->password)) {
                 return back()->withInput(Input::all())->with([
                     'error' => 'Your email or password is incorrect.'
                 ]);
             }
-            if($user->status == false){
+            if ($user->status == false) {
                 return back()->withInput(Input::all())->with([
                     'error' => 'Your account has not been activated! Please activate first.'
                 ]);
@@ -54,20 +54,19 @@ class LoginController extends Controller
             $request->session()->regenerate();
             Auth::login($user);
 
-            if(Auth::user()->isRoot()){
+            if (Auth::user()->isRoot()) {
                 return back()->with('signed', 'You`re now signed in as Root.');
             }
-            if(Auth::user()->isAdmin()){
+            if (Auth::user()->isAdmin()) {
                 return back()->with('signed', 'You`re now signed in as Admin.');
             }
-            if(Auth::user()->isSeeker()){
+            if (Auth::user()->isSeeker()) {
                 return back()->with('signed', 'You`re now signed in as Job Seeker.');
             }
-            if(Auth::user()->isAgency()){
+            if (Auth::user()->isAgency()) {
                 return back()->with('signed', 'You`re now signed in as Job Agency.');
             }
-        }
-        catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return back()->withInput(Input::all())->with([
                 'error' => 'Your email or password is incorrect.'
             ]);
@@ -77,16 +76,20 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
     {
-        if(Auth::guard('web')->check()){
+        if (Auth::guard('web')->check()) {
             $request->session()->invalidate();
             Auth::guard('web')->logout();
 
-            return redirect()->route('home-seeker')->with('logout', 'You`re now signed out.');
+        } elseif (Auth::guard('admin')->check()) {
+            $request->session()->invalidate();
+            Auth::guard('admin')->logout();
         }
+
+        return redirect()->route('home-seeker')->with('logout', 'You`re now signed out.');
     }
 }

@@ -305,8 +305,12 @@ class SeekerController extends Controller
         $user = Auth::user();
         $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
 
-        foreach ($seeker->educations as $education) {
-            $degrees[] = $education->tingkatpend_id;
+        if ($seeker->educations->count()) {
+            foreach ($seeker->educations as $education) {
+                $degrees[] = $education->tingkatpend_id;
+            }
+        } else {
+            $degrees = array();
         }
 
         $keyword = $request->q;

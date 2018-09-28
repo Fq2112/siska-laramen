@@ -42,7 +42,7 @@ class SocialAuthController extends Controller
                     'ava' => $userSocial->getId() . ".jpg",
                     'email' => $userSocial->getEmail(),
                     'name' => $userSocial->getName(),
-                    'password' => bcrypt('secret'),
+                    'password' => bcrypt(str_random(15)),
                     'status' => true,
                     'role' => 'seeker'
                 ]);
