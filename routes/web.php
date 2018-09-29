@@ -58,7 +58,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'account'], function () {
 
 Route::group(['namespace' => 'Admins', 'prefix' => 'admin'], function () {
 
-    Route::get('{id}', [
+    Route::get('/', [
         'uses' => 'AdminController@index',
         'as' => 'home-admin'
     ]);
