@@ -34,5 +34,6 @@ class AppServiceProvider extends ServiceProvider
                 $app['Illuminate\Routing\Redirector']
             );
         });
+        $this->app->bind('GlobalAuth', 'App\Support\GlobalAuth');
     }
 }

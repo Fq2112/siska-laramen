@@ -296,7 +296,7 @@
                                 <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">
                                         <input class="form-control" type="email" placeholder="Email" name="email"
-                                               value="{{ old('email') }}" required>
+                                               required>
                                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                                         @if ($errors->has('email'))
                                             <span class="help-block">
