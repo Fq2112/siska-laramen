@@ -466,7 +466,24 @@
 
         function vacancyCheck(id, job_ads) {
             @guest
+            @if(Auth::guard('admin')->check())
+            swal({
+                title: 'ATTENTION!',
+                text: 'This feature only works when you\'re signed in as a Job Agency.',
+                type: 'warning',
+                timer: '3500'
+            });
+            @else
             openLoginModal();
+            @endif
+            @else
+            @if(Auth::user()->isSeeker())
+            swal({
+                title: 'ATTENTION!',
+                text: 'This feature only works when you\'re signed in as a Job Agency.',
+                type: 'warning',
+                timer: '3500'
+            });
             @else
             if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
             ->count()}}' >= job_ads)
@@ -490,6 +507,7 @@
                     allowOutsideClick: false
                 });
             return false;
+            @endif
             @endguest
         }
     </script>

@@ -276,8 +276,7 @@
             whatsapp: "+628563094333",
             line: "//line.me/ti/p/~fqnkk",
             call_to_action: "Message us",
-            button_color: "{{\Illuminate\Support\Facades\Request::is('agency') ||
-            Auth::check() && Auth::user()->isAgency() ? '#00ADB5' : '#FA5555'}}",
+            button_color: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? '#00ADB5' : '#FA5555'}}",
             position: "left",
             order: "line,whatsapp",
         };

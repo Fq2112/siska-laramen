@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'jQuinn\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$admin->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <!-- top tiles -->

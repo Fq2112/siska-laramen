@@ -395,31 +395,43 @@
                   d="M112.456 363.093c-.056 7.866-6.478 14.197-14.344 14.142 7.866.056 14.198 6.48 14.142 14.345.056-7.866 6.48-14.198 14.345-14.142-7.868-.057-14.2-6.48-14.144-14.345zM432.436 274.908c-.056 7.866-6.478 14.198-14.344 14.142 7.866.057 14.197 6.48 14.142 14.345.056-7.866 6.48-14.197 14.345-14.142-7.868-.056-14.2-6.48-14.144-14.345zM159.75 58.352c-.12 16.537-13.62 29.848-30.157 29.73 16.537.118 29.848 13.62 29.73 30.156.118-16.537 13.62-29.848 30.156-29.73-16.54-.117-29.85-13.62-29.73-30.156z"/>
         </g>
     </svg>
-    @if(Auth::user()->role == 'seeker')
+    @auth
+        <a href="{{Auth::user()->isSeeker() ? route('home-seeker') : route('home-agency')}}" id="home">
+            <button class="denied__link">Go Home</button>
+        </a>
+        <script>
+            @if(\Illuminate\Support\Facades\Request::is('admin*'))
+            swal({
+                title: 'ATTENTION!',
+                text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
+                type: 'warning',
+                timer: '3500'
+            });
+            @else
+            swal({
+                title: 'ATTENTION!',
+                text: 'You\'re redirected here because you didn\'t signed in as a Job {{Auth::user()->isSeeker() ?
+                'Agency' : 'Seeker'}}.',
+                type: 'warning',
+                timer: '3500'
+            });
+            @endif
+        </script>
+    @else
         <a href="{{route('home-seeker')}}" id="home">
             <button class="denied__link">Go Home</button>
         </a>
         <script>
+            @if(\Illuminate\Support\Facades\Request::is('admin*'))
             swal({
                 title: 'ATTENTION!',
-                text: 'You\'re redirected here because you didn\'t signed in as a Job Agency.',
+                text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
                 type: 'warning',
                 timer: '3500'
             });
+            @endif
         </script>
-    @elseif(Auth::user()->role == 'agency')
-        <a href="{{route('home-agency')}}" id="home">
-            <button class="denied__link">Go Home</button>
-        </a>
-        <script>
-            swal({
-                title: 'ATTENTION!',
-                text: 'You\'re redirected here because you didn\'t signed in as a Job Seeker.',
-                type: 'warning',
-                timer: '3500'
-            });
-        </script>
-    @endif
+    @endauth
 </div>
 </body>
 <script>

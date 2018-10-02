@@ -35,8 +35,7 @@ class SeekerController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except('index');
-        $this->middleware('seeker')->except(['index', 'showProfile']);
+        $this->middleware(['auth', 'seeker'])->except(['index', 'showProfile']);
     }
 
     public function index()

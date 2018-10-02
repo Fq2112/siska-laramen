@@ -17,10 +17,6 @@ class AdminMiddleware
     public function handle($request, Closure $next)
     {
         if (Auth::guard('admin')->check()) {
-            if (Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isAdmin()) {
-                return $next($request);
-            }
-        } else {
             return $next($request);
         }
         return response(view('errors.403'), 403);

@@ -117,9 +117,12 @@
                                         </div>
                                     </form>
                                 </li>
-                                <li class="ld ld-heartbeat" id="apply" data-placement="top" data-toggle="tooltip">
+                                <li class="{{$vacancy->isPost == false || Auth::check() && Auth::user()->isAgency() ||
+                                Auth::guard('admin')->check() ? '' : 'ld ld-heartbeat'}}" id="apply"
+                                    data-placement="top" data-toggle="tooltip">
                                     <button type="button" class="btn btn-danger btn-block"
-                                            {{$vacancy->isPost == false ? 'disabled' : ''}}>
+                                            {{$vacancy->isPost == false || Auth::check() && Auth::user()->isAgency() ||
+                                            Auth::guard('admin')->check() ? 'disabled' : ''}}>
                                         <i class="fa fa-paper-plane"></i>&ensp;<strong>Apply</strong>
                                     </button>
                                 </li>
@@ -776,7 +779,16 @@
             @endif
             @else
             $(this).prop('checked', false);
+            @if(Auth::guard('admin')->check())
+            swal({
+                title: 'ATTENTION!',
+                text: 'This feature only works when you\'re signed in as a Job Seeker.',
+                type: 'warning',
+                timer: '3500'
+            });
+            @else
             openLoginModal();
+            @endif
             @endauth
         });
         $btnApply.click(function () {
@@ -810,13 +822,6 @@
                 $('#form-apply')[0].submit();
                 @endif
                 @endif
-            });
-            @else
-            swal({
-                title: 'ATTENTION!',
-                text: 'This feature only works when you\'re signed in as a Job Seeker.',
-                type: 'warning',
-                timer: '3500'
             });
             @endif
             @else

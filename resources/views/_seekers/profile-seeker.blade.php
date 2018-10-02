@@ -106,14 +106,21 @@
                                             </a>
                                         </li>
                                     @else
-                                        <li class="ld ld-heartbeat" id="invite" data-placement="top"
-                                            data-toggle="tooltip">
+                                        <li class="{{!Auth::user()->isAgency() ? '' : 'ld ld-heartbeat'}}"
+                                            id="invite" data-placement="top" data-toggle="tooltip">
                                             <button type="button" class="btn btn-info btn-block"
                                                     {{!Auth::user()->isAgency() ? 'disabled' : ''}}>
                                                 <i class="fa fa-envelope"></i>&ensp;<strong>Invite</strong>
                                             </button>
                                         </li>
                                     @endif
+                                @else
+                                    <li id="invite" data-placement="top"
+                                        data-toggle="tooltip">
+                                        <button type="button" class="btn btn-info btn-block" disabled>
+                                            <i class="fa fa-envelope"></i>&ensp;<strong>Invite</strong>
+                                        </button>
+                                    </li>
                                 @endauth
                             </ul>
                         </div>

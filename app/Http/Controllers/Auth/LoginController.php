@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Support\Facades\GlobalAuth;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 
 class LoginController extends Controller
@@ -52,18 +51,8 @@ class LoginController extends Controller
                 $this->redirectTo = session('intended');
                 session()->forget('intended');
             }
-            if (Auth::user()->isRoot()) {
-                return back()->with('signed', 'You`re now signed in as Root.');
-            }
-            if (Auth::user()->isAdmin()) {
-                return back()->with('signed', 'You`re now signed in as Admin.');
-            }
-            if (Auth::user()->isSeeker()) {
-                return back()->with('signed', 'You`re now signed in as Job Seeker.');
-            }
-            if (Auth::user()->isAgency()) {
-                return back()->with('signed', 'You`re now signed in as Job Agency.');
-            }
+
+            return back()->with('signed', 'You`re now signed in.');
         }
 
         return back()->withInput(Input::all())->with([
@@ -74,10 +63,13 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function logout()
+    public function logout(Request $request)
     {
+        $request->session()->invalidate();
+
         GlobalAuth::logout();
 
         return redirect()->route('home-seeker')->with('logout', 'You`re now signed out.');

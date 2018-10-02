@@ -15,8 +15,9 @@
     });
     @elseif(session('signed'))
     swal({
-        title: 'Welcome {{Auth::user()->name}}!',
-        text: '{{ session('signed') }}',
+        title: 'Signed In!',
+        text: 'Welcome {{Auth::guard('admin')->check() ? Auth::guard('admin')->user()->name : Auth::user()->name}}! ' +
+            'You\'re now signed in.',
         type: 'success',
         timer: '3500'
     });
