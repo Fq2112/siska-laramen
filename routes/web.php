@@ -63,4 +63,9 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin'], function () {
         'as' => 'home-admin'
     ]);
 
+    Route::get('inbox', [
+        'uses' => 'AdminController@showInbox',
+        'as' => 'admin.inbox'
+    ]);
+
 });

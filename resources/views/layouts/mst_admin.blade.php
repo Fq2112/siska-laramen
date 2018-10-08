@@ -16,27 +16,28 @@
     <link href="{{asset('fonts/fontawesome-free/css/all.css')}}" rel="stylesheet">
     <!-- NProgress -->
     <link href="{{asset('_admins/css/nprogress.css')}}" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="{{asset('_admins/css/green.css')}}" rel="stylesheet">
-
-    <!-- bootstrap-progressbar -->
-    <link href="{{asset('_admins/css/bootstrap-progressbar-3.3.4.min.css')}}" rel="stylesheet">
-    <!-- JQVMap -->
-    <link href="{{asset('_admins/css/jqvmap.min.css')}}" rel="stylesheet"/>
     <!-- bootstrap-daterangepicker -->
     <link href="{{asset('_admins/css/daterangepicker.css')}}" rel="stylesheet">
+    <!-- bootstrap-wysiwyg -->
+    <link href="{{asset('_admins/css/prettify.min.css')}}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link href="{{asset('_admins/css/custom.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/custom.css')}}" rel="stylesheet">
+    <style>
+        .dropdown-menu li:first-child a:before {
+            border: none;
+        }
+    </style>
 </head>
 
-<body class="nav-md">
+<body class="nav-md footer_fixed">
+@php $feedback = \App\Feedback::where('created_at', '>=', today()->subWeek()->toDateTimeString()); @endphp
 <div class="container body">
     <div class="main_container">
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="{{route('home-admin')}}" class="site_title"><i class="fa fa-paw"></i>
+                    <a href="{{route('home-admin')}}" class="site_title"><i class="fa fa-user-secret"></i>
                         <span>SISKA Admins</span></a>
                 </div>
 
@@ -45,7 +46,8 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img src="{{asset('_admins/images/img.jpg')}}" alt="..." class="img-circle profile_img">
+                        <img src="{{$admin->ava == "" || $admin->ava == "avatar.png" ? asset('images/avatar.png') :
+                        asset('storage/admins/'.$admin->ava)}}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
@@ -170,11 +172,11 @@
                     <a data-toggle="tooltip" data-placement="top" title="Settings">
                         <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                     </a>
-                    <a data-toggle="tooltip" data-placement="top" title="FullScreen">
+                    <a data-toggle="tooltip" data-placement="top" title="Fullscreen" onclick="fullScreen()">
                         <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                     </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Lock">
-                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    <a href="{{route('home-seeker')}}" data-toggle="tooltip" data-placement="top" title="SISKA">
+                        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
                     </a>
                     <a data-toggle="tooltip" data-placement="top" title="Logout"
                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
@@ -201,7 +203,9 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="{{asset('_admins/images/img.jpg')}}" alt="">{{$admin->name}}
+                                <img src="{{$admin->ava == "" || $admin->ava == "avatar.png" ?
+                                asset('images/avatar.png') : asset('storage/admins/'.$admin->ava)}}" alt="">
+                                {{$admin->name}}
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -228,65 +232,44 @@
                             <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="fa fa-envelope"></i>
-                                <span class="badge bg-green">6</span>
+                                <span class="badge bg-green">{{$feedback->count()}}</span>
                             </a>
                             <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="{{asset('_admins/images/img.jpg')}}"
-                                                                 alt="Profile Image"/></span>
-                                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="{{asset('_admins/images/img.jpg')}}"
-                                                                 alt="Profile Image"/></span>
-                                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="{{asset('_admins/images/img.jpg')}}"
-                                                                 alt="Profile Image"/></span>
-                                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a>
-                                        <span class="image"><img src="{{asset('_admins/images/img.jpg')}}"
-                                                                 alt="Profile Image"/></span>
-                                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                                    </a>
-                                </li>
+                                @if($feedback->count())
+                                    @foreach($feedback->limit(5)->orderByDesc('id')->get() as $row)
+                                        @php $user = \App\User::where('email',$row->email); @endphp
+                                        <li>
+                                            <a>
+                                                <span class="image">
+                                                    @if($user->count())
+                                                        @if($user->first()->ava == "" || $user->first()->ava == "seeker.png")
+                                                            <img src="{{asset('images/seeker.png')}}">
+                                                        @elseif($user->first()->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$user->first()->ava)}}">
+                                                        @endif
+                                                    @else
+                                                        <img src="{{asset('images/avatar.png')}}">
+                                                    @endif
+                                                </span>
+                                                <span><span>{{$row->name}}</span>
+                                                    <span class="time">{{$row->created_at->diffForHumans()}}</span>
+                                                </span>
+                                                <span class="message">{{\Illuminate\Support\Str::words
+                                                ($row->message,15,' ...')}}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                @else
+                                    <li><a style="text-decoration: none;cursor: text"><span class="message">
+                                                There seems to be none of the feedback was found today&hellip;</span></a>
+                                    </li>
+                                @endif
                                 <li>
                                     <div class="text-center">
-                                        <a>
-                                            <strong>See All Alerts</strong>
+                                        <a href="{{route('admin.inbox')}}">
+                                            <strong>See All Feedback</strong>
                                             <i class="fa fa-angle-right"></i>
                                         </a>
                                     </div>
@@ -306,7 +289,7 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+                &copy; 2018 SISKA. All right reserved. Designed by <a href="http://rabbit-media.net">Rabbit Media</a>
             </div>
             <div class="clearfix"></div>
         </footer>
@@ -324,14 +307,8 @@
 <script src="{{asset('_admins/js/nprogress.js')}}"></script>
 <!-- Chart.js -->
 <script src="{{asset('_admins/js/Chart.min.js')}}"></script>
-<!-- gauge.js -->
-<script src="{{asset('_admins/js/gauge.min.js')}}"></script>
-<!-- bootstrap-progressbar -->
-<script src="{{asset('_admins/js/bootstrap-progressbar.min.js')}}"></script>
-<!-- iCheck -->
-<script src="{{asset('_admins/js/icheck.min.js')}}"></script>
-<!-- Skycons -->
-<script src="{{asset('_admins/js/skycons.js')}}"></script>
+<!-- jQuery Sparklines -->
+<script src="{{asset('_admins/js/jquery.sparkline.min.js')}}"></script>
 <!-- Flot -->
 <script src="{{asset('_admins/js/jquery.flot.js')}}"></script>
 <script src="{{asset('_admins/js/jquery.flot.pie.js')}}"></script>
@@ -344,13 +321,13 @@
 <script src="{{asset('_admins/js/curvedLines.js')}}"></script>
 <!-- DateJS -->
 <script src="{{asset('_admins/js/date.js')}}"></script>
-<!-- JQVMap -->
-<script src="{{asset('_admins/js/jquery.vmap.js')}}"></script>
-<script src="{{asset('_admins/js/jquery.vmap.world.js')}}"></script>
-<script src="{{asset('_admins/js/jquery.vmap.sampledata.js')}}"></script>
 <!-- bootstrap-daterangepicker -->
 <script src="{{asset('js/moment.js')}}"></script>
 <script src="{{asset('_admins/js/daterangepicker.js')}}"></script>
+<!-- bootstrap-wysiwyg -->
+<script src="{{asset('_admins/js/bootstrap-wysiwyg.min.js')}}"></script>
+<script src="{{asset('_admins/js/jquery.hotkeys.js')}}"></script>
+<script src="{{asset('_admins/js/prettify.js')}}"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>
@@ -362,6 +339,27 @@
             titleScroller(text.substr(1) + text.substr(0, 1));
         }, 500);
     }(title + " ~ "));
+
+    function fullScreen() {
+        if ((document.fullScreenElement && document.fullScreenElement !== null) ||
+            (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+            if (document.documentElement.requestFullScreen) {
+                document.documentElement.requestFullScreen();
+            } else if (document.documentElement.mozRequestFullScreen) {
+                document.documentElement.mozRequestFullScreen();
+            } else if (document.documentElement.webkitRequestFullScreen) {
+                document.documentElement.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+            }
+        } else {
+            if (document.cancelFullScreen) {
+                document.cancelFullScreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+        }
+    }
 </script>
 </body>
 </html>

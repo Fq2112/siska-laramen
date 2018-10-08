@@ -483,7 +483,7 @@
                         Get in Touch</a><span> &middot; </span>
                     <a href="{{route('info.siska')}}#faqs" target="_blank">
                         FAQ</a><br>
-                    Copyright &copy; 2018 SISKA. All Rights Reserved.<br>Designed by
+                    &copy; 2018 SISKA. All Rights Reserved.<br>Designed by
                     <a href="http://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
