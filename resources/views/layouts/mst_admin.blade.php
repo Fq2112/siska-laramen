@@ -20,6 +20,17 @@
     <link href="{{asset('_admins/css/daterangepicker.css')}}" rel="stylesheet">
     <!-- bootstrap-wysiwyg -->
     <link href="{{asset('_admins/css/prettify.min.css')}}" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="{{asset('_admins/css/green.css')}}" rel="stylesheet">
+    <!-- Datatables -->
+    <link href="{{asset('_admins/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/buttons.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/fixedHeader.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/responsive.bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/scroller.bootstrap.min.css')}}" rel="stylesheet">
+    <!-- Sweet Alert v2 -->
+    <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
+    <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
 
     <!-- Custom Theme Style -->
     <link href="{{asset('_admins/css/custom.css')}}" rel="stylesheet">
@@ -31,7 +42,7 @@
 </head>
 
 <body class="nav-md">
-@php $feedback = \App\Feedback::where('created_at', '>=', today()->subWeek()->toDateTimeString()); @endphp
+@php $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString()); @endphp
 <div class="container body">
     <div class="main_container">
         <div class="col-md-3 left_col">
@@ -76,12 +87,7 @@
                                     <li><a>Data Master <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="{{route('home-admin')}}">Admins</a></li>
-                                            <li><a>Users <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('home-admin')}}">Agencies</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Seekers</a></li>
-                                                </ul>
-                                            </li>
+                                            <li><a href="{{route('table.users')}}">Users</a></li>
                                             <li><a>Requirements <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
                                                     <li><a href="{{route('home-admin')}}">Education Degrees</a></li>
@@ -235,7 +241,7 @@
                                     @endforeach
                                 @else
                                     <li><a style="text-decoration: none;cursor: text"><span class="message">
-                                                There seems to be none of the feedback was found today&hellip;</span></a>
+                                                There seems to be none of the feedback was found this 3 days&hellip;</span></a>
                                     </li>
                                 @endif
                                 <li>
@@ -277,6 +283,9 @@
 <script src="{{asset('_admins/js/fastclick.js')}}"></script>
 <!-- NProgress -->
 <script src="{{asset('_admins/js/nprogress.js')}}"></script>
+<!-- morris.js -->
+<script src="{{asset('_admins/js/raphael.min.js')}}"></script>
+<script src="{{asset('_admins/js/morris.min.js')}}"></script>
 <!-- Chart.js -->
 <script src="{{asset('_admins/js/Chart.min.js')}}"></script>
 <!-- jQuery Sparklines -->
@@ -300,18 +309,28 @@
 <script src="{{asset('_admins/js/bootstrap-wysiwyg.min.js')}}"></script>
 <script src="{{asset('_admins/js/jquery.hotkeys.js')}}"></script>
 <script src="{{asset('_admins/js/prettify.js')}}"></script>
+<!-- iCheck -->
+<script src="{{asset('_admins/js/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{asset('_admins/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('_admins/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{asset('_admins/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{asset('_admins/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{asset('_admins/js/buttons.flash.min.js')}}"></script>
+<script src="{{asset('_admins/js/buttons.html5.min.js')}}"></script>
+<script src="{{asset('_admins/js/buttons.print.min.js')}}"></script>
+<script src="{{asset('_admins/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{asset('_admins/js/dataTables.keyTable.min.js')}}"></script>
+<script src="{{asset('_admins/js/dataTables.responsive.min.js')}}"></script>
+<script src="{{asset('_admins/js/responsive.bootstrap.js')}}"></script>
+<script src="{{asset('_admins/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{asset('_admins/js/jszip.min.js')}}"></script>
+<script src="{{asset('_admins/js/pdfmake.min.js')}}"></script>
+<script src="{{asset('_admins/js/vfs_fonts.js')}}"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>
 <script>
-    var title = document.getElementsByTagName("title")[0].innerHTML;
-    (function titleScroller(text) {
-        document.title = text;
-        setTimeout(function () {
-            titleScroller(text.substr(1) + text.substr(0, 1));
-        }, 500);
-    }(title + " ~ "));
-
     function fullScreen() {
         if ((document.fullScreenElement && document.fullScreenElement !== null) ||
             (!document.mozFullScreen && !document.webkitIsFullScreen)) {
@@ -332,6 +351,18 @@
             }
         }
     }
+
+    var title = document.getElementsByTagName("title")[0].innerHTML;
+    (function titleScroller(text) {
+        document.title = text;
+        setTimeout(function () {
+            titleScroller(text.substr(1) + text.substr(0, 1));
+        }, 500);
+    }(title + " ~ "));
 </script>
+@include('layouts.partials._alert')
+@include('layouts.partials._confirm')
+@include('layouts.partials.auth.notif_alert')
+@stack('scripts')
 </body>
 </html>

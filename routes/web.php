@@ -68,4 +68,26 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin'], function () {
         'as' => 'admin.inbox'
     ]);
 
+    Route::group(['prefix' => 'tables'], function () {
+
+        Route::group(['prefix' => 'users'], function () {
+
+            Route::get('/', [
+                'uses' => 'AdminController@showUsersTable',
+                'as' => 'table.users'
+            ]);
+
+            Route::get('{id}/detail', [
+                'uses' => 'AdminController@detailUsers',
+                'as' => 'detail.users'
+            ]);
+
+            Route::get('{id}/delete', [
+                'uses' => 'AdminController@deleteUsers',
+                'as' => 'delete.users'
+            ]);
+
+        });
+    });
+
 });

@@ -1062,8 +1062,8 @@
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
                                                                                 </small>
-                                                                                <a href="{{route('delete
-                                                                                .experiences',['id' => encrypt
+                                                                                <a href="{{route('delete.experiences',
+                                                                                ['id' => encrypt
                                                                                 ($row->id),'exp' =>
                                                                                 $row->job_title])}}"
                                                                                    class="delete-exp"
@@ -1473,8 +1473,8 @@
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
                                                                                 </small>
-                                                                                <a href="{{route('delete
-                                                                                .educations',['id' => encrypt
+                                                                                <a href="{{route('delete.educations',
+                                                                                ['id' => encrypt
                                                                                 ($row->id),'edu' =>
                                                                                 $row->school_name])}}"
                                                                                    class="delete-edu"

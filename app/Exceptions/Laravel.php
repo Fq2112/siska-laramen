@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -55,6 +56,8 @@ class Laravel extends ExceptionHandler
             return response(view('errors.404'), 404);
         } elseif ($exception instanceof MethodNotAllowedHttpException) {
             return response(view('errors.405'), 405);
+        } elseif ($exception instanceof TokenMismatchException) {
+            return back()->with('token', 'The page has expired due to inactivity, please try again.');
         }
 
         return parent::render($request, $exception);

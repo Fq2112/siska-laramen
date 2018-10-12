@@ -77,7 +77,7 @@
         };
         tinymce.init(editor_config);
 
-        @if(session('success')||session('error')||session('logout')||session('expire'))
+        @if(session('success')||session('error')||session('logout')||session('expire')||session('inactive')||session('unknown'))
         openLoginModal();
         @elseif(session('status'))
         openEmailModal();

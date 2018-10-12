@@ -13,6 +13,20 @@
         type: 'success',
         timer: '3500'
     });
+    @elseif(session('inactive'))
+    swal({
+        title: 'ATTENTION!',
+        text: '{{ session('inactive') }}',
+        type: 'error',
+        timer: '3500'
+    });
+    @elseif(session('token'))
+    swal({
+        title: 'Validation Token Expired!',
+        text: '{{session('token')}}',
+        type: 'error',
+        timer: '3500'
+    });
     @elseif(session('signed'))
     swal({
         title: 'Signed In!',
