@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Clients;
 
 use App\Cities;
+use App\Nations;
 use App\Provinces;
 use App\Http\Controllers\Controller;
 
@@ -18,6 +19,12 @@ class LocationsAPIController extends Controller
     {
         $cities = Cities::all()->toArray();
         return $cities;
+    }
+
+    public function loadNations()
+    {
+        $nation = Nations::all()->toArray();
+        return $nation;
     }
 
     public function loadLocations()
