@@ -18,6 +18,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         'as' => 'get.search.vacancy'
     ]);
 
+    $router->get('vacancies',[
+        'uses' => 'PostController@getVacancy',
+        'as' => 'get.vacancy'
+    ]);
+
     $router->group(['prefix' => 'auth'], function ($router) {
 
         $router->post('login', 'AuthController@login');
@@ -44,6 +49,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'as' => 'load.cities'
         ]);
 
+        $router->get('nations', [
+            'uses' => 'LocationsAPIController@loadNations',
+            'as' => 'load.nations'
+        ]);
+
         $router->get('locations', [
             'uses' => 'LocationsAPIController@loadLocations',
             'as' => 'load.locations'
@@ -62,6 +72,51 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('vacancies/latest', [
             'uses' => 'VacanciesAPIController@loadLateVacancies',
             'as' => 'load.late.vacancies'
+        ]);
+
+        $router->get('joblevel', [
+            'uses' => 'JobAPIController@loadJobLevel',
+            'as' => 'load.joblevel'
+        ]);
+
+        $router->get('jobtype', [
+            'uses' => 'JobAPIController@loadJobType',
+            'as' => 'load.jobtype'
+        ]);
+
+        $router->get('jobfunction', [
+            'uses' => 'JobAPIController@loadJobFunction',
+            'as' => 'load.jobfunction'
+        ]);
+
+        $router->get('industries', [
+            'uses' => 'JobAPIController@loadIndustry',
+            'as' => 'load.industries'
+        ]);
+
+        $router->get('paymentmethod', [
+            'uses' => 'PaymentAPIController@loadPaymentMethod',
+            'as' => 'load.paymentmethod'
+        ]);
+
+        $router->get('paymentcategory', [
+            'uses' => 'PaymentAPIController@loadPaymentCategory',
+            'as' => 'load.paymentcategory'
+        ]);
+
+        $router->get('plan', [
+            'uses' => 'PaymentAPIController@loadPlan',
+            'as' => 'load.paymentcategory'
+        ]);
+
+        $router->get('major', [
+            'uses' => 'EducationAPIController@loadEducationMajor',
+            'as' => 'load.major'
+        ]);
+
+        $router->get('degree', [
+            'uses' => 'EducationAPIController@loadEducationDegree',
+            'as' => 'load.degree'
         ]);
 
     });
