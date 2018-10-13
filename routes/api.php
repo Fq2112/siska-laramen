@@ -109,6 +109,16 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'as' => 'load.paymentcategory'
         ]);
 
+        $router->get('major', [
+            'uses' => 'EducationAPIController@loadEducationMajor',
+            'as' => 'load.major'
+        ]);
+
+        $router->get('degree', [
+            'uses' => 'EducationAPIController@loadEducationDegree',
+            'as' => 'load.degree'
+        ]);
+
     });
 
 });
