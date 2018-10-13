@@ -10,8 +10,10 @@
                             <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                            <li><a class="close-link"><i class="fa fa-times"></i></a></li>
+                            <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
+                                    <i class="fa fa-chevron-up"></i></a></li>
+                            <li><a class="close-link" data-toggle="tooltip" title="Close" data-placement="right">
+                                    <i class="fa fa-times"></i></a></li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
@@ -32,7 +34,7 @@
 
                             <tbody>
                             @php $no = 1; @endphp
-                            @foreach(\App\User::all() as $user)
+                            @foreach($users as $user)
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle" align="center">
@@ -50,8 +52,10 @@
                                     <td style="vertical-align: middle">
                                         <strong>{{$user->name}}</strong><br>
                                         <a href="mailto:{{$user->email}}">{{$user->email}}</a></td>
-                                    <td style="vertical-align: middle;text-transform: capitalize"
-                                        align="center">{{$user->role}}</td>
+                                    <td style="vertical-align: middle;text-transform: uppercase" align="center">
+                                        <span class="label label-default"
+                                              style="background: {{$user->isAgency() ? '#00adb5' : '#fa5555'}}">
+                                            {{$user->isAgency() ? 'Job Agency' : 'Job Seeker'}}</span></td>
                                     <td style="vertical-align: middle;text-transform: uppercase" align="center">
                                         <span class="label label-{{$user->status == true ? 'success' : 'warning'}}">
                                             {{$user->status == true ? 'Active' : 'Inactive'}}</span>
