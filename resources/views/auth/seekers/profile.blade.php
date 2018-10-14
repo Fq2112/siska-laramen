@@ -584,11 +584,8 @@
                                                     <td><i class="fa fa-birthday-cake"></i></td>
                                                     <td>&nbsp;</td>
                                                     <td>
-                                                        @if($seeker->birthday != "")
-                                                            {{$seeker->birthday}}
-                                                        @else
-                                                            Birthday (-)
-                                                        @endif
+                                                        {{$seeker->birthday == "" ? 'Birthday (-)' :
+                                                        \Carbon\Carbon::parse($seeker->birthday)->format('j F Y')}}
                                                     </td>
                                                 </tr>
                                                 <tr>

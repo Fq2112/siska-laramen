@@ -1,18 +1,19 @@
 @extends('layouts.mst_admin')
-@section('title', 'Education Degrees Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Payment Categories Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Education Degrees
+                        <h2>Payment Categories
                             <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
                                     <i class="fa fa-chevron-up"></i></a></li>
-                            <li><a onclick="createDegree()" data-toggle="tooltip" title="Create" data-placement="right">
+                            <li><a onclick="createCategory()" data-toggle="tooltip" title="Create"
+                                   data-placement="right">
                                     <i class="fa fa-plus"></i></a></li>
                         </ul>
                         <div class="clearfix"></div>
@@ -22,7 +23,7 @@
                             <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Degree</th>
+                                <th>Category / Caption</th>
                                 <th>Created at</th>
                                 <th>Last Update</th>
                                 <th>Action</th>
@@ -31,19 +32,21 @@
 
                             <tbody>
                             @php $no = 1; @endphp
-                            @foreach($degrees as $degree)
+                            @foreach($categories as $category)
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
-                                    <td style="vertical-align: middle"><strong>{{$degree->name}}</strong></td>
-                                    <td style="vertical-align: middle">{{\Carbon\Carbon::parse($degree->created_at)->format('j F Y')}}</td>
-                                    <td style="vertical-align: middle">{{$degree->updated_at->diffForHumans()}}</td>
+                                    <td style="vertical-align: middle">
+                                        <strong>{{$category->name}}</strong><br>{{$category->caption}}</td>
+                                    <td style="vertical-align: middle">{{\Carbon\Carbon::parse($category->created_at)->format('j F Y')}}</td>
+                                    <td style="vertical-align: middle">{{$category->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a onclick='editDegree("{{$degree->id}}","{{$degree->name}}")'
+                                        <a onclick='editCategory("{{$category->id}}","{{$category->name}}",
+                                                "{{$category->caption}}")'
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
-                                        <a href="{{route('delete.degrees',['id'=>encrypt($degree->id)])}}"
-                                           class="btn btn-danger btn-sm delete-users" style="font-size: 16px"
+                                        <a href="{{route('delete.PaymentCategories',['id'=>encrypt($category->id)])}}"
+                                           class="btn btn-danger btn-sm delete-data" style="font-size: 16px"
                                            data-toggle="tooltip"
                                            title="Delete" data-placement="right"><i class="fa fa-trash-alt"></i></a>
                                     </td>
@@ -64,15 +67,24 @@
                     </button>
                     <h4 class="modal-title">Create Form</h4>
                 </div>
-                <form method="post" action="{{route('create.degrees')}}">
+                <form method="post" action="{{route('create.PaymentCategories')}}">
                     {{csrf_field()}}
                     <div class="modal-body">
                         <div class="row form-group">
                             <div class="col-lg-12 has-feedback">
-                                <label for="degree">Education Degree <span class="required">*</span></label>
-                                <input id="degree" type="text" class="form-control" maxlength="191" name="name"
-                                       placeholder="Degree name" required>
-                                <span class="fa fa-graduation-cap form-control-feedback right"
+                                <label for="name">Category <span class="required">*</span></label>
+                                <input id="name" type="text" class="form-control" maxlength="191" name="name"
+                                       placeholder="Category name" required>
+                                <span class="fa fa-university form-control-feedback right"
+                                      aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="caption">Caption <span class="required">*</span></label>
+                                <input id="caption" type="text" class="form-control" maxlength="191" name="caption"
+                                       placeholder="Caption" required>
+                                <span class="fa fa-comment-dots form-control-feedback right"
                                       aria-hidden="true"></span>
                             </div>
                         </div>
@@ -100,21 +112,27 @@
 @endsection
 @push("scripts")
     <script>
-        function createDegree() {
+        function createCategory() {
             $("#createModal").modal('show');
         }
 
-        function editDegree(id, name) {
+        function editCategory(id, name, caption) {
             $('#editModalContent').html(
-                '<form method="post" id="' + id + '" action="{{url('admin/tables/requirements/degrees')}}/' + id + '/update">' +
-                '{{csrf_field()}} {{method_field('PUT')}}' +
+                '<form method="post" id="' + id + '" action="{{url('admin/tables/web_contents/payment_categories')}}/' + id +
+                '/update">{{csrf_field()}} {{method_field('PUT')}}' +
                 '<div class="modal-body">' +
                 '<div class="row form-group">' +
-                '<div class="col-lg-12 has-feedback"><label for="degree' + id + '">Education Degree ' +
-                '<span class="required">*</span></label>' +
-                '<input id="degree' + id + '" type="text" class="form-control" maxlength="191" ' +
-                'value="' + name + '" name="name" required>' +
-                '<span class="fa fa-graduation-cap form-control-feedback right" aria-hidden="true"></span>' +
+                '<div class="col-lg-12 has-feedback">' +
+                '<label for="name' + id + '">Category <span class="required">*</span></label>' +
+                '<input id="name' + id + '" type="text" class="form-control" maxlength="191" name="name"' +
+                'value="' + name + '" required>' +
+                '<span class="fa fa-university form-control-feedback right" aria-hidden="true"></span></div></div>' +
+                '<div class="row form-group">' +
+                '<div class="col-lg-12 has-feedback">' +
+                '<label for="caption' + id + '">Caption <span class="required">*</span></label>' +
+                '<input id="caption' + id + '" type="text" class="form-control" maxlength="191" name="caption"' +
+                'value="' + caption + '" required>' +
+                '<span class="fa fa-comment-dots form-control-feedback right" aria-hidden="true"></span>' +
                 '</div></div></div>' +
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +

@@ -1,33 +1,18 @@
 @extends('layouts.mst_admin')
-@section('title', ''.$admin->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="row top_tiles">
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-user-graduate"></i></div>
-                        <div class="count">{{$newSeeker}}</div>
-                        <h3>New {{$newSeeker > 1 ? 'Seekers' : 'Seeker'}}</h3>
-                        <p>Total: <strong>{{\App\Seekers::count()}}</strong> job seekers</p>
-                    </div>
-                </div>
-                <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-paper-plane"></i></div>
-                        <div class="count">{{$newApp}}</div>
-                        <h3>New {{$newApp > 1 ? 'Applications' : 'Application'}}</h3>
-                        <p>Total: <strong>{{\App\Accepting::where('isApply',true)->count()}}</strong>
-                            applied applications</p>
-                    </div>
-                </div>
-                <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-user-tie"></i></div>
-                        <div class="count">{{$newAgency}}</div>
-                        <h3>New {{$newAgency > 1 ? 'Agencies' : 'Agency'}}</h3>
-                        <p>Total: <strong>{{\App\Agencies::count()}}</strong> job agencies</p>
-                    </div>
+                    <a href="{{route('table.agencies')}}">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-user-tie"></i></div>
+                            <div class="count">{{$newAgency}}</div>
+                            <h3>New {{$newAgency > 1 ? 'Agencies' : 'Agency'}}</h3>
+                            <p>Total: <strong>{{\App\Agencies::count()}}</strong> job agencies</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="tile-stats">
@@ -36,6 +21,25 @@
                         <h3>New {{$newJobPost > 1 ? 'Vacancies' : 'Vacancy'}}</h3>
                         <p>Total: <strong>{{\App\Vacancies::where('isPost',true)->count()}}</strong> posted
                             vacancies</p>
+                    </div>
+                </div>
+                <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="{{route('table.seekers')}}">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-user-graduate"></i></div>
+                            <div class="count">{{$newSeeker}}</div>
+                            <h3>New {{$newSeeker > 1 ? 'Seekers' : 'Seeker'}}</h3>
+                            <p>Total: <strong>{{\App\Seekers::count()}}</strong> job seekers</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="tile-stats">
+                        <div class="icon"><i class="fa fa-paper-plane"></i></div>
+                        <div class="count">{{$newApp}}</div>
+                        <h3>New {{$newApp > 1 ? 'Applications' : 'Application'}}</h3>
+                        <p>Total: <strong>{{\App\Accepting::where('isApply',true)->count()}}</strong>
+                            applied applications</p>
                     </div>
                 </div>
             </div>

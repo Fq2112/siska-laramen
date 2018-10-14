@@ -20,6 +20,8 @@
     <link href="{{asset('_admins/css/daterangepicker.css')}}" rel="stylesheet">
     <!-- bootstrap-wysiwyg -->
     <link href="{{asset('_admins/css/prettify.min.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="{{asset('_admins/css/switchery.min.css')}}" rel="stylesheet">
     <!-- iCheck -->
     <link href="{{asset('_admins/css/green.css')}}" rel="stylesheet">
     <!-- Datatables -->
@@ -93,55 +95,56 @@
                                 <ul class="nav child_menu">
                                     <li><a>Data Master <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="{{route('table.admins')}}">Admins</a></li>
-                                            <li><a href="{{route('table.users')}}">Users</a></li>
+                                            <li><a>Accounts <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.admins')}}">Admins</a></li>
+                                                    <li><a href="{{route('table.users')}}">Users</a></li>
+                                                    <li><a href="{{route('table.agencies')}}">Agencies</a></li>
+                                                    <li><a href="{{route('table.seekers')}}">Seekers</a></li>
+                                                </ul>
+                                            </li>
                                             <li><a>Requirements <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
                                                     <li><a href="{{route('table.degrees')}}">Education Degrees</a></li>
                                                     <li><a href="{{route('table.majors')}}">Education Majors</a></li>
                                                     <li><a href="{{route('table.industries')}}">Industries</a></li>
-                                                    <li><a href="#">Job Functions</a></li>
-                                                    <li><a href="#">Job Levels</a></li>
-                                                    <li><a href="#">Job Types</a></li>
-                                                    <li><a href="#">Salaries</a></li>
+                                                    <li><a href="{{route('table.JobFunctions')}}">Job Functions</a></li>
+                                                    <li><a href="{{route('table.JobLevels')}}">Job Levels</a></li>
+                                                    <li><a href="{{route('table.JobTypes')}}">Job Types</a></li>
+                                                    <li><a href="{{route('table.salaries')}}">Salaries</a></li>
                                                 </ul>
                                             </li>
                                             <li><a>Web Contents <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
-                                                    <li><a href="#">Carousels</a></li>
-                                                    <li><a href="#">Payment Category</a></li>
-                                                    <li><a href="#">Payment Method</a></li>
-                                                    <li><a href="#">Plans</a></li>
-                                                    <li><a href="#">Nations</a></li>
-                                                    <li><a href="#">Provinces</a></li>
-                                                    <li><a href="#">Cities</a></li>
+                                                    <li><a href="{{route('table.carousels')}}">Carousels</a></li>
+                                                    <li><a href="{{route('table.PaymentCategories')}}">Payment
+                                                            Category</a></li>
+                                                    <li><a href="{{route('table.PaymentMethods')}}">Payment Method</a>
+                                                    </li>
+                                                    <li><a href="{{route('table.plans')}}">Plans</a></li>
+                                                    <li><a href="{{route('table.nations')}}">Nations</a></li>
+                                                    <li><a href="{{route('table.provinces')}}">Provinces</a></li>
+                                                    <li><a href="{{route('table.cities')}}">Cities</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li><a>Data Agencies <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="#">Galleries</a></li>
-                                            <li><a href="#">Job Vacancies</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a>Data Seekers <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="#">Attachments</a></li>
-                                            <li><a href="#">Educations History</a></li>
-                                            <li><a href="#">Language Skills</a></li>
-                                            <li><a href="#">Organizations</a></li>
-                                            <li><a href="#">Other Skills</a></li>
-                                            <li><a href="#">Trainings/Certifications</a></li>
-                                            <li><a href="#">Work Experiences</a></li>
-                                        </ul>
-                                    </li>
                                     <li><a>Data Transaction <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="#">Applications</a></li>
-                                            <li><a href="#">Favorite Agencies</a></li>
-                                            <li><a href="#">Job Postings</a></li>
-                                            <li><a href="#">Job Invitations</a></li>
+                                            <li><a>Agencies <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.jobPostings')}}">Job Postings</a></li>
+                                                    <li><a href="{{route('table.jobInvitations')}}">Job Invitations</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.applications')}}">Applications</a></li>
+                                                    <li><a href="{{route('table.favAgencies')}}">Favorite Agencies</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -312,12 +315,16 @@
 <!-- bootstrap-daterangepicker -->
 <script src="{{asset('js/moment.js')}}"></script>
 <script src="{{asset('_admins/js/daterangepicker.js')}}"></script>
+<!-- TinyMCE -->
+<script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
 <!-- bootstrap-wysiwyg -->
 <script src="{{asset('_admins/js/bootstrap-wysiwyg.min.js')}}"></script>
 <script src="{{asset('_admins/js/jquery.hotkeys.js')}}"></script>
 <script src="{{asset('_admins/js/prettify.js')}}"></script>
 <!-- iCheck -->
 <script src="{{asset('_admins/js/icheck.min.js')}}"></script>
+<!-- Switchery -->
+<script src="{{asset('_admins/js/switchery.min.js')}}"></script>
 <!-- Datatables -->
 <script src="{{asset('_admins/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('_admins/js/dataTables.bootstrap.min.js')}}"></script>

@@ -68,7 +68,7 @@
                                            title="Details" data-placement="left"><i class="fa fa-info-circle"></i></a>
                                         <hr style="margin: 5px auto">
                                         <a href="{{route('delete.users',['id'=>encrypt($user->id)])}}"
-                                           class="btn btn-danger btn-sm delete-users" style="font-size: 16px"
+                                           class="btn btn-danger btn-sm delete-data" style="font-size: 16px"
                                            data-toggle="tooltip"
                                            title="Delete" data-placement="left"><i class="fa fa-trash-alt"></i></a>
                                     </td>

@@ -60,7 +60,7 @@
                                         @if(!$admin->isRoot() || $admin->id!=Auth::guard('admin')->user()->id)
                                             <hr style="margin: 5px auto">
                                             <a href="{{route('delete.admins',['id'=>encrypt($admin->id)])}}"
-                                               class="btn btn-danger btn-sm delete-users" style="font-size: 16px"
+                                               class="btn btn-danger btn-sm delete-data" style="font-size: 16px"
                                                data-toggle="tooltip"
                                                title="Delete" data-placement="left"><i class="fa fa-trash-alt"></i></a>
                                         @endif

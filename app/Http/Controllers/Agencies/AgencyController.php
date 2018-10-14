@@ -42,7 +42,7 @@ class AgencyController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
-        $plans = Plan::all();
+        $plans = Plan::take(3)->get();
 
         return view('home-agency', compact('provinces', 'carousels', 'plans'));
     }

@@ -106,10 +106,11 @@
                                                             <select class="form-control selectpicker" name="plans_id"
                                                                     id="plans_id" required>
                                                                 @foreach(\App\Plan::all() as $row)
-                                                                    <option value="{{$row->id}}" {{$row->id ==
-                                                                $plan->id || (collect(old('plans_id'))
-                                                            ->contains($row->id)) ? 'selected' : ''}} {{$row->id == 3 ?
-                                                                'disabled' : ''}}>{{$row->name}}</option>
+                                                                    <option value="{{$row->id}}" {{$row->id == $plan->id
+                                                                    || (collect(old('plans_id'))->contains($row->id)) ?
+                                                                    'selected' : ''}} {{preg_replace
+                                                                    ('/[^0-9]/', '', $row->price) == "" ? 'disabled' :
+                                                                    ''}}>{{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
