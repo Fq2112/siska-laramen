@@ -9,11 +9,6 @@ use App\Http\Controllers\Controller;
 
 class TransactionAgencyController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function showJobPostingsTable()
     {
         $postings = ConfirmAgency::all();

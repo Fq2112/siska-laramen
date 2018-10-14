@@ -13,11 +13,6 @@ use App\Http\Controllers\Controller;
 
 class UsersController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function showAdminsTable()
     {
         $admins = Admin::all();

@@ -116,6 +116,8 @@
                                             </li>
                                             <li><a>Web Contents <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.blog')}}">Blog</a></li>
+                                                    <li><a href="{{route('table.blogTypes')}}">Blog Types</a></li>
                                                     <li><a href="{{route('table.carousels')}}">Carousels</a></li>
                                                     <li><a href="{{route('table.PaymentCategories')}}">Payment
                                                             Category</a></li>

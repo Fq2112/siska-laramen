@@ -14,11 +14,6 @@ use App\Http\Controllers\Controller;
 
 class WebContentsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function showCarouselsTable()
     {
         $carousels = Carousel::all();

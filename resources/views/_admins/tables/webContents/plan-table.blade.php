@@ -65,11 +65,10 @@
                                     <td style="vertical-align: middle"
                                         align="center">{{$plan->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a onclick='editPlan("{{$plan->id}}","{{$plan->name}}","{{$plan->price}}",
-                                                "{{$plan->caption}}","{{$plan->job_ads}}","{{$plan->benefit}}",
-                                                "{{$plan->isBest}}")'
-                                           class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
-                                           title="Edit" data-placement="left">
+                                        <a class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
+                                           title="Edit" data-placement="left" onclick="editPlan('{{$plan->id}}',
+                                                '{{$plan->name}}','{{$plan->price}}','{{$plan->caption}}',
+                                                '{{$plan->job_ads}}','{{$plan->isBest}}','{{$plan->benefit}}')">
                                             <i class="fa fa-edit"></i></a>
                                         <a href="{{route('delete.plans',['id'=>encrypt($plan->id)])}}"
                                            class="btn btn-danger btn-sm delete-data" style="font-size: 16px"
@@ -175,8 +174,7 @@
             $("#createModal").modal('show');
         }
 
-        function editPlan(id, name, price, caption, jobAds, benefit, isBest) {
-            var $attr = isBest == true ? 'checked' : '';
+        function editPlan(id, name, price, caption, jobAds, isBest, benefit) {
             $('#editModalContent').html(
                 '<form method="post" id="' + id + '" action="{{url('admin/tables/web_contents/plans')}}/' + id +
                 '/update">{{csrf_field()}} {{method_field('PUT')}}' +
@@ -194,9 +192,9 @@
                 '<span class="fa fa-money-bill-wave form-control-feedback right" aria-hidden="true"></span></div>' +
                 '<div class="col-lg-2"><label>Value</label>' +
                 '<p><label for="normal' + id + '">Normal: <input type="radio" class="flat" name="isBest" ' +
-                'id="normal' + id + '" value="0" checked></label>' +
+                'id="normal' + id + '" value="0"></label>' +
                 '<label for="best' + id + '">Best: <input type="radio" class="flat" name="isBest" ' +
-                'id="best' + id + '" value="1" ' + $attr + '></label></p></div></div>' +
+                'id="best' + id + '" value="1"></label></p></div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-6 has-feedback">' +
                 '<label for="caption' + id + '">Caption <span class="required">*</span></label>' +
@@ -211,11 +209,17 @@
                 '<div class="row form-group">' +
                 '<div class="col-lg-12">' +
                 '<label for="benefit' + id + '">Benefit <span class="required">*</span></label>' +
-                '<textarea name="benefit" id="benefit' + id + '"></textarea></div></div></div>' +
+                '<textarea class="form-control" rows="5" name="benefit" id="benefit' + id + '">' + benefit + '</textarea>' +
+                '</div></div></div>' +
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                 '<button type="submit" class="btn btn-primary">Save changes</button></div></form>'
             );
+            if (isBest == 1) {
+                $("#best" + id).prop('checked', true);
+            } else {
+                $("#normal" + id).prop('checked', true);
+            }
 
             tinymce.init({
                 branding: false,

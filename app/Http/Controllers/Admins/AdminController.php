@@ -4,17 +4,13 @@ namespace App\Http\Controllers\Admins;
 
 use App\Accepting;
 use App\Agencies;
+use App\Blog;
 use App\ConfirmAgency;
 use App\Http\Controllers\Controller;
 use App\Seekers;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function index()
     {
         $newSeeker = Seekers::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
@@ -23,8 +19,9 @@ class AdminController extends Controller
         $newAgency = Agencies::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newJobPost = ConfirmAgency::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
 
-        return view('_admins.home-admin', compact('newSeeker', 'newApp',
-            'newAgency', 'newJobPost'));
+        $blogs = Blog::all();
+
+        return view('_admins.home-admin', compact('newSeeker', 'newApp', 'newAgency', 'newJobPost', 'blogs'));
     }
 
     public function showInbox()

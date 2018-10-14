@@ -56,7 +56,7 @@ Route::group(['namespace' => 'Auth', 'prefix' => 'account'], function () {
 
 });
 
-Route::group(['namespace' => 'Admins', 'prefix' => 'admin'], function () {
+Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('/', [
         'uses' => 'AdminController@index',
@@ -496,6 +496,50 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin'], function () {
                     Route::get('{id}/delete', [
                         'uses' => 'WebContentsController@deleteCities',
                         'as' => 'delete.cities'
+                    ]);
+
+                });
+
+                Route::group(['prefix' => 'blog'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'BlogController@showBlogTable',
+                        'as' => 'table.blog'
+                    ]);
+
+                    Route::post('create', [
+                        'uses' => 'BlogController@createBlog',
+                        'as' => 'create.blog'
+                    ]);
+
+                    Route::put('{id}/update', [
+                        'uses' => 'BlogController@updateBlog',
+                        'as' => 'update.blog'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'BlogController@deleteBlog',
+                        'as' => 'delete.blog'
+                    ]);
+
+                    Route::get('types', [
+                        'uses' => 'BlogController@showBlogTypesTable',
+                        'as' => 'table.blogTypes'
+                    ]);
+
+                    Route::post('types/create', [
+                        'uses' => 'BlogController@createBlogTypes',
+                        'as' => 'create.blogTypes'
+                    ]);
+
+                    Route::put('types/{id}/update', [
+                        'uses' => 'BlogController@updateBlogTypes',
+                        'as' => 'update.blogTypes'
+                    ]);
+
+                    Route::get('types/{id}/delete', [
+                        'uses' => 'BlogController@deleteBlogTypes',
+                        'as' => 'delete.blogTypes'
                     ]);
 
                 });

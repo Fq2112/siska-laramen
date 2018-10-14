@@ -9,11 +9,6 @@ use App\Http\Controllers\Controller;
 
 class TransactionSeekerController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('admin');
-    }
-
     public function showApplicationsTable()
     {
         $applications = Accepting::all();

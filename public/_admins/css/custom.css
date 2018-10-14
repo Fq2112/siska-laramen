@@ -2056,7 +2056,7 @@ h4.graph_title {
     -moz-border-radius: 5px;
     -moz-background-clip: padding;
     border-radius: 5px;
-    background: #FFF;
+    background: #fff;
     transition: all .3s ease-in-out
 }
 
@@ -2064,7 +2064,7 @@ h4.graph_title {
     animation-name: transformAnimation;
     animation-duration: .5s;
     animation-iteration-count: 1;
-    color: rgba(58, 58, 58, .41);
+    color: rgba(58, 58, 58, .5);
     animation-timing-function: ease;
     animation-fill-mode: forwards;
     -webkit-animation-name: transformAnimation;
@@ -2079,10 +2079,56 @@ h4.graph_title {
     -moz-animation-fill-mode: forwards
 }
 
+.agency:hover .tile-stats {
+    animation-name: transformAnimation;
+    animation-duration: .5s;
+    animation-iteration-count: 1;
+    background: #00adb5;
+    border: 1px solid #00adb5;
+    color: #fff;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-name: transformAnimation;
+    -webkit-animation-duration: .5s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-name: transformAnimation;
+    -moz-animation-duration: .5s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-fill-mode: forwards
+}
+
+.seeker:hover .tile-stats {
+    animation-name: transformAnimation;
+    animation-duration: .5s;
+    animation-iteration-count: 1;
+    background: #fa5555;
+    border: 1px solid #fa5555;
+    color: #fff;
+    animation-timing-function: ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-name: transformAnimation;
+    -webkit-animation-duration: .5s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-timing-function: ease;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-name: transformAnimation;
+    -moz-animation-duration: .5s;
+    -moz-animation-iteration-count: 1;
+    -moz-animation-timing-function: ease;
+    -moz-animation-fill-mode: forwards
+}
+
+.agency:hover .tile-stats h3, .seeker:hover .tile-stats h3 {
+    color: #fff;
+}
+
 .tile-stats .icon {
     width: 20px;
     height: 20px;
-    color: #BAB8B8;
+    color: rgba(58, 58, 58, .3);
     position: absolute;
     right: 53px;
     top: 22px;
@@ -2111,7 +2157,8 @@ h4.graph_title {
 }
 
 .tile-stats h3 {
-    color: #BAB8B8
+    color: #BAB8B8;
+    transition: all .3s ease-in-out
 }
 
 .tile-stats p {
