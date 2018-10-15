@@ -39,6 +39,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
     $router->group(['prefix' => 'clients', 'namespace' => 'Clients'], function ($router) {
 
+        $router->get('blog/types', [
+            'uses' => 'BlogAPIController@loadBlogType',
+            'as' => 'load.blogType'
+        ]);
+
         $router->get('provinces', [
             'uses' => 'LocationsAPIController@loadProvinces',
             'as' => 'load.provinces'

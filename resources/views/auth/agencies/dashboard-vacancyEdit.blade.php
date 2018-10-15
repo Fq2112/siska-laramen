@@ -416,7 +416,7 @@
                                                 <small>Requirements</small>
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
-                                                        <textarea class="form-control" name="syarat"
+                                                        <textarea class="use-tinymce" name="syarat"
                                                                   placeholder="Job's requirements"
                                                                   id="syarat"></textarea>
                                                     </div>
@@ -425,7 +425,7 @@
                                                 <small>Responsibilities</small>
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
-                                                        <textarea class="form-control" name="tanggungjawab"
+                                                        <textarea class="use-tinymce" name="tanggungjawab"
                                                                   placeholder="Job's responsibilities"
                                                                   id="tanggungjawab"></textarea>
                                                     </div>
@@ -466,80 +466,6 @@
     </div>
 @endsection
 @push("scripts")
-    <script>
-        $(document).ready(function () {
-            tinymce.init({
-                branding: false,
-                path_absolute: '{{url('/')}}',
-                selector: '#syarat',
-                height: 300,
-                themes: 'modern',
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor textcolor',
-                    'searchreplace visualblocks code',
-                    'insertdatetime media table contextmenu paste code help wordcount'
-                ],
-                toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                relative_urls: false,
-                file_browser_callback: function (field_name, url, type, win) {
-                    var x = window.innerWidth || document.documentElement.clientWidth ||
-                        document.getElementsByTagName('body')[0].clientWidth,
-                        y = window.innerHeight || document.documentElement.clientHeight ||
-                            document.getElementsByTagName('body')[0].clientHeight,
-                        cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
-                    if (type == 'image') {
-                        cmsURL = cmsURL + '&type=Images';
-                    } else {
-                        cmsURL = cmsURL + '&type=Files';
-                    }
-
-                    tinyMCE.activeEditor.windowManager.open({
-                        file: cmsURL,
-                        title: 'File Manager',
-                        width: x * 0.8,
-                        height: y * 0.8,
-                        resizable: 'yes',
-                        close_previous: 'no'
-                    });
-                }
-            });
-            tinymce.init({
-                branding: false,
-                path_absolute: '{{url('/')}}',
-                selector: '#tanggungjawab',
-                height: 300,
-                themes: 'modern',
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor textcolor',
-                    'searchreplace visualblocks code',
-                    'insertdatetime media table contextmenu paste code help wordcount'
-                ],
-                toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                relative_urls: false,
-                file_browser_callback: function (field_name, url, type, win) {
-                    var x = window.innerWidth || document.documentElement.clientWidth ||
-                        document.getElementsByTagName('body')[0].clientWidth,
-                        y = window.innerHeight || document.documentElement.clientHeight ||
-                            document.getElementsByTagName('body')[0].clientHeight,
-                        cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
-                    if (type == 'image') {
-                        cmsURL = cmsURL + '&type=Images';
-                    } else {
-                        cmsURL = cmsURL + '&type=Files';
-                    }
-
-                    tinyMCE.activeEditor.windowManager.open({
-                        file: cmsURL,
-                        title: 'File Manager',
-                        width: x * 0.8,
-                        height: y * 0.8,
-                        resizable: 'yes',
-                        close_previous: 'no'
-                    });
-                }
-            });
-        });
-    </script>
     @include('layouts.partials.auth.Agencies._scripts_auth-agency')
     @include('layouts.partials.auth.Agencies._scripts_ajax-agency')
 @endpush

@@ -33,7 +33,7 @@ class HomeContentSeeder extends Seeder
                 'price' => $faker->numberBetween($min = 1000000, $max = 1500000),
                 'caption' => $faker->sentence($nbWords = 5, $variableNbWords = true),
                 'job_ads' => $faker->sentence($nbWords = 3, $variableNbWords = true),
-                'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Posisi iklan prioritas (4x)</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>',
+                'benefit' => $faker->paragraph(5, true),
             ]);
         }
         Plan::find(1)->update([
@@ -41,6 +41,7 @@ class HomeContentSeeder extends Seeder
             'price' => 800000,
             'caption' => 'Job Posting Basic Package',
             'job_ads' => '1 Job Ad',
+            'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Posisi iklan prioritas (4x)</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>',
         ]);
         Plan::find(2)->update([
             'name' => 'Plus',
@@ -48,6 +49,7 @@ class HomeContentSeeder extends Seeder
             'caption' => 'Best Job Posting Package',
             'job_ads' => '2 Job Ads +FREE 1 Job Ad',
             'isBest' => true,
+            'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Posisi iklan prioritas (4x)</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>',
         ]);
         Plan::find(3)->update([
             'name' => 'Enterprise',

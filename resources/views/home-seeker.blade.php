@@ -355,39 +355,24 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 to-animate blog">
-                        <div class="blog-grid" style="background-image: url({{asset('images/full_image_5.jpg')}});">
-                            <div class="date">
-                                <span>15</span>
-                                <small>Feb</small>
+                    @foreach($blogs as $blog)
+                        <div class="col-md-6 to-animate blog">
+                            <div class="blog-grid" style="background-image: url({{asset('images/blog/'.$blog->dir)}});">
+                                <div class="date">
+                                    <span>{{\Carbon\Carbon::parse($blog->created_at)->format('j')}}</span>
+                                    <small>{{\Carbon\Carbon::parse($blog->created_at)->formatLocalized('%b')}}</small>
+                                </div>
                             </div>
+                            <a href="#" class="desc">
+                                <div class="desc-grid">
+                                    <h3>{{\Illuminate\Support\Str::words($blog->judul,5,"...")}}</h3>
+                                </div>
+                                <div class="reading">
+                                    <i class="icon-arrow-right2"></i>
+                                </div>
+                            </a>
                         </div>
-                        <a href="#" class="desc">
-                            <div class="desc-grid">
-                                <h3>lorem ipsum dolor sit amet.</h3>
-                            </div>
-                            <div class="reading">
-                                <i class="icon-arrow-right2"></i>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="col-md-6 to-animate blog">
-                        <div class="blog-grid" style="background-image: url({{asset('images/full_image_4.jpg')}});">
-                            <div class="date">
-                                <span>24</span>
-                                <small>Feb</small>
-                            </div>
-                        </div>
-                        <a href="#" class="desc">
-                            <div class="desc-grid">
-                                <h3>lorem ipsum dolor sit amet.</h3>
-                            </div>
-                            <div class="reading">
-                                <i class="icon-arrow-right2"></i>
-                            </div>
-                        </a>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

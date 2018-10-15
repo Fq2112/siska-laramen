@@ -189,6 +189,9 @@
                     $('#interview').val(data.interview);
                     $('#tingkatpend').val(data.tingkatpend_id).selectpicker("refresh");
                     $('#jurusanpend').val(data.jurusanpend_id).selectpicker("refresh");
+
+                    tinyMCE.remove();
+                    tinyMCE.init(editor_config);
                     tinyMCE.get('syarat').setContent(data.syarat);
                     tinyMCE.get('tanggungjawab').setContent(data.tanggungjawab);
                 },

@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', ''.$admin->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="">

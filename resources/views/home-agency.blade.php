@@ -134,13 +134,13 @@
                                 <div class="price">
                                     <sup class='currency'>Rp</sup><span id="price-{{$plan->id}}"></span>
                                     <script>
+                                                @if(preg_replace('/[^0-9]/', '', $plan->price) != "")
                                         var price = ("{{$plan->price}}" / "{{$plan->price <= 998999 ? 1000 : 1000000}}");
                                         @if($plan->price <= 998999)
                                             price = price.toFixed(0);
                                         @else
                                             price = price.toFixed(1);
                                         @endif
-                                        @if($plan->id != 3)
                                         document.getElementById("price-{{$plan->id}}").innerHTML = price +
                                             "<sub>{{$plan->price <= 998999 ? 'rb' : 'jt'}}</sub> <small>/bln</small>";
                                         @else
@@ -150,7 +150,7 @@
                                 </div>
                                 <p>{{$plan->caption}}</p>
                                 <hr>
-                                @if($plan->id != 3)
+                                @if(preg_replace('/[^0-9]/', '', $plan->price) != "")
                                     <p align="justify"><strong>Yang bisa Anda dapatkan:</strong></p>
                                     <ul style="margin-bottom: 0">
                                         <li><strong>{{$plan->job_ads}}</strong></li>
@@ -159,7 +159,7 @@
                                     <p align="justify"><strong>Please contact us:</strong></p>
                                 @endif
                                 {!! $plan->benefit !!}
-                                @if($plan->id != 3)
+                                @if(preg_replace('/[^0-9]/', '', $plan->price) != "")
                                     @php
                                         $number = filter_var($plan->job_ads,FILTER_SANITIZE_NUMBER_INT);
                                         $totalAds = array_sum(str_split($number));

@@ -20,6 +20,8 @@
     <link href="{{asset('_admins/css/daterangepicker.css')}}" rel="stylesheet">
     <!-- bootstrap-wysiwyg -->
     <link href="{{asset('_admins/css/prettify.min.css')}}" rel="stylesheet">
+    <!-- Switchery -->
+    <link href="{{asset('_admins/css/switchery.min.css')}}" rel="stylesheet">
     <!-- iCheck -->
     <link href="{{asset('_admins/css/green.css')}}" rel="stylesheet">
     <!-- Datatables -->
@@ -31,6 +33,10 @@
     <!-- Sweet Alert v2 -->
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
+    <!-- PNotify -->
+    <link href="{{asset('_admins/css/pnotify.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/pnotify.buttons.css')}}" rel="stylesheet">
+    <link href="{{asset('_admins/css/pnotify.nonblock.css')}}" rel="stylesheet">
 
     <!-- Custom Theme Style -->
     <link href="{{asset('_admins/css/custom.css')}}" rel="stylesheet">
@@ -42,7 +48,10 @@
 </head>
 
 <body class="nav-md">
-@php $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString()); @endphp
+@php
+    $auth = Auth::guard('admin')->user();
+    $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString());
+@endphp
 <div class="container body">
     <div class="main_container">
         <div class="col-md-3 left_col">
@@ -57,12 +66,12 @@
                 <!-- menu profile quick info -->
                 <div class="profile clearfix">
                     <div class="profile_pic">
-                        <img src="{{$admin->ava == "" || $admin->ava == "avatar.png" ? asset('images/avatar.png') :
-                        asset('storage/admins/'.$admin->ava)}}" alt="..." class="img-circle profile_img">
+                        <img src="{{$auth->ava == "" || $auth->ava == "avatar.png" ? asset('images/avatar.png') :
+                        asset('storage/admins/'.$auth->ava)}}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
-                        <h2>{{$admin->name}}</h2>
+                        <h2>{{$auth->name}}</h2>
                     </div>
                 </div>
                 <!-- /menu profile quick info -->
@@ -86,55 +95,58 @@
                                 <ul class="nav child_menu">
                                     <li><a>Data Master <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="{{route('home-admin')}}">Admins</a></li>
-                                            <li><a href="{{route('table.users')}}">Users</a></li>
+                                            <li><a>Accounts <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.admins')}}">Admins</a></li>
+                                                    <li><a href="{{route('table.users')}}">Users</a></li>
+                                                    <li><a href="{{route('table.agencies')}}">Agencies</a></li>
+                                                    <li><a href="{{route('table.seekers')}}">Seekers</a></li>
+                                                </ul>
+                                            </li>
                                             <li><a>Requirements <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
-                                                    <li><a href="{{route('home-admin')}}">Education Degrees</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Education Majors</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Industry</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Job Function</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Job Levels</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Job Types</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Salaries</a></li>
+                                                    <li><a href="{{route('table.degrees')}}">Education Degrees</a></li>
+                                                    <li><a href="{{route('table.majors')}}">Education Majors</a></li>
+                                                    <li><a href="{{route('table.industries')}}">Industries</a></li>
+                                                    <li><a href="{{route('table.JobFunctions')}}">Job Functions</a></li>
+                                                    <li><a href="{{route('table.JobLevels')}}">Job Levels</a></li>
+                                                    <li><a href="{{route('table.JobTypes')}}">Job Types</a></li>
+                                                    <li><a href="{{route('table.salaries')}}">Salaries</a></li>
                                                 </ul>
                                             </li>
                                             <li><a>Web Contents <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
-                                                    <li><a href="{{route('home-admin')}}">Carousels</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Payment Category</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Payment Method</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Plans</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Nations</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Provinces</a></li>
-                                                    <li><a href="{{route('home-admin')}}">Cities</a></li>
+                                                    <li><a href="{{route('table.blog')}}">Blog</a></li>
+                                                    <li><a href="{{route('table.blogTypes')}}">Blog Types</a></li>
+                                                    <li><a href="{{route('table.carousels')}}">Carousels</a></li>
+                                                    <li><a href="{{route('table.PaymentCategories')}}">Payment
+                                                            Category</a></li>
+                                                    <li><a href="{{route('table.PaymentMethods')}}">Payment Method</a>
+                                                    </li>
+                                                    <li><a href="{{route('table.plans')}}">Plans</a></li>
+                                                    <li><a href="{{route('table.nations')}}">Nations</a></li>
+                                                    <li><a href="{{route('table.provinces')}}">Provinces</a></li>
+                                                    <li><a href="{{route('table.cities')}}">Cities</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li><a>Data Agencies <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="{{route('home-admin')}}">Galleries</a></li>
-                                            <li><a href="{{route('home-admin')}}">Job Vacancies</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a>Data Seekers <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a href="{{route('home-admin')}}">Attachments</a></li>
-                                            <li><a href="{{route('home-admin')}}">Educations History</a></li>
-                                            <li><a href="{{route('home-admin')}}">Language Skills</a></li>
-                                            <li><a href="{{route('home-admin')}}">Organizations</a></li>
-                                            <li><a href="{{route('home-admin')}}">Other Skills</a></li>
-                                            <li><a href="{{route('home-admin')}}">Trainings/Certifications</a></li>
-                                            <li><a href="{{route('home-admin')}}">Work Experiences</a></li>
-                                        </ul>
-                                    </li>
                                     <li><a>Data Transaction <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="{{route('home-admin')}}">Applications</a></li>
-                                            <li><a href="{{route('home-admin')}}">Favorite Agencies</a></li>
-                                            <li><a href="{{route('home-admin')}}">Job Postings</a></li>
-                                            <li><a href="{{route('home-admin')}}">Job Invitations</a></li>
+                                            <li><a>Agencies <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.jobPostings')}}">Job Postings</a></li>
+                                                    <li><a href="{{route('table.jobInvitations')}}">Job Invitations</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                            <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.applications')}}">Applications</a></li>
+                                                    <li><a href="{{route('table.favAgencies')}}">Favorite Agencies</a>
+                                                    </li>
+                                                </ul>
+                                            </li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -181,9 +193,9 @@
                         <li class="">
                             <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
                                aria-expanded="false">
-                                <img src="{{$admin->ava == "" || $admin->ava == "avatar.png" ?
-                                asset('images/avatar.png') : asset('storage/admins/'.$admin->ava)}}" alt="">
-                                {{$admin->name}}
+                                <img src="{{$auth->ava == "" || $auth->ava == "avatar.png" ?
+                                asset('images/avatar.png') : asset('storage/admins/'.$auth->ava)}}" alt="">
+                                {{$auth->name}}
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
@@ -305,12 +317,16 @@
 <!-- bootstrap-daterangepicker -->
 <script src="{{asset('js/moment.js')}}"></script>
 <script src="{{asset('_admins/js/daterangepicker.js')}}"></script>
+<!-- TinyMCE -->
+<script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
 <!-- bootstrap-wysiwyg -->
 <script src="{{asset('_admins/js/bootstrap-wysiwyg.min.js')}}"></script>
 <script src="{{asset('_admins/js/jquery.hotkeys.js')}}"></script>
 <script src="{{asset('_admins/js/prettify.js')}}"></script>
 <!-- iCheck -->
 <script src="{{asset('_admins/js/icheck.min.js')}}"></script>
+<!-- Switchery -->
+<script src="{{asset('_admins/js/switchery.min.js')}}"></script>
 <!-- Datatables -->
 <script src="{{asset('_admins/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('_admins/js/dataTables.bootstrap.min.js')}}"></script>
@@ -327,10 +343,54 @@
 <script src="{{asset('_admins/js/jszip.min.js')}}"></script>
 <script src="{{asset('_admins/js/pdfmake.min.js')}}"></script>
 <script src="{{asset('_admins/js/vfs_fonts.js')}}"></script>
+<!-- PNotify -->
+<script src="{{asset('_admins/js/pnotify.js')}}"></script>
+<script src="{{asset('_admins/js/pnotify.buttons.js')}}"></script>
+<script src="{{asset('_admins/js/pnotify.nonblock.js')}}"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>
 <script>
+    var editor_config;
+    $(function () {
+        editor_config = {
+            branding: false,
+            path_absolute: '{{url('/')}}',
+            selector: '.use-tinymce',
+            height: 300,
+            themes: 'modern',
+            plugins: [
+                'advlist autolink lists link image charmap print preview anchor textcolor',
+                'searchreplace visualblocks code',
+                'insertdatetime media table contextmenu paste code help wordcount'
+            ],
+            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            relative_urls: false,
+            file_browser_callback: function (field_name, url, type, win) {
+                var x = window.innerWidth || document.documentElement.clientWidth ||
+                    document.getElementsByTagName('body')[0].clientWidth,
+                    y = window.innerHeight || document.documentElement.clientHeight ||
+                        document.getElementsByTagName('body')[0].clientHeight,
+                    cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
+                if (type == 'image') {
+                    cmsURL = cmsURL + '&type=Images';
+                } else {
+                    cmsURL = cmsURL + '&type=Files';
+                }
+
+                tinyMCE.activeEditor.windowManager.open({
+                    file: cmsURL,
+                    title: 'File Manager',
+                    width: x * 0.8,
+                    height: y * 0.8,
+                    resizable: 'yes',
+                    close_previous: 'no'
+                });
+            }
+        };
+        tinymce.init(editor_config);
+    });
+
     function fullScreen() {
         if ((document.fullScreenElement && document.fullScreenElement !== null) ||
             (!document.mozFullScreen && !document.webkitIsFullScreen)) {
@@ -360,9 +420,8 @@
         }, 500);
     }(title + " ~ "));
 </script>
-@include('layouts.partials._alert')
 @include('layouts.partials._confirm')
-@include('layouts.partials.auth.notif_alert')
+@include('layouts.partials.auth.Admins._pnotify')
 @stack('scripts')
 </body>
 </html>

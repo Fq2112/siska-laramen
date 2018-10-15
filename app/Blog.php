@@ -8,7 +8,10 @@ class Blog extends Model
 {
     protected $table = 'blog';
 
-    protected $fillable = [
-        'id', 'judul', 'subjudul', 'dir', 'konten', 'uploder', 'jenisblog_id',
-    ];
+    protected $guarded = ['id'];
+
+    public function jenisBlog()
+    {
+        return $this->belongsTo(Jenisblog::class);
+    }
 }

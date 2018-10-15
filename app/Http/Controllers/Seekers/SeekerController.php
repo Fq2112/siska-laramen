@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seekers;
 use App\Accepting;
 use App\Agencies;
 use App\Attachments;
+use App\Blog;
 use App\Carousel;
 use App\Cities;
 use App\Education;
@@ -42,6 +43,7 @@ class SeekerController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
+        $blogs = Blog::all();
 
         $id = [4, 9, 13, 26, 29, 30, 38, 40, 41, 45, 47, 49, 52, 58, 59, 61, 62, 63];
         $favIndustries = Industri::whereIn('id', $id)->get();
@@ -60,7 +62,7 @@ class SeekerController extends Controller
             $agencies = Agencies::wherehas('vacancies')->orderByDesc('updated_at')->take(6)->get();
         }
 
-        return view('home-seeker', compact('provinces', 'carousels', 'favIndustries', 'agencies'));
+        return view('home-seeker', compact('provinces', 'carousels', 'blogs', 'favIndustries', 'agencies'));
     }
 
     public function showProfile($id)

@@ -1,42 +1,50 @@
 @extends('layouts.mst_admin')
-@section('title', ''.$admin->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="">
             <div class="row top_tiles">
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-user-graduate"></i></div>
-                        <div class="count">{{$newSeeker}}</div>
-                        <h3>New {{$newSeeker > 1 ? 'Seekers' : 'Seeker'}}</h3>
-                        <p>Total: <strong>{{\App\Seekers::count()}}</strong> job seekers</p>
-                    </div>
+                    <a href="{{route('table.agencies')}}" class="agency">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-user-tie"></i></div>
+                            <div class="count">{{$newAgency}}</div>
+                            <h3>New {{$newAgency > 1 ? 'Agencies' : 'Agency'}}</h3>
+                            <p>Total: <strong>{{\App\Agencies::count()}}</strong> job agencies</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-paper-plane"></i></div>
-                        <div class="count">{{$newApp}}</div>
-                        <h3>New {{$newApp > 1 ? 'Applications' : 'Application'}}</h3>
-                        <p>Total: <strong>{{\App\Accepting::where('isApply',true)->count()}}</strong>
-                            applied applications</p>
-                    </div>
+                    <a href="{{route('table.seekers')}}" class="seeker">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-user-graduate"></i></div>
+                            <div class="count">{{$newSeeker}}</div>
+                            <h3>New {{$newSeeker > 1 ? 'Seekers' : 'Seeker'}}</h3>
+                            <p>Total: <strong>{{\App\Seekers::count()}}</strong> job seekers</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-user-tie"></i></div>
-                        <div class="count">{{$newAgency}}</div>
-                        <h3>New {{$newAgency > 1 ? 'Agencies' : 'Agency'}}</h3>
-                        <p>Total: <strong>{{\App\Agencies::count()}}</strong> job agencies</p>
-                    </div>
+                    <a href="{{route('table.jobPostings')}}" class="agency">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-briefcase"></i></div>
+                            <div class="count">{{$newJobPost}}</div>
+                            <h3>New {{$newJobPost > 1 ? 'Vacancies' : 'Vacancy'}}</h3>
+                            <p>Total: <strong>{{\App\Vacancies::where('isPost',true)->count()}}</strong> posted
+                                vacancies</p>
+                        </div>
+                    </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <div class="tile-stats">
-                        <div class="icon"><i class="fa fa-briefcase"></i></div>
-                        <div class="count">{{$newJobPost}}</div>
-                        <h3>New {{$newJobPost > 1 ? 'Vacancies' : 'Vacancy'}}</h3>
-                        <p>Total: <strong>{{\App\Vacancies::where('isPost',true)->count()}}</strong> posted
-                            vacancies</p>
-                    </div>
+                    <a href="{{route('table.applications')}}" class="seeker">
+                        <div class="tile-stats">
+                            <div class="icon"><i class="fa fa-paper-plane"></i></div>
+                            <div class="count">{{$newApp}}</div>
+                            <h3>New {{$newApp > 1 ? 'Applications' : 'Application'}}</h3>
+                            <p>Total: <strong>{{\App\Accepting::where('isApply',true)->count()}}</strong>
+                                applied applications</p>
+                        </div>
+                    </a>
                 </div>
             </div>
 
@@ -103,20 +111,8 @@
                                 <small>Activity shares</small>
                             </h2>
                             <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                       aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
-                                        </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-times"></i></a>
-                                </li>
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                <li><a class="close-link"><i class="fa fa-times"></i></a></li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
@@ -159,239 +155,61 @@
 
 
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Top Profiles
-                                <small>Sessions</small>
+                            <h2>Blog
+                                <small>Career Inspirations</small>
                             </h2>
                             <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                       aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
-                                        </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-times"></i></a>
-                                </li>
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                <li><a class="close-link"><i class="fa fa-times"></i></a></li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item One Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Three Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>Top Profiles
-                                <small>Sessions</small>
-                            </h2>
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                       aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
+                            @if(count($blogs) > 0)
+                                <ul class="list-unstyled timeline">
+                                    @foreach($blogs as $blog)
+                                        <li>
+                                            <div class="block">
+                                                <div class="tags">
+                                                    <a href="" class="tag">
+                                                        <span>{{\App\Jenisblog::find($blog->jenisblog_id)->nama}}</span>
+                                                    </a>
+                                                </div>
+                                                <div class="block_content">
+                                                    <h2 class="title">
+                                                        <a>{{$blog->judul}}</a>
+                                                    </h2>
+                                                    <div class="byline">
+                                                        <span>{{$blog->updated_at->diffForHumans()}}</span> by
+                                                        <a>{{$blog->uploder}}</a>
+                                                    </div>
+                                                    <p class="excerpt">
+                                                        {!!$blog->konten!!}
+                                                        <a>Read More</a>
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-times"></i></a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item One Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Three Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4">
-                    <div class="x_panel">
-                        <div class="x_title">
-                            <h2>Top Profiles
-                                <small>Sessions</small>
-                            </h2>
-                            <ul class="nav navbar-right panel_toolbox">
-                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                       aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li><a href="#">Settings 1</a>
-                                        </li>
-                                        <li><a href="#">Settings 2</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><a class="close-link"><i class="fa fa-times"></i></a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="x_content">
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item One Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Two Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
-                            <article class="media event">
-                                <a class="pull-left date">
-                                    <p class="month">April</p>
-                                    <p class="day">23</p>
-                                </a>
-                                <div class="media-body">
-                                    <a class="title" href="#">Item Three Title</a>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                                </div>
-                            </article>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <ul class="list-unstyled timeline widget">
+                                    <li>
+                                        <div class="block">
+                                            <div class="block_content">
+                                                <h2 class="title">
+                                                    <a>There seems to be none of the blog was found&hellip;</a>
+                                                </h2>
+                                                <div class="byline"></div>
+                                                <p class="excerpt"></p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -8,7 +8,10 @@ class Jenisblog extends Model
 {
     protected $table = 'jenisblog';
 
-    protected $fillable = [
-        'id', 'nama',
-    ];
+    protected $guarded = ['id'];
+
+    public function blogs()
+    {
+        return $this->hasMany(Blog::class, 'jenisblog_id');
+    }
 }

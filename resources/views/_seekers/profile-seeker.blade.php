@@ -170,11 +170,8 @@
                                                     <td>&nbsp;Birthday</td>
                                                     <td>&nbsp;:&nbsp;</td>
                                                     <td>
-                                                        @if($seeker->birthday != "")
-                                                            {{$seeker->birthday}}
-                                                        @else
-                                                            -
-                                                        @endif
+                                                        {{$seeker->birthday == "" ? '-' : \Carbon\Carbon::parse
+                                                        ($seeker->birthday)->format('j F Y')}}
                                                     </td>
                                                 </tr>
                                                 <tr>
