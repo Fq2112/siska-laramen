@@ -143,7 +143,7 @@
                         <div class="row form-group">
                             <div class="col-lg-12">
                                 <label for="benefit">Benefit <span class="required">*</span></label>
-                                <textarea name="benefit" id="benefit"></textarea>
+                                <textarea class="use-tinymce" name="benefit"></textarea>
                             </div>
                         </div>
                     </div>
@@ -209,7 +209,7 @@
                 '<div class="row form-group">' +
                 '<div class="col-lg-12">' +
                 '<label for="benefit' + id + '">Benefit <span class="required">*</span></label>' +
-                '<textarea class="form-control" rows="5" name="benefit" id="benefit' + id + '">' + benefit + '</textarea>' +
+                '<textarea class="use-tinymce" name="benefit" id="benefit' + id + '"></textarea>' +
                 '</div></div></div>' +
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
@@ -221,81 +221,12 @@
                 $("#normal" + id).prop('checked', true);
             }
 
-            tinymce.init({
-                branding: false,
-                path_absolute: '{{url('/')}}',
-                selector: '#benefit' + id,
-                height: 300,
-                themes: 'modern',
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor textcolor',
-                    'searchreplace visualblocks code',
-                    'insertdatetime media table contextmenu paste code help wordcount'
-                ],
-                toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                relative_urls: false,
-                file_browser_callback: function (field_name, url, type, win) {
-                    var x = window.innerWidth || document.documentElement.clientWidth ||
-                        document.getElementsByTagName('body')[0].clientWidth,
-                        y = window.innerHeight || document.documentElement.clientHeight ||
-                            document.getElementsByTagName('body')[0].clientHeight,
-                        cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
-                    if (type == 'image') {
-                        cmsURL = cmsURL + '&type=Images';
-                    } else {
-                        cmsURL = cmsURL + '&type=Files';
-                    }
-
-                    tinyMCE.activeEditor.windowManager.open({
-                        file: cmsURL,
-                        title: 'File Manager',
-                        width: x * 0.8,
-                        height: y * 0.8,
-                        resizable: 'yes',
-                        close_previous: 'no'
-                    });
-                }
-            });
+            tinyMCE.remove();
+            tinyMCE.init(editor_config);
             tinyMCE.get('benefit' + id).setContent(benefit);
 
             $("#editModal").modal('show');
         }
-
-        tinymce.init({
-            branding: false,
-            path_absolute: '{{url('/')}}',
-            selector: '#benefit',
-            height: 300,
-            themes: 'modern',
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor textcolor',
-                'searchreplace visualblocks code',
-                'insertdatetime media table contextmenu paste code help wordcount'
-            ],
-            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-            relative_urls: false,
-            file_browser_callback: function (field_name, url, type, win) {
-                var x = window.innerWidth || document.documentElement.clientWidth ||
-                    document.getElementsByTagName('body')[0].clientWidth,
-                    y = window.innerHeight || document.documentElement.clientHeight ||
-                        document.getElementsByTagName('body')[0].clientHeight,
-                    cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
-                if (type == 'image') {
-                    cmsURL = cmsURL + '&type=Images';
-                } else {
-                    cmsURL = cmsURL + '&type=Files';
-                }
-
-                tinyMCE.activeEditor.windowManager.open({
-                    file: cmsURL,
-                    title: 'File Manager',
-                    width: x * 0.8,
-                    height: y * 0.8,
-                    resizable: 'yes',
-                    close_previous: 'no'
-                });
-            }
-        });
 
         $("#form-create-plan").on('submit', function (e) {
             e.preventDefault();

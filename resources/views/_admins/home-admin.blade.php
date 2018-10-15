@@ -175,7 +175,7 @@
                                             <div class="block">
                                                 <div class="tags">
                                                     <a href="" class="tag">
-                                                        <span>{{$blog->jenisBlog->nama}}</span>
+                                                        <span>{{\App\Jenisblog::find($blog->jenisblog_id)->nama}}</span>
                                                     </a>
                                                 </div>
                                                 <div class="block_content">
@@ -184,10 +184,10 @@
                                                     </h2>
                                                     <div class="byline">
                                                         <span>{{$blog->updated_at->diffForHumans()}}</span> by
-                                                        <a>{{$blog->uploader}}</a>
+                                                        <a>{{$blog->uploder}}</a>
                                                     </div>
                                                     <p class="excerpt">
-                                                        {{\Illuminate\Support\Str::words($blog->konten,20," ... ")}}
+                                                        {!!$blog->konten!!}
                                                         <a>Read More</a>
                                                     </p>
                                                 </div>

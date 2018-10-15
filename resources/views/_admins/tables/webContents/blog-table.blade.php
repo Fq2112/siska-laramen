@@ -12,8 +12,7 @@
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
                                     <i class="fa fa-chevron-up"></i></a></li>
-                            <li><a onclick="createBlog()" data-toggle="tooltip" title="Create"
-                                   data-placement="right">
+                            <li><a onclick="createBlog()" data-toggle="tooltip" title="Create" data-placement="right">
                                     <i class="fa fa-plus"></i></a></li>
                         </ul>
                         <div class="clearfix"></div>
@@ -146,7 +145,7 @@
                         <div class="row form-group">
                             <div class="col-lg-12">
                                 <label for="konten">Content <span class="required">*</span></label>
-                                <textarea name="konten" id="konten"></textarea>
+                                <textarea name="konten" class="use-tinymce"></textarea>
                             </div>
                         </div>
                     </div>
@@ -221,7 +220,7 @@
                 '<div class="row form-group">' +
                 '<div class="col-lg-12">' +
                 '<label for="konten' + id + '">Content <span class="required">*</span></label>' +
-                '<textarea class="form-control" rows="5" name="konten" id="konten' + id + '">' + konten + '</textarea>' +
+                '<textarea class="use-tinymce" id="konten' + id + '" name="konten" required></textarea>' +
                 '</div></div></div>' +
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
@@ -234,44 +233,11 @@
                     $attr = val.id == jenisblog ? 'selected' : '';
                     $result += '<option value="' + val.id + '" ' + $attr + '>' + val.nama + '</option>';
                 });
-                $("#blogType" + id).empty().append($result);
+                $("#blogType" + id).empty().append();
             });
 
-            tinymce.init({
-                branding: false,
-                path_absolute: '{{url('/')}}',
-                selector: '#konten' + id,
-                height: 300,
-                themes: 'modern',
-                plugins: [
-                    'advlist autolink lists link image charmap print preview anchor textcolor',
-                    'searchreplace visualblocks code',
-                    'insertdatetime media table contextmenu paste code help wordcount'
-                ],
-                toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                relative_urls: false,
-                file_browser_callback: function (field_name, url, type, win) {
-                    var x = window.innerWidth || document.documentElement.clientWidth ||
-                        document.getElementsByTagName('body')[0].clientWidth,
-                        y = window.innerHeight || document.documentElement.clientHeight ||
-                            document.getElementsByTagName('body')[0].clientHeight,
-                        cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
-                    if (type == 'image') {
-                        cmsURL = cmsURL + '&type=Images';
-                    } else {
-                        cmsURL = cmsURL + '&type=Files';
-                    }
-
-                    tinyMCE.activeEditor.windowManager.open({
-                        file: cmsURL,
-                        title: 'File Manager',
-                        width: x * 0.8,
-                        height: y * 0.8,
-                        resizable: 'yes',
-                        close_previous: 'no'
-                    });
-                }
-            });
+            tinyMCE.remove();
+            tinyMCE.init(editor_config);
             tinyMCE.get('konten' + id).setContent(konten);
 
             $("#editModal").modal('show');
@@ -303,42 +269,6 @@
             var txt = $("#txt_dir");
             txt.val(names);
             $("#txt_dir[data-toggle=tooltip]").attr('data-original-title', names).tooltip('show');
-        });
-
-        tinymce.init({
-            branding: false,
-            path_absolute: '{{url('/')}}',
-            selector: '#konten',
-            height: 300,
-            themes: 'modern',
-            plugins: [
-                'advlist autolink lists link image charmap print preview anchor textcolor',
-                'searchreplace visualblocks code',
-                'insertdatetime media table contextmenu paste code help wordcount'
-            ],
-            toolbar: 'insert | undo redo |  formatselect | bold italic backcolor  | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-            relative_urls: false,
-            file_browser_callback: function (field_name, url, type, win) {
-                var x = window.innerWidth || document.documentElement.clientWidth ||
-                    document.getElementsByTagName('body')[0].clientWidth,
-                    y = window.innerHeight || document.documentElement.clientHeight ||
-                        document.getElementsByTagName('body')[0].clientHeight,
-                    cmsURL = editor_config.path_absolute + 'filemanager?field_name=' + field_name;
-                if (type == 'image') {
-                    cmsURL = cmsURL + '&type=Images';
-                } else {
-                    cmsURL = cmsURL + '&type=Files';
-                }
-
-                tinyMCE.activeEditor.windowManager.open({
-                    file: cmsURL,
-                    title: 'File Manager',
-                    width: x * 0.8,
-                    height: y * 0.8,
-                    resizable: 'yes',
-                    close_previous: 'no'
-                });
-            }
         });
 
         $("#form-create-blog").on('submit', function (e) {

@@ -1,4 +1,5 @@
 <script>
+    var editor_config;
     $(document).ready(function () {
         $('.carousel-indicators:nth-child(1)').addClass('active');
         $('.item:nth-child(1)').addClass('active');
@@ -40,7 +41,7 @@
             });
         });
 
-        var editor_config = {
+        editor_config = {
             branding: false,
             path_absolute: '{{url('/')}}',
             selector: '.use-tinymce',
