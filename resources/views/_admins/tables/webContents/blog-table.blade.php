@@ -40,10 +40,20 @@
                                                     <img class="img-responsive" width="100" alt="{{$blog->dir}}"
                                                          style="float: left;margin-right: .5em;margin-bottom: .5em"
                                                          src="{{asset('images/blog/'.$blog->dir)}}">
-                                                    <strong>{{$blog->judul}}</strong><br>{{$blog->subjudul}}<br>
-                                                    Blog Type: <span class="label label-success"
-                                                                     style="text-transform: uppercase">
-                                                        {{$type->nama}}</span>
+                                                    <table style="margin: 0">
+                                                        <tr>
+                                                            <td><strong>{{$blog->judul}}</strong></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{$blog->subjudul}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Blog Type:
+                                                                <span class="label label-success"
+                                                                      style="text-transform: uppercase">
+                                                                    {{$type->nama}}</span></td>
+                                                        </tr>
+                                                    </table>
                                                 </td>
                                             </tr>
                                             <tr style="border-bottom: 1px solid #eee">

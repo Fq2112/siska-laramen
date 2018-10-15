@@ -334,7 +334,7 @@
                     '</blockquote></div></div><hr class="hr-divider">';
             });
             $("#search-result").empty().append($result);
-            $("#total_rec").html(data.total);
+
             if (data.last_page > 1) {
 
                 if (data.current_page > 4) {

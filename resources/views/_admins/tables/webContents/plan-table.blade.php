@@ -191,9 +191,9 @@
                 'placeholder="0" value="' + price + '" required>' +
                 '<span class="fa fa-money-bill-wave form-control-feedback right" aria-hidden="true"></span></div>' +
                 '<div class="col-lg-2"><label>Value</label>' +
-                '<p><label for="normal' + id + '">Normal: <input type="radio" class="flat" name="isBest" ' +
+                '<p><label for="normal' + id + '">Normal: <input type="radio" class="flat iCheck" name="isBest" ' +
                 'id="normal' + id + '" value="0"></label>' +
-                '<label for="best' + id + '">Best: <input type="radio" class="flat" name="isBest" ' +
+                '<label for="best' + id + '">Best: <input type="radio" class="flat iCheck" name="isBest" ' +
                 'id="best' + id + '" value="1"></label></p></div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-6 has-feedback">' +
@@ -215,10 +215,11 @@
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                 '<button type="submit" class="btn btn-primary">Save changes</button></div></form>'
             );
+            $('.iCheck').iCheck({checkboxClass: 'icheckbox_flat-green', radioClass: 'iradio_flat-green'});
             if (isBest == 1) {
-                $("#best" + id).prop('checked', true);
+                $("#best" + id).iCheck('check');
             } else {
-                $("#normal" + id).prop('checked', true);
+                $("#normal" + id).iCheck('check');
             }
 
             tinyMCE.remove();

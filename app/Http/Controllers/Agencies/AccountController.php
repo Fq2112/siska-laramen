@@ -87,6 +87,8 @@ class AccountController extends Controller
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
         $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)->get();
 
+        $reqExp = array();
+        $reqEdu = array();
         foreach ($vacancies as $vacancy) {
             $reqExp[] = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
             $reqEdu[] = $vacancy->tingkatpend_id;

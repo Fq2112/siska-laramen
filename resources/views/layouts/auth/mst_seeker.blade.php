@@ -34,6 +34,25 @@
     </style>
 @endpush
 @section('content')
+    @php
+        $degrees = array();
+        if(Illuminate\Support\Facades\Request::is('account/dashboard/recommended_vacancy')){
+            foreach ($seeker->educations as $education) {
+                $degrees[] = $education->tingkatpend_id;
+            }
+        }
+        if ($seeker->total_exp == "") {
+            $totalExp = 0;
+        } else {
+            $totalExp = $seeker->total_exp;
+        }
+        $rec = \App\Vacancies::where('isPost', true)->where('pengalaman', '<=', $totalExp)
+        ->where(function ($query) use ($degrees) {
+            foreach ($degrees as $degree) {
+                $query->orWhere('tingkatpend_id', '<=', $degree);
+            }
+        })->count();
+    @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
             <div class="wrapper_container">
@@ -87,7 +106,8 @@
                                                                class="{{ \Illuminate\Support\Facades\Request::is
                                                        ('account/dashboard/recommended_vacancy') ? 'active' : '' }}">
                                                                 Recommended Vacancy
-                                                                <span class="badge" id="total_rec"></span></a>
+                                                                <span class="badge">
+                                                                    {{$rec > 999 ? '999+' : $rec}}</span></a>
                                                         </li>
                                                         <li><a href="{{route('seeker.bookmarked.vacancy')}}"
                                                                class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/bookmarked_vacancy') ? 'active' : '' }}">Bookmarked

@@ -7,18 +7,14 @@
 
         .media-object {
             cursor: pointer;
-            -webkit-transition: all 100ms ease-in;
-            -moz-transition: all 100ms ease-in;
-            transition: all 100ms ease-in;
-            -webkit-filter: brightness(1.8) grayscale(1) opacity(.7);
-            -moz-filter: brightness(1.8) grayscale(1) opacity(.7);
-            filter: brightness(1.8) grayscale(1) opacity(.7);
+            opacity: .4;
+            -webkit-transition: all .2s ease-in;
+            -moz-transition: all .2s ease-in;
+            transition: all .2s ease-in;
         }
 
         .media-object:hover {
-            -webkit-filter: none;
-            -moz-filter: none;
-            filter: none;
+            opacity: 1;
         }
 
         #formModal .login .box .form input[type="text"], .login .box .form input[type="email"], .login .box .form input[type="password"] {

@@ -24,7 +24,7 @@ class UsersController extends Controller
     {
         $findAdmin = Admin::find($id);
 
-        return view('_admins.details.user-detail', compact('findAdmin'));
+        return view('_admins.details.admin-detail', compact('findAdmin'));
     }
 
     public function createAdmins(Request $request)

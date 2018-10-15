@@ -128,7 +128,8 @@
         $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)->count();
         $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')
         ->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count();
-
+        $reqExp = array();
+        $reqEdu = array();
         foreach (\App\Vacancies::where('agency_id', $agency->id)->where('isPost',true)->get() as $vacancy){
             $reqExp[] = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
             $reqEdu[] = $vacancy->tingkatpend_id;

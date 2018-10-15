@@ -559,6 +559,16 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'table.jobPostings'
                     ]);
 
+                    Route::put('{id}/update', [
+                        'uses' => 'TransactionAgencyController@updateJobPostings',
+                        'as' => 'table.jobPostings.update'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'TransactionAgencyController@deleteJobPostings',
+                        'as' => 'table.jobPostings.delete'
+                    ]);
+
                 });
 
                 Route::group(['prefix' => 'job_invitations'], function () {

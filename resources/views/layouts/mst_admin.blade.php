@@ -18,6 +18,10 @@
     <link href="{{asset('_admins/css/nprogress.css')}}" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
     <link href="{{asset('_admins/css/daterangepicker.css')}}" rel="stylesheet">
+    <!-- bootstrap-datepicker -->
+    <link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet">
+    <!-- bootstrap-datetimepicker -->
+    <link href="{{ asset('css/bootstrap-datetimepicker.css') }}" rel="stylesheet">
     <!-- bootstrap-wysiwyg -->
     <link href="{{asset('_admins/css/prettify.min.css')}}" rel="stylesheet">
     <!-- Switchery -->
@@ -317,6 +321,10 @@
 <!-- bootstrap-daterangepicker -->
 <script src="{{asset('js/moment.js')}}"></script>
 <script src="{{asset('_admins/js/daterangepicker.js')}}"></script>
+<!-- bootstrap-datepicker -->
+<script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
+<!-- bootstrap-datetimepicker -->
+<script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 <!-- TinyMCE -->
 <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
 <!-- bootstrap-wysiwyg -->
@@ -389,6 +397,8 @@
             }
         };
         tinymce.init(editor_config);
+
+        $('.datepicker').datepicker({format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true});
     });
 
     function fullScreen() {
