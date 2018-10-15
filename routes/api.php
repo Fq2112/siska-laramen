@@ -69,9 +69,26 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'as' => 'load.fav.vacancies'
         ]);
 
+
+
+        $router->get('vacancies/totalapply/{vacancy_id}', [
+            'uses' => 'VacanciesAPIController@getTotalApllyVacancies',
+            'as' => 'load.totalapply'
+        ]);
+
         $router->get('vacancies/latest', [
             'uses' => 'VacanciesAPIController@loadLateVacancies',
             'as' => 'load.late.vacancies'
+        ]);
+
+        $router->get('agency/{agency_id}', [
+            'uses' => 'VacanciesAPIController@getDetailAgency',
+            'as' => 'load.agency'
+        ]);
+
+        $router->get('vacancies/{id}', [
+            'uses' => 'VacanciesAPIController@getVacancyAgency',
+            'as' => 'load.vacancies.selected'
         ]);
 
         $router->get('joblevel', [
@@ -118,6 +135,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'uses' => 'EducationAPIController@loadEducationDegree',
             'as' => 'load.degree'
         ]);
+
+
 
     });
 

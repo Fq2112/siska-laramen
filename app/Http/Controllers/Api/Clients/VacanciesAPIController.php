@@ -93,4 +93,39 @@ class VacanciesAPIController extends Controller
 
         return $arr;
     }
+
+    public function getDetailAgency($agency_id)
+    {
+        $agency = Agencies::find($agency_id)->toArray();
+        return response()->json([
+            'data' => [
+                $agency
+            ]
+        ]);
+    }
+
+    public function getVacancyAgency($id)
+    {
+        $vacancies = Vacancies::find($id)->toArray();
+        $agency = Agencies::findOrFail($vacancies['agency_id'])->toArray();
+        $degrees = array('degrees' => Tingkatpend::findOrFail($vacancies['tingkatpend_id'])->name);
+        $majors = array('majors' => Jurusanpend::findOrFail($vacancies['jurusanpend_id'])->name);
+        $jobfunc = array('job_func' => FungsiKerja::findOrFail($vacancies['fungsikerja_id'])->nama);
+        $industry = array('industry' => Industri::findOrFail($vacancies['industry_id'])->nama);
+        $jobtype = array('job_type' => JobType::findOrFail($vacancies['jobtype_id'])->name);
+        $joblevel = array('job_level' => JobLevel::findOrFail($vacancies['joblevel_id'])->name);
+        $salary = array('salary' => Salaries::findOrFail($vacancies['salary_id'])->name);
+        $total = array('total' => Accepting::where('vacancy_id',$id)->get()->count());
+
+        $user = User::findOrFail(Agencies::findOrFail($vacancies['agency_id'])->user_id);
+        if ($user->ava == "agency.png" || $user->ava == "") {
+            $filename = asset('images/agency.png');
+        } else {
+            $filename = asset('storage/users/' . $user->ava);
+        }
+        $ava['user'] = array('ava' => $filename, 'name' => $user->name);
+        $array = array_replace($vacancies,$agency,$salary,$degrees,$majors,$jobtype,$jobfunc,$industry,$joblevel,$total,$ava);
+        return $array;
+    }
+
 }
