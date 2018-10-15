@@ -50,7 +50,7 @@ class AgencyController extends Controller
     public function showProfile($id)
     {
         $provinces = Provinces::all();
-        $agency = Agencies::find($id);
+        $agency = Agencies::findOrFail($id);
         $user = User::find($agency->user_id);
         $industry = Industri::find($agency->industri_id);
         $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)

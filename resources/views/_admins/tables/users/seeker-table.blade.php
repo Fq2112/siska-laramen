@@ -34,7 +34,7 @@
                             <tbody>
                             @php $no = 1; @endphp
                             @foreach($seekers as $seeker)
-                                @php $user = \App\User::where('id',$seeker->user_id)->first(); @endphp
+                                @php $user = \App\User::find($seeker->user_id); @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle" align="center">
@@ -114,7 +114,7 @@
                                     <td style="vertical-align: middle"
                                         align="center">{{$seeker->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a href="{{route('delete.seekers',['id' => $seeker->id])}}"
+                                        <a href="{{route('seeker.profile',['id' => $seeker->id])}}" target="_blank"
                                            class="btn btn-info btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Details" data-placement="left"><i class="fa fa-info-circle"></i></a>
                                         <hr style="margin: 5px auto">

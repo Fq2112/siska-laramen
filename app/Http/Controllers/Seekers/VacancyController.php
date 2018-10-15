@@ -56,7 +56,7 @@ class VacancyController extends Controller
     public function detailVacancy($id)
     {
         $provinces = Provinces::all();
-        $vacancy = Vacancies::find($id);
+        $vacancy = Vacancies::findOrFail($id);
         $carousels = Carousel::all();
         $agency = Agencies::find($vacancy->agency_id);
         $user = User::find(Agencies::find($vacancy->agency_id)->user_id);

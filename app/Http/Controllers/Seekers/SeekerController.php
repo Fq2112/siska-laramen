@@ -68,7 +68,7 @@ class SeekerController extends Controller
     public function showProfile($id)
     {
         $provinces = Provinces::all();
-        $seeker = Seekers::find($id);
+        $seeker = Seekers::findOrFail($id);
         $user = User::find($seeker->user_id);
 
         $attachments = Attachments::where('seeker_id', $id)->orderby('created_at', 'desc')->get();

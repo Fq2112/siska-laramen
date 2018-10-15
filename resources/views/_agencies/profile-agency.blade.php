@@ -73,6 +73,9 @@
                                 @auth
                                     @if(Auth::user()->isAgency() && Auth::user()->id == $agency->user_id)
                                         <li class="ld ld-breath" id="btn_edit">
+                                            <span class="label label-default" style="background: #fa5555">
+                                                <strong>{{$likes}}&ensp;<i class="fa fa-thumbs-up"></i></strong>
+                                            </span>
                                             <a href="{{route('agency.edit.profile')}}" class="btn btn-info btn-block">
                                                 <i class="fa fa-user-edit"></i>&ensp;<strong>Edit</strong>
                                             </a>
@@ -82,10 +85,9 @@
                                             <form method="post" action="{{route('favorite.agency')}}"
                                                   id="form-favorite">
                                                 {{csrf_field()}}
-                                                @if($likes > 0)
-                                                    <small><strong>{{$likes}} {{$likes > 1 ? 'likes' : 'like'}}</strong>
-                                                    </small>
-                                                @endif
+                                                <span class="label label-default" style="background: #fa5555">
+                                                    <strong>{{$likes}}&ensp;<i class="fa fa-thumbs-up"></i></strong>
+                                                </span>
                                                 <div class="anim-icon anim-icon-md heart ld ld-heartbeat">
                                                     <input type="hidden" name="agency_id" value="{{$agency->id}}">
                                                     <input type="checkbox" id="favorite">
@@ -99,10 +101,9 @@
                                     <li id="fav-agency">
                                         <form method="post" action="{{route('favorite.agency')}}" id="form-favorite">
                                             {{csrf_field()}}
-                                            @if($likes > 0)
-                                                <small><strong>{{$likes}} {{$likes > 1 ? 'likes' : 'like'}}</strong>
-                                                </small>
-                                            @endif
+                                            <span class="label label-default" style="background: #fa5555">
+                                                <strong>{{$likes}}&ensp;<i class="fa fa-thumbs-up"></i></strong>
+                                            </span>
                                             <div class="anim-icon anim-icon-md heart ld ld-heartbeat">
                                                 <input type="hidden" name="agency_id" value="{{$agency->id}}">
                                                 <input type="checkbox" id="favorite">

@@ -34,7 +34,11 @@
                             <tbody>
                             @php $no = 1; @endphp
                             @foreach($agencies as $agency)
-                                @php $user = \App\User::where('id',$agency->user_id)->first(); @endphp
+                                @php
+                                    $user = \App\User::find($agency->user_id);
+                                    $likes = \App\FavoriteAgency::where('agency_id', $agency->id)
+                                    ->where('isFavorite', true)->count();
+                                @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle" align="center">
@@ -47,11 +51,13 @@
                                         @endif
                                     </td>
                                     <td style="vertical-align: middle">
-                                        <strong>{{$user->name}}</strong><br>
+                                        <strong>{{$user->name}}</strong>&nbsp;&ndash;&nbsp;<span
+                                                class="label label-default" style="background: #fa5555">
+                                            {{$likes}}&ensp;<i class="fa fa-thumbs-up"></i></span><br>
                                         <a href="mailto:{{$user->email}}">{{$user->email}}</a><br>
                                         <strong>Headquarter : </strong>
-                                        <span class="label label-primary"
-                                              style="text-transform: uppercase">{{$agency->kantor_pusat}}</span>
+                                        <span class="label label-default"
+                                              style="text-transform: uppercase;background: #00adb5">{{$agency->kantor_pusat}}</span>
                                         <hr style="margin: 5px auto">
                                         <a href="{{$agency->link}}" target="_blank">{{$agency->link}}</a><br>
                                         <a href="tel:{{$agency->phone}}">{{$agency->phone}}</a><br>{{$agency->alamat}}
@@ -61,7 +67,7 @@
                                     <td style="vertical-align: middle"
                                         align="center">{{$agency->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a href="{{route('detail.agencies',['id' => $agency->id])}}"
+                                        <a href="{{route('agency.profile',['id' => $agency->id])}}" target="_blank"
                                            class="btn btn-info btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Details" data-placement="left"><i class="fa fa-info-circle"></i></a>
                                         <hr style="margin: 5px auto">

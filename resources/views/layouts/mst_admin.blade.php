@@ -139,6 +139,7 @@
                                         <ul class="nav child_menu">
                                             <li><a>Agencies <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.vacancies')}}">Job Vacancies</a></li>
                                                     <li><a href="{{route('table.jobPostings')}}">Job Postings</a></li>
                                                     <li><a href="{{route('table.jobInvitations')}}">Job Invitations</a>
                                                     </li>

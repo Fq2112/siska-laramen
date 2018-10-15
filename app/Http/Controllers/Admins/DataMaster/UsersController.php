@@ -125,13 +125,6 @@ class UsersController extends Controller
         return view('_admins.tables.users.user-table', compact('users'));
     }
 
-    public function detailUsers($id)
-    {
-        $user = User::find($id);
-
-        return view('_admins.details.user-detail', compact('user'));
-    }
-
     public function deleteUsers($id)
     {
         $user = User::find(decrypt($id));
@@ -147,18 +140,11 @@ class UsersController extends Controller
         return view('_admins.tables.users.agency-table', compact('agencies'));
     }
 
-    public function detailAgencies($id)
-    {
-        $agency = Agencies::find($id);
-
-        return view('_admins.details.user-detail', compact('agency'));
-    }
-
     public function deleteAgencies($id)
     {
         $agency = Agencies::find(decrypt($id));
-        $user = User::where('id', $agency->user_id)->first();
-        $agency->delete();
+        $user = User::find($agency->user_id);
+        $user->forceDelete();
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
     }
@@ -170,18 +156,11 @@ class UsersController extends Controller
         return view('_admins.tables.users.seeker-table', compact('seekers'));
     }
 
-    public function detailSeekers($id)
-    {
-        $seeker = Seekers::find($id);
-
-        return view('_admins.details.user-detail', compact('seeker'));
-    }
-
     public function deleteSeekers($id)
     {
         $seeker = Seekers::find(decrypt($id));
-        $user = User::where('id', $seeker->user_id)->first();
-        $seeker->delete();
+        $user = User::find($seeker->user_id);
+        $user->forceDelete();
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
     }

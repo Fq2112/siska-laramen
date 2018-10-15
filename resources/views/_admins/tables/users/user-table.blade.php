@@ -63,7 +63,8 @@
                                     <td style="vertical-align: middle">{{\Carbon\Carbon::parse($user->created_at)->format('j F Y')}}</td>
                                     <td style="vertical-align: middle">{{$user->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a href="{{route('detail.users',['id' => $user->id])}}"
+                                        <a href="{{$user->isAgency() ? route('agency.profile',['id' => $user->agencies]) :
+                                        route('seeker.profile',['id' => $user->seekers])}}" target="_blank"
                                            class="btn btn-info btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Details" data-placement="left"><i class="fa fa-info-circle"></i></a>
                                         <hr style="margin: 5px auto">

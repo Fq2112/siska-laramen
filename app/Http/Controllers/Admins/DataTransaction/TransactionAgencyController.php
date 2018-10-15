@@ -13,6 +13,21 @@ use Illuminate\Support\Facades\Storage;
 
 class TransactionAgencyController extends Controller
 {
+    public function showVacanciesTable()
+    {
+        $vacancies = Vacancies::all();
+
+        return view('_admins.tables.transactions.vacancy-table', compact('vacancies'));
+    }
+
+    public function deleteVacancies($id)
+    {
+        $vacancy = Vacancies::find(decrypt($id));
+        $vacancy->delete();
+
+        return back()->with('success', '' . $vacancy->judul . ' is successfully deleted!');
+    }
+
     public function showJobPostingsTable()
     {
         $postings = ConfirmAgency::all();
