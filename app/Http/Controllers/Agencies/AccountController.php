@@ -330,7 +330,7 @@ class AccountController extends Controller
             if ($request->hasFile('ava')) {
                 $name = $img->getClientOriginalName();
 
-                if ($user->ava != '') {
+                if ($user->ava != '' || $user->ava != 'agency.png') {
                     Storage::delete('public/users/' . $user->ava);
                 }
 

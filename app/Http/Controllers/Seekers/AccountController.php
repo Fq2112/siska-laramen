@@ -125,7 +125,9 @@ class AccountController extends Controller
 
     private function deleteVideoSummary($seeker)
     {
-        Storage::delete('public/users/seekers/video/' . $seeker->video_summary);
+        if ($seeker->video_summary != '') {
+            Storage::delete('public/users/seekers/video/' . $seeker->video_summary);
+        }
         $seeker->update([
             'video_summary' => null
         ]);
@@ -205,7 +207,7 @@ class AccountController extends Controller
             if ($request->hasFile('ava')) {
                 $name = $img->getClientOriginalName();
 
-                if ($user->ava != '') {
+                if ($user->ava != '' || $user->ava != 'seeker.png') {
                     Storage::delete('public/users/' . $user->ava);
                 }
 

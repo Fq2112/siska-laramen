@@ -13,13 +13,13 @@ class TransactionSeekerController extends Controller
     {
         $applications = Accepting::all();
 
-        return view('_admins.tables.transactions.application-table', compact('applications'));
+        return view('_admins.tables._transactions.application-table', compact('applications'));
     }
 
     public function showFavAgenciesTable()
     {
         $favorites = FavoriteAgency::all();
 
-        return view('_admins.tables.transactions.application-table', compact('favorites'));
+        return view('_admins.tables._transactions.application-table', compact('favorites'));
     }
 }

@@ -17,7 +17,7 @@ class TransactionAgencyController extends Controller
     {
         $vacancies = Vacancies::all();
 
-        return view('_admins.tables.transactions.vacancy-table', compact('vacancies'));
+        return view('_admins.tables._transactions.agencies.vacancy-table', compact('vacancies'));
     }
 
     public function deleteVacancies($id)
@@ -32,7 +32,7 @@ class TransactionAgencyController extends Controller
     {
         $postings = ConfirmAgency::all();
 
-        return view('_admins.tables.transactions.jobPosting-table', compact('postings'));
+        return view('_admins.tables._transactions.agencies.jobPosting-table', compact('postings'));
     }
 
     public function updateJobPostings(Request $request)
@@ -77,6 +77,6 @@ class TransactionAgencyController extends Controller
     {
         $invitations = Invitation::all();
 
-        return view('_admins.tables.transactions.application-table', compact('invitations'));
+        return view('_admins.tables._transactions.application-table', compact('invitations'));
     }
 }

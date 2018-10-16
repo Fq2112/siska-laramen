@@ -11,13 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Controller;
 
-class UsersController extends Controller
+class AccountsController extends Controller
 {
     public function showAdminsTable()
     {
         $admins = Admin::all();
 
-        return view('_admins.tables.users.admin-table', compact('admins'));
+        return view('_admins.tables.accounts.admin-table', compact('admins'));
     }
 
     public function detailAdmins($id)
@@ -93,7 +93,7 @@ class UsersController extends Controller
             if ($request->hasFile('ava')) {
                 $name = $img->getClientOriginalName();
 
-                if ($admin->ava != '') {
+                if ($admin->ava != '' || $admin->ava != 'avatar.png') {
                     Storage::delete('public/admins/' . $admin->ava);
                 }
 
@@ -110,7 +110,7 @@ class UsersController extends Controller
     public function deleteAdmins($id)
     {
         $admin = Admin::find(decrypt($id));
-        if ($admin->ava != '') {
+        if ($admin->ava != '' || $admin->ava != 'avatar.png') {
             Storage::delete('public/admins/' . $admin->ava);
         }
         $admin->forceDelete();
@@ -122,12 +122,15 @@ class UsersController extends Controller
     {
         $users = User::all();
 
-        return view('_admins.tables.users.user-table', compact('users'));
+        return view('_admins.tables.accounts.user-table', compact('users'));
     }
 
     public function deleteUsers($id)
     {
         $user = User::find(decrypt($id));
+        if ($user->ava != '' || $user->ava != 'seeker.png' || $user->ava != 'agency.png') {
+            Storage::delete('public/users/' . $user->ava);
+        }
         $user->forceDelete();
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
@@ -137,13 +140,16 @@ class UsersController extends Controller
     {
         $agencies = Agencies::all();
 
-        return view('_admins.tables.users.agency-table', compact('agencies'));
+        return view('_admins.tables.accounts.agency-table', compact('agencies'));
     }
 
     public function deleteAgencies($id)
     {
         $agency = Agencies::find(decrypt($id));
         $user = User::find($agency->user_id);
+        if ($user->ava != '' || $user->ava != 'agency.png') {
+            Storage::delete('public/users/' . $user->ava);
+        }
         $user->forceDelete();
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
@@ -153,13 +159,16 @@ class UsersController extends Controller
     {
         $seekers = Seekers::all();
 
-        return view('_admins.tables.users.seeker-table', compact('seekers'));
+        return view('_admins.tables.accounts.seeker-table', compact('seekers'));
     }
 
     public function deleteSeekers($id)
     {
         $seeker = Seekers::find(decrypt($id));
         $user = User::find($seeker->user_id);
+        if ($user->ava != '' || $user->ava != 'seeker.png') {
+            Storage::delete('public/users/' . $user->ava);
+        }
         $user->forceDelete();
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');

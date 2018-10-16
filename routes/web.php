@@ -77,27 +77,27 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                 Route::group(['prefix' => 'admins'], function () {
 
                     Route::get('/', [
-                        'uses' => 'UsersController@showAdminsTable',
+                        'uses' => 'AccountsController@showAdminsTable',
                         'as' => 'table.admins'
                     ]);
 
                     Route::get('{id}/detail', [
-                        'uses' => 'UsersController@detailAdmins',
+                        'uses' => 'AccountsController@detailAdmins',
                         'as' => 'detail.admins'
                     ]);
 
                     Route::post('create', [
-                        'uses' => 'UsersController@createAdmins',
+                        'uses' => 'AccountsController@createAdmins',
                         'as' => 'create.admins'
                     ]);
 
                     Route::put('{id}/update', [
-                        'uses' => 'UsersController@updateAdmins',
+                        'uses' => 'AccountsController@updateAdmins',
                         'as' => 'update.admins'
                     ]);
 
                     Route::get('{id}/delete', [
-                        'uses' => 'UsersController@deleteAdmins',
+                        'uses' => 'AccountsController@deleteAdmins',
                         'as' => 'delete.admins'
                     ]);
 
@@ -106,12 +106,12 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                 Route::group(['prefix' => 'users'], function () {
 
                     Route::get('/', [
-                        'uses' => 'UsersController@showUsersTable',
+                        'uses' => 'AccountsController@showUsersTable',
                         'as' => 'table.users'
                     ]);
 
                     Route::get('{id}/delete', [
-                        'uses' => 'UsersController@deleteUsers',
+                        'uses' => 'AccountsController@deleteUsers',
                         'as' => 'delete.users'
                     ]);
 
@@ -120,12 +120,12 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                 Route::group(['prefix' => 'agencies'], function () {
 
                     Route::get('/', [
-                        'uses' => 'UsersController@showAgenciesTable',
+                        'uses' => 'AccountsController@showAgenciesTable',
                         'as' => 'table.agencies'
                     ]);
 
                     Route::get('{id}/delete', [
-                        'uses' => 'UsersController@deleteAgencies',
+                        'uses' => 'AccountsController@deleteAgencies',
                         'as' => 'delete.agencies'
                     ]);
 
@@ -134,12 +134,12 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                 Route::group(['prefix' => 'seekers'], function () {
 
                     Route::get('/', [
-                        'uses' => 'UsersController@showSeekersTable',
+                        'uses' => 'AccountsController@showSeekersTable',
                         'as' => 'table.seekers'
                     ]);
 
                     Route::get('{id}/delete', [
-                        'uses' => 'UsersController@deleteSeekers',
+                        'uses' => 'AccountsController@deleteSeekers',
                         'as' => 'delete.seekers'
                     ]);
 
@@ -592,15 +592,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                     Route::get('/', [
                         'uses' => 'TransactionSeekerController@showApplicationsTable',
                         'as' => 'table.applications'
-                    ]);
-
-                });
-
-                Route::group(['prefix' => 'fav_agencies'], function () {
-
-                    Route::get('/', [
-                        'uses' => 'TransactionSeekerController@showFavAgenciesTable',
-                        'as' => 'table.favAgencies'
                     ]);
 
                 });
