@@ -574,15 +574,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
                 });
 
-                Route::group(['prefix' => 'job_invitations'], function () {
-
-                    Route::get('/', [
-                        'uses' => 'TransactionAgencyController@showJobInvitationsTable',
-                        'as' => 'table.jobInvitations'
-                    ]);
-
-                });
-
             });
 
             Route::group(['prefix' => 'seekers'], function () {
@@ -592,6 +583,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                     Route::get('/', [
                         'uses' => 'TransactionSeekerController@showApplicationsTable',
                         'as' => 'table.applications'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'TransactionSeekerController@deleteApplications',
+                        'as' => 'table.applications.delete'
                     ]);
 
                 });

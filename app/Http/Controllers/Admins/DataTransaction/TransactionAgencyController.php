@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admins\DataTransaction;
 
 use App\ConfirmAgency;
-use App\Invitation;
 use App\Support\RomanConverter;
 use App\Vacancies;
 use Illuminate\Http\Request;
@@ -38,19 +37,34 @@ class TransactionAgencyController extends Controller
     public function updateJobPostings(Request $request)
     {
         $posting = ConfirmAgency::find($request->id);
-
-        $posting->update([
-            'isPaid' => $request->isPaid,
-            'date_payment' => now(),
-            'admin_id' => Auth::guard('admin')->user()->id
-        ]);
-
         $vacancies = Vacancies::whereIn('id', $posting->vacancy_ids)->get();
+
         foreach ($vacancies as $vacancy) {
-            $vacancy->update([
-                'isPost' => $request->isPost,
-                'active_period' => $request->active_period
-            ]);
+            if ($request->isPost == 1) {
+                $vacancy->update([
+                    'isPost' => true,
+                    'active_period' => today()->addMonth()
+                ]);
+                $posting->update([
+                    'isPaid' => true,
+                    'date_payment' => now(),
+                    'admin_id' => Auth::guard('admin')->user()->id
+                ]);
+
+            } else {
+                $vacancy->update([
+                    'isPost' => false,
+                    'active_period' => null,
+                    'interview_date' => null,
+                    'recruitmentDate_start' => null,
+                    'recruitmentDate_end' => null
+                ]);
+                $posting->update([
+                    'isPaid' => false,
+                    'date_payment' => null,
+                    'admin_id' => Auth::guard('admin')->user()->id
+                ]);
+            }
         }
 
         return back()->with('success', '' . $request->invoice . ' is successfully updated!');
@@ -71,12 +85,5 @@ class TransactionAgencyController extends Controller
         $posting->forcedelete();
 
         return back()->with('success', '' . $invoice . ' is successfully deleted!');
-    }
-
-    public function showJobInvitationsTable()
-    {
-        $invitations = Invitation::all();
-
-        return view('_admins.tables._transactions.application-table', compact('invitations'));
     }
 }

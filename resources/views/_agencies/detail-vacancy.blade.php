@@ -77,26 +77,24 @@
                                 @php
                                     $content = '';
                                     if($vacancy->isPost == false){
-                                        $content = 'This vacancy hasn\'t posted yet.';
+                                        $content = 'This vacancy is INACTIVE.';
                                         $placement = 'right';
                                         $style = 'inline-block';
                                     } else{
-                                        $placement = 'left';
-                                        $style = 'none';
-                                    }
-                                    if(now() < $vacancy->recruitmentDate_start || is_null($vacancy
-                                    ->recruitmentDate_start)){
-                                        $content = 'The recruitment date of this vacancy hasn\'t started yet.';
-                                        $placement = 'right';
-                                        $style = 'inline-block';
-                                    } elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
-                                    ->recruitmentDate_end)){
-                                        $content = 'The recruitment date of this vacancy has been ended.';
-                                        $placement = 'right';
-                                        $style = 'inline-block';
-                                    } else {
-                                        $placement = 'left';
-                                        $style = 'none';
+                                        if(now() < $vacancy->recruitmentDate_start || is_null($vacancy
+                                            ->recruitmentDate_start)){
+                                                $content = 'The recruitment date of this vacancy hasn\'t started yet.';
+                                                $placement = 'right';
+                                                $style = 'inline-block';
+                                        } elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
+                                            ->recruitmentDate_end)){
+                                                $content = 'The recruitment date of this vacancy has been ended.';
+                                                $placement = 'right';
+                                                $style = 'inline-block';
+                                        } else {
+                                                $placement = 'left';
+                                                $style = 'none';
+                                        }
                                     }
                                 @endphp
                                 <li data-placement="{{$placement}}"

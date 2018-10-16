@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admins\DataTransaction;
 
 use App\Accepting;
-use App\FavoriteAgency;
+use App\Seekers;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -13,13 +14,16 @@ class TransactionSeekerController extends Controller
     {
         $applications = Accepting::all();
 
-        return view('_admins.tables._transactions.application-table', compact('applications'));
+        return view('_admins.tables._transactions.seekers.application-table', compact('applications'));
     }
 
-    public function showFavAgenciesTable()
+    public function deleteApplications(Request $request)
     {
-        $favorites = FavoriteAgency::all();
+        $application = Accepting::find(decrypt($request->id));
+        $user = User::find(Seekers::find($application->seeker_id)->user_id);
 
-        return view('_admins.tables._transactions.application-table', compact('favorites'));
+        $application->delete();
+
+        return back()->with('success', '' . $user->name . '\'s application is successfully deleted!');
     }
 }

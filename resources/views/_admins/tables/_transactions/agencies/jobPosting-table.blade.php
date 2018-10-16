@@ -22,7 +22,6 @@
                             <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Invoice Number</th>
                                 <th>Order Details</th>
                                 <th>Payment Details</th>
                                 <th>Status</th>
@@ -36,7 +35,7 @@
                                 @php
                                     $agency = \App\Agencies::find($posting->agency_id);
                                     $user = \App\User::find($agency->user_id);
-                                    $vacancies = \App\Vacancies::whereIn('id',$posting->vacancy_ids)->get();
+                                    $vacancies = \App\Vacancies::whereIn('id',$posting->vacancy_ids);
                                     $plan = \App\Plan::find($posting->plans_id);
                                     $pm = \App\PaymentMethod::find($posting->payment_method_id);
                                     $pc = \App\PaymentCategory::find($pm->payment_category_id);
@@ -47,11 +46,12 @@
                                 @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
-                                    <td style="vertical-align: middle"><strong>{{$invoice}}</strong></td>
                                     <td style="vertical-align: middle">
                                         <table style="margin: 0">
                                             <tr style="border-bottom: 1px solid #eee">
                                                 <td>
+                                                    <span style="font-size: 15px">INVOICE <strong>{{$invoice}}</strong></span>
+                                                    <hr style="margin-top: 0">
                                                     @if($user->ava == "" || $user->ava == "agency.png")
                                                         <img style="float: left;margin-right: .5em;margin-bottom: 1.2em"
                                                              class="img-responsive" width="64" alt="agency.png"
@@ -86,9 +86,9 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <strong>{{count($vacancies) > 1 ? 'Vacancies' : 'Vacancy'}}</strong>
+                                                    <strong>{{$vacancies->count() > 1 ? 'Vacancies' : 'Vacancy'}}</strong>
                                                     <ul>
-                                                        @foreach($vacancies as $vacancy)
+                                                        @foreach($vacancies->get() as $vacancy)
                                                             <li>{{$vacancy->judul}}</li>
                                                         @endforeach
                                                     </ul>
@@ -144,19 +144,44 @@
                                         @endif
                                     </td>
                                     <td style="vertical-align: middle" align="center">
-                                        @if($posting->isPaid == false)
-                                            <a onclick="approval('{{$posting->id}}','{{$invoice}}')"
-                                               class="btn btn-success btn-sm" style="font-size: 16px"
-                                               data-toggle="tooltip"
-                                               title="Approval"><i class="fa fa-clipboard-check"></i></a>
-                                            <hr style="margin: 5px auto">
-                                        @endif
-                                        <a href="{{route('table.jobPostings.delete',['id'=>encrypt($posting->id)])}}"
-                                           class="btn btn-danger btn-sm delete-data" style="font-size: 16px"
-                                           data-toggle="tooltip"
-                                           title="Delete"
-                                           data-placement="{{$posting->isPaid == false ? 'bottom' : 'top'}}">
-                                            <i class="fa fa-trash-alt"></i></a>
+                                        <form method="post" action="{{route('table.jobPostings.update',['id' =>
+                                            $posting->id])}}" id="form-approval{{$posting->id}}">
+                                            {{csrf_field()}} {{method_field('PUT')}}
+                                            <input type="hidden" name="invoice" value="{{$invoice}}">
+                                            <input type="hidden" name="isPost" value="1">
+                                        </form>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success btn-sm"
+                                                    style="font-weight: 600"
+                                                    onclick="approving('{{$posting->id}}','{{$invoice}}')"
+                                                    {{$vacancies->first()->isPost == false ? '' : 'disabled'}}>
+                                                {{$vacancies->first()->isPost == false ? 'APPROVE' : 'APPROVED'}}
+                                            </button>
+                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle"
+                                                    data-toggle="dropdown" aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                @if($vacancies->first()->isPost == true)
+                                                    <form method="post"
+                                                          action="{{route('table.jobPostings.update',['id' =>
+                                                          $posting->id])}}" id="form-revert{{$posting->id}}">
+                                                        {{csrf_field()}} {{method_field('PUT')}}
+                                                        <input type="hidden" name="invoice" value="{{$invoice}}">
+                                                        <input type="hidden" name="isPost" value="0">
+                                                    </form>
+                                                    <li><a onclick="revertApproval('{{$posting->id}}','{{$invoice}}')">
+                                                            <i class="fa fa-undo"></i>&ensp;Revert</a></li>
+                                                @endif
+                                                <li>
+                                                    <a href="{{route('table.jobPostings.delete',['id'=> encrypt
+                                                       ($posting->id)])}}" class="delete-approval">
+                                                        <i class="fa fa-trash-alt"></i>&ensp;Delete
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -172,18 +197,6 @@
             <img style="margin: 0 auto" class="img-responsive" id="paymentProof" src="">
         </div>
     </div>
-    <div id="approvalModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="width: 40%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title" id="invoice"></h4>
-                </div>
-                <div id="approvalModalContent"></div>
-            </div>
-        </div>
-    </div>
 @endsection
 @push("scripts")
     <script>
@@ -192,41 +205,65 @@
             $("#paymentProofModal").modal('show');
         }
 
-        function approval(id, invoice) {
-            $("#invoice").html('Vacancy Approval: <strong>' + invoice + '</strong>');
-            $('#approvalModalContent').html(
-                '<form method="post" id="' + id + '" action="{{url('admin/tables/agencies/job_postings')}}/' + id +
-                '/update">{{csrf_field()}} {{method_field('PUT')}}' +
-                '<input type="hidden" name="invoice" value="' + invoice + '">' +
-                '<div class="modal-body">' +
-                '<div class="row form-group">' +
-                '<div class="col-lg-2">' +
-                '<div class="row"><div class="col-lg-12">' +
-                '<label for="paid' + id + '">Status <span class="required">*</span></label><br>' +
-                '<label><input name="isPaid" value="1" type="checkbox" class="flat iCheck" ' +
-                'id="paid' + id + '" required> Paid</label><br>' +
-                '<label><input name="isPost" value="1" type="checkbox" class="flat iCheck" ' +
-                'id="active' + id + '" required> Active</label>' +
-                '</div></div></div>' +
-                '<div class="col-lg-10">' +
-                '<div class="row"><div class="col-lg-12 has-feedback">' +
-                '<label for="active_period' + id + '">Active Period <span class="required">*</span></label>' +
-                '<input type="text" class="form-control" id="active_period' + id + '" ' +
-                'name="active_period" placeholder="yyyy-mm-dd" required>' +
-                '<span class="fa fa-calendar-check form-control-feedback right" aria-hidden="true"></span>' +
-                '</div></div></div>' +
-                '</div></div>' +
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-                '<button type="submit" class="btn btn-primary">Submit</button></div></form>'
-            );
-            $('.iCheck').iCheck({checkboxClass: 'icheckbox_flat-green', radioClass: 'iradio_flat-green'});
+        function approving(id, invoice) {
+            swal({
+                title: 'Vacancy Approval ' + invoice,
+                text: 'The status of the vacancy in this invoice will be change into "ACTIVE". Are you sure to approve it?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00adb5',
+                confirmButtonText: 'Yes, approve it!',
+                showLoaderOnConfirm: true,
 
-            $('#active_period' + id).datepicker({
-                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: '{{today()}}'
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        $("#form-approval" + id)[0].submit();
+                    });
+                },
+                allowOutsideClick: false
             });
-
-            $("#approvalModal").modal('show');
+            return false;
         }
+
+        function revertApproval(id, invoice) {
+            swal({
+                title: 'Revert Approval ' + invoice,
+                text: 'The status of the vacancy in this invoice will be change into "INACTIVE". Are you sure to revert it?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, revert it!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        $("#form-revert" + id)[0].submit();
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
+        }
+
+        $(".delete-approval").on("click", function () {
+            var linkURL = $(this).attr("href");
+            swal({
+                title: 'Delete Approval',
+                text: 'Are you sure? You won\'t be able to revert this!',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, delete it!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        window.location.href = linkURL;
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
+        });
     </script>
 @endpush
