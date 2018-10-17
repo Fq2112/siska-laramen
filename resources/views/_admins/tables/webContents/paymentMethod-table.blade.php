@@ -167,8 +167,9 @@
                 '<div class="modal-body">' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12 has-feedback">' +
-                '<img style="margin: 0 auto;width: 50%" class="img-responsive" ' +
-                'src="{{asset('images/paymentMethod/')}}/' + logo + '">' +
+                '<img style="margin: 0 auto;width: 50%;cursor:pointer" class="img-responsive" id="btn_img' + id + '" ' +
+                'src="{{asset('images/paymentMethod/')}}/' + logo + '" data-toggle="tooltip" data-placement="bottom" ' +
+                'title="Allowed extension: jpg, jpeg, gif, png. Allowed size: < 1 MB">' +
                 '<label for="logo' + id + '">Logo <span class="required">*</span></label>' +
                 '<input type="file" name="logo" style="display: none;" accept="image/*" id="logo' + id + '">' +
                 '<div class="input-group">' +
@@ -220,6 +221,9 @@
             $("#editModal").modal('show');
 
             $(".browse_files").on('click', function () {
+                $("#logo" + id).trigger('click');
+            });
+            $("#btn_img" + id).on('click', function () {
                 $("#logo" + id).trigger('click');
             });
 

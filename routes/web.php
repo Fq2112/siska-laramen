@@ -63,10 +63,34 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
         'as' => 'home-admin'
     ]);
 
-    Route::get('inbox', [
-        'uses' => 'AdminController@showInbox',
-        'as' => 'admin.inbox'
+    Route::put('profile/update', [
+        'uses' => 'AdminController@updateProfile',
+        'as' => 'admin.update.profile'
     ]);
+
+    Route::put('account/update', [
+        'uses' => 'AdminController@updateAccount',
+        'as' => 'admin.update.account'
+    ]);
+
+    Route::group(['prefix' => 'inbox'], function () {
+
+        Route::get('/', [
+            'uses' => 'AdminController@showInbox',
+            'as' => 'admin.inbox'
+        ]);
+
+        Route::post('compose', [
+            'uses' => 'AdminController@composeInbox',
+            'as' => 'admin.compose.inbox'
+        ]);
+
+        Route::get('{id}/delete', [
+            'uses' => 'AdminController@deleteInbox',
+            'as' => 'admin.delete.inbox'
+        ]);
+
+    });
 
     Route::group(['prefix' => 'tables'], function () {
 
@@ -81,19 +105,19 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'table.admins'
                     ]);
 
-                    Route::get('{id}/detail', [
-                        'uses' => 'AccountsController@detailAdmins',
-                        'as' => 'detail.admins'
-                    ]);
-
                     Route::post('create', [
                         'uses' => 'AccountsController@createAdmins',
                         'as' => 'create.admins'
                     ]);
 
-                    Route::put('{id}/update', [
-                        'uses' => 'AccountsController@updateAdmins',
-                        'as' => 'update.admins'
+                    Route::put('{id}/update/profile', [
+                        'uses' => 'AccountsController@updateProfileAdmins',
+                        'as' => 'update.profile.admins'
+                    ]);
+
+                    Route::put('{id}/update/account', [
+                        'uses' => 'AccountsController@updateAccountAdmins',
+                        'as' => 'update.account.admins'
                     ]);
 
                     Route::get('{id}/delete', [

@@ -194,8 +194,9 @@
                 '<div class="modal-body">' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12 has-feedback">' +
-                '<img style="margin: 0 auto;width: 50%" class="img-responsive" ' +
-                'src="{{asset('images/blog/')}}/' + dir + '">' +
+                '<img style="margin: 0 auto;width: 50%;cursor:pointer" class="img-responsive" id="btn_img' + id + '"' +
+                'src="{{asset('images/blog/')}}/' + dir + '" data-toggle="tooltip" data-placement="bottom" ' +
+                'title="Allowed extension: jpg, jpeg, gif, png. Allowed size: < 1 MB">' +
                 '<label for="dir' + id + '">Image <span class="required">*</span></label>' +
                 '<input type="file" name="dir" style="display: none;" accept="image/*" id="dir' + id + '">' +
                 '<div class="input-group">' +
@@ -253,6 +254,9 @@
             $("#editModal").modal('show');
 
             $(".browse_files").on('click', function () {
+                $("#dir" + id).trigger('click');
+            });
+            $("#btn_img" + id).on('click', function () {
                 $("#dir" + id).trigger('click');
             });
 

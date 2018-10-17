@@ -141,7 +141,6 @@
                                                 <ul class="nav child_menu">
                                                     <li><a href="{{route('table.vacancies')}}">Job Vacancies</a></li>
                                                     <li><a href="{{route('table.jobPostings')}}">Job Postings</a></li>
-                                                    </li>
                                                 </ul>
                                             </li>
                                             <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
@@ -161,16 +160,16 @@
 
                 <!-- /menu footer buttons -->
                 <div class="sidebar-footer hidden-small">
-                    <a data-toggle="tooltip" data-placement="top" title="Settings">
-                        <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                    </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Fullscreen" onclick="fullScreen()">
+                    <a data-toggle="tooltip" title="Fullscreen" onclick="fullScreen()">
                         <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                     </a>
-                    <a href="{{route('home-seeker')}}" data-toggle="tooltip" data-placement="top" title="SISKA">
+                    <a href="{{route('home-seeker')}}" data-toggle="tooltip" title="SISKA">
                         <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
                     </a>
-                    <a data-toggle="tooltip" data-placement="top" title="Logout"
+                    <a data-toggle="tooltip" title="Account Settings" class="btn_settings">
+                        <span class="fa fa-user-cog" aria-hidden="true"></span>
+                    </a>
+                    <a data-toggle="tooltip" title="Logout"
                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
@@ -201,18 +200,27 @@
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li><a href="javascript:;"> Profile</a></li>
                                 <li>
-                                    <a href="javascript:;">
-                                        <span class="badge bg-red pull-right">50%</span>
-                                        <span>Settings</span>
+                                    <a href="{{route('admin.inbox')}}">
+                                        <i class="fa fa-envelope pull-right"></i> Inbox</a>
+                                </li>
+                                <li>
+                                    <a class="btn_editProfile">
+                                        <span class="badge {{$auth->ava == "" || $auth->ava == "avatar.png" ? 'bg-red' :
+                                        'bg-green'}} pull-right">
+                                            {{$auth->ava == "" || $auth->ava == "avatar.png" ? '50%' : '100%'}}</span>
+                                        <span>Profile</span>
                                     </a>
                                 </li>
-                                <li><a href="javascript:;">Help</a></li>
                                 <li>
-                                    <a onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                    <a class="btn_settings">
+                                        <i class="fa fa-user-cog pull-right"></i> Account Settings</a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a onclick="event.preventDefault();document.getElementById('logout-form2').submit();">
                                         <i class="fa fa-sign-out-alt pull-right"></i> Log Out</a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    <form id="logout-form2" action="{{ route('logout') }}" method="POST"
                                           style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
@@ -231,7 +239,7 @@
                                     @foreach($feedback->limit(5)->orderByDesc('id')->get() as $row)
                                         @php $user = \App\User::where('email',$row->email); @endphp
                                         <li>
-                                            <a>
+                                            <a style="cursor: text">
                                                 <span class="image">
                                                     @if($user->count())
                                                         @if($user->first()->ava == "" || $user->first()->ava == "seeker.png")
@@ -287,6 +295,113 @@
         </footer>
         <!-- /footer content -->
     </div>
+    <div id="profileModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Edit Profile</h4>
+                </div>
+                <form method="post" action="{{route('admin.update.profile')}}" enctype="multipart/form-data">
+                    {{csrf_field()}} {{method_field('PUT')}}
+                    <div class="modal-body">
+                        <div class="row form-group">
+                            <img src="{{$auth->ava == "" || $auth->ava == "avatar.png" ? asset('images/avatar.png') :
+                            asset('storage/admins/'.$auth->ava)}}" class="img-responsive" id="myBtn_img"
+                                 style="margin: 0 auto;width: 50%;cursor: pointer" data-toggle="tooltip"
+                                 data-placement="bottom"
+                                 title="Allowed extension: jpg, jpeg, gif, png. Allowed size: < 2 MB">
+                            <hr style="margin: .5em auto">
+                            <div class="col-lg-12">
+                                <label for="myAva">Avatar</label>
+                                <input type="file" name="myAva" style="display: none;" accept="image/*" id="myAva"
+                                       value="{{$auth->ava}}">
+                                <div class="input-group">
+                                    <input type="text" id="myTxt_ava" value="{{$auth->ava}}"
+                                           class="browse_files form-control"
+                                           placeholder="Upload file here..."
+                                           readonly style="cursor: pointer" data-toggle="tooltip"
+                                           title="Allowed extension: jpg, jpeg, gif, png. Allowed size: < 2 MB">
+                                    <span class="input-group-btn">
+                                        <button class="browse_files btn btn-info" type="button">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="myName">Name <span class="required">*</span></label>
+                                <input id="myName" type="text" class="form-control" maxlength="191" name="myName"
+                                       placeholder="Full name" value="{{$auth->name}}" required>
+                                <span class="fa fa-id-card form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="settingsModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm" style="width: 30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Account Settings</h4>
+                </div>
+                <form method="post" action="{{route('admin.update.account')}}">
+                    {{csrf_field()}} {{method_field('PUT')}}
+                    <div class="modal-body">
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="myEmail">Email <span class="required">*</span></label>
+                                <input id="myEmail" type="email" class="form-control" name="myEmail"
+                                       placeholder="Email" value="{{$auth->email}}"
+                                        {{$auth->isRoot() ? 'required' : 'readonly'}}>
+                                <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="myPassword">Current Password <span class="required">*</span></label>
+                                <input id="myPassword" type="password" class="form-control" minlength="6"
+                                       name="myPassword"
+                                       placeholder="Current Password" required>
+                                <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="myNew_password">New Password <span class="required">*</span></label>
+                                <input id="myNew_password" type="password" class="form-control" minlength="6"
+                                       name="myNew_password" placeholder="New Password" required>
+                                <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="myConfirm">Password Confirmation <span class="required">*</span></label>
+                                <input id="myConfirm" type="password" class="form-control" minlength="6"
+                                       name="myPassword_confirmation" placeholder="Retype password" required>
+                                <span class="fa fa-sign-in-alt form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- jQuery -->
@@ -316,6 +431,8 @@
 <script src="{{asset('_admins/js/curvedLines.js')}}"></script>
 <!-- DateJS -->
 <script src="{{asset('_admins/js/date.js')}}"></script>
+<!-- bootstrap-progressbar -->
+<script src="{{asset('_admins/js/bootstrap-progressbar.min.js')}}"></script>
 <!-- bootstrap-daterangepicker -->
 <script src="{{asset('js/moment.js')}}"></script>
 <script src="{{asset('_admins/js/daterangepicker.js')}}"></script>
@@ -363,7 +480,7 @@
             branding: false,
             path_absolute: '{{url('/')}}',
             selector: '.use-tinymce',
-            height: 300,
+            height: 250,
             themes: 'modern',
             plugins: [
                 'advlist autolink lists link image charmap print preview anchor textcolor',
@@ -397,6 +514,26 @@
         tinymce.init(editor_config);
 
         $('.datepicker').datepicker({format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true});
+    });
+
+    $(".btn_editProfile").on("click", function () {
+        $("#profileModal").modal("show");
+        $(".browse_files,#myBtn_img").on('click', function () {
+            $("#myAva").trigger('click');
+        });
+        $("#myAva").on('change', function () {
+            var files = $(this).prop("files");
+            var names = $.map(files, function (val) {
+                return val.name;
+            });
+            var txt = $("#myTxt_ava");
+            txt.val(names);
+            $("#myTxt_ava[data-toggle=tooltip]").attr('data-original-title', names).tooltip('show');
+        });
+    });
+
+    $(".btn_settings").on("click", function () {
+        $("#settingsModal").modal("show");
     });
 
     function fullScreen() {

@@ -2271,8 +2271,9 @@ a.star {
     margin-right: 0
 }
 
-.mail_list_column, .mail_view {
-    border-left: 1px solid #DBDBDB
+.mail_list_column {
+    border-left: 1px solid #DBDBDB;
+    border-right: 1px solid #DBDBDB
 }
 
 .mail_list {
@@ -2285,7 +2286,7 @@ a.star {
 .mail_list .left {
     width: 5%;
     float: left;
-    margin-right: 3%
+    margin-right: 2%
 }
 
 .mail_list .right {
@@ -2375,7 +2376,7 @@ a.star {
     border-right: 0;
     border-bottom: 0;
     border-top-left-radius: 5px;
-    z-index: 9999;
+    z-index: 20;
     display: none
 }
 

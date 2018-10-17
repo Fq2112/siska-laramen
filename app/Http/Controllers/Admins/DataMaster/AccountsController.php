@@ -20,13 +20,6 @@ class AccountsController extends Controller
         return view('_admins.tables.accounts.admin-table', compact('admins'));
     }
 
-    public function detailAdmins($id)
-    {
-        $findAdmin = Admin::find($id);
-
-        return view('_admins.details.admin-detail', compact('findAdmin'));
-    }
-
     public function createAdmins(Request $request)
     {
         $this->validate($request, [
@@ -55,55 +48,49 @@ class AccountsController extends Controller
         return back()->with('success', '' . $request->name . ' is successfully created!');
     }
 
-    public function updateAdmins(Request $request)
+    public function updateProfileAdmins(Request $request)
     {
         $admin = Admin::find($request->id);
-        $img = $request->file('ava');
-
-        if ($img == null) {
-            $this->validate($request, [
-                'password' => 'required|string|min:6',
-                'new_password' => 'required|string|min:6',
-                'password_confirmation' => 'required|same:new_password',
-            ]);
-
-            if (!Hash::check($request->password, $admin->password)) {
-                return back()->with('error', 'Your current password is incorrect!');
-
-            } else {
-                if ($request->new_password != $request->password_confirmation) {
-                    return back()->with('error', 'Your password confirmation doesn\'t match!');
-
-                } else {
-                    $admin->update([
-                        'name' => $request->name,
-                        'email' => $request->email,
-                        'password' => bcrypt($request->new_password),
-                        'role' => $request->role
-                    ]);
-                    return back()->with('success', '' . $admin->name . ' is successfully updated!');
-                }
+        $this->validate($request, [
+            'ava' => 'image|mimes:jpg,jpeg,gif,png|max:2048',
+        ]);
+        if ($request->hasFile('ava')) {
+            $name = $request->file('ava')->getClientOriginalName();
+            if ($admin->ava != '' || $admin->ava != 'avatar.png') {
+                Storage::delete('public/admins/' . $admin->ava);
             }
+            $request->file('ava')->storeAs('public/admins', $name);
 
         } else {
-            $this->validate($request, [
-                'ava' => 'image|mimes:jpg,jpeg,gif,png|max:2048',
-            ]);
+            $name = $admin->ava;
+        }
+        $admin->update([
+            'ava' => $name,
+            'name' => $request->name
+        ]);
 
-            if ($request->hasFile('ava')) {
-                $name = $img->getClientOriginalName();
+        return back()->with('success', 'Successfully update ' . $admin->name . '\'s profile!');
+    }
 
-                if ($admin->ava != '' || $admin->ava != 'avatar.png') {
-                    Storage::delete('public/admins/' . $admin->ava);
-                }
+    public function updateAccountAdmins(Request $request)
+    {
+        $admin = Admin::find($request->id);
 
-                if ($img->isValid()) {
-                    $request->ava->storeAs('public/admins', $name);
-                    $admin->update(['ava' => $name]);
-                }
+        if (!Hash::check($request->password, $admin->password)) {
+            return back()->with('error', '' . $admin->name . '\'s current password is incorrect!');
+
+        } else {
+            if ($request->new_password != $request->password_confirmation) {
+                return back()->with('error', '' . $admin->name . '\'s password confirmation doesn\'t match!');
+
+            } else {
+                $admin->update([
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password),
+                    'role' => $request->role == null ? 'root' : $request->role
+                ]);
+                return back()->with('success', 'Successfully update ' . $admin->name . '\'s account!');
             }
-
-            return back()->with('success', '' . $admin->name . '\'s ava is successfully updated!');
         }
     }
 

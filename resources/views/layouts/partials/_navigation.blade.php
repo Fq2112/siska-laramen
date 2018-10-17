@@ -190,7 +190,9 @@
                data-toggle="dropdown">
                 <span>
                     <img style="margin-right: 7px" width="25" height="25" class="img-circle show_ava"
-                         src="{{Auth::guard('admin')->user()->ava == "" || Auth::guard('admin')->user()->ava == "avatar.png" ? asset('images/avatar.png') : asset('storage/users/'.Auth::user()->ava)}}">
+                         src="{{Auth::guard('admin')->user()->ava == "" ||
+                         Auth::guard('admin')->user()->ava == "avatar.png" ? asset('images/avatar.png') :
+                         asset('storage/admins/'.Auth::guard('admin')->user()->ava)}}">
                         <strong class="aj_name">{{Auth::guard('admin')->user()->name}}</strong></span>
             </a>
             <ul class="dropdown-menu">
@@ -201,9 +203,9 @@
                         <i class="fa fa-tachometer-alt"></i>&nbsp;Dashboard</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
-                       href="{{route('home-admin')}}"
+                       href="{{route('admin.inbox')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-cogs"></i>&nbsp;Account Settings</a></li>
+                        <i class="fa fa-envelope"></i>&ensp;Inbox</a></li>
                 <li class="divider"></li>
                 <li>
                     <a onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'"
