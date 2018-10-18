@@ -146,6 +146,7 @@
                                             <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
                                                     <li><a href="{{route('table.applications')}}">Applications</a></li>
+                                                    <li><a href="{{route('table.invitations')}}">Invitations</a></li>
                                                 </ul>
                                             </li>
                                         </ul>

@@ -616,6 +616,20 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
                 });
 
+                Route::group(['prefix' => 'invitations'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'TransactionSeekerController@showInvitationsTable',
+                        'as' => 'table.invitations'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'TransactionSeekerController@deleteInvitations',
+                        'as' => 'table.invitations.delete'
+                    ]);
+
+                });
+
             });
 
         });
