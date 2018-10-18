@@ -67,7 +67,11 @@
                                                                              data-toggle="tooltip" title="Edit Schedule"
                                                                              data-placement="bottom"
                                                                              onclick="editVacancySchedule('{{$row->id}}',
-                                                                                     '{{$row->isPost}}')">
+                                                                                     '{{$row->judul}}','{{$row->isPost}}',
+                                                                                     '{{$row->active_period}}',
+                                                                                     '{{$row->interview_date}}',
+                                                                                     '{{$row->recruitmentDate_start}}',
+                                                                                     '{{$row->recruitmentDate_end}}')">
                                                                     </div>
                                                                     <div class="media-body">
                                                                         <small class="media-heading">

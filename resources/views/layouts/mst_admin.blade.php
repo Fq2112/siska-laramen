@@ -415,8 +415,6 @@
 <!-- morris.js -->
 <script src="{{asset('_admins/js/raphael.min.js')}}"></script>
 <script src="{{asset('_admins/js/morris.min.js')}}"></script>
-<!-- Chart.js -->
-<script src="{{asset('_admins/js/Chart.min.js')}}"></script>
 <!-- jQuery Sparklines -->
 <script src="{{asset('_admins/js/jquery.sparkline.min.js')}}"></script>
 <!-- Flot -->
@@ -470,6 +468,8 @@
 <script src="{{asset('_admins/js/pnotify.js')}}"></script>
 <script src="{{asset('_admins/js/pnotify.buttons.js')}}"></script>
 <script src="{{asset('_admins/js/pnotify.nonblock.js')}}"></script>
+<!-- ECharts -->
+<script src="{{asset('_admins/js/echarts.min.js')}}"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>

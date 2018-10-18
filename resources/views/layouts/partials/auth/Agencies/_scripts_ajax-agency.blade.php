@@ -194,6 +194,10 @@
                     tinyMCE.init(editor_config);
                     tinyMCE.get('syarat').setContent(data.syarat);
                     tinyMCE.get('tanggungjawab').setContent(data.tanggungjawab);
+
+                    $('html, body').animate({
+                        scrollTop: $('#show_vacancy_settings').offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({
@@ -204,123 +208,6 @@
                     })
                 }
             });
-        }
-
-        function editVacancySchedule(id, isPost) {
-            if (isPost == true) {
-                $.ajax({
-                    url: "{{ url('account/agency/vacancy/edit') }}" + '/' + id,
-                    type: "GET",
-                    dataType: "JSON",
-                    success: function (data) {
-                        var $interview = data.interview_date,
-                            $start = data.recruitmentDate_start, $end = data.recruitmentDate_end;
-                        if ($interview == null) {
-                            $interview = "";
-                        }
-                        if ($start == null) {
-                            $start = "";
-                        }
-                        if ($end == null) {
-                            $end = "";
-                        }
-                        $('#schedule_settings').html(
-                            '<form action="{{url('account/agency/vacancy/update')}}/' + id + '"' +
-                            'method="post" id="form-schedule">{{csrf_field()}}' +
-                            '<input type="hidden" name="_method">' +
-                            '<input type="hidden" name="check_form" value="schedule">' +
-                            '<div class="modal-body">' +
-                            '<div class="box">' +
-                            '<div class="content">' +
-                            '<p style="font-size: 17px" align="justify">' +
-                            'Agencies are permitted to set their own vacancy schedule. ' +
-                            'To set yours, please fill in all the form fields correctly.</p>' +
-                            '<hr class="hr-divider">' +
-                            '<div class="row form">' +
-                            '<div class="col-lg-12">' +
-                            '<div class="row form-group">' +
-                            '<div class="col-lg-6">' +
-                            '<small>Active Period</small>' +
-                            '<div class="input-group">' +
-                            '<span class="input-group-addon">' +
-                            '<i class="fa fa-calendar-check"></i></span>' +
-                            '<input class="form-control" type="text" value="' + data.active_period + '" ' +
-                            'id="active_period" disabled></div></div>' +
-                            '<div class="col-lg-6">' +
-                            '<small>Interview Date</small>' +
-                            '<div class="input-group">' +
-                            '<span class="input-group-addon">' +
-                            '<i class="fa fa-comments"></i></span>' +
-                            '<input style="background-color: #fff" class="form-control datepicker" ' +
-                            'type="text" maxlength="10" ' +
-                            'placeholder="yyyy-mm-dd" name="interview_date" id="interview_date" ' +
-                            'value="' + $interview + '" required></div></div></div>' +
-                            '<div class="row form-group" style="margin-bottom: 0">' +
-                            '<div class="col-lg-6">' +
-                            '<small>Recruitment Start Date</small>' +
-                            '<div class="input-group">' +
-                            '<span class="input-group-addon">' +
-                            '<i class="fa fa-hourglass-start"></i></span>' +
-                            '<input style="background-color: #fff" class="form-control datepicker" ' +
-                            'type="text" maxlength="10" ' +
-                            'placeholder="yyyy-mm-dd" name="recruitmentDate_start" id="recruitmentDate_start" ' +
-                            'value="' + $start + '" required></div></div>' +
-                            '<div class="col-lg-6">' +
-                            '<small>Recruitment End Date</small>' +
-                            '<div class="input-group">' +
-                            '<span class="input-group-addon">' +
-                            '<i class="fa fa-hourglass-end"></i></span>' +
-                            '<input style="background-color: #fff" class="form-control datepicker" ' +
-                            'type="text" maxlength="10" ' +
-                            'placeholder="yyyy-mm-dd" name="recruitmentDate_end" id="recruitmentDate_end" ' +
-                            'value="' + $end + '" required></div></div></div>' +
-                            '<div class="row form-group">' +
-                            '<div class="col-lg-12"><small style="font-size: 12px;color: #fa5555;">' +
-                            'P.S.: You\'re only permitted to set those dates before its active period runs out.' +
-                            '</small></div></div></div></div></div></div></div>' +
-                            '<div class="modal-footer">' +
-                            '<div class="card-read-more" id="btn-schedule">' +
-                            '<button class="btn btn-link btn-block" type="submit">' +
-                            '<i class="fa fa-calendar"></i>&ensp;SAVE CHANGES</button></div></div></form>'
-                        );
-                        $("#form-schedule input[name='_method']").val('PUT');
-                        $("#vacancy_title").html('<strong>' + data.judul + '</strong> &ndash; VACANCY SCHEDULE');
-                        $('.datepicker').datepicker({
-                            format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                            endDate: data.active_period
-                        });
-                        $("#formModal").modal('show');
-                    },
-                    error: function () {
-                        swal({
-                            title: 'Vacancy Setup',
-                            text: 'Data not found!',
-                            type: 'error',
-                            timer: '1500'
-                        })
-                    }
-                });
-
-            } else {
-                swal({
-                    title: 'ATTENTION!',
-                    text: "It seems this vacancy isn't posted yet. To post your vacancy, please select one of " +
-                        "the available Plans Package on the Agency\'s Home page first",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#00ADB5',
-                    confirmButtonText: 'Yes, redirect me to the Agency\'s Home page.',
-                    showLoaderOnConfirm: true,
-
-                    preConfirm: function () {
-                        return new Promise(function (resolve) {
-                            window.location.href = '{{route('home-agency')}}#pricing';
-                        });
-                    },
-                    allowOutsideClick: false
-                });
-                return false;
-            }
         }
     </script>
 @endauth

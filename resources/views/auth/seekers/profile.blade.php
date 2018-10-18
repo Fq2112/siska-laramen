@@ -47,7 +47,7 @@
                                         <small id="show_background_settings">
                                             Profile Background
                                             <span class="pull-right" style="cursor: pointer; color: #fa5555">
-                                                <i class="fa fa-edit"></i>&nbsp;Edit</span>
+                                                <i class="fa fa-edit"></i>&nbsp;EDIT</span>
                                         </small>
                                         <hr class="hr-divider">
                                         <blockquote style="text-transform: none">
@@ -102,7 +102,7 @@
                                                 Video Summary
                                                 <span class="optional-label">(Optional)</span>
                                                 <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;Edit
+                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;EDIT
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -291,14 +291,14 @@
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editLang('{{encrypt
                                                                                    ($row->id)}}')">
-                                                                                   Edit&ensp;<i class="fa fa-edit"></i></a>
+                                                                                   EDIT&ensp;<i class="fa fa-edit"></i></a>
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
                                                                                 </small>
                                                                                 <a href="{{route('delete.languages',['id' => encrypt($row->id),'lang' => $row->name])}}"
                                                                                    class="delete-lang"
                                                                                    style="color: #FA5555;">
-                                                                                    <i class="fa fa-eraser"></i>&ensp;Delete</a>
+                                                                                    <i class="fa fa-eraser"></i>&ensp;DELETE</a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote
@@ -468,7 +468,7 @@
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editSkill('{{encrypt
                                                                                    ($row->id)}}')">
-                                                                                    Edit&ensp;<i class="fa fa-edit"></i></a>
+                                                                                    EDIT&ensp;<i class="fa fa-edit"></i></a>
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
                                                                                 </small>
@@ -477,7 +477,7 @@
                                                                                 'skill' => $row->name])}}"
                                                                                    class="delete-skill"
                                                                                    style="color: #FA5555;">
-                                                                                    <i class="fa fa-eraser"></i>&ensp;Delete</a>
+                                                                                    <i class="fa fa-eraser"></i>&ensp;DELETE</a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote
@@ -569,7 +569,7 @@
                                             <small id="show_personal_data_settings">
                                                 Personal Data
                                                 <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;Edit
+                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;EDIT
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -840,7 +840,7 @@
                                             <small id="show_contact_settings">
                                                 Contact
                                                 <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;Edit
+                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;EDIT
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -974,7 +974,7 @@
                                             <small id="show_summary_settings">
                                                 Summary <span class="optional-label">(Optional)</span>
                                                 <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;Edit
+                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;EDIT
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -1052,9 +1052,8 @@
                                                                             </small>
                                                                             <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
-                                                                                   onclick="editExp('{{encrypt
-                                                                                   ($row->id)}}')">
-                                                                                    Edit&ensp;<i class="fa fa-edit"></i>
+                                                                                   onclick="editExp('{{encrypt($row->id)}}')">
+                                                                                    EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
@@ -1066,7 +1065,7 @@
                                                                                    class="delete-exp"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
-                                                                                    Delete</a>
+                                                                                    DELETE</a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote
@@ -1465,7 +1464,7 @@
 
                                                                                    onclick="editEdu('{{encrypt
                                                                                    ($row->id)}}')">
-                                                                                    Edit&ensp;<i class="fa fa-edit"></i>
+                                                                                    EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
@@ -1477,7 +1476,7 @@
                                                                                    class="delete-edu"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
-                                                                                    Delete</a>
+                                                                                    DELETE</a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote
@@ -1720,7 +1719,7 @@
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editCert('{{encrypt
                                                                                    ($row->id)}}')">
-                                                                                    Edit&ensp;<i class="fa fa-edit"></i>
+                                                                                    EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
@@ -1731,7 +1730,7 @@
                                                                                    class="delete-cert"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
-                                                                                    Delete</a>
+                                                                                    DELETE</a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote
@@ -1886,7 +1885,7 @@
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editOrg('{{encrypt
                                                                                    ($row->id)}}')">
-                                                                                    Edit&ensp;<i class="fa fa-edit"></i>
+                                                                                    EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
                                                                                 <small style="color: #7f7f7f">
                                                                                     &nbsp;&#124;&nbsp;
@@ -1898,7 +1897,7 @@
                                                                                    class="delete-org"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
-                                                                                    Delete</a>
+                                                                                    DELETE</a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote

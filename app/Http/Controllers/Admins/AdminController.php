@@ -10,6 +10,7 @@ use App\ConfirmAgency;
 use App\Feedback;
 use App\Http\Controllers\Controller;
 use App\Seekers;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -26,9 +27,14 @@ class AdminController extends Controller
         $newAgency = Agencies::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newJobPost = ConfirmAgency::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
 
+        $users = User::all();
+        $agencies = Agencies::all();
+        $seekers = Seekers::all();
+
         $blogs = Blog::all();
 
-        return view('_admins.home-admin', compact('newSeeker', 'newApp', 'newAgency', 'newJobPost', 'blogs'));
+        return view('_admins.home-admin', compact('newSeeker', 'newApp', 'newAgency', 'newJobPost',
+            'users', 'agencies', 'seekers', 'blogs'));
     }
 
     public function showInbox()

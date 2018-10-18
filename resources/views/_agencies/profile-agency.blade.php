@@ -72,10 +72,12 @@
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
                                 @auth
                                     @if(Auth::user()->isAgency() && Auth::user()->id == $agency->user_id)
-                                        <li class="ld ld-breath" id="btn_edit">
+                                        <li style="margin: 10px auto">
                                             <span class="label label-default" style="background: #fa5555">
                                                 <strong>{{$likes}}&ensp;<i class="fa fa-thumbs-up"></i></strong>
                                             </span>
+                                        </li>
+                                        <li class="ld ld-breath" id="btn_edit">
                                             <a href="{{route('agency.edit.profile')}}" class="btn btn-info btn-block">
                                                 <i class="fa fa-user-edit"></i>&ensp;<strong>Edit</strong>
                                             </a>
