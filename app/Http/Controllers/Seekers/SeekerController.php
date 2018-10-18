@@ -124,7 +124,7 @@ class SeekerController extends Controller
 
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $time = $request->time;
         if ($request->has('time')) {
@@ -234,7 +234,7 @@ class SeekerController extends Controller
 
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $time = $request->time;
 
@@ -256,13 +256,13 @@ class SeekerController extends Controller
 
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         return view('auth.seekers.dashboard-onlineTest', compact('user', 'provinces', 'seeker',
             'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply'));
     }
 
-    public function showInvToApply()
+    public function showJobInvitation()
     {
         $user = Auth::user();
         $provinces = Provinces::all();
@@ -276,12 +276,30 @@ class SeekerController extends Controller
 
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $invToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->paginate(5);
 
         return view('auth.seekers.dashboard-toApply', compact('user', 'provinces', 'seeker',
             'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'invToApply'));
+    }
+
+    public function applyJobInvitation(Request $request)
+    {
+        $invitation = Invitation::find(decrypt($request->invitation_id));
+        $vacancy = Vacancies::find($invitation->vacancy_id);
+        $userAgency = User::find(Agencies::find($invitation->agency_id)->user_id);
+
+        if ($invitation->isApply == false) {
+            $invitation->update(['isApply' => true]);
+
+            return back()->with('vacancy', '' . $userAgency->name . '`s invitation is successfully applied! You don`t need to take the Online Test, so please check the Interview Invitation in your Dashboard.');
+
+        } else {
+            $invitation->update(['isApply' => false]);
+
+            return back()->with('vacancy', 'Application for ' . $vacancy->judul . ' is successfully aborted!');
+        }
     }
 
     public function recommendedVacancy(Request $request)
@@ -292,7 +310,7 @@ class SeekerController extends Controller
         $provinces = Provinces::all();
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $keyword = $request->q;
         $page = $request->page;
@@ -434,7 +452,7 @@ class SeekerController extends Controller
 
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $bookmark = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->paginate(5);
 

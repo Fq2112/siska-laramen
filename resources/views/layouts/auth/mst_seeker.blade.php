@@ -87,9 +87,9 @@
                                                        class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/online_test') ? 'active' : '' }}">Online
                                                         Test Invitation<span class="badge">0</span></a>
                                                 </li>
-                                                <li><a href="{{route('seeker.invitation.toApply')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/to_apply') ? 'active' : '' }}">Invitation
-                                                        to Apply<span class="badge" style="background: #FA5555;">
+                                                <li><a href="{{route('seeker.jobInvitation')}}"
+                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/job_invitation') ? 'active' : '' }}">Job
+                                                        Invitation <span class="badge" style="background: #FA5555;">
                                                             {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}
                                                         </span></a>
                                                 </li>

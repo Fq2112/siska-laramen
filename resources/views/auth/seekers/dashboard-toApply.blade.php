@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Invitation to Apply | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Job Invitation | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_seeker')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
@@ -7,8 +7,8 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h4 style="margin-bottom: 10px">Invitation to Apply</h4>
-                            <small>Here is your invitation to apply (job offers) from agencies.</small>
+                            <h4 style="margin-bottom: 10px">Job Invitation</h4>
+                            <small>Here is your job invitations from agencies.</small>
                             <hr>
                         </div>
                     </div>
@@ -22,11 +22,12 @@
                         <div class="col-lg-12 to-animate">
                             <small class="pull-right">
                                 @if(count($invToApply) > 1)
-                                    Showing <strong>{{count($invToApply)}}</strong> invitation to apply
+                                    Showing <strong>{{count($invToApply)}}</strong> job invitations
                                 @elseif(count($invToApply) == 1)
-                                    Showing an invitation to apply
+                                    Showing a job invitation
                                 @else
-                                    <em>There seems to be none of the invitation was found from any agency&hellip;</em>
+                                    <em>There seems to be none of the job invitation was found from any
+                                        agency&hellip;</em>
                                 @endif
                             </small>
                         </div>
@@ -76,15 +77,15 @@
                                                     <div class="media">
                                                         <div class="media-body">
                                                             <div class="pull-right to-animate-2">
-                                                                <div class="anim-icon anim-icon-md apply ld ld-breath"
-                                                                     onclick="showapplyInvModal('{{$vacancy->id}}',
-                                                                             '{{$vacancy->judul}}')"
-                                                                     data-toggle="tooltip" title="Apply"
-                                                                     data-placement="bottom" style="font-size: 25px">
-                                                                    <input id="apply{{$vacancy->id}}"
-                                                                           type="checkbox" checked>
-                                                                    <label for="apply{{$vacancy->id}}"></label>
-                                                                </div>
+                                                                <button class="btn btn-danger btn-block {{$row
+                                                                ->isApply == true ? '' : 'ld ld-breath'}}"
+                                                                        onclick="showapplyInvModal('{{$vacancy->id}}',
+                                                                                '{{$vacancy->judul}}',
+                                                                                '{{encrypt($row->id)}}')"
+                                                                        style="border: none;background: {{$row->isApply == true ? '#393e46' : '#fa5555'}}" {{$row->isApply == true ?
+                                                                        'disabled' : ''}}>
+                                                                    <i class="fa fa-paper-plane"></i>&ensp;{{$row
+                                                                    ->isApply == true ? 'APPLIED' : 'APPLY'}}</button>
                                                             </div>
                                                             <ul class="list-inline">
                                                                 <li>
@@ -174,6 +175,27 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if($row->isApply == true && today() <= $vacancy->recruitmentDate_end)
+                                                <hr style="margin-bottom: 0">
+                                                <form class="to-animate" id="form-apply-{{$vacancy->id}}"
+                                                      method="post" action="{{route('apply.vacancy')}}">
+                                                    {{csrf_field()}}
+                                                    <div class="anim-icon anim-icon-md apply ld ld-heartbeat"
+                                                         onclick="abortApplication('{{$vacancy->id}}',
+                                                                 '{{$vacancy->judul}}')"
+                                                         data-toggle="tooltip" data-placement="right"
+                                                         title="Click here to abort this application!"
+                                                         style="font-size: 15px">
+                                                        <input type="hidden" name="invitation_id" value="{{$row->id}}">
+                                                        <input id="apply{{$vacancy->id}}" type="checkbox" checked>
+                                                        <label for="apply{{$vacancy->id}}"></label>
+                                                    </div>
+                                                </form>
+                                                <small class="to-animate-2">
+                                                    P.S.: Job Seekers are only permitted to abort their application
+                                                    before the recruitment ends.
+                                                </small>
+                                            @endif
                                         </blockquote>
                                     </div>
                                 </div>
@@ -213,9 +235,9 @@
                 </div>
                 <div class="modal-footer">
                     <div class="card-read-more" id="btn-apply">
-                        <form method="post" action="{{route('apply.vacancy')}}" id="form-apply">
-                            {{csrf_field()}}
-                            <input type="hidden" name="vacancy_id" id="vacancy_id">
+                        <form method="post" action="{{route('seeker.jobInvitation.apply')}}" id="form-apply">
+                            {{csrf_field()}} {{method_field('PUT')}}
+                            <input type="hidden" name="invitation_id" id="invitation_id">
                             <button class="btn btn-link btn-block" type="submit">
                                 <i class="fa fa-paper-plane"></i>&ensp;Apply
                             </button>
@@ -228,7 +250,7 @@
 @endsection
 @push('scripts')
     <script>
-        function showapplyInvModal(id, title) {
+        function showapplyInvModal(id, title, invitation_id) {
             var today = new Date().toJSON().slice(0, 10), $pengalaman;
             $.ajax({
                 url: "{{ url('account/dashboard/application_status/compare') }}" + '/' + id,
@@ -275,12 +297,12 @@
                             '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
                             '</ul></blockquote></div></div>'
                         );
-                        $("#apply" + id).prop('checked', false);
+                        $("#apply" + id).prop('checked', true);
                         $("#applyInvModal").modal('show');
                         $(document).on('hide.bs.modal', '#applyInvModal', function (event) {
-                            $("#apply" + id).prop('checked', true);
+                            $("#apply" + id).prop('checked', false);
                         });
-                        $("#vacancy_id").val(data.id);
+                        $("#invitation_id").val(invitation_id);
 
                     } else if (today < data.recruitmentDate_start) {
                         swal({
@@ -301,11 +323,31 @@
                 },
                 error: function () {
                     swal({
-                        title: 'Invitation to Apply',
+                        title: 'Job Invitation',
                         text: 'Data not found!',
                         type: 'error',
                         timer: '1500'
                     })
+                }
+            });
+        }
+
+        function abortApplication(id, title) {
+            swal({
+                title: 'Are you sure to abort ' + title + '?',
+                text: "If its recruitment date has been ended, you won't be able to revert this application!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, abort it!',
+                showLoaderOnConfirm: true,
+                allowOutsideClick: false,
+            }).then(function () {
+                $("#apply" + id).prop('checked', false);
+                $("#form-apply-" + id)[0].submit();
+            }, function (dismiss) {
+                if (dismiss == 'cancel') {
+                    $("#apply" + id).prop('checked', true);
                 }
             });
         }
