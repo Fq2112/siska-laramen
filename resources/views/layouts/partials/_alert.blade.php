@@ -104,7 +104,7 @@
         title: 'Good Luck!',
         text: '{{ session('vacancy') }}',
         type: 'success',
-        timer: '7000'
+        timer: '10000'
     });
     @elseif(session('agency'))
     swal({

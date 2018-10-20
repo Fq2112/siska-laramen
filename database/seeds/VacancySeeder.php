@@ -42,7 +42,7 @@ class VacancySeeder extends Seeder
                 'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
                 'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
                 'isPost' => true,
-                'active_period' => now()->addDays(30)
+                'active_period' => today()->addMonth()
             ]);
         }
     }

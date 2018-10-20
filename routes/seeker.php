@@ -207,9 +207,14 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.invitation.onlineTest'
             ]);
 
-            Route::get('to_apply', [
-                'uses' => 'SeekerController@showInvToApply',
-                'as' => 'seeker.invitation.toApply'
+            Route::get('job_invitation', [
+                'uses' => 'SeekerController@showJobInvitation',
+                'as' => 'seeker.jobInvitation'
+            ]);
+
+            Route::put('job_invitation/apply', [
+                'uses' => 'SeekerController@applyJobInvitation',
+                'as' => 'seeker.jobInvitation.apply'
             ]);
 
             Route::get('recommended_vacancy', [
