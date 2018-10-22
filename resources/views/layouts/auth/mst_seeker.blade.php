@@ -83,9 +83,9 @@
                                                         Invitation<span class="badge"
                                                                         style="background: #FA5555;">0</span></a>
                                                 </li>
-                                                <li><a href="{{route('seeker.invitation.onlineTest')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/online_test') ? 'active' : '' }}">Online
-                                                        Test Invitation<span class="badge">0</span></a>
+                                                <li><a href="{{route('seeker.invitation.quiz')}}"
+                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/quiz') ? 'active' : '' }}">Quiz
+                                                        Invitation<span class="badge">0</span></a>
                                                 </li>
                                                 <li><a href="{{route('seeker.jobInvitation')}}"
                                                        class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/job_invitation') ? 'active' : '' }}">Job

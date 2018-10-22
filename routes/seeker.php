@@ -202,9 +202,9 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.invitation.interview'
             ]);
 
-            Route::get('online_test', [
-                'uses' => 'SeekerController@showOnlineTestInv',
-                'as' => 'seeker.invitation.onlineTest'
+            Route::get('quiz', [
+                'uses' => 'SeekerController@showQuizInv',
+                'as' => 'seeker.invitation.quiz'
             ]);
 
             Route::get('job_invitation', [

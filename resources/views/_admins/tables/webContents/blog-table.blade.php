@@ -220,7 +220,7 @@
                 '</div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-6 has-feedback">' +
-                '<label for="blogType' + id + '">Title <span class="required">*</span></label>' +
+                '<label for="blogType' + id + '">Blog Type <span class="required">*</span></label>' +
                 '<select id="blogType' + id + '" class="form-control" name="jenisblog_id" required></select>' +
                 '<span class="fa fa-newspaper form-control-feedback right" aria-hidden="true"></span></div>' +
                 '<div class="col-lg-6 has-feedback">' +
@@ -244,7 +244,7 @@
                     $attr = val.id == jenisblog ? 'selected' : '';
                     $result += '<option value="' + val.id + '" ' + $attr + '>' + val.nama + '</option>';
                 });
-                $("#blogType" + id).empty().append();
+                $("#blogType" + id).empty().append($result);
             });
 
             tinyMCE.remove();

@@ -242,7 +242,7 @@ class SeekerController extends Controller
             'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time'));
     }
 
-    public function showOnlineTestInv()
+    public function showQuizInv()
     {
         $user = Auth::user();
         $provinces = Provinces::all();
@@ -258,7 +258,7 @@ class SeekerController extends Controller
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
-        return view('auth.seekers.dashboard-onlineTest', compact('user', 'provinces', 'seeker',
+        return view('auth.seekers.dashboard-quiz', compact('user', 'provinces', 'seeker',
             'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply'));
     }
 

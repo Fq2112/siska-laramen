@@ -18,7 +18,7 @@ class CreateQuizOptionsTable extends Migration
             $table->integer('question_id')->unsigned();
             $table->foreign('question_id')->references('id')->on('quiz_questions');
             $table->text('option');
-            $table->text('correct');
+            $table->boolean('correct')->default(false);
             $table->timestamps();
         });
     }
