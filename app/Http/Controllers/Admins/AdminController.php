@@ -9,6 +9,9 @@ use App\Blog;
 use App\ConfirmAgency;
 use App\Feedback;
 use App\Http\Controllers\Controller;
+use App\QuizInfo;
+use App\QuizOptions;
+use App\QuizQuestions;
 use App\Seekers;
 use App\User;
 use Illuminate\Http\Request;
@@ -116,5 +119,47 @@ class AdminController extends Controller
                 return back()->with('success', 'Successfully update your account!');
             }
         }
+    }
+
+    public function showQuizInfo()
+    {
+        $infos = QuizInfo::all();
+
+        return view('_admins.quiz', compact('infos'));
+    }
+
+    public function createQuizInfo(Request $request)
+    {
+        $info = QuizInfo::create([
+            'quiztype_id' => $request->quiztype_id,
+            'total_question' => $request->total_question,
+            'question_ids' => $request->question_ids,
+            'unique_code' => $request->unique_code,
+            'time_limit' => $request->time_limit
+        ]);
+
+        return back()->with('success', 'Quiz #' . $info->unique_code . ' is successfully created!');
+    }
+
+    public function updateQuizInfo(Request $request)
+    {
+        $info = QuizInfo::find($request->id);
+        $info->update([
+            'quiztype_id' => $request->quiztype_id,
+            'total_question' => $request->total_question,
+            'question_ids' => $request->question_ids,
+            'unique_code' => $request->unique_code,
+            'time_limit' => $request->time_limit
+        ]);
+
+        return back()->with('success', 'Quiz #' . $info->unique_code . ' is successfully updated!');
+    }
+
+    public function deleteQuizInfo(Request $request)
+    {
+        $info = QuizInfo::find(decrypt($request->id));
+        $info->delete();
+
+        return back()->with('success', 'Quiz #' . $info->unique_code . ' is successfully deleted!');
     }
 }

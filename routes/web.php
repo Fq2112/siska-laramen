@@ -92,6 +92,29 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
     });
 
+    Route::group(['prefix' => 'quiz'], function () {
+
+        Route::get('/', [
+            'uses' => 'AdminController@showQuizInfo',
+            'as' => 'quiz.info'
+        ]);
+
+        Route::post('create', [
+            'uses' => 'AdminController@createQuizInfo',
+            'as' => 'quiz.create.info'
+        ]);
+
+        Route::put('{id}/update', [
+            'uses' => 'AdminController@updateQuizInfo',
+            'as' => 'quiz.update.info'
+        ]);
+
+        Route::get('{id}/delete', [
+            'uses' => 'AdminController@deleteQuizInfo',
+            'as' => 'quiz.delete.info'
+        ]);
+    });
+
     Route::group(['prefix' => 'tables'], function () {
 
         Route::group(['namespace' => 'DataMaster'], function () {
@@ -165,6 +188,92 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                     Route::get('{id}/delete', [
                         'uses' => 'AccountsController@deleteSeekers',
                         'as' => 'delete.seekers'
+                    ]);
+
+                });
+
+            });
+
+            Route::group(['prefix' => 'bank_soal'], function () {
+
+                Route::group(['prefix' => 'topics'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'BankSoalController@showQuizTopics',
+                        'as' => 'quiz.topics'
+                    ]);
+
+                    Route::get('load', [
+                        'uses' => 'BankSoalController@loadQuizTopics',
+                        'as' => 'quiz.topics.load'
+                    ]);
+
+                    Route::post('create', [
+                        'uses' => 'BankSoalController@createQuizTopics',
+                        'as' => 'quiz.create.topics'
+                    ]);
+
+                    Route::put('{id}/update', [
+                        'uses' => 'BankSoalController@updateQuizTopics',
+                        'as' => 'quiz.update.topics'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'BankSoalController@deleteQuizTopics',
+                        'as' => 'quiz.delete.topics'
+                    ]);
+
+                });
+
+                Route::group(['prefix' => 'questions'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'BankSoalController@showQuizQuestions',
+                        'as' => 'quiz.questions'
+                    ]);
+
+                    Route::get('load', [
+                        'uses' => 'BankSoalController@loadQuizQuestions',
+                        'as' => 'quiz.questions.load'
+                    ]);
+
+                    Route::post('create', [
+                        'uses' => 'BankSoalController@createQuizQuestions',
+                        'as' => 'quiz.create.questions'
+                    ]);
+
+                    Route::put('{id}/update', [
+                        'uses' => 'BankSoalController@updateQuizQuestions',
+                        'as' => 'quiz.update.questions'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'BankSoalController@deleteQuizQuestions',
+                        'as' => 'quiz.delete.questions'
+                    ]);
+
+                });
+
+                Route::group(['prefix' => 'options'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'BankSoalController@showQuizOptions',
+                        'as' => 'quiz.options'
+                    ]);
+
+                    Route::post('create', [
+                        'uses' => 'BankSoalController@createQuizOptions',
+                        'as' => 'quiz.create.options'
+                    ]);
+
+                    Route::put('{id}/update', [
+                        'uses' => 'BankSoalController@updateQuizOptions',
+                        'as' => 'quiz.update.options'
+                    ]);
+
+                    Route::get('{id}/delete', [
+                        'uses' => 'BankSoalController@deleteQuizOptions',
+                        'as' => 'quiz.delete.options'
                     ]);
 
                 });
@@ -631,92 +740,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                 });
 
             });
-
-        });
-
-    });
-
-    Route::group(['prefix' => 'quiz'], function () {
-
-        Route::group(['prefix' => 'topics'], function () {
-
-            Route::get('/', [
-                'uses' => 'QuizController@showQuizTopics',
-                'as' => 'quiz.topics'
-            ]);
-
-            Route::get('load', [
-                'uses' => 'QuizController@loadQuizTopics',
-                'as' => 'quiz.topics.load'
-            ]);
-
-            Route::post('create', [
-                'uses' => 'QuizController@createQuizTopics',
-                'as' => 'quiz.create.topics'
-            ]);
-
-            Route::put('{id}/update', [
-                'uses' => 'QuizController@updateQuizTopics',
-                'as' => 'quiz.update.topics'
-            ]);
-
-            Route::get('{id}/delete', [
-                'uses' => 'QuizController@deleteQuizTopics',
-                'as' => 'quiz.delete.topics'
-            ]);
-
-        });
-
-        Route::group(['prefix' => 'questions'], function () {
-
-            Route::get('/', [
-                'uses' => 'QuizController@showQuizQuestions',
-                'as' => 'quiz.questions'
-            ]);
-
-            Route::get('load', [
-                'uses' => 'QuizController@loadQuizQuestions',
-                'as' => 'quiz.questions.load'
-            ]);
-
-            Route::post('create', [
-                'uses' => 'QuizController@createQuizQuestions',
-                'as' => 'quiz.create.questions'
-            ]);
-
-            Route::put('{id}/update', [
-                'uses' => 'QuizController@updateQuizQuestions',
-                'as' => 'quiz.update.questions'
-            ]);
-
-            Route::get('{id}/delete', [
-                'uses' => 'QuizController@deleteQuizQuestions',
-                'as' => 'quiz.delete.questions'
-            ]);
-
-        });
-
-        Route::group(['prefix' => 'options'], function () {
-
-            Route::get('/', [
-                'uses' => 'QuizController@showQuizOptions',
-                'as' => 'quiz.options'
-            ]);
-
-            Route::post('create', [
-                'uses' => 'QuizController@createQuizOptions',
-                'as' => 'quiz.create.options'
-            ]);
-
-            Route::put('{id}/update', [
-                'uses' => 'QuizController@updateQuizOptions',
-                'as' => 'quiz.update.options'
-            ]);
-
-            Route::get('{id}/delete', [
-                'uses' => 'QuizController@deleteQuizOptions',
-                'as' => 'quiz.delete.options'
-            ]);
 
         });
 

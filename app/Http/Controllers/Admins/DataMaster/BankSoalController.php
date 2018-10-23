@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admins;
+namespace App\Http\Controllers\Admins\DataMaster;
 
 use App\QuizOptions;
 use App\QuizQuestions;
@@ -8,13 +8,13 @@ use App\QuizType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class QuizController extends Controller
+class BankSoalController extends Controller
 {
     public function showQuizTopics()
     {
         $topics = QuizType::all();
 
-        return view('_admins.quiz.topic-table', compact('topics'));
+        return view('_admins.tables.bankSoal.topic-table', compact('topics'));
     }
 
     public function loadQuizTopics()
@@ -49,7 +49,7 @@ class QuizController extends Controller
     {
         $questions = QuizQuestions::all();
 
-        return view('_admins.quiz.question-table', compact('questions'));
+        return view('_admins.tables.bankSoal.question-table', compact('questions'));
     }
 
     public function loadQuizQuestions()
@@ -116,7 +116,7 @@ class QuizController extends Controller
     {
         $options = QuizOptions::all();
 
-        return view('_admins.quiz.option-table', compact('options'));
+        return view('_admins.tables.bankSoal.option-table', compact('options'));
     }
 
     public function createQuizOptions(Request $request)

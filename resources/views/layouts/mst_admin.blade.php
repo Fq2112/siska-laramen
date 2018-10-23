@@ -87,14 +87,11 @@
                     <div class="menu_section">
                         <h3>General</h3>
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> Home
-                                    <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{route('home-admin')}}">Dashboard</a></li>
-                                    <li><a href="{{route('admin.inbox')}}">Inbox</a></li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-table"></i> Tables
+                            <li><a href="{{route('home-admin')}}"><i class="fa fa-home"></i> Dashboard</a></li>
+                            <li><a href="{{route('admin.inbox')}}"><i class="fa fa-envelope"></i> Inbox</a></li>
+                            <li><a href="{{route('quiz.info')}}"><i class="fa fa-smile"></i> Quiz</a></li>
+                            <li>
+                                <a><i class="fa fa-table"></i> Tables
                                     <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
                                     <li><a>Data Master <span class="fa fa-chevron-down"></span></a>
@@ -105,6 +102,13 @@
                                                     <li><a href="{{route('table.users')}}">Users</a></li>
                                                     <li><a href="{{route('table.agencies')}}">Agencies</a></li>
                                                     <li><a href="{{route('table.seekers')}}">Seekers</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a>Bank Soal <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('quiz.topics')}}">Topics</a></li>
+                                                    <li><a href="{{route('quiz.questions')}}">Questions</a></li>
+                                                    <li><a href="{{route('quiz.options')}}">Options</a></li>
                                                 </ul>
                                             </li>
                                             <li><a>Requirements <span class="fa fa-chevron-down"></span></a>
@@ -151,13 +155,6 @@
                                             </li>
                                         </ul>
                                     </li>
-                                </ul>
-                            </li>
-                            <li><a><i class="fa fa-smile"></i> Quiz <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{route('quiz.topics')}}">Topics</a></li>
-                                    <li><a href="{{route('quiz.questions')}}">Questions</a></li>
-                                    <li><a href="{{route('quiz.options')}}">Options</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -420,6 +417,8 @@
 <script src="{{asset('_admins/js/fastclick.js')}}"></script>
 <!-- NProgress -->
 <script src="{{asset('_admins/js/nprogress.js')}}"></script>
+<!-- jQuery Smart Wizard -->
+<script src="{{asset('_admins/js/jquery.smartWizard.js')}}"></script>
 <!-- morris.js -->
 <script src="{{asset('_admins/js/raphael.min.js')}}"></script>
 <script src="{{asset('_admins/js/morris.min.js')}}"></script>
@@ -563,6 +562,24 @@
                 document.webkitCancelFullScreen();
             }
         }
+    }
+
+    function numberOnly(e, decimal) {
+        var key;
+        var keychar;
+        if (window.event) {
+            key = window.event.keyCode;
+        } else if (e) {
+            key = e.which;
+        } else return true;
+        keychar = String.fromCharCode(key);
+        if ((key == null) || (key == 0) || (key == 8) || (key == 9) || (key == 13) || (key == 27) || (key == 188)) {
+            return true;
+        } else if ((("0123456789").indexOf(keychar) > -1)) {
+            return true;
+        } else if (decimal && (keychar == ".")) {
+            return true;
+        } else return false;
     }
 
     var title = document.getElementsByTagName("title")[0].innerHTML;

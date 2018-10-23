@@ -6,8 +6,8 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Topics
-                            <small>Quiz</small>
+                        <h2>Quiz Topics
+                            <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
@@ -106,7 +106,7 @@
 
         function editTopic(id, name) {
             $('#editModalContent').html(
-                '<form method="post" id="' + id + '" action="{{url('admin/quiz/topics')}}/' + id + '/update">' +
+                '<form method="post" id="' + id + '" action="{{url('admin/tables/bank_soal/topics')}}/' + id + '/update">' +
                 '{{csrf_field()}} {{method_field('PUT')}}' +
                 '<div class="modal-body">' +
                 '<div class="row form-group">' +

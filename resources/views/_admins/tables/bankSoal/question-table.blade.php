@@ -1,18 +1,19 @@
 @extends('layouts.mst_admin')
-@section('title', 'Quiz Options Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Quiz Questions Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Options
-                            <small>Quiz</small>
+                        <h2>Quiz Questions
+                            <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
                                     <i class="fa fa-chevron-up"></i></a></li>
-                            <li><a onclick="createOption()" data-toggle="tooltip" title="Create" data-placement="right">
+                            <li><a onclick="createQuestion()" data-toggle="tooltip" title="Create"
+                                   data-placement="right">
                                     <i class="fa fa-plus"></i></a></li>
                         </ul>
                         <div class="clearfix"></div>
@@ -22,9 +23,8 @@
                             <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Topic</th>
                                 <th>Question</th>
-                                <th>Option</th>
-                                <th>Status</th>
                                 <th>Created at</th>
                                 <th>Last Update</th>
                                 <th>Action</th>
@@ -33,26 +33,21 @@
 
                             <tbody>
                             @php $no = 1; @endphp
-                            @foreach($options as $option)
+                            @foreach($questions as $question)
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
-                                        <strong>{{\App\QuizQuestions::find($option->question_id)->question_text}}</strong>
-                                    </td>
-                                    <td style="vertical-align: middle">{{$option->option}}</td>
-                                    <td style="vertical-align: middle;text-transform: uppercase" align="center">
-                                        <span class="label label-{{$option->correct == true ? 'success' : 'danger'}}">
-                                            {{$option->correct == true ? 'Correct' : 'Incorrect'}}</span>
-                                    </td>
-                                    <td style="vertical-align: middle">{{\Carbon\Carbon::parse($option->created_at)->format('j F Y')}}</td>
-                                    <td style="vertical-align: middle">{{$option->updated_at->diffForHumans()}}</td>
+                                        <strong>{{\App\QuizType::find($question->quiztype_id)->name}}</strong></td>
+                                    <td style="vertical-align: middle">{{$question->question_text}}</td>
+                                    <td style="vertical-align: middle">{{\Carbon\Carbon::parse($question->created_at)->format('j F Y')}}</td>
+                                    <td style="vertical-align: middle">{{$question->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a onclick='editOption("{{$option->id}}","{{$option->question_id}}",
-                                                "{{$option->option}}","{{$option->correct}}")'
+                                        <a onclick='editQuestion("{{$question->id}}","{{$question->quiztype_id}}",
+                                                "{{$question->question_text}}")'
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
-                                        <a href="{{route('quiz.delete.options',['id'=>encrypt($option->id)])}}"
+                                        <a href="{{route('quiz.delete.questions',['id'=>encrypt($question->id)])}}"
                                            class="btn btn-danger btn-sm delete-data" style="font-size: 16px"
                                            data-toggle="tooltip"
                                            title="Delete" data-placement="right"><i class="fa fa-trash-alt"></i></a>
@@ -74,33 +69,51 @@
                     </button>
                     <h4 class="modal-title">Create Form</h4>
                 </div>
-                <form method="post" action="{{route('quiz.create.options')}}">
+                <form method="post" action="{{route('quiz.create.questions')}}">
                     {{csrf_field()}}
                     <div class="modal-body">
                         <div class="row form-group">
                             <div class="col-lg-12 has-feedback">
-                                <label for="question_id">Question <span class="required">*</span></label>
-                                <select id="question_id" class="form-control" name="question_id" required>
+                                <label for="quiztype_id">Topic <span class="required">*</span></label>
+                                <select id="quiztype_id" class="form-control" name="quiztype_id" required>
                                     <option value="">-- Choose --</option>
-                                    @foreach(\App\QuizQuestions::all() as $question)
-                                        <option value="{{$question->id}}">{{$question->question_text}}</option>
+                                    @foreach(\App\QuizType::all() as $topic)
+                                        <option value="{{$topic->id}}">{{$topic->name}}</option>
                                     @endforeach
                                 </select>
-                                <span class="fa fa-question-circle form-control-feedback right"
+                                <span class="fa fa-star form-control-feedback right"
                                       aria-hidden="true"></span>
                             </div>
                         </div>
                         <div class="row form-group">
-                            <div class="col-lg-10 has-feedback">
-                                <label for="option">Option <span class="required">*</span></label>
-                                <input id="option" name="option" class="form-control" placeholder="Option" required>
-                                <span class="fa fa-list-ul form-control-feedback right"
+                            <div class="col-lg-12 has-feedback">
+                                <label for="question_text">Question <span class="required">*</span></label>
+                                <textarea id="question_text" name="question_text" class="form-control"
+                                          placeholder="Question" style="resize: vertical" required></textarea>
+                                <span class="fa fa-question-circle form-control-feedback right"
                                       aria-hidden="true"></span>
                             </div>
-                            <div class="col-lg-2 has-feedback">
-                                <label for="correct">Status <span class="required">*</span></label>
-                                <label><input type="checkbox" name="correct" class="flat" id="correct" value="1">
-                                    Correct</label>
+                        </div>
+                        @for($i=1;$i<=5;$i++)
+                            <div class="row form-group">
+                                <div class="col-lg-12 has-feedback">
+                                    <label for="option{{$i}}">Option #{{$i}} <span class="required">*</span></label>
+                                    <input id="option{{$i}}" name="option{{$i}}" class="form-control"
+                                           placeholder="Option #{{$i}}" required>
+                                    <span class="fa fa-list-ul form-control-feedback right" aria-hidden="true"></span>
+                                </div>
+                            </div>
+                        @endfor
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="correct">Correct Answer <span class="required">*</span></label>
+                                <select id="correct" name="correct" class="form-control" required>
+                                    <option value="">-- Choose --</option>
+                                    @for($i=1;$i<=5;$i++)
+                                        <option value="option{{$i}}">Option #{{$i}}</option>
+                                    @endfor
+                                </select>
+                                <span class="fa fa-check-circle form-control-feedback right" aria-hidden="true"></span>
                             </div>
                         </div>
                     </div>
@@ -127,48 +140,40 @@
 @endsection
 @push("scripts")
     <script>
-        function createOption() {
+        function createQuestion() {
             $("#createModal").modal('show');
         }
 
-        function editOption(id, question, option, correct) {
+        function editQuestion(id, topic, question) {
             $('#editModalContent').html(
-                '<form method="post" id="' + id + '" action="{{url('admin/quiz/options')}}/' + id + '/update">' +
+                '<form method="post" id="' + id + '" action="{{url('admin/tables/bank_soal/questions')}}/' + id + '/update">' +
                 '{{csrf_field()}} {{method_field('PUT')}}' +
                 '<div class="modal-body">' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12 has-feedback">' +
-                '<label for="question_id' + id + '">Question <span class="required">*</span></label>' +
-                '<select id="question_id' + id + '" class="form-control" name="question_id" required></select>' +
-                '<span class="fa fa-question-circle form-control-feedback right" aria-hidden="true"></span></div></div>' +
+                '<label for="quiztype_id' + id + '">Topic <span class="required">*</span></label>' +
+                '<select id="quiztype_id' + id + '" class="form-control" name="quiztype_id" required></select>' +
+                '<span class="fa fa-star form-control-feedback right" aria-hidden="true"></span></div></div>' +
                 '<div class="row form-group">' +
-                '<div class="col-lg-10 has-feedback">' +
-                '<label for="option' + id + '">Option <span class="required">*</span></label>' +
-                '<input id="option' + id + '" name="option" class="form-control" placeholder="Option" ' +
-                'value="' + option + '" required>' +
-                '<span class="fa fa-list-ul form-control-feedback right" aria-hidden="true"></span></div>' +
-                '<div class="col-lg-2 has-feedback">' +
-                '<label for="correct' + id + '">Status <span class="required">*</span></label>' +
-                '<label><input type="checkbox" name="correct" class="flat iCheck" ' +
-                'id="correct' + id + '" value="1"> Correct</label></div></div></div>' +
+                '<div class="col-lg-12 has-feedback">' +
+                '<label for="question_text' + id + '">Question <span class="required">*</span></label>' +
+                '<textarea id="question_text' + id + '" name="question_text" class="form-control" ' +
+                'placeholder="Question" style="resize: vertical" required>' + question + '</textarea>' +
+                '<span class="fa fa-question-circle form-control-feedback right" aria-hidden="true"></span>' +
+                '</div></div></div>' +
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                 '<button type="submit" class="btn btn-primary">Save changes</button></div></form>'
             );
 
-            $.get('/admin/quiz/questions/load', function (data) {
+            $.get('/admin/quiz/topics/load', function (data) {
                 var $attr, $result = '';
                 $.each(data, function (i, val) {
-                    $attr = val.id == question ? 'selected' : '';
-                    $result += '<option value="' + val.id + '" ' + $attr + '>' + val.question_text + '</option>';
+                    $attr = val.id == topic ? 'selected' : '';
+                    $result += '<option value="' + val.id + '" ' + $attr + '>' + val.name + '</option>';
                 });
-                $("#question_id" + id).empty().append($result);
+                $("#quiztype_id" + id).empty().append($result);
             });
-
-            $('.iCheck').iCheck({checkboxClass: 'icheckbox_flat-green', radioClass: 'iradio_flat-green'});
-            if (correct == 1) {
-                $("#correct" + id).iCheck('check');
-            }
 
             $("#editModal").modal('show');
         }
