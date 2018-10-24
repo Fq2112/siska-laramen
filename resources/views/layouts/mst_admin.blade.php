@@ -24,6 +24,8 @@
     <link href="{{ asset('css/bootstrap-datetimepicker.css') }}" rel="stylesheet">
     <!-- bootstrap-wysiwyg -->
     <link href="{{asset('_admins/css/prettify.min.css')}}" rel="stylesheet">
+    <!-- bootstrap-select -->
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-select.css') }}">
     <!-- Switchery -->
     <link href="{{asset('_admins/css/switchery.min.css')}}" rel="stylesheet">
     <!-- iCheck -->
@@ -451,6 +453,8 @@
 <script src="{{asset('_admins/js/bootstrap-wysiwyg.min.js')}}"></script>
 <script src="{{asset('_admins/js/jquery.hotkeys.js')}}"></script>
 <script src="{{asset('_admins/js/prettify.js')}}"></script>
+<!-- bootstrap-select -->
+<script src="{{ asset('js/bootstrap-select.js') }}"></script>
 <!-- iCheck -->
 <script src="{{asset('_admins/js/icheck.min.js')}}"></script>
 <!-- Switchery -->

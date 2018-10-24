@@ -99,6 +99,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
             'as' => 'quiz.info'
         ]);
 
+        Route::get('question/{topic}/load', [
+            'uses' => 'AdminController@loadQuizQuestion',
+            'as' => 'quiz.question.load'
+        ]);
+
         Route::post('create', [
             'uses' => 'AdminController@createQuizInfo',
             'as' => 'quiz.create.info'

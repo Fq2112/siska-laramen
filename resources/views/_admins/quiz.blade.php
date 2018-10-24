@@ -118,21 +118,13 @@
                                     <label for="total_question">Total Question <span class="required">*</span></label>
                                     <input id="total_question" name="total_question" class="form-control" type="text"
                                            placeholder="10" maxlength="3" onkeypress="return numberOnly(event, false)"
-                                           required>
+                                           value="1" required>
                                     <span class="fa fa-list-ol form-control-feedback right"
                                           aria-hidden="true"></span>
                                 </div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-lg-12">
-                                    <label for="question_ids">Questions <span class="required">*</span></label>
-                                    <select id="question_ids" name="question_ids[]" class="form-control" multiple
-                                            required>
-                                        @foreach(\App\QuizQuestions::all() as $question)
-                                            <option value="{{$question->id}}">{{$question->question_text}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+                                <div class="col-lg-12" id="select-question"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-lg-12">
@@ -159,8 +151,10 @@
                 return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
             });
 
-            $("#unique_code").val(generateCode());
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
+            $("#form-quiz")[0].reset();
+            $("#unique_code").val(generateCode());
+            $("#select-question").empty().append("");
 
             $("#content1").toggle(300);
             $("#content2").toggle(300);
@@ -180,38 +174,31 @@
             return text;
         }
 
+        $("#quiztype_id").on("change", function () {
+            $("#total_question").val(1);
+            $.get('{{url('/admin/quiz/question')}}/' + $(this).val() + '/load', function (data) {
+                var $result = '';
+                $result +=
+                    '<label for="question_ids">Questions <span class="required">*</span></label>' +
+                    '<select id="question_ids" class="form-control selectpicker" data-max-options="1" ' +
+                    'title="-- Select Questions --" data-live-search="true" name="question_ids[]" ' +
+                    'data-selected-text-format="count > 3" multiple required>';
+                $.each(data, function (i, val) {
+                    $result += '<option value="' + val.id + '">' + val.question_text + '</option>'
+                });
+                $result += '</select>';
+                $("#select-question").empty().append($result);
+                $('.selectpicker').selectpicker();
+            });
+        });
+
         var total_question = "";
         $("#total_question").on("blur", function () {
-            if ($(this).val() == "0") {
+            if ($(this).val() == "0" || $(this).val() == "") {
                 $(this).val(1);
             }
             total_question = $(this).val();
-        });
-
-        var last_valid_selection = null;
-        $('#question_ids').on("change", function (event) {
-            if (total_question != "") {
-                if ($(this).val().length > total_question) {
-                    $(this).val(last_valid_selection);
-                    new PNotify({
-                        title: 'ATTENTION!',
-                        text: 'Total question is set to ' + total_question + '!',
-                        type: 'warning',
-                        styling: 'bootstrap3'
-                    });
-
-                } else {
-                    last_valid_selection = $(this).val();
-                }
-            } else {
-                new PNotify({
-                    title: 'Error!',
-                    text: 'Total question field cant be null!',
-                    type: 'error',
-                    styling: 'bootstrap3'
-                });
-                $(this).val(null);
-            }
+            $("#question_ids").val('default').selectpicker({maxOptions: total_question}).selectpicker('refresh');
         });
 
         function editQuiz(id, code, topic, time, total, questions) {
@@ -233,8 +220,27 @@
             $("#quiztype_id").val(topic);
             $("#time_limit").val(time);
             $("#total_question").val(total);
-            $("#question_ids").val([questions]);
             $("#btn_quiz_submit").html("<strong>SAVE CHANGES</strong>");
+
+            $.get('{{url('/admin/quiz/question')}}/' + topic + '/load', function (data) {
+                var $result = '';
+                $result +=
+                    '<label for="question_ids">Questions <span class="required">*</span></label>' +
+                    '<select id="question_ids" class="form-control selectpicker" data-max-options="' + total + '" ' +
+                    'title="-- Select Questions --" data-live-search="true" name="question_ids[]" ' +
+                    'data-selected-text-format="count > 3" multiple required>';
+                $.each(data, function (i, val) {
+                    $result += '<option value="' + val.id + '">' + val.question_text + '</option>'
+                });
+                $result += '</select>';
+                $("#select-question").empty().append($result);
+
+                $.each(questions.split(","), function (i, e) {
+                    $("#question_ids option[value='" + e + "']").prop("selected", true);
+                });
+
+                $('.selectpicker').selectpicker();
+            });
         }
     </script>
 @endpush

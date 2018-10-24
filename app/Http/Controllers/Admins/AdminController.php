@@ -128,6 +128,11 @@ class AdminController extends Controller
         return view('_admins.quiz', compact('infos'));
     }
 
+    public function loadQuizQuestion($topic)
+    {
+        return QuizQuestions::where('quiztype_id', $topic)->get();
+    }
+
     public function createQuizInfo(Request $request)
     {
         $info = QuizInfo::create([
