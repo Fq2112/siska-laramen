@@ -228,6 +228,46 @@
         }
     }
 
+    $("#start_date").datepicker({
+        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#end_date input').datepicker({
+            format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+            startDate: minDate,
+        });
+    });
+
+    $("#start_period").datepicker({
+        format: "yyyy", viewMode: "years", minViewMode: "years", autoclose: true, todayHighlight: true, todayBtn: true
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#end_period input').datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose: true,
+            todayHighlight: true,
+            todayBtn: true,
+            startDate: minDate,
+        });
+    });
+
+    $("#start_period2").datepicker({
+        format: "yyyy", viewMode: "years", minViewMode: "years", autoclose: true, todayHighlight: true, todayBtn: true
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#end_period2 input').datepicker({
+            format: "yyyy",
+            viewMode: "years",
+            minViewMode: "years",
+            autoclose: true,
+            todayHighlight: true,
+            todayBtn: true,
+            startDate: minDate,
+        });
+    });
+
     function showEndDate() {
         var checkBox = document.getElementById("cb_end_date"),
             div = document.getElementById("end_date");

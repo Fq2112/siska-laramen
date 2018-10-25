@@ -322,12 +322,12 @@
                     'class="tag"><i class="fa fa-user-graduate"></i>&ensp;' + val.majors + '</a></li>' +
                     '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li></ul>' +
                     '<table style="font-size: 14px;margin-top: -.5em">' +
-                    '<tr><td><i class="fa fa-comments"></i></td>' +
-                    '<td>&nbsp;Interview Date</td>' +
-                    '<td>: ' + val.interview_date + '</td></tr>' +
                     '<tr><td><i class="fa fa-users"></i></td>' +
                     '<td>&nbsp;Recruitment Date</td>' +
                     '<td>: ' + $recruitmentDate + '</td></tr>' +
+                    '<tr><td><i class="fa fa-comments"></i></td>' +
+                    '<td>&nbsp;Interview Date</td>' +
+                    '<td>: ' + val.interview_date + '</td></tr>' +
                     '<tr><td><i class="fa fa-clock"></i></td>' +
                     '<td>&nbsp;Last Update</td>' +
                     '<td>: ' + val.updated_at + '</td></tr></table>' +
@@ -436,12 +436,12 @@
                         'class="tag"><i class="fa fa-user-graduate"></i>&ensp;' + data.majors + '</a></li>' +
                         '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li></ul>' +
                         '<table style="font-size: 14px;margin-top: -.5em">' +
-                        '<tr><td><i class="fa fa-comments"></i></td>' +
-                        '<td>&nbsp;Interview Date</td>' +
-                        '<td>: ' + data.interview_date + '</td></tr>' +
                         '<tr><td><i class="fa fa-users"></i></td>' +
                         '<td>&nbsp;Recruitment Date</td>' +
                         '<td>: ' + data.recruitment_date + '</td></tr>' +
+                        '<tr><td><i class="fa fa-comments"></i></td>' +
+                        '<td>&nbsp;Interview Date</td>' +
+                        '<td>: ' + data.interview_date + '</td></tr>' +
                         '<tr><td><i class="fa fa-clock"></i></td>' +
                         '<td>&nbsp;Last Update</td>' +
                         '<td>: ' + data.updated_at + '</td></tr></table>' +

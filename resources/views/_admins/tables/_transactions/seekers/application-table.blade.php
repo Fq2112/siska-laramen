@@ -49,19 +49,25 @@
                                         <table style="margin: 0">
                                             <tr>
                                                 <td>
-                                                    @if($userSeeker->ava == "" || $userSeeker->ava == "seeker.png")
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: .5em"
-                                                             class="img-responsive" width="100" alt="seeker.png"
-                                                             src="{{asset('images/seeker.png')}}">
-                                                    @else
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: .5em"
-                                                             class="img-responsive" width="100"
-                                                             alt="{{$userSeeker->ava}}"
-                                                             src="{{asset('storage/users/'.$userSeeker->ava)}}">
-                                                    @endif
+                                                    <a href="{{route('seeker.profile',['id' => $seeker->id])}}"
+                                                       target="_blank"
+                                                       style="float: left;margin-right: .5em;margin-bottom: .5em">
+                                                        @if($userSeeker->ava == "" || $userSeeker->ava == "seeker.png")
+                                                            <img class="img-responsive" width="100" alt="seeker.png"
+                                                                 src="{{asset('images/seeker.png')}}">
+                                                        @else
+                                                            <img class="img-responsive" width="100"
+                                                                 alt="{{$userSeeker->ava}}"
+                                                                 src="{{asset('storage/users/'.$userSeeker->ava)}}">
+                                                        @endif
+                                                    </a>
                                                     <table style="margin: 0">
                                                         <tr>
-                                                            <td><strong>{{$userSeeker->name}}</strong></td>
+                                                            <td>
+                                                                <a href="{{route('seeker.profile',['id' => $seeker->id])}}"
+                                                                   target="_blank">
+                                                                    <strong>{{$userSeeker->name}}</strong></a>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><a href="mailto:{{$userSeeker->email}}">
@@ -120,33 +126,38 @@
                                         <table style="margin: 0">
                                             <tr>
                                                 <td>
-                                                    @if($userAgency->ava == "" || $userAgency->ava == "agency.png")
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: 0"
-                                                             class="img-responsive" width="100" alt="agency.png"
-                                                             src="{{asset('images/agency.png')}}">
-                                                    @else
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: 0"
-                                                             class="img-responsive" width="100"
-                                                             alt="{{$userAgency->ava}}"
-                                                             src="{{asset('storage/users/'.$userAgency->ava)}}">
-                                                    @endif
+                                                    <a href="{{route('agency.profile',['id' => $agency->id])}}"
+                                                       target="_blank"
+                                                       style="float: left;margin-right: .5em;margin-bottom: 0">
+                                                        @if($userAgency->ava == "" || $userAgency->ava == "agency.png")
+                                                            <img class="img-responsive" width="100" alt="agency.png"
+                                                                 src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img class="img-responsive" width="100"
+                                                                 alt="{{$userAgency->ava}}"
+                                                                 src="{{asset('storage/users/'.$userAgency->ava)}}">
+                                                        @endif
+                                                    </a>
                                                     <table style="margin: 0">
                                                         <tr>
-                                                            <td><strong>{{$vacancy->judul}}</strong></td>
+                                                            <td>
+                                                                <a href="{{route('detail.vacancy',['id' => $vacancy->id])}}"
+                                                                   target="_blank"><strong>{{$vacancy->judul}}</strong>
+                                                                </a>
+                                                            </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>{{$userAgency->name}}&nbsp;&ndash;&nbsp;{{substr($city, 0, 2)=="Ko" ?
-                                                            substr($city,5) : substr($city,10)}}</td>
+                                                            <td>
+                                                                <a href="{{route('agency.profile',['id' => $agency->id])}}"
+                                                                   target="_blank">
+                                                                    {{$userAgency->name}}</a>&nbsp;&ndash;
+                                                                {{substr($city, 0, 2) == "Ko" ? substr($city,5) :
+                                                                substr($city,10)}}
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>
                                                                 <strong data-toggle="tooltip" data-placement="left"
-                                                                        title="Interview Date">
-                                                                    {{$vacancy->interview_date != "" ?
-                                                                    \Carbon\Carbon::parse($vacancy->interview_date)
-                                                                    ->format('l, j F Y') : '(empty)'}}
-                                                                </strong> |
-                                                                <strong data-toggle="tooltip" data-placement="right"
                                                                         title="Recruitment Date">
                                                                     {{$vacancy->recruitmentDate_start != "" &&
                                                                     $vacancy->recruitmentDate_end != "" ?
@@ -155,6 +166,12 @@
                                                                     ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                     ($vacancy->recruitmentDate_end)
                                                                     ->format('j F Y') : '(empty)'}}
+                                                                </strong> |
+                                                                <strong data-toggle="tooltip" data-placement="right"
+                                                                        title="Interview Date">
+                                                                    {{$vacancy->interview_date != "" ?
+                                                                    \Carbon\Carbon::parse($vacancy->interview_date)
+                                                                    ->format('l, j F Y') : '(empty)'}}
                                                                 </strong>
                                                             </td>
                                                         </tr>

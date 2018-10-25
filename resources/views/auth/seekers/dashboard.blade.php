@@ -130,25 +130,8 @@
                                                         $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
                                                     </a>
                                                 </li>
-                                                <li>
-                                                    <a class="tag">
-                                                        <i class="fa fa-calendar-alt"></i>
-                                                        &ensp;Interview Schedule: {{$vacancy->interview}}
-                                                    </a>
-                                                </li>
                                             </ul>
                                             <table style="font-size: 14px;margin-top: -.5em">
-                                                <tr>
-                                                    <td><i class="fa fa-comments"></i>
-                                                    </td>
-                                                    <td>&nbsp;Interview Date</td>
-                                                    <td>:
-                                                        {{$vacancy->interview_date != "" ?
-                                                        \Carbon\Carbon::parse
-                                                        ($vacancy->interview_date)
-                                                        ->format('l, j F Y') : '-'}}
-                                                    </td>
-                                                </tr>
                                                 <tr>
                                                     <td><i class="fa fa-users"></i></td>
                                                     <td>&nbsp;Recruitment Date</td>
@@ -161,6 +144,17 @@
                                                         \Carbon\Carbon::parse
                                                         ($vacancy->recruitmentDate_end)
                                                         ->format('j F Y') : '-'}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="fa fa-comments"></i>
+                                                    </td>
+                                                    <td>&nbsp;Interview Date</td>
+                                                    <td>:
+                                                        {{$vacancy->interview_date != "" ?
+                                                        \Carbon\Carbon::parse
+                                                        ($vacancy->interview_date)
+                                                        ->format('l, j F Y') : '-'}}
                                                     </td>
                                                 </tr>
                                                 <tr>

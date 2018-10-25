@@ -52,18 +52,24 @@
                                                 <td>
                                                     <span style="font-size: 15px">INVOICE <strong>{{$invoice}}</strong></span>
                                                     <hr style="margin-top: 0">
-                                                    @if($user->ava == "" || $user->ava == "agency.png")
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: 1.2em"
-                                                             class="img-responsive" width="64" alt="agency.png"
-                                                             src="{{asset('images/agency.png')}}">
-                                                    @else
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: 1.2em"
-                                                             class="img-responsive" width="64" alt="{{$user->ava}}"
-                                                             src="{{asset('storage/users/'.$user->ava)}}">
-                                                    @endif
+                                                    <a href="{{route('agency.profile',['id' => $posting->agency_id])}}"
+                                                       target="_blank"
+                                                       style="float: left;margin-right: .5em;margin-bottom: 1.2em">
+                                                        @if($user->ava == "" || $user->ava == "agency.png")
+                                                            <img class="img-responsive" width="64" alt="agency.png"
+                                                                 src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img class="img-responsive" width="64" alt="{{$user->ava}}"
+                                                                 src="{{asset('storage/users/'.$user->ava)}}">
+                                                        @endif
+                                                    </a>
                                                     <table style="margin: 0">
                                                         <tr>
-                                                            <td><strong>{{$user->name}}</strong></td>
+                                                            <td>
+                                                                <a href="{{route('agency.profile',['id' =>
+                                                                $posting->agency_id])}}" target="_blank">
+                                                                    <strong>{{$user->name}}</strong></a>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><a href="mailto:{{$user->email}}">{{$user->email}}</a>
@@ -89,7 +95,10 @@
                                                     <strong>{{$vacancies->count() > 1 ? 'Vacancies' : 'Vacancy'}}</strong>
                                                     <ul>
                                                         @foreach($vacancies->get() as $vacancy)
-                                                            <li>{{$vacancy->judul}}</li>
+                                                            <li>
+                                                                <a href="{{route('detail.vacancy',['id' => $vacancy->id])}}"
+                                                                   target="_blank">{{$vacancy->judul}}</a>
+                                                            </li>
                                                         @endforeach
                                                     </ul>
                                                 </td>

@@ -211,12 +211,6 @@
                                             <hr>
                                             <table class="stats">
                                                 <tr>
-                                                    <td><i class="fa fa-comments"></i></td>
-                                                    <td>&nbsp;Interview Date</td>
-                                                    <td>: {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
-                                                    ($vacancy->interview_date)->format('l, j F Y') : '-'}}</td>
-                                                </tr>
-                                                <tr>
                                                     <td><i class="fa fa-users"></i></td>
                                                     <td>&nbsp;Recruitment Date</td>
                                                     <td style="text-transform: none">: {{$vacancy->recruitmentDate_start &&
@@ -224,6 +218,12 @@
                                                     ($vacancy->recruitmentDate_start)->format('d-m-Y')." to ".
                                                     \Carbon\Carbon::parse($vacancy->recruitmentDate_end)
                                                     ->format('d-m-Y') : '-'}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="fa fa-comments"></i></td>
+                                                    <td>&nbsp;Interview Date</td>
+                                                    <td>: {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
+                                                    ($vacancy->interview_date)->format('l, j F Y') : '-'}}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -366,17 +366,6 @@
                                                                     </ul>
                                                                     <table style="font-size: 12px;margin-top: -.5em">
                                                                         <tr>
-                                                                            <td><i class="fa fa-comments"></i>
-                                                                            </td>
-                                                                            <td>&nbsp;Interview Date</td>
-                                                                            <td>:
-                                                                                {{$row->interview_date != "" ?
-                                                                                \Carbon\Carbon::parse
-                                                                                ($row->interview_date)
-                                                                                ->format('l, j F Y') : '-'}}
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
                                                                             <td><i class="fa fa-users"></i></td>
                                                                             <td>&nbsp;Recruitment Date</td>
                                                                             <td>:
@@ -388,6 +377,17 @@
                                                                                 \Carbon\Carbon::parse
                                                                                 ($row->recruitmentDate_end)
                                                                                 ->format('j F Y') : '-'}}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><i class="fa fa-comments"></i>
+                                                                            </td>
+                                                                            <td>&nbsp;Interview Date</td>
+                                                                            <td>:
+                                                                                {{$row->interview_date != "" ?
+                                                                                \Carbon\Carbon::parse
+                                                                                ($row->interview_date)
+                                                                                ->format('l, j F Y') : '-'}}
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -500,15 +500,6 @@
                                                     </ul>
                                                     <table style="font-size: 12px;margin-top: -.5em">
                                                         <tr>
-                                                            <td><i class="fa fa-comments"></i>
-                                                            </td>
-                                                            <td>&nbsp;Interview Date</td>
-                                                            <td>:
-                                                                {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
-                                                                ($vacancy->interview_date)->format('l, j F Y') : '-'}}
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
                                                             <td><i class="fa fa-users"></i></td>
                                                             <td>&nbsp;Recruitment Date</td>
                                                             <td>:
@@ -517,6 +508,15 @@
                                                                 \Carbon\Carbon::parse($vacancy->recruitmentDate_start)
                                                                 ->format('j F Y')." - ".\Carbon\Carbon::parse
                                                                 ($vacancy->recruitmentDate_end)->format('j F Y') : '-'}}
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td><i class="fa fa-comments"></i>
+                                                            </td>
+                                                            <td>&nbsp;Interview Date</td>
+                                                            <td>:
+                                                                {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
+                                                                ($vacancy->interview_date)->format('l, j F Y') : '-'}}
                                                             </td>
                                                         </tr>
                                                     </table>

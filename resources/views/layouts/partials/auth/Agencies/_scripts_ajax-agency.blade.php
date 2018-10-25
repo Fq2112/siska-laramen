@@ -186,7 +186,6 @@
                     $('#city_id').val(data.cities_id).selectpicker("refresh");
                     $('#salary_id').val(data.salary_id).selectpicker("refresh");
                     $('#pengalaman').val(numb);
-                    $('#interview').val(data.interview);
                     $('#tingkatpend').val(data.tingkatpend_id).selectpicker("refresh");
                     $('#jurusanpend').val(data.jurusanpend_id).selectpicker("refresh");
 

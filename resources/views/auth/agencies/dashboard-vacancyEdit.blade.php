@@ -180,17 +180,6 @@
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td><i class="fa fa-comments"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Interview Date</td>
-                                                                                    <td>:
-                                                                                        {{$row->interview_date != "" ?
-                                                                                        \Carbon\Carbon::parse
-                                                                                        ($row->interview_date)
-                                                                                        ->format('l, j F Y') : '-'}}
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
                                                                                     <td><i class="fa fa-users"></i></td>
                                                                                     <td>&nbsp;Recruitment Date</td>
                                                                                     <td>: {{$row->recruitmentDate_start
@@ -201,6 +190,17 @@
                                                                                         \Carbon\Carbon::parse
                                                                                         ($row->recruitmentDate_end)
                                                                                         ->format('j F Y') : '-'}}
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td><i class="fa fa-comments"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Interview Date</td>
+                                                                                    <td>:
+                                                                                        {{$row->interview_date != "" ?
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->interview_date)
+                                                                                        ->format('l, j F Y') : '-'}}
                                                                                     </td>
                                                                                 </tr>
                                                                             </table>
@@ -219,7 +219,7 @@
 
                                             <div id="vacancy_settings" style="display: none">
                                                 <div class="row form-group">
-                                                    <div class="col-lg-12">
+                                                    <div class="col-lg-8">
                                                         <small>Vacancy Name</small>
                                                         <div class="input-group">
                                                             <span class="input-group-addon">
@@ -229,6 +229,19 @@
                                                                    placeholder="ex: Programmer"
                                                                    name="judul" id="judul"
                                                                    maxlength="200" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <small>Work Experience</small>
+                                                        <div class="input-group" style="text-transform: none">
+                                                            <span class="input-group-addon">
+                                                                At least</span>
+                                                            <input class="form-control" type="text"
+                                                                   onkeypress="return numberOnly(event, false)"
+                                                                   maxlength="3" placeholder="0"
+                                                                   id="pengalaman" name="pengalaman" required>
+                                                            <span class="input-group-addon">
+                                                                year(s)</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -346,33 +359,6 @@
                                                                         {{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <div class="col-lg-6">
-                                                        <small>Work Experience</small>
-                                                        <div class="input-group" style="text-transform: none">
-                                                            <span class="input-group-addon">
-                                                                At least</span>
-                                                            <input class="form-control" type="text"
-                                                                   onkeypress="return numberOnly(event, false)"
-                                                                   maxlength="3" placeholder="0"
-                                                                   id="pengalaman" name="pengalaman" required>
-                                                            <span class="input-group-addon">
-                                                                year(s)</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <small>Interview Schedule</small>
-                                                        <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <i class="fa fa-calendar-alt"></i>
-                                                            </span>
-                                                            <input class="form-control datetimepicker"
-                                                                   name="interview" type="text"
-                                                                   placeholder="yyyy-mm-dd hh:mm:ss"
-                                                                   id="interview" required>
                                                         </div>
                                                     </div>
                                                 </div>

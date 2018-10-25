@@ -217,33 +217,32 @@
                 '<input class="form-control" type="text" value="' + $active_period + '" ' +
                 'id="active_period" disabled></div></div>' +
                 '<div class="col-lg-6">' +
-                '<small>Interview Date</small>' +
-                '<div class="input-group">' +
-                '<span class="input-group-addon">' +
-                '<i class="fa fa-comments"></i></span>' +
-                '<input style="background-color: #fff" class="form-control datepicker" ' +
-                'type="text" maxlength="10" ' +
-                'placeholder="yyyy-mm-dd" name="interview_date" id="interview_date" ' +
-                'value="' + $interview + '" required></div></div></div>' +
-                '<div class="row form-group" style="margin-bottom: 0">' +
-                '<div class="col-lg-6">' +
                 '<small>Recruitment Start Date</small>' +
                 '<div class="input-group">' +
                 '<span class="input-group-addon">' +
                 '<i class="fa fa-hourglass-start"></i></span>' +
-                '<input style="background-color: #fff" class="form-control datepicker" ' +
+                '<input style="background-color: #fff" class="form-control" ' +
                 'type="text" maxlength="10" ' +
                 'placeholder="yyyy-mm-dd" name="recruitmentDate_start" id="recruitmentDate_start" ' +
-                'value="' + $start + '" required></div></div>' +
+                'value="' + $start + '" required></div></div></div>' +
+                '<div class="row form-group" style="margin-bottom: 0">' +
                 '<div class="col-lg-6">' +
                 '<small>Recruitment End Date</small>' +
                 '<div class="input-group">' +
                 '<span class="input-group-addon">' +
                 '<i class="fa fa-hourglass-end"></i></span>' +
-                '<input style="background-color: #fff" class="form-control datepicker" ' +
+                '<input style="background-color: #fff" class="form-control" ' +
                 'type="text" maxlength="10" ' +
                 'placeholder="yyyy-mm-dd" name="recruitmentDate_end" id="recruitmentDate_end" ' +
-                'value="' + $end + '" required></div></div></div>' +
+                'value="' + $end + '" required></div></div>' +
+                '<div class="col-lg-6">' +
+                '<small>Interview Date</small>' +
+                '<div class="input-group">' +
+                '<span class="input-group-addon">' +
+                '<i class="fa fa-comments"></i></span>' +
+                '<input style="background-color: #fff" class="form-control" ' +
+                'type="text" maxlength="10" placeholder="yyyy-mm-dd" name="interview_date" id="interview_date" ' +
+                'value="' + $interview + '" required></div></div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12"><small style="font-size: 12px;color: #fa5555;">' +
                 'P.S.: You\'re only permitted to set those dates before its active period runs out.' +
@@ -255,10 +254,26 @@
             );
             $("#form-schedule input[name='_method']").val('PUT');
             $("#vacancy_title").html('<strong>' + $judul + '</strong> &ndash; VACANCY SCHEDULE');
-            $('.datepicker').datepicker({
+
+            $("#recruitmentDate_start").datepicker({
                 format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                startDate: '{{today()}}',
                 endDate: $active_period
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#recruitmentDate_end').datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                    startDate: minDate,
+                    endDate: $active_period
+                }).on('changeDate', function (selected) {
+                    var minDate = new Date(selected.date.valueOf());
+                    $('#interview_date').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: minDate
+                    });
+                });
             });
+
             $("#formModal").modal('show');
 
         } else {

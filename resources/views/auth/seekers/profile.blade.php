@@ -1327,7 +1327,7 @@
                                                                             <span class="input-group-addon">
                                                                                 <i class="fa fa-calendar-alt"></i>
                                                                             </span>
-                                                            <input class="form-control datepicker"
+                                                            <input class="form-control"
                                                                    name="start_date" type="text"
                                                                    id="start_date" required
                                                                    maxlength="10"
@@ -1367,7 +1367,7 @@
                                                                             <span class="input-group-addon">
                                                                                 <i class="fa fa-calendar-check"></i>
                                                                             </span>
-                                                            <input class="form-control datepicker"
+                                                            <input class="form-control"
                                                                    name="end_date" type="text"
                                                                    placeholder="yyyy-mm-dd"
                                                                    maxlength="10">
@@ -1622,7 +1622,7 @@
                                                                             <span class="input-group-addon">
                                                                                 <i class="fa fa-hourglass-start"></i>
                                                                             </span>
-                                                            <input class="form-control yearpicker"
+                                                            <input class="form-control"
                                                                    name="start_period" type="text"
                                                                    id="start_period" placeholder="yyyy"
                                                                    maxlength="4" required>
@@ -1641,7 +1641,7 @@
                                                                             <span class="input-group-addon">
                                                                                 <i class="fa fa-hourglass-end"></i>
                                                                             </span>
-                                                            <input class="form-control yearpicker"
+                                                            <input class="form-control"
                                                                    name="end_period" type="text"
                                                                    placeholder="yyyy" maxlength="4">
                                                         </div>
@@ -1972,7 +1972,7 @@
                                                                             <span class="input-group-addon">
                                                                                 <i class="fa fa-hourglass-start"></i>
                                                                             </span>
-                                                            <input class="form-control yearpicker"
+                                                            <input class="form-control"
                                                                    placeholder="yyyy" type="text"
                                                                    name="start_period" required
                                                                    id="start_period2" maxlength="4">
@@ -1991,7 +1991,7 @@
                                                                             <span class="input-group-addon">
                                                                                 <i class="fa fa-hourglass-end"></i>
                                                                             </span>
-                                                            <input class="form-control yearpicker"
+                                                            <input class="form-control"
                                                                    placeholder="yyyy" type="text"
                                                                    name="end_period" maxlength="4">
                                                         </div>

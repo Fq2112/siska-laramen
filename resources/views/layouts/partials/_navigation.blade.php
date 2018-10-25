@@ -206,6 +206,11 @@
                        href="{{route('admin.inbox')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-envelope"></i>&ensp;Inbox</a></li>
+                <li><a id="external"
+                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       href="{{route('quiz.info')}}"
+                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                        <i class="fa fa-grin-beam"></i>&ensp;Quiz</a></li>
                 <li class="divider"></li>
                 <li>
                     <a onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'"

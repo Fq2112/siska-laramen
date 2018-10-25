@@ -47,19 +47,23 @@
                                         <table style="margin: 0">
                                             <tr>
                                                 <td>
-                                                    @if($user->ava == "" || $user->ava == "agency.png")
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: 0"
-                                                             class="img-responsive" width="100" alt="agency.png"
-                                                             src="{{asset('images/agency.png')}}">
-                                                    @else
-                                                        <img style="float: left;margin-right: .5em;margin-bottom: 0"
-                                                             class="img-responsive" width="100" alt="{{$user->ava}}"
-                                                             src="{{asset('storage/users/'.$user->ava)}}">
-                                                    @endif
+                                                    <a href="{{route('agency.profile',['id' => $vacancy->agency_id])}}"
+                                                       target="_blank"
+                                                       style="float: left;margin-right: .5em;margin-bottom: 0">
+                                                        @if($user->ava == "" || $user->ava == "agency.png")
+                                                            <img class="img-responsive" width="100" alt="agency.png"
+                                                                 src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img class="img-responsive" width="100" alt="{{$user->ava}}"
+                                                                 src="{{asset('storage/users/'.$user->ava)}}">
+                                                        @endif
+                                                    </a>
                                                     <table style="margin: 0">
                                                         <tr>
                                                             <td>
-                                                                <strong>{{$vacancy->judul}}</strong>&nbsp;&ndash;&nbsp;
+                                                                <a href="{{route('detail.vacancy',['id' =>
+                                                                $vacancy->id])}}" target="_blank">
+                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;&nbsp;
                                                                 <span data-toggle="tooltip" data-placement="bottom"
                                                                       title="Status" class="label label-default"
                                                                       style="background: {{$vacancy->isPost == true ?
@@ -76,7 +80,9 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>{{$user->name}}</td>
+                                                            <td><a href="{{route('agency.profile',['id' =>
+                                                            $vacancy->agency_id])}}" target="_blank">{{$user->name}}</a>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td>{{substr($city, 0, 2)=="Ko" ? substr($city,5) :
@@ -84,14 +90,6 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Interview Date"
-                                                                      class="label label-primary">
-                                                                    <strong>
-                                                                        {{$vacancy->interview_date != "" ?
-                                                                        \Carbon\Carbon::parse($vacancy->interview_date)
-                                                                        ->format('l, j F Y') : 'Unknown'}}
-                                                                    </strong></span>&nbsp;|
                                                                 <span data-toggle="tooltip" data-placement="bottom"
                                                                       title="Recruitment Date" class="label label-info">
                                                                     <strong>
@@ -102,6 +100,15 @@
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->recruitmentDate_end)
                                                                         ->format('j F Y') : 'Unknown'}}
+                                                                    </strong>
+                                                                </span>&nbsp;|
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Interview Date"
+                                                                      class="label label-primary">
+                                                                    <strong>
+                                                                        {{$vacancy->interview_date != "" ?
+                                                                        \Carbon\Carbon::parse($vacancy->interview_date)
+                                                                        ->format('l, j F Y') : 'Unknown'}}
                                                                     </strong>
                                                                 </span>
                                                             </td>
