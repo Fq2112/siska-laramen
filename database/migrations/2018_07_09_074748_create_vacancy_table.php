@@ -51,6 +51,9 @@ class CreateVacancyTable extends Migration
             $table->date('interview_date')->nullable();
             $table->date('recruitmentDate_start')->nullable();
             $table->date('recruitmentDate_end')->nullable();
+            $table->date('quizDate_start')->nullable();
+            $table->date('quizDate_end')->nullable();
+            $table->integer('passing_grade');
             $table->timestamps();
         });
     }
