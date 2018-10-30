@@ -53,7 +53,9 @@ class CreateVacancyTable extends Migration
             $table->date('recruitmentDate_end')->nullable();
             $table->date('quizDate_start')->nullable();
             $table->date('quizDate_end')->nullable();
-            $table->integer('passing_grade');
+            $table->integer('passing_grade')->nullable();
+            $table->integer('limit_aplicants')->nullable();
+            $table->integer('plan_id')->nullable();
             $table->timestamps();
         });
     }
