@@ -31,12 +31,13 @@ class CreateConfirmAgencies extends Migration
             $table->string('cc_expiry', '9')->nullable();
             $table->string('cc_cvc', '4')->nullable();
             $table->text('payment_proof')->nullable();
-
             $table->boolean('isPaid')->default(false);
             $table->dateTime('date_payment')->nullable();
             $table->integer('admin_id')->unsigned()->nullable();
             $table->foreign('admin_id')->references('id')->on('admins')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->boolean('isUpgrade')->default(false);
+            $table->integer('from_plan')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
