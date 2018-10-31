@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateVacancyTable extends Migration
+class CreateTableVacancy extends Migration
 {
     /**
      * Run the migrations.
@@ -46,16 +46,20 @@ class CreateVacancyTable extends Migration
             $table->integer('fungsikerja_id')->unsigned();
             $table->foreign('fungsikerja_id')->references('id')->on('fungsi_kerja')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->integer('plan_id')->unsigned();
+            $table->foreign('plan_id')->references('id')->on('plans')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->boolean('isPost')->default(false);
             $table->date('active_period')->nullable();
-            $table->date('interview_date')->nullable();
             $table->date('recruitmentDate_start')->nullable();
             $table->date('recruitmentDate_end')->nullable();
             $table->date('quizDate_start')->nullable();
             $table->date('quizDate_end')->nullable();
             $table->integer('passing_grade')->nullable();
-            $table->integer('limit_aplicants')->nullable();
-            $table->integer('plan_id')->nullable();
+            $table->integer('limit_applicants')->nullable();
+            $table->date('psychoTestDate_start')->nullable();
+            $table->date('psychoTestDate_end')->nullable();
+            $table->date('interview_date')->nullable();
             $table->timestamps();
         });
     }

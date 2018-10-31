@@ -20,12 +20,9 @@ class CreatePlansTable extends Migration
             $table->string('caption');
             $table->string('job_ads');
             $table->text('benefit');
-            $table->boolean('quiz')->default(false);
-            $table->boolean('interview')->default(false);
+            $table->boolean('isQuiz')->default(false);
+            $table->boolean('isPsychoTest')->default(false);
             $table->boolean('isBest')->default(false);
-            $table->integer('admin_id')->unsigned();
-            $table->foreign('admin_id')->references('id')->on('admins')
-                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->softDeletes();
             $table->timestamps();
         });
