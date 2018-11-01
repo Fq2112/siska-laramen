@@ -107,6 +107,13 @@ class VacanciesAPIController extends Controller
     public function getVacancyAgency($id)
     {
         $vacancies = Vacancies::find($id)->toArray();
+
+        if (substr(Cities::find($vacancies['cities_id'])->name, 0, 2) == "Ko") {
+            $cities = array('city' => substr(Cities::find($vacancies['cities_id'])->name, 5));
+        } else {
+            $cities = array('city' => substr(Cities::find($vacancies['cities_id'])->name, 10));
+        }
+
         $agency = Agencies::findOrFail($vacancies['agency_id'])->toArray();
         $degrees = array('degrees' => Tingkatpend::findOrFail($vacancies['tingkatpend_id'])->name);
         $majors = array('majors' => Jurusanpend::findOrFail($vacancies['jurusanpend_id'])->name);
@@ -116,7 +123,7 @@ class VacanciesAPIController extends Controller
         $joblevel = array('job_level' => JobLevel::findOrFail($vacancies['joblevel_id'])->name);
         $salary = array('salary' => Salaries::findOrFail($vacancies['salary_id'])->name);
         $total = array('total' => Accepting::where('vacancy_id',$id)->get()->count());
-
+        $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s', $vacancies['updated_at'])->diffForHumans());
         $user = User::findOrFail(Agencies::findOrFail($vacancies['agency_id'])->user_id);
         if ($user->ava == "agency.png" || $user->ava == "") {
             $filename = asset('images/agency.png');
@@ -124,7 +131,7 @@ class VacanciesAPIController extends Controller
             $filename = asset('storage/users/' . $user->ava);
         }
         $ava['user'] = array('ava' => $filename, 'name' => $user->name);
-        $array = array_replace($vacancies,$agency,$salary,$degrees,$majors,$jobtype,$jobfunc,$industry,$joblevel,$total,$ava);
+        $array = array_replace($vacancies,$agency,$salary,$degrees,$majors,$jobtype,$jobfunc,$industry,$joblevel,$update_at,$total,$ava,$cities);
         return $array;
     }
 
