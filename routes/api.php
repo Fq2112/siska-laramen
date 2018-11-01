@@ -18,10 +18,12 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         'as' => 'get.search.vacancy'
     ]);
 
-    $router->get('vacancies',[
-        'uses' => 'PostController@getVacancy',
+    $router->post('feed',[
+        'uses' => 'PostController@feedback',
         'as' => 'get.vacancy'
     ]);
+
+
 
     $router->group(['prefix' => 'auth'], function ($router) {
 
