@@ -15,8 +15,6 @@ class CreateQuizInfosTable extends Migration
     {
         Schema::create('quiz_infos', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('quiztype_id')->unsigned();
-            $table->foreign('quiztype_id')->references('id')->on('quiz_types');
             $table->integer('total_question');
             $table->string('question_ids');
             $table->string('unique_code', 6);

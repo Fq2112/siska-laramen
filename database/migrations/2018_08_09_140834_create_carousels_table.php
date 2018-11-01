@@ -18,9 +18,6 @@ class CreateCarouselsTable extends Migration
             $table->string('image')->nullable();
             $table->string('title')->nullable();
             $table->string('captions')->nullable();
-            $table->integer('admin_id')->unsigned();
-            $table->foreign('admin_id')->references('id')->on('admins')
-                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->timestamps();
         });
     }
