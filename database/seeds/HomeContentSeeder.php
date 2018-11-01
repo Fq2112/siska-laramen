@@ -29,34 +29,54 @@ class HomeContentSeeder extends Seeder
             Plan::create([
                 'name' => rand(0, 1) ? 'plus' : 'enterprise',
                 'price' => $faker->numberBetween($min = 1000000, $max = 1500000),
+                'discount' => $faker->numberBetween($min = 0, $max = 100),
                 'caption' => $faker->sentence($nbWords = 5, $variableNbWords = true),
                 'job_ads' => $faker->sentence($nbWords = 3, $variableNbWords = true),
-                'benefit' => $faker->paragraph(5, true),
+                'quiz_applicant' => $faker->numberBetween(1, 100),
+                'price_quiz_applicant' => $faker->numberBetween(10000, 20000),
+                'psychoTest_applicant' => $faker->numberBetween(1, 5),
+                'price_psychoTest_applicant' => $faker->numberBetween(100000, 200000),
+                'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>'
             ]);
         }
+
         Plan::find(1)->update([
             'name' => 'Basic',
             'price' => 500000,
+            'discount' => 10,
             'caption' => 'Job Posting Basic Package',
             'job_ads' => '1 Job Ad',
-            'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>',
+            'quiz_applicant' => 0,
+            'price_quiz_applicant' => 0,
+            'psychoTest_applicant' => 0,
+            'price_psychoTest_applicant' => 0,
         ]);
+
         Plan::find(2)->update([
             'name' => 'Plus',
-            'price' => 1000000,
+            'price' => 2000000,
+            'discount' => 20,
             'caption' => 'Job Posting Plus Package',
             'job_ads' => '2 Job Ads + Quiz (Online TPA & TKD)',
-            'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>',
             'isQuiz' => true,
+            'quiz_applicant' => 100,
+            'price_quiz_applicant' => 10000,
+            'psychoTest_applicant' => 0,
+            'price_psychoTest_applicant' => 0,
         ]);
+
         Plan::find(3)->update([
             'name' => 'Enterprise',
-            'price' => 1500000,
+            'price' => 3500000,
+            'discount' => 30,
             'caption' => 'Job Posting Plus Package',
             'job_ads' => '3 Job Ads + Quiz + Psycho Test (Online Interview)',
-            'benefit' => '<ul><li>Waktu tayang 30 hari</li><li>Sistem auto-match untuk memfilter pelamar</li><li>Simpan resume pelamar selamanya</li></ul>',
             'isQuiz' => true,
+            'quiz_applicant' => 100,
+            'price_quiz_applicant' => 10000,
             'isPsychoTest' => true,
+            'psychoTest_applicant' => 5,
+            'price_psychoTest_applicant' => 200000,
             'isBest' => true,
         ]);
     }

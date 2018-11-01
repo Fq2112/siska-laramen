@@ -117,61 +117,65 @@
                 </div>
 
                 <div class="row">
-                    {{--<div class="col-lg-4 col-sm-6 to-animate">
-                        <h3>Sistem pembayaran online yang mudah dan aman.</h3>
-                        <h4>Transaksi online kami didukung oleh Midtrans</h4>
-                        <p align="justify">Kini memasang iklan di SISKA semudah berbelanja online. Setiap transaksi
-                            ditangani oleh Midtrans yang menyediakan sistem pembayaran online yang aman, analisis data
-                            kelola risiko dan layanan konsumen melalui chat untuk kemudahan transaksi.</p>
-                        <p><img src="{{asset('images/logo-midtrans-color.svg')}}" style="width: 70%"></p>
-                    </div>--}}
                     @foreach($plans as $plan)
+                        @php
+                            if($plan->id == 1){
+                                $price = number_format($plan->price -
+                                ($plan->price * $plan->discount/100),2,',','.');
+
+                            } elseif($plan->id == 2){
+                                $price = number_format($plan->price -
+                                ($plan->price * $plan->discount/100),2,',','.');
+
+                            } elseif($plan->id == 3){
+                                $price = number_format($plan->price -
+                                ($plan->price * $plan->discount/100),2,',','.');
+                            }
+
+                            $number = filter_var($plan->job_ads,FILTER_SANITIZE_NUMBER_INT);
+                            $totalAds = array_sum(str_split($number));
+                        @endphp
                         <div class="col-lg-4 to-animate">
                             <div class="price-box {{$plan->isBest == true ? 'popular' : ''}}">
-                                @if($plan->isBest == true)
-                                    <div class="popular-text">Best Value</div>@endif
-                                <h2 class="pricing-plan">{{$plan->name}}</h2>
-                                <div class="price">
-                                    <sup class='currency'>Rp</sup><span id="price-{{$plan->id}}"></span>
-                                    <script>
-                                                @if(preg_replace('/[^0-9]/', '', $plan->price) != "")
-                                        var price = ("{{$plan->price}}" / "{{$plan->price <= 998999 ? 1000 : 1000000}}");
-                                        @if($plan->price <= 998999)
-                                            price = price.toFixed(0);
-                                        @else
-                                            price = price.toFixed(1);
-                                        @endif
-                                        document.getElementById("price-{{$plan->id}}").innerHTML = price +
-                                            "<sub>{{$plan->price <= 998999 ? 'rb' : 'jt'}}</sub> <small>/bln</small>";
-                                        @else
-                                        document.getElementById("price-{{$plan->id}}").innerHTML = "{{$plan->price}}";
-                                        @endif
-                                    </script>
+                                <div class="popular-text"
+                                     style="display: {{$plan->isBest == true ? 'block' : 'none'}};">
+                                    Best Value
                                 </div>
+                                <h2 class="pricing-plan">{{$plan->name}}</h2>
+                                <div class="price-before-disc">Rp{{number_format($plan->price,2,',','.')}}</div>
+                                <div class="price-after-disc">Rp{{$price}}</div>
+                                <div class="discount">Save {{$plan->discount}}%</div>
                                 <p>{{$plan->caption}}</p>
                                 <hr>
-                                @if(preg_replace('/[^0-9]/', '', $plan->price) != "")
-                                    <p align="justify"><strong>Yang bisa Anda dapatkan:</strong></p>
-                                    <ul style="margin-bottom: 0">
-                                        <li><strong>{{$plan->job_ads}}</strong></li>
-                                    </ul>
-                                @else
-                                    <p align="justify"><strong>Please contact us:</strong></p>
-                                @endif
+                                <p align="justify"><strong>Yang bisa Anda dapatkan:</strong></p>
+                                <ul style="margin-bottom: 0">
+                                    <li><strong>{{$plan->job_ads}}</strong></li>
+                                    @if($plan->id == 2)
+                                        <li>Quiz untuk <strong>{{$plan->quiz_applicant}}</strong> applicants</li>
+                                        <li style="list-style: none">(<strong>Rp{{number_format
+                                        ($plan->price_quiz_applicant,0,',','.')}}/applicant</strong>)
+                                        </li>
+                                    @elseif($plan->id == 3)
+                                        <li>Quiz untuk <strong>{{$plan->quiz_applicant}}</strong> applicants</li>
+                                        <li style="list-style: none">(<strong>Rp{{number_format
+                                        ($plan->price_quiz_applicant,0,',','.')}}/applicant</strong>)
+                                        </li>
+                                        <li>Psycho Test untuk <strong>{{$plan->psychoTest_applicant}}</strong>
+                                            applicants
+                                        </li>
+                                        <li style="list-style: none">(<strong>Rp{{number_format
+                                        ($plan->price_psychoTest_applicant,0,',','.')}}/applicant</strong>)
+                                        </li>
+                                    @endif
+                                </ul>
                                 {!! $plan->benefit !!}
-                                @if(preg_replace('/[^0-9]/', '', $plan->price) != "")
-                                    @php
-                                        $number = filter_var($plan->job_ads,FILTER_SANITIZE_NUMBER_INT);
-                                        $totalAds = array_sum(str_split($number));
-                                    @endphp
-                                        <form id="form-plans-{{$plan->id}}" action="{{route('show.job.posting',
+                                <form id="form-plans-{{$plan->id}}" action="{{route('show.job.posting',
                                         ['id'=>encrypt($plan->id)])}}">
-                                        <button type="button" class="btn btn-primary"
-                                                onclick="vacancyCheck('{{$plan->id}}','{{$totalAds}}')">
-                                            Post Now
-                                        </button>
-                                    </form>
-                                @endif
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="vacancyCheck('{{$plan->id}}','{{$totalAds}}')">
+                                        <strong>Post Now</strong>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @endforeach
@@ -486,13 +490,36 @@
             });
             @else
             if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-            ->count()}}' >= job_ads)
-                $("#form-plans-" + id)[0].submit();
-            else
+            ->where('isPost',false)->count()}}' > 0) {
+
+                if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
+                ->where('isPost', false)->count()}}' >= job_ads) {
+                    $("#form-plans-" + id)[0].submit();
+                }
+                else {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: "This package requires at least " + job_ads + " Vacancy that have not been posted yet. It seems that the amount of your vacancy doesn't meet the minimal amount of this package.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00ADB5',
+                        confirmButtonText: 'Yes, redirect me to the Vacancy Setup page.',
+                        showLoaderOnConfirm: true,
+
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                window.location.href = '{{route('agency.vacancy.show')}}';
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                    return false;
+                }
+
+            } else {
                 swal({
                     title: 'ATTENTION!',
-                    text: "This plans package required at least " + job_ads + " Vacancy. It seems that the amount " +
-                        "of your vacancy doesn't meet the minimal amount of this package.",
+                    text: "All of your vacancies have been posted. If you want to post another vacancy, please go to the Vacancy Setup to make another one.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#00ADB5',
@@ -506,7 +533,8 @@
                     },
                     allowOutsideClick: false
                 });
-            return false;
+                return false;
+            }
             @endif
             @endguest
         }

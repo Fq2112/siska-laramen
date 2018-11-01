@@ -102,9 +102,10 @@ class AgencyController extends Controller
 
         $plan = Plan::find(decrypt($id));
         $totalAds = array_sum(str_split(filter_var($plan->job_ads, FILTER_SANITIZE_NUMBER_INT)));
+        $price = $plan->price - ($plan->price * $plan->discount / 100);
 
         return view('_agencies.form-jobPosting', compact('agency', 'paymentCategories', 'vacancies',
-            'plan', 'totalAds'));
+            'plan', 'totalAds', 'price'));
     }
 
     public function getVacancyReviewData($vacancy)
@@ -156,11 +157,15 @@ class AgencyController extends Controller
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', false)->orderByDesc('id')->count();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', false)->count();
 
         $plans = Plan::find($plan)->toArray();
         $totalAds = array_sum(str_split(filter_var($plans['job_ads'], FILTER_SANITIZE_NUMBER_INT)));
-        $plans = array_replace($plans, array('job_ads' => $totalAds));
+        $price = $plans['price'] - ($plans['price'] * $plans['discount'] / 100);
+        $plans = array_replace($plans, array('job_ads' => $totalAds),
+            array('main_feature' => $plans['job_ads']),
+            array('price' => $price),
+            array('rp_price' => number_format($price, 2, ',', '.')));
 
         if ($vacancies < $totalAds) {
             return 0;

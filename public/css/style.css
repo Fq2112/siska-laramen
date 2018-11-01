@@ -924,9 +924,26 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
 }
 
-#fh5co-pricing .price {
-    font-size: 50px;
+#fh5co-pricing .price-before-disc {
+    margin-top: 10px;
+    text-decoration: line-through;
+    font-size: 32px;
+    color: #ddd
+}
+
+#fh5co-pricing .price-after-disc {
+    margin-top: -10px;
+    font-size: 36px;
+    font-weight: 600;
     color: #000;
+}
+
+#fh5co-pricing .discount {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    color: #fa5555;
 }
 
 #fh5co-pricing .price .currency {

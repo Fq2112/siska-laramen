@@ -380,7 +380,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-        $vacancies = Vacancies::where('agency_id', $agency->id)->orderByDesc('isPost')->orderByDesc('id')->get();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->orderByDesc('id')->get();
 
         $provinces = Provinces::all();
         $job_functions = FungsiKerja::all();

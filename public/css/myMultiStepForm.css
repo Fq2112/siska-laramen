@@ -1,7 +1,7 @@
 .msform {
     margin: 0 auto;
     position: relative;
-    width: 75%;
+    /*width: 75%;*/
 }
 
 .msform .dropdown-menu > .active > a {
@@ -105,6 +105,7 @@
 
 #progressbar {
     margin-bottom: 30px;
+    padding-left: 1em;
     overflow: hidden;
     counter-reset: step;
 }

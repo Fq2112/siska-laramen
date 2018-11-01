@@ -133,9 +133,9 @@
                                       aria-hidden="true"></span>
                             </div>
                             <div class="col-lg-6 has-feedback">
-                                <label for="job_ads">Job Ads <span class="required">*</span></label>
+                                <label for="job_ads">Main Feature <span class="required">*</span></label>
                                 <input id="job_ads" type="text" class="form-control" maxlength="191" name="job_ads"
-                                       placeholder="Job ads" required>
+                                       placeholder="Main feature" required>
                                 <span class="fa fa-briefcase form-control-feedback right"
                                       aria-hidden="true"></span>
                             </div>
@@ -202,9 +202,9 @@
                 'placeholder="Caption" value="' + caption + '" required>' +
                 '<span class="fa fa-comment-dots form-control-feedback right" aria-hidden="true"></span></div>' +
                 '<div class="col-lg-6 has-feedback">' +
-                '<label for="job_ads' + id + '">Job Ads <span class="required">*</span></label>' +
+                '<label for="job_ads' + id + '">Main Feature <span class="required">*</span></label>' +
                 '<input id="job_ads' + id + '" type="text" class="form-control" maxlength="191" name="job_ads" ' +
-                'placeholder="Job ads" value="' + jobAds + '" required>' +
+                'placeholder="Main feature" value="' + jobAds + '" required>' +
                 '<span class="fa fa-briefcase form-control-feedback right" aria-hidden="true"></span></div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12">' +

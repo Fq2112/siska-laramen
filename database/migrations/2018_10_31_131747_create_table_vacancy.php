@@ -46,7 +46,7 @@ class CreateTableVacancy extends Migration
             $table->integer('fungsikerja_id')->unsigned();
             $table->foreign('fungsikerja_id')->references('id')->on('fungsi_kerja')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->integer('plan_id')->unsigned();
+            $table->integer('plan_id')->unsigned()->nullable();
             $table->foreign('plan_id')->references('id')->on('plans')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->boolean('isPost')->default(false);

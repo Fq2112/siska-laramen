@@ -32,113 +32,239 @@
                                     <form action="{{route('submit.job.posting')}}" method="post" id="pm-form">
                                         {{csrf_field()}}
                                         <input type="hidden" name="payment_code" id="payment_code">
-                                        <fieldset class="text-center" id="vacancy_setup">
-                                            <h2 class="fs-title">Vacancy Setup</h2>
-                                            <h3 class="fs-subtitle">
-                                                Select {{$totalAds > 1 ? $totalAds : 'one'}} of your vacancies
-                                                that you're going to post</h3>
+                                        <fieldset id="vacancy_setup">
+                                            <div class="row form-group text-center">
+                                                <div class="col-lg-12">
+                                                    <h2 class="fs-title">Vacancy Setup</h2>
+                                                    <h3 class="fs-subtitle">You're only permitted to setup vacancy that
+                                                        haven't been posted yet</h3>
+                                                </div>
+                                            </div>
                                             <div class="row form-group" id="vacancy_list">
                                                 <div class="col-lg-12">
-                                                <span class="help-block">
-                                                    <small class="aj_vacancy"
-                                                           style="text-transform: none;float: left"></small>
-                                                </span>
+                                                    <small>Job Vacancy</small>
                                                     <div class="input-group">
-                                                    <span class="input-group-addon">
-                                                        <i class="fa fa-briefcase"></i></span>
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-briefcase"></i></span>
+                                                        <input id="total_ads" name="total_ads" type="number"
+                                                               class="form-control" placeholder="0"
+                                                               value="{{$totalAds}}" style="width: 15%" min="1"
+                                                               required>
                                                         <select id="vacancy_id" class="form-control selectpicker"
                                                                 title="-- Choose Vacancy --" data-live-search="true"
                                                                 multiple data-max-options="{{$totalAds}}"
-                                                                data-selected-text-format="count > 1"
-                                                                name="vacancy_id[]" data-container="body" required>
+                                                                data-selected-text-format="count > 3"
+                                                                name="vacancy_id[]" data-container="body"
+                                                                data-width="85%" required>
                                                             @foreach($vacancies as $vacancy)
                                                                 <option value="{{$vacancy->id}}">
                                                                     {{$vacancy->judul}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                    <small style="font-size: 10px;color: #00ADB5;float: left">
-                                                        P.S.: You're only permitted to select your vacancy
-                                                        that have not been posted.
-                                                    </small>
+                                                    <span class="help-block">
+                                                        <small class="aj_vacancy"
+                                                               style="text-transform: none;float: left"></small>
+                                                    </span>
                                                 </div>
                                             </div>
-                                            <input type="button" name="next" class="next action-button" value="Next">
+                                            <div class="row form-group">
+                                                @php
+                                                    if($plan->id == 1){
+                                                        $attr_quiz = 'readonly';
+                                                        $attr_psychoTest = 'readonly';
+
+                                                    } elseif($plan->id == 2){
+                                                        $attr_quiz = '';
+                                                        $attr_psychoTest = 'readonly';
+
+                                                    } elseif($plan->id == 3){
+                                                        $attr_quiz = '';
+                                                        $attr_psychoTest = '';
+                                                    }
+                                                @endphp
+                                                <div class="col-lg-6">
+                                                    <small>Total Applicant for Quiz</small>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-grin-beam"></i></span>
+                                                        <input id="total_quiz" name="total_quiz"
+                                                               type="number" class="form-control"
+                                                               placeholder="0" value="{{$plan->quiz_applicant}}"
+                                                               min="1" {{$attr_quiz}} required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6">
+                                                    <small>Total Applicant for Psycho Test</small>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">
+                                                            <i class="fa fa-comments"></i></span>
+                                                        <input id="total_psychoTest" name="total_psychoTest"
+                                                               type="number" class="form-control"
+                                                               placeholder="0" value="{{$plan->psychoTest_applicant}}"
+                                                               min="1" {{$attr_psychoTest}} required>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <input type="button" name="next" class="next action-button"
+                                                   value="Next" style="display: table">
                                         </fieldset>
                                         <fieldset id="order_summary">
                                             <h2 class="fs-title text-center">Order Summary</h2>
                                             <h3 class="fs-subtitle text-center">
                                                 Make sure your order details and the vacancy that you want
                                                 to post is correct</h3>
-                                            <small>Plans Details
-                                                <span id="show_plans_settings" class="pull-right"
-                                                      style="color: #00ADB5;cursor: pointer; font-size: 15px">
+                                            <div class="row">
+                                                <div class="col-lg-7">
+                                                    <small>Plan Details
+                                                        <span id="show_plans_settings" class="pull-right"
+                                                              style="color: #00ADB5;cursor: pointer; font-size: 15px">
                                                 <i class="fa fa-edit"></i>&nbsp;EDIT</span>
-                                            </small>
-                                            <hr class="hr-divider">
-                                            <ul class="list-inline stats_plans" style="margin-top: -1em">
-                                                <li>
-                                                    <a class="tag tag-plans" id="plans_name">
-                                                        <i class="fa fa-thumbtack"></i>&ensp;
-                                                        <strong style="text-transform: uppercase">
-                                                            {{$plan->name}}</strong> Package
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="tag tag-plans" id="plans_job_ads">
-                                                        <i class="fa fa-briefcase"></i>&ensp;
-                                                        <strong>{{$totalAds}}</strong> Job
-                                                        {{$totalAds > 1 ? 'Ads' : 'Ad'}}
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a class="tag tag-plans" id="plan_price">
-                                                        <i class="fa fa-money-bill-wave"></i>&ensp;</a>
-                                                </li>
-                                            </ul>
-                                            <div id="plans_settings" style="display: none">
-                                                <div class="row form-group">
-                                                    <div class="col-lg-12">
-                                                        <div class="input-group">
+                                                    </small>
+                                                    <hr class="hr-divider">
+                                                    <ul class="list-inline stats_plans" style="margin-top: -1em">
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-thumbtack"></i>&ensp;
+                                                                <strong style="text-transform: uppercase"
+                                                                        class="plans_name">
+                                                                    {{$plan->name}}</strong> &ensp;|&ensp;
+                                                                <i class='fa fa-money-bill-wave'>
+                                                                </i>&ensp;<strong class="plan_price">Rp{{number_format
+                                                                ($price,2,',','.')}}</strong>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-briefcase"></i>&ensp;
+                                                                <strong class="main_feature">{{$plan->job_ads}}</strong>
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-grin-beam"></i>&ensp;
+                                                                Total Applicant for Quiz:
+                                                                <strong class="quiz_applicant">
+                                                                    {{$plan->quiz_applicant}}</strong> applicants
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-comments"></i>&ensp;
+                                                                Total Applicant for Psycho Test:
+                                                                <strong class="psychoTest_applicant">
+                                                                    {{$plan->psychoTest_applicant}}</strong> applicants
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                    <div id="plans_settings" style="display: none">
+                                                        <div class="row form-group">
+                                                            <div class="col-lg-12">
+                                                                <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-thumbtack"></i>
                                                         </span>
-                                                            <select class="form-control selectpicker" name="plans_id"
-                                                                    id="plans_id" required>
-                                                                @foreach(\App\Plan::all() as $row)
-                                                                    <option value="{{$row->id}}" {{$row->id == $plan->id
+                                                                    <select class="form-control selectpicker"
+                                                                            name="plans_id"
+                                                                            id="plans_id" required>
+                                                                        @foreach(\App\Plan::all() as $row)
+                                                                            <option value="{{$row->id}}" {{$row->id == $plan->id
                                                                     || (collect(old('plans_id'))->contains($row->id)) ?
-                                                                    'selected' : ''}} {{preg_replace
-                                                                    ('/[^0-9]/', '', $row->price) == "" ? 'disabled' :
-                                                                    ''}}>{{$row->name}}</option>
-                                                                @endforeach
-                                                            </select>
+                                                                    'selected' : ''}}>{{$row->name}}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                        <small style="font-size: 10px;color: #00ADB5;float: left">
-                                                            P.S.: If you're going to use ENTERPRISE Package, please
-                                                            contact us:
-                                                            <a href="tel:+628563094333">+62-85-6309 4333</a> |
-                                                            <a href="mailto:info@karir.org">info@karir.org</a>.
-                                                        </small>
                                                     </div>
                                                 </div>
+                                                <div class="col-lg-5">
+                                                    <small>Billing Details</small>
+                                                    <hr class="hr-divider">
+                                                    <table id="stats-billing" style="font-size: 16px">
+                                                        <tr>
+                                                            <td>
+                                                                <strong style="text-transform: uppercase"
+                                                                        class="plans_name">
+                                                                    {{$plan->name}}</strong>
+                                                            </td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center"><strong>1</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong class="plan_price">
+                                                                    Rp{{number_format($price,2,',','.')}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total Job Ad</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center">
+                                                                <strong class="total_vacancy">{{$totalAds}}</strong>
+                                                            </td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong class="total_price_vacancy">
+                                                                    Rp{{number_format(0,2,',','.')}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-placement="left" data-toggle="tooltip"
+                                                            title="Total Applicant for">
+                                                            <td>Quiz</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center">
+                                                                <strong class="bill_quiz_applicant">
+                                                                    {{$plan->quiz_applicant}}</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong>Rp{{number_format(0,2,',','.')}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-placement="left" data-toggle="tooltip"
+                                                            title="Total Applicant for">
+                                                            <td>Psycho Test</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center">
+                                                                <strong class="bill_psychoTest_applicant">
+                                                                    {{$plan->psychoTest_applicant}}</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong>Rp{{number_format(0,2,',','.')}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="border-top: 1px solid #eee">
+                                                            <td>Amount to Pay</td>
+                                                            <td>&emsp;</td>
+                                                            <td>&emsp;</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong class="subtotal"
+                                                                        style="font-size: 18px;color: #00adb5"></strong>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
                                             </div>
-                                            <small>Vacancy List
-                                                <span id="show_vacancy_setup" class="pull-right"
-                                                      style="color: #00ADB5;cursor: pointer; font-size: 15px">
+                                            <div class="row" style="margin-top: 1em;">
+                                                <div class="col-lg-12">
+                                                    <small>Vacancy List
+                                                        <span id="show_vacancy_setup" class="pull-right"
+                                                              style="color: #00ADB5;cursor: pointer; font-size: 15px">
                                                 <i class="fa fa-edit"></i>&nbsp;EDIT</span>
-                                            </small>
-                                            <hr class="hr-divider">
-                                            <div id="vacancy_data"></div>
+                                                    </small>
+                                                    <hr class="hr-divider">
+                                                    <div id="vacancy_data"></div>
+                                                </div>
+                                            </div>
                                             <input type="button" name="previous" class="previous action-button"
                                                    value="Previous">
-                                            <input type="button" name="next" class="next action-button" value="Next">
+                                            <input type="button" name="next" class="next action-button"
+                                                   value="Next">
                                         </fieldset>
                                         <fieldset id="payment_method">
                                             <h2 class="fs-title text-center">Payment Method</h2>
                                             <h3 class="fs-subtitle text-center">Select one of the following payment
-                                                methods
-                                                before completing your payment</h3>
+                                                methods before completing your payment</h3>
                                             <hr class="hr-divider">
                                             <div class="panel-group accordion" style="margin-top: -1em">
                                                 @foreach($paymentCategories as $row)
@@ -221,8 +347,8 @@
                                                                                      style="font-size: 13px">
                                                                                     Your credit card will be charged
                                                                                     <strong class="subtotal"></strong>
-                                                                                    every
-                                                                                    month to renew your Vacancy Status.
+                                                                                    every month to renew your Vacancy
+                                                                                    Status.
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -253,7 +379,11 @@
                                         </fieldset>
                                     </form>
                                     @if(session('confirmAgency'))
-                                        @php $pm = \App\PaymentMethod::find(session('confirmAgency')->payment_method_id)
+                                        @php
+                                            $plan_price = \App\Plan::find(old('plans_id'))->price -
+                                            (\App\Plan::find(old('plans_id'))->price *
+                                            \App\Plan::find(old('plans_id'))->discount/100);
+                                            $pm = \App\PaymentMethod::find(session('confirmAgency')->payment_method_id);
                                         @endphp
                                         <fieldset id="proceeds" style="margin: 0 4%">
                                             <div class="row">
@@ -377,7 +507,9 @@
                                                                     ->name}}</strong> Package
                                                             </td>
                                                             <td>&emsp;</td>
-                                                            <td align="right"><strong id="subtotal"></strong></td>
+                                                            <td align="right">
+                                                                <strong>{{number_format($plan_price,2,',','.')}}</strong>
+                                                            </td>
                                                         </tr>
                                                         <tr style="border-bottom: 1px solid #ccc">
                                                             <td>Unique Code</td>
@@ -463,14 +595,11 @@
     <script src="{{asset('js/jquery.cc.js')}}"></script>
     <script src="{{asset('js/TweenMax.min.js')}}"></script>
     <script>
-        var price = ("{{$plan->price}}" / "{{$plan->price <= 998999 ? 1000 : 1000000}}"), subtotal;
-        price = price.toFixed({{$plan->price <= 998999 ? 0 : 1}});
+        var old_total_ads = '{{$totalAds}}', new_total_ads = '',
+            price_per_ads = '{{\App\Plan::find(1)->price - (\App\Plan::find(1)->price * \App\Plan::find(1)->discount/100)}}',
+            plan_price = '{{$price}}', subtotal = '';
 
-        subtotal = thousandSeparator("{{$plan->price}}");
-        $(".subtotal").text("Rp" + subtotal + ",00");
-
-        $("#plan_price").html("<i class='fa fa-money-bill-wave'></i>&ensp;Rp<strong>" + price +
-            "{{$plan->price <= 998999 ? 'rb' : 'jt'}}</strong>/bln");
+        $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
 
         $("#show_plans_settings").click(function () {
             $(".stats_plans").toggle(300);
@@ -493,6 +622,19 @@
                 });
                 $("#order_summary .previous").click();
             }
+        });
+
+        $("#total_ads").on("blur", function () {
+            if ($(this).val() == "0" || $(this).val() == "") {
+                $(this).val('{{$totalAds}}');
+            }
+            new_total_ads = $(this).val();
+            $(".total_vacancy").text(old_total_ads + '(+' + parseInt(new_total_ads - old_total_ads) + ')');
+            $(".total_price_vacancy").text('Rp' +
+                thousandSeparator(parseInt((new_total_ads - old_total_ads) * price_per_ads)));
+            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads);
+            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
+            $("#vacancy_id").val('default').selectpicker({maxOptions: new_total_ads}).selectpicker('refresh');
         });
 
         $("#vacancy_id").on('change', function () {
@@ -555,16 +697,22 @@
             });
         });
 
+        $("#total_quiz").on("blur", function () {
+            $(".bill_quiz_applicant").text($(this).val());
+        });
+        $("#total_psychoTest").on("blur", function () {
+            $(".bill_psychoTest_applicant").text($(this).val());
+        });
+
         $("#plans_id").on('change', function () {
-            var price, totalAds;
             $.get('{{route('get.plansReviewData',['plan'=>''])}}/' + $(this).val(), function (data) {
-                subtotal = thousandSeparator(data.price);
+                plan_price = data.price;
+                old_total_ads = data.job_ads;
                 if (data == 0) {
                     $("#plans_id").val('default').selectpicker("refresh");
                     swal({
                         title: 'ATTENTION!',
-                        text: "It seems that the amount of your vacancy doesn't meet the minimal amount of " +
-                            "this plans package.",
+                        text: "This package requires at least " + data.job_ads + " Vacancy that have not been posted yet. It seems that the amount of your vacancy doesn't meet the minimal amount of this package.",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#00ADB5',
@@ -579,26 +727,15 @@
                         allowOutsideClick: false
                     });
                     return false;
+
                 } else {
                     $("#show_plans_settings").click();
-                    if (data.price <= 998999) {
-                        price = data.price / 1000;
-                        price = price.toFixed(0) + 'rb';
-                    } else {
-                        price = data.price / 1000000;
-                        price = price.toFixed(1) + 'jt';
-                    }
-                    if (data.job_ads > 1) {
-                        totalAds = 'Job Ads';
-                    } else {
-                        totalAds = 'Job Ad';
-                    }
-                    $("#plans_name").html('<i class="fa fa-thumbtack"></i>&ensp;' +
-                        '<strong style="text-transform: uppercase">' + data.name + '</strong> Package');
-                    $("#plans_job_ads").html('<i class="fa fa-briefcase"></i>&ensp;' +
-                        '<strong>' + data.job_ads + '</strong> ' + totalAds);
-                    $("#plan_price").html('<i class="fa fa-money-bill-wave"></i>&ensp;' +
-                        'Rp<strong>' + price + '</strong>/bln');
+                    $(".plans_name").text(data.name);
+                    $(".main_feature").text(data.main_feature);
+                    $(".total_vacancy").text(data.job_ads);
+                    $(".quiz_applicant, .bill_quiz_applicant").text(data.quiz_applicant);
+                    $(".psychoTest_applicant, .bill_psychoTest_applicant").text(data.psychoTest_applicant);
+                    $(".plan_price").text('Rp' + data.rp_price);
                     $(".subtotal").text("Rp" + subtotal + ",00");
 
                     if (data.id == 1) {
@@ -609,13 +746,13 @@
                             type: 'warning',
                             timer: '5000'
                         });
-                        $("#vacancy_setup .fs-subtitle").text("Select one of your vacancies that " +
-                            "you're going to post");
-                        $("#vacancy_id").val('default')
-                            .selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
+                        $("#total_ads").val(data.job_ads);
+                        $("#total_quiz").val(data.quiz_applicant).prop('readonly', true);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('readonly', true);
+                        $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
-                    }
-                    if (data.id == 2) {
+
+                    } else if (data.id == 2) {
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select PLUS Package, it means you are permitted to perform ' +
@@ -623,10 +760,24 @@
                             type: 'warning',
                             timer: '5000'
                         });
-                        $("#vacancy_setup .fs-subtitle").text("Select " + data.job_ads + " of your vacancies that " +
-                            "you're going to post");
-                        $("#vacancy_id").val('default')
-                            .selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
+                        $("#total_ads").val(data.job_ads);
+                        $("#total_quiz").val(data.quiz_applicant).prop('readonly', false);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('readonly', true);
+                        $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
+                        $("#order_summary .previous").click();
+
+                    } else if (data.id == 3) {
+                        swal({
+                            title: 'ATTENTION!',
+                            text: 'You\'ve just select ENTERPRISE Package, it means you are permitted to perform ' +
+                                'multi-select of your vacancies.',
+                            type: 'warning',
+                            timer: '5000'
+                        });
+                        $("#total_ads").val(data.job_ads);
+                        $("#total_quiz").val(data.quiz_applicant).prop('readonly', false);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('readonly', false);
+                        $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
                     }
                 }
@@ -824,9 +975,8 @@
         @endforeach
         $(".countdown-h2").html('<sub>Expired <strong>Time</strong>: {{$expDay." at ".$expTime}}</sub>');
 
-        var billsub = '{{\App\Plan::find(old('plans_id'))->price}}', rpbillSub = thousandSeparator(billsub),
+        var billsub = '{{\App\Plan::find(old('plans_id'))->price}}',
             code = '{{session('confirmAgency')->payment_code}}', billTotal = 0, $strTotal, $first, $last;
-        $("#subtotal").text("Rp" + rpbillSub);
         @if(\App\PaymentMethod::find($confirm->payment_method_id)->payment_category_id == 1)
         $("#uCode").text("-Rp" + code);
         billTotal += parseInt(parseInt(billsub) - code);
