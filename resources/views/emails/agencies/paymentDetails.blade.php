@@ -524,22 +524,68 @@
                                                                 <tr>
                                                                     <td>
                                                                         <strong style="text-transform: uppercase">
-                                                                            {{$data['plans']->name}}</strong> Package
+                                                                            {{$data['plans']->name}}</strong>
+                                                                    </td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="center"><strong>-</strong></td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="right">
+                                                                        <strong>Rp{{number_format
+                                                                        ($data['plan_price'],0,',','.')}}</strong>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>Total Job Ad</td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="center">
+                                                                        <strong>{{$data['totalVacancy']}}</strong>
                                                                     </td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <strong>Rp{{number_format($data['plans']->price,0,"",".")}}</strong>
+                                                                        <strong>Rp{{number_format
+                                                                        ($data['price_totalVacancy'],0,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
-                                                                <tr style="border-bottom: 1px solid #ccc">
+                                                                <tr data-placement="left" data-toggle="tooltip"
+                                                                    title="Total Applicant for">
+                                                                    <td>Quiz</td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="center">
+                                                                        <strong>{{$data['totalQuizApplicant']}}</strong>
+                                                                    </td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="right">
+                                                                        <strong>Rp{{number_format
+                                                                        ($data['price_totalQuiz'],0,',','.')}}</strong>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr data-placement="left" data-toggle="tooltip"
+                                                                    title="Total Applicant for">
+                                                                    <td>Psycho Test</td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="center">
+                                                                        <strong>{{$data['totalPsychoTest']}}</strong>
+                                                                    </td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="right">
+                                                                        <strong>Rp{{number_format
+                                                                        ($data['price_totalPsychoTest'],0,',','.')}}
+                                                                        </strong>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
                                                                     <td>Unique Code</td>
+                                                                    <td>&emsp;</td>
+                                                                    <td align="center"><strong>-</strong></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>-Rp{{$data['payment_code']}}</strong>
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td>Amount to Transfer</td>
+                                                                <tr style="border-top: 1px solid #eee">
+                                                                    <td><strong>TOTAL</strong></td>
+                                                                    <td>&emsp;</td>
+                                                                    <td>&emsp;</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         @if($data['payment_category']->id == 1)
@@ -552,7 +598,7 @@
                                                                 </tr>
                                                                 @if($data['payment_category']->id == 1)
                                                                     <tr>
-                                                                        <td colspan="3" align="right"
+                                                                        <td colspan="5" align="right"
                                                                             style="font-size:12px;color:#fa5555;font-weight:bold;">
                                                                             Transfer right up to the last 3 digits
                                                                         </td>
@@ -621,7 +667,8 @@
                                                         <td>
                                                             <small><strong>Payment Status</strong></small>
                                                             <hr class="hr-divider">
-                                                            <span>Waiting for Payment</span>
+                                                            <span>{{$data['confirmAgency']->isPaid == false ?
+                                                            'Waiting for Payment' : 'Payment Successful'}}</span>
                                                         </td>
                                                     </tr>
                                                 </table>

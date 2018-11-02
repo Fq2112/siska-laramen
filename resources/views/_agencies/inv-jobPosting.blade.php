@@ -170,42 +170,67 @@
                        width="100%" cellspacing="0" cellpadding="0">
                     <thead style="font-size: 14px;">
                     <tr>
-                        <th style="width: 270px; font-weight: 600; text-align: left; padding: 0 5px 15px 15px;">
-                            Vacancy
+                        <th style="width: 270px; font-weight: 700; text-align: left; padding: 0 5px 15px 15px;">Item
+                            Details
                         </th>
-                        <th colspan="2" style="width: 120px; font-weight: 600; padding: 0 5px 15px;">Plans Package</th>
-                        <th style="width: 115px; font-weight: 600; padding: 0 5px 15px;">Price</th>
-                        <th style="width: 115px; font-weight: 600; text-align: right; padding: 0 30px 15px 5px;">
+                        <th colspan="2" style="width: 120px; font-weight: 700; padding: 0 5px 15px;">Qty.</th>
+                        <th style="width: 115px; font-weight: 700; padding: 0 5px 15px;">Price</th>
+                        <th style="width: 115px; font-weight: 700; text-align: right; padding: 0 30px 15px 5px;">
                             Subtotal
                         </th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr style="font-size: 13px;">
-                        <td style="width: 270px;text-align: left; padding: 8px 5px 8px 15px;">
-                            <table style="width: 100%; border-collapse: collapse;" width="100%"
-                                   cellspacing="0" cellpadding="0">
-                                <tbody>
-                                @foreach($vacancies as $vacancy)
-                                    <tr>
-                                        <td style="text-align: left; padding: .5em 0">{{$vacancy->judul}}</td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">
+                            <span style="text-transform: uppercase">{{$pl->name}} Package</span>
+                            <ul style="margin: 0 auto">
+                                <li><strong>{{$pl->job_ads}}</strong></li>
+                                <li>Quiz for <strong>{{$pl->quiz_applicant}}</strong> applicants</li>
+                                <li>Psycho Test for <strong>{{$pl->psychoTest_applicant}}</strong> applicants</li>
+                            </ul>
                         </td>
-                        <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">{{$pl->name}}</td>
-                        <td style="width: 115px; padding: 8px 5px;" width="115">Rp{{number_format($pl->price,2,",",".")}}</td>
+                        <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
+                            <strong>&ndash;</strong></td>
+                        <td style="width: 115px; padding: 8px 5px;" width="115">
+                            Rp{{number_format($plan_price,2,",",".")}}</td>
                         <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
-                            Rp{{number_format($pl->price,2,",",".")}}</td>
+                            Rp{{number_format($plan_price,2,",",".")}}</td>
                     </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
                         <td colspan="4"
-                            style="width: 270px;font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
-                            Subtotal
+                            style="width: 270px;font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">Subtotal
                         </td>
                         <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
-                            width="115">Rp{{number_format($pl->price,2,",",".")}}</td>
+                            width="115">Rp{{number_format($plan_price,2,",",".")}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table style="width: 100%; text-align: center; border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 15px 0;"
+                       width="100%" cellspacing="0" cellpadding="0">
+                    <tbody>
+                    <tr style="font-size: 13px;">
+                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">
+                            <span style="text-transform: uppercase">Job Vacancy</span>
+                            <ul style="margin: 0 auto">
+                                @foreach($vacancies as $vacancy)
+                                    <li>{{$vacancy->judul}}</li>
+                                @endforeach
+                            </ul>
+                        </td>
+                        <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
+                            <strong>{{$totalVacancy}}</strong></td>
+                        <td style="width: 115px; padding: 8px 5px;" width="115">
+                            Rp{{number_format($price_per_ads,2,",",".")}}</td>
+                        <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
+                            Rp{{number_format($price_totalVacancy,2,",",".")}}</td>
+                    </tr>
+                    <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
+                        <td colspan="4"
+                            style="width: 270px;font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">Subtotal
+                        </td>
+                        <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
+                            width="115">Rp{{number_format($plan_price + $price_totalVacancy,2,",",".")}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -213,22 +238,42 @@
                        cellpadding="0">
                     <tbody>
                     <tr style="font-size: 13px;">
-                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">
-                            Unique Code
+                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">Quiz
+                            (Online TPA & TKD)
                         </td>
-                        <td colspan="2" style="width: 120px;padding: 8px 5px">&ndash;</td>
-                        <td style="width: 115px; padding: 8px 5px;" width="115">&ndash;</td>
+                        <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
+                            <strong>{{$totalQuizApplicant}}</strong></td>
+                        <td style="width: 115px; padding: 8px 5px;" width="115">
+                            Rp{{number_format($pl->price_quiz_applicant,2,",",".")}}</td>
                         <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
-                            -Rp{{$payment_code}}
+                            Rp{{number_format($price_totalQuiz,2,",",".")}}</td>
+                    </tr>
+                    <tr style="font-size: 13px;">
+                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">Psycho
+                            Test (Online Interview)
                         </td>
+                        <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
+                            <strong>{{$totalPsychoTest}}</strong></td>
+                        <td style="width: 115px; padding: 8px 5px;" width="115">
+                            Rp{{number_format($pl->price_psychoTest_applicant,2,",",".")}}</td>
+                        <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
+                            Rp{{number_format($price_totalPsychoTest,2,",",".")}}</td>
+                    </tr>
+                    <tr style="font-size: 13px;">
+                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">Unique
+                            Code
+                        </td>
+                        <td colspan="2" style="width: 120px;padding: 8px 5px"><strong>&ndash;</strong></td>
+                        <td style="width: 115px; padding: 8px 5px;" width="115">Rp{{$payment_code}}</td>
+                        <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
+                            -Rp{{$payment_code}}</td>
                     </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
                         <td colspan="4" style="font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
                             Subtotal
                         </td>
                         <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
-                            width="115">-Rp{{$payment_code}}
-                        </td>
+                            width="115">Rp{{number_format($total,2,",",".")}}</td>
                     </tr>
                     </tbody>
                 </table>

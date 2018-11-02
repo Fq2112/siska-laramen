@@ -47,14 +47,13 @@
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-briefcase"></i></span>
                                                         <input id="total_ads" name="total_ads" type="number"
-                                                               class="form-control" placeholder="0"
-                                                               value="{{$totalAds}}" style="width: 15%" min="1"
-                                                               required>
+                                                               class="form-control" placeholder="0" style="width: 15%"
+                                                               value="{{$totalAds}}" min="{{$totalAds}}" required>
                                                         <select id="vacancy_id" class="form-control selectpicker"
                                                                 title="-- Choose Vacancy --" data-live-search="true"
                                                                 multiple data-max-options="{{$totalAds}}"
                                                                 data-selected-text-format="count > 3"
-                                                                name="vacancy_id[]" data-container="body"
+                                                                name="vacancy_ids[]" data-container="body"
                                                                 data-width="85%" required>
                                                             @foreach($vacancies as $vacancy)
                                                                 <option value="{{$vacancy->id}}">
@@ -91,7 +90,7 @@
                                                         <input id="total_quiz" name="total_quiz"
                                                                type="number" class="form-control"
                                                                placeholder="0" value="{{$plan->quiz_applicant}}"
-                                                               min="1" {{$attr_quiz}} required>
+                                                               min="{{$plan->quiz_applicant}}" {{$attr_quiz}} required>
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-6">
@@ -100,9 +99,10 @@
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-comments"></i></span>
                                                         <input id="total_psychoTest" name="total_psychoTest"
-                                                               type="number" class="form-control"
-                                                               placeholder="0" value="{{$plan->psychoTest_applicant}}"
-                                                               min="1" {{$attr_psychoTest}} required>
+                                                               type="number" class="form-control" placeholder="0"
+                                                               value="{{$plan->psychoTest_applicant}}"
+                                                               min="{{$plan->psychoTest_applicant}}"
+                                                               {{$attr_psychoTest}} required>
                                                     </div>
                                                 </div>
                                             </div>
@@ -189,7 +189,7 @@
                                                                     {{$plan->name}}</strong>
                                                             </td>
                                                             <td>&emsp;</td>
-                                                            <td align="center"><strong>1</strong></td>
+                                                            <td align="center"><strong>-</strong></td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
                                                                 <strong class="plan_price">
@@ -217,7 +217,8 @@
                                                                     {{$plan->quiz_applicant}}</strong></td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
-                                                                <strong>Rp{{number_format(0,2,',','.')}}</strong>
+                                                                <strong class="total_price_quiz">
+                                                                    Rp{{number_format(0,2,',','.')}}</strong>
                                                             </td>
                                                         </tr>
                                                         <tr data-placement="left" data-toggle="tooltip"
@@ -229,11 +230,12 @@
                                                                     {{$plan->psychoTest_applicant}}</strong></td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
-                                                                <strong>Rp{{number_format(0,2,',','.')}}</strong>
+                                                                <strong class="total_price_psychoTest">
+                                                                    Rp{{number_format(0,2,',','.')}}</strong>
                                                             </td>
                                                         </tr>
                                                         <tr style="border-top: 1px solid #eee">
-                                                            <td>Amount to Pay</td>
+                                                            <td><strong>SUBTOTAL</strong></td>
                                                             <td>&emsp;</td>
                                                             <td>&emsp;</td>
                                                             <td>&emsp;</td>
@@ -373,6 +375,7 @@
                                                     <hr class="hr-divider" style="margin-bottom: 0">
                                                 @endforeach
                                             </div>
+                                            <input type="hidden" name="total_payment" id="total_payment">
                                             <input type="button" name="previous" class="previous action-button"
                                                    value="Previous">
                                             <input type="button" class="submit action-button" value="Submit">
@@ -380,11 +383,49 @@
                                     </form>
                                     @if(session('confirmAgency'))
                                         @php
-                                            $plan_price = \App\Plan::find(old('plans_id'))->price -
-                                            (\App\Plan::find(old('plans_id'))->price *
-                                            \App\Plan::find(old('plans_id'))->discount/100);
                                             $pm = \App\PaymentMethod::find(session('confirmAgency')->payment_method_id);
+                                            $pl = \App\Plan::find(old('plans_id'));
+                                            $plan_price = $pl->price - ($pl->price * $pl->discount/100);
+                                            $price_per_ads = \App\Plan::find(1)->price -
+                                            (\App\Plan::find(1)->price * \App\Plan::find(1)->discount/100);
+
+                                            $old_totalVacancy = array_sum(str_split(filter_var
+                                            ($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
+                                            $totalVacancy = $old_totalVacancy;
+                                            $diffTotalVacancy = old('total_ads') - $old_totalVacancy;
+                                            $price_totalVacancy = 0;
+                                            if($diffTotalVacancy > 0){
+                                                $totalVacancy = $old_totalVacancy."(+".$diffTotalVacancy.")";
+                                                $price_totalVacancy = number_format
+                                                ($diffTotalVacancy * $price_per_ads,0,',','.');
+                                            }
+
+                                            $old_totalQuizApplicant = $pl->quiz_applicant;
+                                            $totalQuizApplicant = $old_totalQuizApplicant;
+                                            $diffTotalQuizApplicant = old('total_quiz') - $old_totalQuizApplicant;
+                                            $price_totalQuiz = 0;
+                                            if($diffTotalQuizApplicant > 0){
+                                                $totalQuizApplicant = $old_totalQuizApplicant.
+                                                "(+".$diffTotalQuizApplicant.")";
+                                                $price_totalQuiz = number_format
+                                                ($diffTotalQuizApplicant * $pl->price_quiz_applicant,0,',','.');
+                                            }
+
+                                            $old_totalPsychoTest = $pl->psychoTest_applicant;
+                                            $totalPsychoTest = $old_totalPsychoTest;
+                                            $diffTotalPsychoTest = old('total_psychoTest') - $old_totalPsychoTest;
+                                            $price_totalPsychoTest = 0;
+                                            if($diffTotalPsychoTest > 0){
+                                                $totalPsychoTest = $old_totalPsychoTest."(+".$diffTotalPsychoTest.")";
+                                                $price_totalPsychoTest = number_format
+                                                ($diffTotalPsychoTest * $pl->price_psychoTest_applicant,0,',','.');
+                                            }
                                         @endphp
+                                        <style>
+                                            .msform {
+                                                width: 75%;
+                                            }
+                                        </style>
                                         <fieldset id="proceeds" style="margin: 0 4%">
                                             <div class="row">
                                                 <div class="col-lg-12 alert alert-info">
@@ -453,7 +494,7 @@
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-lg-7" id="stats_payment">
+                                                <div class="col-lg-6" id="stats_payment">
                                                     @if($pm->payment_category_id == 1)
                                                         <small>Banking Details</small>
                                                     @elseif($pm->payment_category_id == 4)
@@ -462,7 +503,7 @@
                                                     <hr class="hr-divider">
                                                     <div class="media">
                                                         <div class="media-left media-middle">
-                                                            <img width="128" class="media-object"
+                                                            <img width="100" class="media-object"
                                                                  src="{{asset('images/paymentMethod/'.$pm->logo)}}">
                                                         </div>
                                                         <div class="media-body">
@@ -497,28 +538,65 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-5" id="stats_billing">
+                                                <div class="col-lg-6" id="stats_billing">
                                                     <small>Billing Details</small>
                                                     <hr class="hr-divider">
                                                     <table id="stats-billing" style="font-size: 16px">
                                                         <tr>
                                                             <td>
-                                                                <strong style="text-transform: uppercase">{{\App\Plan::find(old('plans_id'))
-                                                                    ->name}}</strong> Package
+                                                                <strong style="text-transform: uppercase">{{$pl->name}}</strong>
+                                                            </td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center"><strong>-</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong>Rp{{number_format($plan_price,0,',','.')}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Total Job Ad</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center">
+                                                                <strong>{{$totalVacancy}}</strong>
                                                             </td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
-                                                                <strong>{{number_format($plan_price,2,',','.')}}</strong>
+                                                                <strong>Rp{{$price_totalVacancy}}</strong>
                                                             </td>
                                                         </tr>
-                                                        <tr style="border-bottom: 1px solid #ccc">
+                                                        <tr data-placement="left" data-toggle="tooltip"
+                                                            title="Total Applicant for">
+                                                            <td>Quiz</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center">
+                                                                <strong>{{$totalQuizApplicant}}</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong>Rp{{$price_totalQuiz}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-placement="left" data-toggle="tooltip"
+                                                            title="Total Applicant for">
+                                                            <td>Psycho Test</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center">
+                                                                <strong>{{$totalPsychoTest}}</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td align="right">
+                                                                <strong>Rp{{$price_totalPsychoTest}}</strong>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
                                                             <td>Unique Code</td>
+                                                            <td>&emsp;</td>
+                                                            <td align="center"><strong>-</strong></td>
                                                             <td>&emsp;</td>
                                                             <td align="right"><strong id="uCode"></strong></td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>Amount to {{$pm->payment_category_id == 1 ?
-                                                            'Transfer' : 'Pay'}}</td>
+                                                        <tr style="border-top: 1px solid #eee">
+                                                            <td><strong>TOTAL</strong></td>
+                                                            <td>&emsp;</td>
+                                                            <td>&emsp;</td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
                                                                 <strong id="toPay"
@@ -527,7 +605,7 @@
                                                         </tr>
                                                         @if($pm->payment_category_id == 1)
                                                             <tr>
-                                                                <td colspan="3" align="right"
+                                                                <td colspan="5" align="right"
                                                                     style="font-size:12px;color:#fa5555;font-weight:bold;">
                                                                     Transfer right up to the last 3 digits
                                                                 </td>
@@ -595,9 +673,18 @@
     <script src="{{asset('js/jquery.cc.js')}}"></script>
     <script src="{{asset('js/TweenMax.min.js')}}"></script>
     <script>
-        var old_total_ads = '{{$totalAds}}', new_total_ads = '',
+        var plan_price = '{{$price}}', subtotal = 0, payment_code_value = 0,
+            old_total_ads = '{{$totalAds}}',
+            new_total_ads = '{{$totalAds}}',
             price_per_ads = '{{\App\Plan::find(1)->price - (\App\Plan::find(1)->price * \App\Plan::find(1)->discount/100)}}',
-            plan_price = '{{$price}}', subtotal = '';
+
+            old_total_quiz = '{{$plan->quiz_applicant}}',
+            new_total_quiz = '{{$plan->quiz_applicant}}',
+            price_per_quiz = '{{$plan->price_quiz_applicant}}',
+
+            old_total_psychoTest = '{{$plan->psychoTest_applicant}}',
+            new_total_psychoTest = '{{$plan->psychoTest_applicant}}',
+            price_per_psychoTest = '{{$plan->price_psychoTest_applicant}}';
 
         $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
 
@@ -610,31 +697,74 @@
             $("#order_summary .previous").click();
         });
 
-        $("#vacancy_setup .next").click(function () {
-            if (!$("#vacancy_id").val()) {
-                $("#vacancy_list").addClass('has-error');
-                $(".aj_vacancy").text('Please select a vacancy in order to posting it.');
-                swal({
-                    title: 'ATTENTION!',
-                    text: 'There\'s empty field! Please fill in all the form fields with a valid data.',
-                    type: 'warning',
-                    timer: '3500'
-                });
-                $("#order_summary .previous").click();
+        $("#total_ads").on("change", function () {
+            if ($(this).val() == "0" || $(this).val() == "" || $(this).val() < old_total_ads) {
+                $(this).val(old_total_ads);
             }
+
+            new_total_ads = $(this).val();
+
+            if (parseInt(new_total_ads - old_total_ads) > 0) {
+                $(".total_vacancy").text(old_total_ads + '(+' + parseInt(new_total_ads - old_total_ads) + ')');
+                $(".total_price_vacancy").text('Rp' +
+                    thousandSeparator(parseInt((new_total_ads - old_total_ads) * price_per_ads)) + ',00');
+            } else {
+                $(".total_vacancy").text(old_total_ads);
+                $(".total_price_vacancy").text('Rp0,00');
+            }
+
+            $("#vacancy_id").val('default').selectpicker({maxOptions: new_total_ads}).selectpicker('refresh');
+
+            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
+                parseInt((new_total_quiz - old_total_quiz) * price_per_quiz) +
+                parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest);
+            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         });
 
-        $("#total_ads").on("blur", function () {
-            if ($(this).val() == "0" || $(this).val() == "") {
-                $(this).val('{{$totalAds}}');
+        $("#total_quiz").on("change", function () {
+            if ($(this).val() == "0" || $(this).val() == "" || $(this).val() < old_total_quiz) {
+                $(this).val(old_total_quiz);
             }
-            new_total_ads = $(this).val();
-            $(".total_vacancy").text(old_total_ads + '(+' + parseInt(new_total_ads - old_total_ads) + ')');
-            $(".total_price_vacancy").text('Rp' +
-                thousandSeparator(parseInt((new_total_ads - old_total_ads) * price_per_ads)));
-            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads);
+
+            new_total_quiz = $(this).val();
+
+            if (parseInt(new_total_quiz - old_total_quiz) > 0) {
+                $(".bill_quiz_applicant").text(old_total_quiz + '(+' + parseInt(new_total_quiz - old_total_quiz) + ')');
+                $(".total_price_quiz").text('Rp' +
+                    thousandSeparator(parseInt((new_total_quiz - old_total_quiz) * price_per_quiz)) + ',00');
+            } else {
+                $(".bill_quiz_applicant").text(old_total_quiz);
+                $(".total_price_quiz").text('Rp0,00');
+            }
+
+            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
+                parseInt((new_total_quiz - old_total_quiz) * price_per_quiz) +
+                parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest);
             $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
-            $("#vacancy_id").val('default').selectpicker({maxOptions: new_total_ads}).selectpicker('refresh');
+        });
+
+        $("#total_psychoTest").on("change", function () {
+            if ($(this).val() == "0" || $(this).val() == "" || $(this).val() < old_total_psychoTest) {
+                $(this).val(old_total_psychoTest);
+            }
+
+            new_total_psychoTest = $(this).val();
+
+            if (parseInt(new_total_psychoTest - old_total_psychoTest) > 0) {
+                $(".bill_psychoTest_applicant").text(old_total_psychoTest + '(+' +
+                    parseInt(new_total_psychoTest - old_total_psychoTest) + ')');
+                $(".total_price_psychoTest").text('Rp' +
+                    thousandSeparator(parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest)) +
+                    ',00');
+            } else {
+                $(".bill_psychoTest_applicant").text(old_total_psychoTest);
+                $(".total_price_psychoTest").text('Rp0,00');
+            }
+
+            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
+                parseInt((new_total_quiz - old_total_quiz) * price_per_quiz) +
+                parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest);
+            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         });
 
         $("#vacancy_id").on('change', function () {
@@ -697,17 +827,22 @@
             });
         });
 
-        $("#total_quiz").on("blur", function () {
-            $(".bill_quiz_applicant").text($(this).val());
-        });
-        $("#total_psychoTest").on("blur", function () {
-            $(".bill_psychoTest_applicant").text($(this).val());
+        $("#vacancy_setup .next").click(function () {
+            if (!$("#vacancy_id").val()) {
+                $("#vacancy_list").addClass('has-error');
+                $(".aj_vacancy").text('Please select a vacancy in order to posting it.');
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'There\'s empty field! Please fill in all the form fields with a valid data.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+                $("#order_summary .previous").click();
+            }
         });
 
         $("#plans_id").on('change', function () {
             $.get('{{route('get.plansReviewData',['plan'=>''])}}/' + $(this).val(), function (data) {
-                plan_price = data.price;
-                old_total_ads = data.job_ads;
                 if (data == 0) {
                     $("#plans_id").val('default').selectpicker("refresh");
                     swal({
@@ -729,14 +864,24 @@
                     return false;
 
                 } else {
+                    plan_price = data.price;
+                    old_total_ads = data.job_ads;
+                    old_total_quiz = data.quiz_applicant;
+                    price_per_quiz = data.price_quiz_applicant;
+                    old_total_psychoTest = data.psychoTest_applicant;
+                    price_per_psychoTest = data.price_psychoTest_applicant;
+
                     $("#show_plans_settings").click();
                     $(".plans_name").text(data.name);
                     $(".main_feature").text(data.main_feature);
-                    $(".total_vacancy").text(data.job_ads);
-                    $(".quiz_applicant, .bill_quiz_applicant").text(data.quiz_applicant);
-                    $(".psychoTest_applicant, .bill_psychoTest_applicant").text(data.psychoTest_applicant);
+                    $(".total_vacancy").text(old_total_ads);
+                    $(".quiz_applicant, .bill_quiz_applicant").text(old_total_quiz);
+                    $(".psychoTest_applicant, .bill_psychoTest_applicant").text(old_total_psychoTest);
+                    $(".total_price_vacancy").text('Rp0,00');
+                    $(".total_price_quiz").text('Rp0,00');
+                    $(".total_price_psychoTest").text('Rp0,00');
                     $(".plan_price").text('Rp' + data.rp_price);
-                    $(".subtotal").text("Rp" + subtotal + ",00");
+                    $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
 
                     if (data.id == 1) {
                         swal({
@@ -746,9 +891,9 @@
                             type: 'warning',
                             timer: '5000'
                         });
-                        $("#total_ads").val(data.job_ads);
-                        $("#total_quiz").val(data.quiz_applicant).prop('readonly', true);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('readonly', true);
+                        $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
+                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('readonly', true);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('readonly', true);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
 
@@ -760,9 +905,9 @@
                             type: 'warning',
                             timer: '5000'
                         });
-                        $("#total_ads").val(data.job_ads);
-                        $("#total_quiz").val(data.quiz_applicant).prop('readonly', false);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('readonly', true);
+                        $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
+                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('readonly', false);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('readonly', true);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
 
@@ -774,9 +919,9 @@
                             type: 'warning',
                             timer: '5000'
                         });
-                        $("#total_ads").val(data.job_ads);
-                        $("#total_quiz").val(data.quiz_applicant).prop('readonly', false);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('readonly', false);
+                        $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
+                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('readonly', false);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('readonly', false);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
                     }
@@ -797,6 +942,7 @@
             $pm_2.html("");
             $pm_4.html("");
             $pm_5.html("");
+            payment_code_value = 0;
 
             $(".pm-radioButton").prop("checked", false).trigger('change');
             $pm_3.prop("checked", false).trigger('change');
@@ -817,7 +963,8 @@
                     'You will receive an email about your payment details as soon as you finish the current step.' +
                     '</div></div></div>'
                 );
-                $payment_code.val(Math.floor(Math.random() * (999 - 100 + 1) + 100));
+                payment_code_value = Math.floor(Math.random() * (999 - 100 + 1) + 100);
+                $payment_code.val(payment_code_value);
 
             } else if (id == 3) {
                 $("#pm-11").prop("checked", true).trigger('change');
@@ -944,6 +1091,7 @@
 
         $(".submit").click(function () {
             if ($(".pm-radioButton").is(":checked") || ($("#pm-11").is(":checked") && $("#cc_number,#cc_name,#cc_expiry,#cc_cvc").val())) {
+                $("#total_payment").val(parseInt(subtotal) - parseInt(payment_code_value));
                 $("#pm-form")[0].submit();
                 $('html, body').animate({
                     scrollTop: $('#job-posting').offset().top
@@ -975,11 +1123,10 @@
         @endforeach
         $(".countdown-h2").html('<sub>Expired <strong>Time</strong>: {{$expDay." at ".$expTime}}</sub>');
 
-        var billsub = '{{\App\Plan::find(old('plans_id'))->price}}',
-            code = '{{session('confirmAgency')->payment_code}}', billTotal = 0, $strTotal, $first, $last;
+        var code = '{{session('confirmAgency')->payment_code}}', billTotal = '{{old('total_payment')}}',
+            $strTotal, $first, $last;
         @if(\App\PaymentMethod::find($confirm->payment_method_id)->payment_category_id == 1)
         $("#uCode").text("-Rp" + code);
-        billTotal += parseInt(parseInt(billsub) - code);
         if (billTotal < 1000000) {
             $first = thousandSeparator(billTotal).substr(0, 4);
         }
@@ -990,7 +1137,6 @@
         $strTotal = "Rp" + $first + "<span style='border:1px solid #fa5555;'>" + $last + "</span>";
         @else
         $("#uCode").text("-Rp0");
-        billTotal += parseInt(billsub);
         $strTotal = "Rp" + thousandSeparator(billTotal);
         @endif
         $("#toPay").html($strTotal);
