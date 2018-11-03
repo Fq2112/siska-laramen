@@ -23,31 +23,40 @@ class AuthController extends Controller
      */
     public function signup(Request $request)
     {
-//        $request->validate([
-//            'name' => 'required|string',
-//            'email' => 'required|string|email|unique:users',
-//            'password' => 'required|string|confirmed'
-//        ]);
-        $check = User::where('email',$request->email)->count();
-        if ($check<1) {
-            $user = new User([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-                'role' => 'seeker',
-                'status' => false,
-                'verifyToken' => Str::random(255),
-            ]);
 
-            $user->save();
-            return response()->json([
-                'message' => 'Successfully created user!'
-            ], 201);
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json,true);
+
+        $username = $obj['username'];
+        $email =  $obj['email'];
+        $password = $obj['password'];
+        $repassword = $obj['repassword'];
+
+        $check = User::where('email',$email)->count();
+        if ($check<1) {
+            if($password != $repassword)
+            {
+                echo json_encode("Password Doesn't Match!!!");
+            }
+            else {
+                $user = new User([
+                    'name' => $username,
+                    'email' => $email,
+                    'password' => bcrypt($password),
+                    'role' => 'seeker',
+                    'status' => false,
+                    'verifyToken' => Str::random(255),
+                ]);
+
+                $user->save();
+                echo json_encode("User Successfully Created");
+//                return response()->json([
+//                    'message' => 'Successfully created user!'
+//                ], 201);
+            }
         }
         else
-            return response()->json([
-                'error' => 'Email Already Taken!'
-            ]);
+           echo json_encode("Email Already Taken!!!");
     }
 
     /**
