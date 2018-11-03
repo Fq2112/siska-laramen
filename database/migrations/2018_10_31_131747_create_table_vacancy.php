@@ -56,7 +56,7 @@ class CreateTableVacancy extends Migration
             $table->date('quizDate_start')->nullable();
             $table->date('quizDate_end')->nullable();
             $table->integer('quiz_applicant')->nullable();
-            $table->integer('passing_grade')->nullable();
+            $table->decimal('passing_grade')->nullable();
             $table->date('psychoTestDate_start')->nullable();
             $table->date('psychoTestDate_end')->nullable();
             $table->integer('psychoTest_applicant')->nullable();
