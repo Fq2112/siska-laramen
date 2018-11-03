@@ -698,7 +698,8 @@
         });
 
         $("#total_ads").on("change", function () {
-            if ($(this).val() == "0" || $(this).val() == "" || $(this).val() < old_total_ads) {
+            var value = parseInt($(this).val());
+            if (value == "" || value < old_total_ads) {
                 $(this).val(old_total_ads);
             }
 
@@ -722,7 +723,8 @@
         });
 
         $("#total_quiz").on("change", function () {
-            if ($(this).val() == "0" || $(this).val() == "" || $(this).val() < old_total_quiz) {
+            var value = parseInt($(this).val());
+            if (value == "" || value < old_total_quiz) {
                 $(this).val(old_total_quiz);
             }
 
@@ -744,7 +746,8 @@
         });
 
         $("#total_psychoTest").on("change", function () {
-            if ($(this).val() == "0" || $(this).val() == "" || $(this).val() < old_total_psychoTest) {
+            var value = parseInt($(this).val());
+            if (value == "" || value < old_total_psychoTest) {
                 $(this).val(old_total_psychoTest);
             }
 
