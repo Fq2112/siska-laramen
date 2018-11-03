@@ -369,11 +369,11 @@ class AccountController extends Controller
             $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
         }
         $req_id = $request->id;
-        $req_image = $request->image;
         $req_invoice = $request->invoice;
+        $findConfirm = $req_id != null ? ConfirmAgency::find(decrypt($req_id)) : '';
 
         return view('auth.agencies.dashboard-vacancyStatus', compact('user', 'agency', 'time',
-            'confirmAgency', 'req_id', 'req_image', 'req_invoice'));
+            'confirmAgency', 'req_id', 'req_invoice', 'findConfirm'));
     }
 
     public function showVacancy()

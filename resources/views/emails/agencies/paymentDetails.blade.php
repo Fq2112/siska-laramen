@@ -690,13 +690,11 @@
                                         <tr>
                                             <td>
                                                 <div class="alert alert-info text-center">
-                                                    <a href="{{route('agency.vacancy.status',[
-                                                    'id'=>$data['confirmAgency']->id,
-                                                    'image'=>$data['confirmAgency']->payment_proof,
-                                                    'invoice'=>$invoice])}}" target="_blank"
-                                                       style="color: #00ADB5;text-decoration: none">
-                                                        <strong>Upload Payment Proof</strong></a> to speed up
-                                                    verification
+                                                    <a target="_blank" style="color: #00ADB5;text-decoration: none"
+                                                       href="{{route('agency.vacancy.status',
+                                                    ['id'=>encrypt($data['confirmAgency']->id),'invoice'=>$invoice])}}">
+                                                        <strong>Upload Payment Proof</strong>
+                                                    </a> to speed up verification
                                                 </div>
                                             </td>
                                         </tr>

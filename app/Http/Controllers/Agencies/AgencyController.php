@@ -189,8 +189,8 @@ class AgencyController extends Controller
             'plans_id' => $request->plans_id,
             'total_ads' => $request->total_ads,
             'vacancy_ids' => $request->vacancy_ids,
-            'total_quiz' => $request->total_quiz,
-            'total_psychoTest' => $request->total_psychoTest,
+            'total_quiz' => $request->total_quiz != null ? $request->total_quiz : 0,
+            'total_psychoTest' => $request->total_psychoTest != null ? $request->total_psychoTest : 0,
             'payment_method_id' => $request->pm_id,
             'payment_code' => strtoupper($request->payment_code),
             'cc_number' => $request->number,
@@ -199,6 +199,16 @@ class AgencyController extends Controller
             'cc_cvc' => $request->cvc,
             'total_payment' => $request->total_payment,
         ]);
+
+        foreach ((array)$request->vacancy_ids as $id) {
+            $vacancy = Vacancies::find($id);
+            $vacancy->update([
+                'plan_id' => $request->plans_id,
+                'passing_grade' => $request->passing_grade,
+                'quiz_applicant' => $request->total_quiz,
+                'psychoTest_applicant' => $request->total_psychoTest,
+            ]);
+        }
 
         $this->paymentDetailsMail($confirmAgency);
 

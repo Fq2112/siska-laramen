@@ -280,7 +280,7 @@
             swal({
                 title: 'ATTENTION!',
                 text: "It seems this vacancy isn't posted yet. To post your vacancy, please select one of " +
-                    "the available Plans Package on the Agency\'s Home page first",
+                    "the available Plan/Package on the Agency\'s Home page first.",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#00ADB5',

@@ -49,17 +49,17 @@ class CreateTableVacancy extends Migration
             $table->integer('plan_id')->unsigned()->nullable();
             $table->foreign('plan_id')->references('id')->on('plans')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->decimal('passing_grade', 8, 2)->nullable();
+            $table->integer('quiz_applicant')->nullable();
+            $table->integer('psychoTest_applicant')->nullable();
             $table->boolean('isPost')->default(false);
             $table->date('active_period')->nullable();
             $table->date('recruitmentDate_start')->nullable();
             $table->date('recruitmentDate_end')->nullable();
             $table->date('quizDate_start')->nullable();
             $table->date('quizDate_end')->nullable();
-            $table->integer('quiz_applicant')->nullable();
-            $table->integer('passing_grade')->nullable();
             $table->date('psychoTestDate_start')->nullable();
             $table->date('psychoTestDate_end')->nullable();
-            $table->integer('psychoTest_applicant')->nullable();
             $table->date('interview_date')->nullable();
             $table->timestamps();
         });

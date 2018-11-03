@@ -68,20 +68,22 @@
                                             <sub>&ndash; {{$row->created_at->diffForHumans()}}</sub>
                                         </small>
                                         <blockquote style="font-size: 12px;color: #7f7f7f">
-                                            <form class="pull-right to-animate-2" id="form-paymentProof-{{$row->id}}"
-                                                  method="post" action="{{route('upload.paymentProof')}}">
-                                                {{csrf_field()}}
-                                                <div class="anim-icon anim-icon-md upload {{$row->isPaid == true ? '' :
-                                                'ld ld-breath'}}"
-                                                     onclick="uploadPaymentProof('{{$row->id}}',
-                                                             '{{$row->payment_proof}}','{{$invoice}}')"
-                                                     data-toggle="tooltip" data-placement="bottom" title="Payment Proof"
-                                                     style="font-size: 25px">
-                                                    <input type="hidden" name="confirmAgency_id" value="{{$row->id}}">
-                                                    <input id="upload{{$row->id}}" type="checkbox" checked>
-                                                    <label for="upload{{$row->id}}"></label>
-                                                </div>
-                                            </form>
+                                            @if($row->isPaid == false && now() <= $row->created_at->addDay())
+                                                <form class="pull-right to-animate-2"
+                                                      id="form-paymentProof-{{$row->id}}" method="post"
+                                                      action="{{route('upload.paymentProof')}}">{{csrf_field()}}
+                                                    <div class="anim-icon anim-icon-md upload {{$row->isPaid == true ?
+                                                    '' : 'ld ld-breath'}}" onclick="uploadPaymentProof('{{$row->id}}',
+                                                            '{{$row->payment_proof}}','{{$invoice}}')"
+                                                         data-toggle="tooltip" data-placement="bottom"
+                                                         title="Payment Proof" style="font-size: 25px">
+                                                        <input type="hidden" name="confirmAgency_id"
+                                                               value="{{$row->id}}">
+                                                        <input id="upload{{$row->id}}" type="checkbox" checked>
+                                                        <label for="upload{{$row->id}}"></label>
+                                                    </div>
+                                                </form>
+                                            @endif
                                             <ul class="list-inline">
                                                 @foreach($vacancies as $vacancy)
                                                     <li><a class="tag" target="_blank" href="{{route('detail.vacancy',
@@ -91,8 +93,9 @@
                                                 @endforeach
                                                 <li>
                                                     <a class="tag tag-plans">
-                                                        <i class="fa fa-thumbtack"></i>&ensp;Plans Package:
-                                                        <strong style="text-transform: uppercase">{{$plan->name}}</strong></a>
+                                                        <i class="fa fa-thumbtack"></i>&ensp;Plan:
+                                                        <strong style="text-transform: uppercase">{{$plan->name}}</strong>
+                                                        Package</a>
                                                 </li>
                                                 <li>
                                                     <a class="tag tag-plans">
@@ -102,9 +105,15 @@
                                                     </a></li>
                                             </ul>
                                             <small>
-                                                <strong>{{$row->isPaid == true ? 'Paid' : 'Ordered'}}</strong> on
-                                                {{\Carbon\Carbon::parse($row->date_payment)->format('l, j F Y').' at '.
-                                                \Carbon\Carbon::parse($row->date_payment)->format('H:i')}}
+                                                @if($row->isPaid == true)
+                                                    <strong>Paid</strong> on
+                                                    {{\Carbon\Carbon::parse($row->date_payment)->format('l, j F Y').
+                                                    ' at '.\Carbon\Carbon::parse($row->date_payment)->format('H:i')}}
+                                                @else
+                                                    <strong>Ordered</strong> on
+                                                    {{\Carbon\Carbon::parse($row->created_at)->format('l, j F Y').
+                                                    ' at '.\Carbon\Carbon::parse($row->created_at)->format('H:i')}}
+                                                @endif
                                             </small>
                                             @if($row->isPaid == false && now() <= $row->created_at->addDay())
                                                 <a href="{{route('delete.job.posting',['id'=>encrypt($row->id)])}}"
@@ -118,9 +127,10 @@
                                                     </div>
                                                 </a>
                                                 <small class="to-animate-2">
-                                                    P.S.: You are only permitted to abort this order before
-                                                    <strong>{{$row->created_at->addDay()->format('l, j F Y').' at '.
-                                                    $row->created_at->addDay()->format('H:i').'.'}}</strong>
+                                                    P.S.: You are only permitted to COMPLETE the payment or
+                                                    even ABORT this order before <strong>
+                                                        {{$row->created_at->addDay()->format('l, j F Y').' at '.
+                                                        $row->created_at->addDay()->format('H:i').'.'}}</strong>
                                                 </small>
                                             @endif
                                         </blockquote>
@@ -164,11 +174,19 @@
 @endsection
 @push('scripts')
     <script>
-        @if($req_id != null || $req_image != null|| $req_invoice != null)
+        @if($findConfirm != "")
         $(function () {
-            uploadPaymentProof('{{$req_id}}', '{{$req_image}}', '{{$req_invoice}}');
+            @if(now() <= $findConfirm->created_at->addDay())
+            uploadPaymentProof('{{$findConfirm->id}}', '{{$findConfirm->payment_proof}}', '{{$req_invoice}}');
+            @else
+            swal({
+                title: 'ATTENTION!',
+                text: '{{$req_invoice}} has been expired.',
+                type: 'warning',
+                timer: '3500'
+            });
+            @endif
         });
-
         @endif
 
         function uploadPaymentProof(id, image, invoice) {

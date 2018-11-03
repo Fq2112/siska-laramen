@@ -125,8 +125,10 @@
     @php
         $acc = \App\Accepting::whereIn('vacancy_id',$agency->vacancies->pluck('id')->toArray())->where('isApply',true)->count();
         $inv = \App\Invitation::where('agency_id',$agency->id)->count();
-        $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)->count();
-        $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')
+        $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)
+        ->whereDate('created_at','>=',now()->subDay())->count();
+        $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)
+        ->whereNotNull('active_period')->whereNotNull('plan_id')
         ->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count();
         $reqExp = array();
         $reqEdu = array();

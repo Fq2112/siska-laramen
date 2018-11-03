@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
         Model::unguard();
 
         $this->call([
-            UserSeeder::class,
             HomeContentSeeder::class,
             TingkatpendSeeder::class,
             NationSeeder::class,
@@ -27,7 +26,7 @@ class DatabaseSeeder extends Seeder
             JobLevelSeeder::class,
             JobTypeSeeder::class,
             SalarySeeder::class,
-            VacancySeeder::class,
+            UserSeeder::class,
             PaymentMethodSeeder::class,
             QuizSeeder::class,
         ]);

@@ -19,8 +19,8 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <h4 style="margin-bottom: 10px">Recommended Seeker</h4>
-                            <small>Here is our recommended seekers based on your vacancy's requirements of work
-                                experience and education degree requirement.
+                            <small>Here is our recommended seekers based on your <strong>posted</strong> vacancy's
+                                requirements of work experience <strong>and</strong> education degree requirement.
                             </small>
                             <hr>
                         </div>

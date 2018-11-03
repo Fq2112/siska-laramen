@@ -58,7 +58,11 @@
                                                             $degrees = \App\Tingkatpend::find($row->tingkatpend_id);
                                                             $majors = \App\Jurusanpend::find($row->jurusanpend_id);
                                                         @endphp
-                                                        <div class="row">
+                                                        <div class="row" style="border: {{$row->isPost == true &&
+                                                        $row->active_period != "" && $row->plan_id != "" &&
+                                                        ($row->recruitmentDate_start == "" ||
+                                                        $row->recruitmentDate_end == "" || $row->interview_date == "")
+                                                        ? '2px solid #00ADB5' : 'none'}};">
                                                             <div class="col-lg-12">
                                                                 <div class="media">
                                                                     <div class="media-left media-middle">
@@ -159,6 +163,18 @@
                                                                                         $row->pengalaman.' year'}}
                                                                                     </a>
                                                                                 </li>
+                                                                                @if($row->plan_id != "")
+                                                                                    <li>
+                                                                                        <a class="tag tag-plans">
+                                                                                            <i class="fa fa-thumbtack">
+                                                                                            </i>&ensp;Plan:
+                                                                                            <strong style="text-transform: uppercase">
+                                                                                                {{\App\Plan::find
+                                                                                                ($row->plan_id)->name}}
+                                                                                            </strong> Package
+                                                                                        </a>
+                                                                                    </li>
+                                                                                @endif
                                                                             </ul>
                                                                             <small>Requirements</small>
                                                                             {!! $row->syarat !!}

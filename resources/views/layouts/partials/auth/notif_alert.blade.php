@@ -2,7 +2,8 @@
     @if(Auth::user()->isAgency())
         @php
             $agency = \App\Agencies::where('user_id',Auth::user()->id)->firstOrFail();
-            $vacancies = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)->whereNotNull('active_period')
+            $vacancies = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)
+            ->whereNotNull('active_period')->whereNotNull('plan_id')
             ->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end');
         @endphp
         @if($vacancies->count() && !Illuminate\Support\Facades\Request::is('account/agency/vacancy'))

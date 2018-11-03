@@ -490,16 +490,40 @@
             });
             @else
             if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-            ->where('isPost',false)->count()}}' > 0) {
+            ->count()}}' > 0) {
 
                 if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-                ->where('isPost', false)->count()}}' >= job_ads) {
-                    $("#form-plans-" + id)[0].submit();
-                }
-                else {
+                ->where('isPost',false)->count()}}' > 0) {
+
+                    if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
+                    ->where('isPost', false)->count()}}' >= job_ads) {
+                        $("#form-plans-" + id)[0].submit();
+                    }
+                    else {
+                        swal({
+                            title: 'ATTENTION!',
+                            text: "This package requires at least " + job_ads + " Vacancy that have not been posted yet. It seems that the amount of your vacancy doesn't meet the minimal amount of this package.",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#00ADB5',
+                            confirmButtonText: 'Yes, redirect me to the Vacancy Setup page.',
+                            showLoaderOnConfirm: true,
+
+                            preConfirm: function () {
+                                return new Promise(function (resolve) {
+                                    window.location.href = '{{route('agency.vacancy.show')}}';
+                                });
+                            },
+                            allowOutsideClick: false
+                        });
+                        return false;
+                    }
+
+                } else {
                     swal({
                         title: 'ATTENTION!',
-                        text: "This package requires at least " + job_ads + " Vacancy that have not been posted yet. It seems that the amount of your vacancy doesn't meet the minimal amount of this package.",
+                        text: "All of your vacancies have been posted. If you want to post another vacancy, " +
+                            "please go to the Vacancy Setup to make another one.",
                         type: 'warning',
                         showCancelButton: true,
                         confirmButtonColor: '#00ADB5',
@@ -515,11 +539,14 @@
                     });
                     return false;
                 }
+                @endif
+                @endguest
 
             } else {
                 swal({
                     title: 'ATTENTION!',
-                    text: "All of your vacancies have been posted. If you want to post another vacancy, please go to the Vacancy Setup to make another one.",
+                    text: "There seems to be none of the vacancy was found. If you want to post some vacancy, " +
+                        "please go to the Vacancy Setup to make it.",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#00ADB5',
@@ -535,8 +562,6 @@
                 });
                 return false;
             }
-            @endif
-            @endguest
         }
     </script>
 @endpush

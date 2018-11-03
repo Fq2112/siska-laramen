@@ -52,7 +52,7 @@
                                                         <select id="vacancy_id" class="form-control selectpicker"
                                                                 title="-- Choose Vacancy --" data-live-search="true"
                                                                 multiple data-max-options="{{$totalAds}}"
-                                                                data-selected-text-format="count > 3"
+                                                                data-selected-text-format="count > 2"
                                                                 name="vacancy_ids[]" data-container="body"
                                                                 data-width="85%" required>
                                                             @foreach($vacancies as $vacancy)
@@ -70,28 +70,40 @@
                                             <div class="row form-group">
                                                 @php
                                                     if($plan->id == 1){
-                                                        $attr_quiz = 'readonly';
-                                                        $attr_psychoTest = 'readonly';
+                                                        $attr_passingGrade = 'disabled';
+                                                        $attr_quiz = 'disabled';
+                                                        $attr_psychoTest = 'disabled';
 
                                                     } elseif($plan->id == 2){
+                                                        $attr_passingGrade = '';
                                                         $attr_quiz = '';
-                                                        $attr_psychoTest = 'readonly';
+                                                        $attr_psychoTest = 'disabled';
 
                                                     } elseif($plan->id == 3){
+                                                        $attr_passingGrade = '';
                                                         $attr_quiz = '';
                                                         $attr_psychoTest = '';
                                                     }
                                                 @endphp
-                                                <div class="col-lg-6">
-                                                    <small>Total Applicant for Quiz</small>
+                                                <div class="col-lg-6" id="quiz_setup">
+                                                    <small>Passing Grade & Total Applicant Quiz</small>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-grin-beam"></i></span>
-                                                        <input id="total_quiz" name="total_quiz"
+                                                        <input id="passing_grade" name="passing_grade"
+                                                               type="number" class="form-control" style="width: 30%"
+                                                               placeholder="0.00"
+                                                               value="{{$plan->id == 1 ? '0.00' : ''}}"
+                                                               min="1" step=".01" {{$attr_passingGrade}} required>
+                                                        <input id="total_quiz" name="total_quiz" style="width: 70%"
                                                                type="number" class="form-control"
                                                                placeholder="0" value="{{$plan->quiz_applicant}}"
                                                                min="{{$plan->quiz_applicant}}" {{$attr_quiz}} required>
                                                     </div>
+                                                    <span class="help-block">
+                                                        <small id="quiz_errorTxt"
+                                                               style="text-transform: none;float: left"></small>
+                                                    </span>
                                                 </div>
                                                 <div class="col-lg-6">
                                                     <small>Total Applicant for Psycho Test</small>
@@ -119,7 +131,7 @@
                                                     <small>Plan Details
                                                         <span id="show_plans_settings" class="pull-right"
                                                               style="color: #00ADB5;cursor: pointer; font-size: 15px">
-                                                <i class="fa fa-edit"></i>&nbsp;EDIT</span>
+                                                            <i class="fa fa-edit"></i>&nbsp;EDIT</span>
                                                     </small>
                                                     <hr class="hr-divider">
                                                     <ul class="list-inline stats_plans" style="margin-top: -1em">
@@ -177,6 +189,30 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <small>
+                                                        Quiz & Psycho Test Details
+                                                        <span class="show_vacancy_setup pull-right"
+                                                              style="color: #00ADB5;cursor: pointer; font-size: 15px">
+                                                            <i class="fa fa-edit"></i>&nbsp;EDIT</span>
+                                                    </small>
+                                                    <hr class="hr-divider">
+                                                    <ul class="list-inline" style="margin-top: -1em">
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-grin-beam"></i>&ensp;
+                                                                Quiz with <strong id="detail_passing_grade">0.00
+                                                                </strong> passing grade&ensp;&ndash;&nbsp;for&nbsp;&ndash;&ensp;<strong
+                                                                        id="detail_quiz_applicant">0</strong> applicants
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-comments"></i>&ensp;Psycho Test for
+                                                                <strong id="detail_psychoTest_applicant">0</strong>
+                                                                applicants
+                                                            </a>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <small>Billing Details</small>
@@ -250,7 +286,7 @@
                                             <div class="row" style="margin-top: 1em;">
                                                 <div class="col-lg-12">
                                                     <small>Vacancy List
-                                                        <span id="show_vacancy_setup" class="pull-right"
+                                                        <span class="show_vacancy_setup pull-right"
                                                               style="color: #00ADB5;cursor: pointer; font-size: 15px">
                                                 <i class="fa fa-edit"></i>&nbsp;EDIT</span>
                                                     </small>
@@ -693,13 +729,12 @@
             $("#plans_settings").toggle(300);
         });
 
-        $("#show_vacancy_setup").click(function () {
+        $(".show_vacancy_setup").click(function () {
             $("#order_summary .previous").click();
         });
 
-        $("#total_ads").on("change", function () {
-            var value = parseInt($(this).val());
-            if (value == "" || value < old_total_ads) {
+        $("#total_ads").on("blur", function () {
+            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads) {
                 $(this).val(old_total_ads);
             }
 
@@ -722,11 +757,20 @@
             $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         });
 
-        $("#total_quiz").on("change", function () {
-            var value = parseInt($(this).val());
-            if (value == "" || value < old_total_quiz) {
+        $("#passing_grade").on("blur", function () {
+            if ($(this).val() == "" || parseFloat($(this).val()) == 0.00) {
+                $(this).val(75.50);
+            }
+            $("#quiz_setup").removeClass('has-error');
+            $("#quiz_errorTxt").text('');
+            $("#detail_passing_grade").text($(this).val());
+        });
+
+        $("#total_quiz").on("blur", function () {
+            if ($(this).val() == "" || parseInt($(this).val()) < old_total_quiz) {
                 $(this).val(old_total_quiz);
             }
+            $("#detail_quiz_applicant").text($(this).val());
 
             new_total_quiz = $(this).val();
 
@@ -745,11 +789,11 @@
             $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         });
 
-        $("#total_psychoTest").on("change", function () {
-            var value = parseInt($(this).val());
-            if (value == "" || value < old_total_psychoTest) {
+        $("#total_psychoTest").on("blur", function () {
+            if ($(this).val() == "" || parseInt($(this).val()) < old_total_psychoTest) {
                 $(this).val(old_total_psychoTest);
             }
+            $("#detail_psychoTest_applicant").text($(this).val());
 
             new_total_psychoTest = $(this).val();
 
@@ -842,6 +886,18 @@
                 });
                 $("#order_summary .previous").click();
             }
+
+            if (!$("#passing_grade").val()) {
+                $("#quiz_setup").addClass('has-error');
+                $("#quiz_errorTxt").text('Please fill in the Passing Grade Quiz field.');
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'There\'s empty field! Please fill in all the form fields with a valid data.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+                $("#order_summary .previous").click();
+            }
         });
 
         $("#plans_id").on('change', function () {
@@ -880,6 +936,9 @@
                     $(".total_vacancy").text(old_total_ads);
                     $(".quiz_applicant, .bill_quiz_applicant").text(old_total_quiz);
                     $(".psychoTest_applicant, .bill_psychoTest_applicant").text(old_total_psychoTest);
+                    $("#detail_passing_grade").text(0.00);
+                    $("#detail_quiz_applicant").text(old_total_quiz);
+                    $("#detail_psychoTest_applicant").text(old_total_psychoTest);
                     $(".total_price_vacancy").text('Rp0,00');
                     $(".total_price_quiz").text('Rp0,00');
                     $(".total_price_psychoTest").text('Rp0,00');
@@ -895,8 +954,9 @@
                             timer: '5000'
                         });
                         $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('readonly', true);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('readonly', true);
+                        $("#passing_grade").val(0.00).prop('disabled', true);
+                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('disabled', true);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('disabled', true);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
 
@@ -909,8 +969,9 @@
                             timer: '5000'
                         });
                         $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('readonly', false);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('readonly', true);
+                        $("#passing_grade").val("").prop('disabled', false);
+                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('disabled', false);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('disabled', true);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
 
@@ -923,8 +984,9 @@
                             timer: '5000'
                         });
                         $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('readonly', false);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('readonly', false);
+                        $("#passing_grade").val("").prop('disabled', false);
+                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('disabled', false);
+                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('disabled', false);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
                     }
