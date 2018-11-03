@@ -320,7 +320,9 @@
                     'class="tag"><i class="fa fa-graduation-cap"></i>&ensp;' + val.degrees + '</a></li>' +
                     '<li><a target="_blank" href="{{route('search.vacancy',['majors_ids'=>''])}}' + val.jurusanpend_id + '" ' +
                     'class="tag"><i class="fa fa-user-graduate"></i>&ensp;' + val.majors + '</a></li>' +
-                    '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li></ul>' +
+                    '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
+                    '<li><a class="tag tag-plans"><i class="fa fa-paper-plane"></i>&ensp;' +
+                    '<strong>' + val.total_app + '</strong> applicants</a></li></ul>' +
                     '<table style="font-size: 14px;margin-top: -.5em">' +
                     '<tr><td><i class="fa fa-users"></i></td>' +
                     '<td>&nbsp;Recruitment Date</td>' +

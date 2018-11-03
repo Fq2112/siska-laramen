@@ -67,9 +67,10 @@ class VacancyController extends Controller
         $industry = Industri::find($vacancy->industry_id);
         $degrees = Tingkatpend::find($vacancy->tingkatpend_id);
         $majors = Jurusanpend::find($vacancy->jurusanpend_id);
+        $applicants = Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->count();
 
         return view('_agencies.detail-vacancy', compact('provinces', 'vacancy', 'carousels', 'agency', 'user',
-            'city', 'salary', 'jobfunc', 'joblevel', 'industry', 'degrees', 'majors'));
+            'city', 'salary', 'jobfunc', 'joblevel', 'industry', 'degrees', 'majors', 'applicants'));
     }
 
     public function bookmarkVacancy(Request $request)

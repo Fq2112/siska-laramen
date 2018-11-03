@@ -39,6 +39,8 @@
                                     $industry = \App\Industri::find($vacancy->industry_id);
                                     $degrees = \App\Tingkatpend::find($vacancy->tingkatpend_id);
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
+                                    $applicants = \App\Accepting::where('vacancy_id', $vacancy->id)
+                                    ->where('isApply', true)->count();
                                 @endphp
                                 <div class="media to-animate">
                                     <div class="media-left media-middle">
@@ -119,6 +121,12 @@
                                                         <i class="fa fa-briefcase"></i>
                                                         &ensp;At least {{$vacancy->pengalaman > 1 ?
                                                         $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="tag tag-plans">
+                                                        <i class="fa fa-paper-plane"></i>&ensp;
+                                                        <strong>{{$applicants}}</strong> applicants
                                                     </a>
                                                 </li>
                                             </ul>

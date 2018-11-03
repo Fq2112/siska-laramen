@@ -310,7 +310,8 @@ class SeekerController extends Controller
         $provinces = Provinces::all();
         $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)
+            ->where('isApply', false)->count();
 
         $keyword = $request->q;
         $page = $request->page;
@@ -392,9 +393,10 @@ class SeekerController extends Controller
             $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
                 $vacancy['updated_at'])->diffForHumans());
             $acc = array('acc' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->first());
+            $totalApp = array('total_app' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->count());
 
             $result['data'][$i] = array_replace($ava, $result['data'][$i], $city, $degrees, $majors, $jobfunc,
-                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc);
+                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc, $totalApp);
             $i = $i + 1;
         }
 

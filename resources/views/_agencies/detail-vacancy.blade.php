@@ -78,34 +78,29 @@
                                     $content = '';
                                     if($vacancy->isPost == false){
                                         $content = 'This vacancy is INACTIVE.';
-                                        $placement = 'right';
                                         $style = 'inline-block';
+                                        $style_applicant = 'none';
                                     } else{
                                         if(now() < $vacancy->recruitmentDate_start || is_null($vacancy
-                                            ->recruitmentDate_start)){
-                                                $content = 'The recruitment date of this vacancy hasn\'t started yet.';
-                                                $placement = 'right';
-                                                $style = 'inline-block';
+                                        ->recruitmentDate_start)){
+                                            $content = 'The recruitment date of this vacancy hasn\'t started yet.';
+                                            $style = 'inline-block';
+                                            $style_applicant = 'none';
                                         } elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
-                                            ->recruitmentDate_end)){
-                                                $content = 'The recruitment date of this vacancy has been ended.';
-                                                $placement = 'right';
-                                                $style = 'inline-block';
+                                        ->recruitmentDate_end)){
+                                            $content = 'The recruitment date of this vacancy has been ended.';
+                                            $style = 'inline-block';
+                                            $style_applicant = 'none';
                                         } else {
-                                                $placement = 'left';
-                                                $style = 'none';
+                                            $content = '';
+                                            $style = 'none';
+                                            $style_applicant = 'inline-block';
                                         }
                                     }
                                 @endphp
-                                <li data-placement="{{$placement}}"
-                                    data-toggle="tooltip" id="bm">
+                                <li data-placement="left" data-toggle="tooltip" id="bm">
                                     <form method="post" action="{{route('bookmark.vacancy')}}" id="form-bookmark">
                                         {{csrf_field()}}
-                                        <div class="anim-icon anim-icon-md info" style="display: {{$style}};">
-                                            <input type="checkbox" id="info">
-                                            <label for="info" style="cursor: help" data-toggle="popover"
-                                                   data-placement="top" title="FYI" data-content="{{$content}}"></label>
-                                        </div>
                                         <div class="anim-icon anim-icon-md bookmark ld ld-breath">
                                             <input type="hidden" name="vacancy_id" value="{{$vacancy->id}}">
                                             <input type="checkbox" id="bookmark" {{$vacancy->isPost == false ?
@@ -113,6 +108,15 @@
                                             <label for="bookmark" style="cursor: {{$vacancy->isPost == false ?
                                             'not-allowed' : 'pointer'}}"></label>
                                         </div>
+                                        <div class="anim-icon anim-icon-md info" style="display: {{$style}};">
+                                            <input type="checkbox" id="info">
+                                            <label for="info" style="cursor: help;" data-toggle="popover"
+                                                   data-placement="top" title="FYI" data-content="{{$content}}"></label>
+                                        </div>
+                                        <span class="label label-default"
+                                              style="background: #fa5555;display: {{$style_applicant}};">
+                                            <strong>{{$applicants}}&ensp;applicants</strong>
+                                        </span>
                                     </form>
                                 </li>
                                 <li class="{{$vacancy->isPost == false || Auth::check() && Auth::user()->isAgency() ||
@@ -293,18 +297,31 @@
                                         <div class="card-title">
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
-                                            @foreach(\App\Vacancies::where('agency_id',$vacancy->agency_id)
+                                            @foreach(\App\Vacancies::where('agency_id',$agency->id)
                                             ->where('isPost',true)->orderByDesc('id')->get() as $row)
+                                                @php
+                                                    $agency_list = \App\Agencies::find($row->agency_id);
+                                                    $user_list = \App\User::find(\App\Agencies::find($row->agency_id)->user_id);
+                                                    $city_list = \App\Cities::find($row->cities_id)->name;
+                                                    $salary_list = \App\Salaries::find($row->salary_id);
+                                                    $jobfunc_list = \App\FungsiKerja::find($row->fungsikerja_id);
+                                                    $joblevel_list = \App\JobLevel::find($row->joblevel_id);
+                                                    $industry_list = \App\Industri::find($row->industry_id);
+                                                    $degrees_list = \App\Tingkatpend::find($row->tingkatpend_id);
+                                                    $majors_list = \App\Jurusanpend::find($row->jurusanpend_id);
+                                                    $applicants_list = \App\Accepting::where('vacancy_id', $row->id)
+                                                    ->where('isApply', true)->count();
+                                                @endphp
                                                 <div class="row">
                                                     <div class="col-lg-12">
                                                         <div class="media">
                                                             <div class="media-left media-middle">
-                                                                @if($user->ava == ""||$user->ava == "agency.png")
+                                                                @if($user_list->ava == ""||$user_list->ava == "agency.png")
                                                                     <img width="100" class="media-object"
                                                                          src="{{asset('images/agency.png')}}">
                                                                 @else
                                                                     <img width="100" class="media-object"
-                                                                         src="{{asset('storage/users/'.$user->ava)}}">
+                                                                         src="{{asset('storage/users/'.$user_list->ava)}}">
                                                                 @endif
                                                             </div>
                                                             <div class="media-body">
@@ -318,49 +335,56 @@
                                                                     <ul class="list-inline">
                                                                         <li>
                                                                             <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['loc' => substr($city, 0, 2)=="Ko" ? substr($city,5) : substr($city,10)])}}">
+                                                                               href="{{route('search.vacancy',['loc' => substr($city_list, 0, 2)=="Ko" ? substr($city_list,5) : substr($city_list,10)])}}">
                                                                                 <i class="fa fa-map-marked"></i>&ensp;
-                                                                                {{substr($city, 0, 2)=="Ko" ? substr($city,5) : substr($city,10)}}
+                                                                                {{substr($city_list, 0, 2)=="Ko" ? substr($city_list,5) : substr($city_list,10)}}
                                                                             </a>
                                                                         </li>
                                                                         <li>
                                                                             <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['jobfunc_ids' => $vacancy->fungsikerja_id])}}">
+                                                                               href="{{route('search.vacancy',['jobfunc_ids' => $row->fungsikerja_id])}}">
                                                                                 <i class="fa fa-warehouse"></i>&ensp;
-                                                                                {{$jobfunc->nama}}
+                                                                                {{$jobfunc_list->nama}}
                                                                             </a>
                                                                         </li>
                                                                         <li>
                                                                             <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['industry_ids' => $vacancy->industry_id])}}">
+                                                                               href="{{route('search.vacancy',['industry_ids' => $row->industry_id])}}">
                                                                                 <i class="fa fa-industry"></i>&ensp;
-                                                                                {{$industry->nama}}
+                                                                                {{$industry_list->nama}}
                                                                             </a>
                                                                         </li>
                                                                         <li>
                                                                             <a class="tag" target="_blank"
                                                                                href="{{route('search.vacancy',['salary_ids' => $salary->id])}}">
                                                                                 <i class="fa fa-money-bill-wave"></i>
-                                                                                &ensp;IDR {{$salary->name}}</a>
+                                                                                &ensp;IDR {{$salary_list->name}}</a>
                                                                         </li>
                                                                         <li>
                                                                             <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['degrees_ids' => $vacancy->tingkatpend_id])}}">
+                                                                               href="{{route('search.vacancy',['degrees_ids' => $row->tingkatpend_id])}}">
                                                                                 <i class="fa fa-graduation-cap"></i>
-                                                                                &ensp;{{$degrees->name}}</a>
+                                                                                &ensp;{{$degrees_list->name}}</a>
                                                                         </li>
                                                                         <li>
                                                                             <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['majors_ids' => $vacancy->jurusanpend_id])}}">
+                                                                               href="{{route('search.vacancy',['majors_ids' => $row->jurusanpend_id])}}">
                                                                                 <i class="fa fa-user-graduate"></i>
-                                                                                &ensp;{{$majors->name}}</a>
+                                                                                &ensp;{{$majors_list->name}}</a>
                                                                         </li>
                                                                         <li>
                                                                             <a class="tag">
                                                                                 <i class="fa fa-briefcase"></i>
-                                                                                &ensp;At least {{$vacancy->pengalaman > 1 ?
-                                                                                $vacancy->pengalaman.' years' :
-                                                                                $vacancy->pengalaman.' year'}}
+                                                                                &ensp;At least {{$row->pengalaman > 1 ?
+                                                                                $row->pengalaman.' years' :
+                                                                                $row->pengalaman.' year'}}
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <a class="tag tag-plans">
+                                                                                <i class="fa fa-paper-plane"></i>&ensp;
+                                                                                <strong>{{$applicants_list}}</strong>
+                                                                                applicants
                                                                             </a>
                                                                         </li>
                                                                     </ul>

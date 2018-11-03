@@ -57,6 +57,8 @@
                                                             $industry = \App\Industri::find($row->industry_id);
                                                             $degrees = \App\Tingkatpend::find($row->tingkatpend_id);
                                                             $majors = \App\Jurusanpend::find($row->jurusanpend_id);
+                                                            $applicants = \App\Accepting::where('vacancy_id', $row->id)
+                                                            ->where('isApply', true)->count();
                                                         @endphp
                                                         <div class="row" style="border: {{$row->isPost == true &&
                                                         $row->active_period != "" && $row->plan_id != "" &&
@@ -161,6 +163,14 @@
                                                                                         {{$row->pengalaman > 1 ?
                                                                                         $row->pengalaman.' years' :
                                                                                         $row->pengalaman.' year'}}
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a class="tag tag-plans">
+                                                                                        <i class="fa fa-paper-plane">
+                                                                                        </i>&ensp;
+                                                                                        <strong>{{$applicants}}</strong>
+                                                                                        applicants
                                                                                     </a>
                                                                                 </li>
                                                                                 @if($row->plan_id != "")
