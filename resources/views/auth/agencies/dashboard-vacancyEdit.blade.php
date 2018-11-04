@@ -73,11 +73,16 @@
                                                                              data-toggle="tooltip" title="Edit Schedule"
                                                                              data-placement="bottom"
                                                                              onclick="editVacancySchedule('{{$row->id}}',
-                                                                                     '{{$row->judul}}','{{$row->isPost}}',
+                                                                                     '{{$row->judul}}','{{$row->plan_id}}',
+                                                                                     '{{$row->isPost}}',
                                                                                      '{{$row->active_period}}',
                                                                                      '{{$row->interview_date}}',
                                                                                      '{{$row->recruitmentDate_start}}',
-                                                                                     '{{$row->recruitmentDate_end}}')">
+                                                                                     '{{$row->recruitmentDate_end}}',
+                                                                                     '{{$row->quizDate_start}}',
+                                                                                     '{{$row->quizDate_end}}',
+                                                                                     '{{$row->psychoTestDate_start}}',
+                                                                                     '{{$row->psychoTestDate_end}}')">
                                                                     </div>
                                                                     <div class="media-body">
                                                                         <small class="media-heading">
@@ -218,10 +223,70 @@
                                                                                         ->format('j F Y') : '-'}}
                                                                                     </td>
                                                                                 </tr>
+                                                                                @if($row->plan_id != "" &&
+                                                                                $row->plan_id == 2)
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-grin-beam">
+                                                                                            </i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Quiz
+                                                                                            (Online TPA & TKD) Date
+                                                                                        </td>
+                                                                                        <td>: {{$row->quizDate_start &&
+                                                                                        $row->quizDate_end != "" ?
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->quizDate_start)
+                                                                                        ->format('j F Y')." - ".
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->quizDate_end)
+                                                                                        ->format('j F Y') : '-'}}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @elseif($row->plan_id != "" &&
+                                                                                $row->plan_id == 3)
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-grin-beam">
+                                                                                            </i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Quiz
+                                                                                            (Online TPA & TKD) Date
+                                                                                        </td>
+                                                                                        <td>: {{$row->quizDate_start &&
+                                                                                        $row->quizDate_end != "" ?
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->quizDate_start)
+                                                                                        ->format('j F Y')." - ".
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->quizDate_end)
+                                                                                        ->format('j F Y') : '-'}}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-comments">
+                                                                                            </i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Psycho Test
+                                                                                            (Online Interview) Date
+                                                                                        </td>
+                                                                                        <td>:
+                                                                                            {{$row->psychoTestDate_start
+                                                                                            && $row->psychoTestDate_end
+                                                                                            != "" ? \Carbon\Carbon::parse
+                                                                                            ($row->psychoTestDate_start)
+                                                                                            ->format('j F Y')." - ".
+                                                                                            \Carbon\Carbon::parse
+                                                                                            ($row->psychoTestDate_end)
+                                                                                            ->format('j F Y') : '-'}}
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endif
                                                                                 <tr>
-                                                                                    <td><i class="fa fa-comments"></i>
+                                                                                    <td><i class="fa fa-user-tie"></i>
                                                                                     </td>
-                                                                                    <td>&nbsp;Interview Date</td>
+                                                                                    <td>&nbsp;Job Interview Date</td>
                                                                                     <td>:
                                                                                         {{$row->interview_date != "" ?
                                                                                         \Carbon\Carbon::parse

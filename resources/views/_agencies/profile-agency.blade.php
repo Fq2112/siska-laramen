@@ -59,15 +59,14 @@
                         </div>
                         <div class="collapse navbar-collapse" id="mainNav">
                             <ul class="nav main-menu navbar-nav to-animate">
-                                <li data-placement="left" data-toggle="tooltip" title="Headquarter"><a>
-                                        <i class="fa fa-building"></i>&ensp;{{$agency->kantor_pusat}}</a></li>
-                                <li data-placement="bottom" data-toggle="tooltip" title="Industry"><a>
-                                        <i class="fa fa-industry"></i>&ensp;{{is_null($agency->industri_id) ? 'Unknown' : $industry->name}}
-                                    </a></li>
-                                <li data-placement="bottom" data-toggle="tooltip" title="Working Days"><a>
-                                        <i class="fa fa-calendar"></i>&ensp;{{$agency->hari_kerja}}</a></li>
-                                <li data-placement="right" data-toggle="tooltip" title="Working Hours"><a>
-                                        <i class="fa fa-clock"></i>&ensp;{{$agency->jam_kerja}}</a></li>
+                                <li data-placement="left" data-toggle="tooltip" title="Headquarter">
+                                    <a><i class="fa fa-building"></i>&ensp;{{$agency->kantor_pusat}}</a></li>
+                                <li data-placement="bottom" data-toggle="tooltip" title="Industry">
+                                    <a><i class="fa fa-industry"></i>&ensp;{{$industry->nama}}</a></li>
+                                <li data-placement="bottom" data-toggle="tooltip" title="Working Days">
+                                    <a><i class="fa fa-calendar"></i>&ensp;{{$agency->hari_kerja}}</a></li>
+                                <li data-placement="right" data-toggle="tooltip" title="Working Hours">
+                                    <a><i class="fa fa-clock"></i>&ensp;{{$agency->jam_kerja}}</a></li>
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
                                 @auth
@@ -250,17 +249,6 @@
                                                                     <hr>
                                                                     <table style="font-size: 12px;margin-top: -.5em">
                                                                         <tr>
-                                                                            <td><i class="fa fa-comments"></i>
-                                                                            </td>
-                                                                            <td>&nbsp;Interview Date</td>
-                                                                            <td>:
-                                                                                {{$row->interview_date != "" ?
-                                                                                \Carbon\Carbon::parse
-                                                                                ($row->interview_date)
-                                                                                ->format('l, j F Y') : '-'}}
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
                                                                             <td><i class="fa fa-users"></i></td>
                                                                             <td>&nbsp;Recruitment Date</td>
                                                                             <td>:
@@ -272,6 +260,66 @@
                                                                                 \Carbon\Carbon::parse
                                                                                 ($row->recruitmentDate_end)
                                                                                 ->format('j F Y') : '-'}}
+                                                                            </td>
+                                                                        </tr>
+                                                                        @if($row->plan_id != "" && $row->plan_id == 2)
+                                                                            <tr>
+                                                                                <td><i class="fa fa-grin-beam"></i></td>
+                                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date
+                                                                                </td>
+                                                                                <td>:
+                                                                                    {{$row->quizDate_start &&
+                                                                                    $row->quizDate_end != "" ?
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->quizDate_start)
+                                                                                    ->format('j F Y')." - ".
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->quizDate_end)
+                                                                                    ->format('j F Y') : '-'}}
+                                                                                </td>
+                                                                            </tr>
+                                                                        @elseif($row->plan_id != "" &&
+                                                                        $row->plan_id == 3)
+                                                                            <tr>
+                                                                                <td><i class="fa fa-grin-beam"></i></td>
+                                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date
+                                                                                </td>
+                                                                                <td>:
+                                                                                    {{$row->quizDate_start &&
+                                                                                    $row->quizDate_end != "" ?
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->quizDate_start)
+                                                                                    ->format('j F Y')." - ".
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->quizDate_end)
+                                                                                    ->format('j F Y') : '-'}}
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td><i class="fa fa-comments"></i></td>
+                                                                                <td>&nbsp;Psycho Test (Online Interview)
+                                                                                    Date
+                                                                                </td>
+                                                                                <td>:
+                                                                                    {{$row->psychoTestDate_start &&
+                                                                                    $row->psychoTestDate_end != "" ?
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->psychoTestDate_start)
+                                                                                    ->format('j F Y')." - ".
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->psychoTestDate_end)
+                                                                                    ->format('j F Y') : '-'}}
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        <tr>
+                                                                            <td><i class="fa fa-user-tie"></i></td>
+                                                                            <td>&nbsp;Job Interview Date</td>
+                                                                            <td>:
+                                                                                {{$row->interview_date != "" ?
+                                                                                \Carbon\Carbon::parse
+                                                                                ($row->interview_date)
+                                                                                ->format('l, j F Y') : '-'}}
                                                                             </td>
                                                                         </tr>
                                                                     </table>

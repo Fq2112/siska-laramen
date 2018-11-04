@@ -451,6 +451,10 @@ class AccountController extends Controller
                 'interview_date' => $request->interview_date,
                 'recruitmentDate_start' => $request->recruitmentDate_start,
                 'recruitmentDate_end' => $request->recruitmentDate_end,
+                'quizDate_start' => $request->quizDate_start,
+                'quizDate_end' => $request->quizDate_end,
+                'psychoTestDate_start' => $request->psychoTestDate_start,
+                'psychoTestDate_end' => $request->psychoTestDate_end,
             ]);
         }
 

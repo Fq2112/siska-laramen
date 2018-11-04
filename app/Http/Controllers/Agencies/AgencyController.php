@@ -53,8 +53,7 @@ class AgencyController extends Controller
         $agency = Agencies::findOrFail($id);
         $user = User::find($agency->user_id);
         $industry = Industri::find($agency->industri_id);
-        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)
-            ->orderBy('updated_at', 'desc')->get();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)->orderByDesc('updated_at')->get();
         $likes = FavoriteAgency::where('agency_id', $agency->id)->where('isFavorite', true)->count();
 
         return view('_agencies.profile-agency', compact('provinces', 'agency', 'user', 'industry',

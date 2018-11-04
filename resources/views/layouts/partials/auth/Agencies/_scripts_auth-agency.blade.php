@@ -192,7 +192,7 @@
         });
     });
 
-    function editVacancySchedule(id, $judul, isPost, $active_period, $interview, $start, $end) {
+    function editVacancySchedule(id, $judul, plan_id, isPost, $active_period, $interview, $start, $end, $quiz_start, $quiz_end, $psychoTest_start, $psychoTest_end) {
         if (isPost == true) {
             $('#schedule_settings').html(
                 '<form action="{{url('account/agency/vacancy/update')}}/' + id + '"' +
@@ -209,44 +209,39 @@
                 '<div class="row form">' +
                 '<div class="col-lg-12">' +
                 '<div class="row form-group">' +
-                '<div class="col-lg-6">' +
+                '<div class="col-lg-12">' +
                 '<small>Active Period</small>' +
                 '<div class="input-group">' +
                 '<span class="input-group-addon">' +
                 '<i class="fa fa-calendar-check"></i></span>' +
                 '<input class="form-control" type="text" value="' + $active_period + '" ' +
-                'id="active_period" disabled></div></div>' +
-                '<div class="col-lg-6">' +
-                '<small>Recruitment Start Date</small>' +
+                'id="active_period" disabled></div></div></div>' +
+                '<div class="row form-group">' +
+                '<div class="col-lg-12">' +
+                '<small>Recruitment Date</small>' +
                 '<div class="input-group">' +
-                '<span class="input-group-addon">' +
-                '<i class="fa fa-hourglass-start"></i></span>' +
-                '<input style="background-color: #fff" class="form-control" ' +
-                'type="text" maxlength="10" ' +
+                '<span class="input-group-addon"><i class="fa fa-user"></i></span>' +
+                '<input style="background-color: #fff;width: 50%" class="form-control" type="text" maxlength="10" ' +
                 'placeholder="yyyy-mm-dd" name="recruitmentDate_start" id="recruitmentDate_start" ' +
-                'value="' + $start + '" required></div></div></div>' +
-                '<div class="row form-group" style="margin-bottom: 0">' +
-                '<div class="col-lg-6">' +
-                '<small>Recruitment End Date</small>' +
-                '<div class="input-group">' +
-                '<span class="input-group-addon">' +
-                '<i class="fa fa-hourglass-end"></i></span>' +
-                '<input style="background-color: #fff" class="form-control" ' +
-                'type="text" maxlength="10" ' +
+                'value="' + $start + '" required>' +
+                '<input style="background-color: #fff;width:50%" class="form-control" type="text" maxlength="10" ' +
                 'placeholder="yyyy-mm-dd" name="recruitmentDate_end" id="recruitmentDate_end" ' +
-                'value="' + $end + '" required></div></div>' +
-                '<div class="col-lg-6">' +
-                '<small>Interview Date</small>' +
+                'value="' + $end + '" required>' +
+                '<span class="input-group-addon"><i class="fa fa-users"></i></span></div>' +
+                '<span class="help-block">' +
+                '<small style="float: left;font-size: 12px;color: #fa5555;">P.S.: You\'re only permitted to set ' +
+                'those dates before its active period runs out.</small></span></div></div>' +
+                '<div id="quiz_psychoTest_date' + id + '"></div>' +
+                '<div class="row form-group">' +
+                '<div class="col-lg-12">' +
+                '<small>Job Interview Date</small>' +
                 '<div class="input-group">' +
                 '<span class="input-group-addon">' +
-                '<i class="fa fa-comments"></i></span>' +
+                '<i class="fa fa-user-tie"></i></span>' +
                 '<input style="background-color: #fff" class="form-control" ' +
                 'type="text" maxlength="10" placeholder="yyyy-mm-dd" name="interview_date" id="interview_date" ' +
                 'value="' + $interview + '" required></div></div></div>' +
-                '<div class="row form-group">' +
-                '<div class="col-lg-12"><small style="font-size: 12px;color: #fa5555;">' +
-                'P.S.: You\'re only permitted to set those dates before its active period runs out.' +
-                '</small></div></div></div></div></div></div></div>' +
+                '</div></div></div></div></div>' +
                 '<div class="modal-footer">' +
                 '<div class="card-read-more" id="btn-schedule">' +
                 '<button class="btn btn-link btn-block" type="submit">' +
@@ -255,24 +250,146 @@
             $("#form-schedule input[name='_method']").val('PUT');
             $("#vacancy_title").html('<strong>' + $judul + '</strong> &ndash; VACANCY SCHEDULE');
 
-            $("#recruitmentDate_start").datepicker({
-                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                startDate: '{{today()}}',
-                endDate: $active_period
-            }).on('changeDate', function (selected) {
-                var minDate = new Date(selected.date.valueOf());
-                $('#recruitmentDate_end').datepicker({
+            if (plan_id == 1) {
+                $("#quiz_psychoTest_date" + id).html('');
+                $("#recruitmentDate_start").datepicker({
                     format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                    startDate: minDate,
+                    startDate: '{{today()}}',
                     endDate: $active_period
                 }).on('changeDate', function (selected) {
                     var minDate = new Date(selected.date.valueOf());
-                    $('#interview_date').datepicker({
+                    $('#recruitmentDate_end').datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: minDate
+                        startDate: minDate,
+                        endDate: $active_period
+                    }).on('changeDate', function (selected) {
+                        var minDate = new Date(selected.date.valueOf());
+                        $('#interview_date').datepicker({
+                            format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                            startDate: minDate
+                        });
                     });
                 });
-            });
+
+            } else if (plan_id == 2) {
+                $("#quiz_psychoTest_date" + id).html(
+                    '<div class="row form-group">' +
+                    '<div class="col-lg-12">' +
+                    '<small>Quiz (Online TPA & TKD) Date</small>' +
+                    '<div class="input-group">' +
+                    '<span class="input-group-addon"><i class="fa fa-smile"></i></span>' +
+                    '<input style="background-color: #fff;width: 50%" class="form-control" type="text" maxlength="10" ' +
+                    'placeholder="yyyy-mm-dd" name="quizDate_start" id="quizDate_start" ' +
+                    'value="' + $quiz_start + '" required>' +
+                    '<input style="background-color: #fff;width:50%" class="form-control" type="text" maxlength="10" ' +
+                    'placeholder="yyyy-mm-dd" name="quizDate_end" id="quizDate_end" ' +
+                    'value="' + $quiz_end + '" required>' +
+                    '<span class="input-group-addon"><i class="fa fa-grin-beam"></i></span>' +
+                    '</div></div></div>'
+                );
+                $("#recruitmentDate_start").datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                    startDate: '{{today()}}',
+                    endDate: $active_period
+                }).on('changeDate', function (selected) {
+                    var minDate = new Date(selected.date.valueOf());
+                    $('#recruitmentDate_end').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: minDate,
+                        endDate: $active_period
+                    }).on('changeDate', function (selected) {
+                        var minDate = new Date(selected.date.valueOf());
+                        $('#quizDate_start').datepicker({
+                            format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                            startDate: minDate
+                        }).on('changeDate', function (selected) {
+                            var minDate = new Date(selected.date.valueOf());
+                            $('#quizDate_end').datepicker({
+                                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                startDate: minDate
+                            }).on('changeDate', function (selected) {
+                                var minDate = new Date(selected.date.valueOf());
+                                $('#interview_date').datepicker({
+                                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                    startDate: minDate
+                                });
+                            });
+                        });
+                    });
+                });
+
+            } else if (plan_id == 3) {
+                $("#quiz_psychoTest_date" + id).html(
+                    '<div class="row form-group">' +
+                    '<div class="col-lg-12">' +
+                    '<small>Quiz (Online TPA & TKD) Date</small>' +
+                    '<div class="input-group">' +
+                    '<span class="input-group-addon"><i class="fa fa-smile"></i></span>' +
+                    '<input style="background-color: #fff;width: 50%" class="form-control" type="text" maxlength="10" ' +
+                    'placeholder="yyyy-mm-dd" name="quizDate_start" id="quizDate_start" ' +
+                    'value="' + $quiz_start + '" required>' +
+                    '<input style="background-color: #fff;width:50%" class="form-control" type="text" maxlength="10" ' +
+                    'placeholder="yyyy-mm-dd" name="quizDate_end" id="quizDate_end" ' +
+                    'value="' + $quiz_end + '" required>' +
+                    '<span class="input-group-addon"><i class="fa fa-grin-beam"></i></span>' +
+                    '</div></div></div>' +
+                    '<div class="row form-group">' +
+                    '<div class="col-lg-12">' +
+                    '<small>Psycho Test (Online Interview) Date</small>' +
+                    '<div class="input-group">' +
+                    '<span class="input-group-addon"><i class="fa fa-comment"></i></span>' +
+                    '<input style="background-color: #fff;width: 50%" class="form-control" type="text" maxlength="10" ' +
+                    'placeholder="yyyy-mm-dd" name="psychoTestDate_start" id="psychoTestDate_start" ' +
+                    'value="' + $psychoTest_start + '" required>' +
+                    '<input style="background-color: #fff;width:50%" class="form-control" type="text" maxlength="10" ' +
+                    'placeholder="yyyy-mm-dd" name="psychoTestDate_end" id="psychoTestDate_end" ' +
+                    'value="' + $psychoTest_end + '" required>' +
+                    '<span class="input-group-addon"><i class="fa fa-comments"></i></span>' +
+                    '</div></div></div>'
+                );
+                $("#recruitmentDate_start").datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                    startDate: '{{today()}}',
+                    endDate: $active_period
+                }).on('changeDate', function (selected) {
+                    var minDate = new Date(selected.date.valueOf());
+                    $('#recruitmentDate_end').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: minDate,
+                        endDate: $active_period
+                    }).on('changeDate', function (selected) {
+                        var minDate = new Date(selected.date.valueOf());
+                        $('#quizDate_start').datepicker({
+                            format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                            startDate: minDate
+                        }).on('changeDate', function (selected) {
+                            var minDate = new Date(selected.date.valueOf());
+                            $('#quizDate_end').datepicker({
+                                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                startDate: minDate
+                            }).on('changeDate', function (selected) {
+                                var minDate = new Date(selected.date.valueOf());
+                                $('#psychoTestDate_start').datepicker({
+                                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                    startDate: minDate
+                                }).on('changeDate', function (selected) {
+                                    var minDate = new Date(selected.date.valueOf());
+                                    $('#psychoTestDate_end').datepicker({
+                                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                        startDate: minDate
+                                    }).on('changeDate', function (selected) {
+                                        var minDate = new Date(selected.date.valueOf());
+                                        $('#interview_date').datepicker({
+                                            format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                            startDate: minDate
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            }
 
             $("#formModal").modal('show');
 

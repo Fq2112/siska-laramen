@@ -57,44 +57,44 @@
                         </div>
                         <div class="collapse navbar-collapse" id="mainNav">
                             <ul class="nav main-menu navbar-nav to-animate">
-                                <li>
-                                    <a target="_blank"
-                                       href="{{route('search.vacancy',['loc' => substr($city, 0, 2)=="Ko" ? substr($city,5) : substr($city,10)])}}">
-                                        <i class="fa fa-map-marked"></i>&ensp;{{substr($city, 0, 2)=="Ko" ? substr($city,5) : substr($city,10)}}
+                                <li data-placement="left" data-toggle="tooltip" title="Location">
+                                    <a target="_blank" href="{{route('search.vacancy',
+                                    ['loc' => substr($city, 0, 2)=="Ko" ? substr($city,5) : substr($city,10)])}}">
+                                        <i class="fa fa-map-marked"></i>&ensp;{{substr($city, 0, 2)=="Ko" ?
+                                        substr($city,5) : substr($city,10)}}
                                     </a>
                                 </li>
-                                <li>
-                                    <a target="_blank"
-                                       href="{{route('search.vacancy',['salary_ids' => $salary->id])}}">
-                                        <i class="fa fa-money-bill-wave"></i>&ensp;IDR {{$salary->name}}</a>
+                                <li data-placement="bottom" data-toggle="tooltip" title="Salary">
+                                    <a target="_blank" href="{{route('search.vacancy',['salary_ids' => $salary->id])}}">
+                                        <i class="fa fa-money-bill-wave"></i>&ensp;IDR {{$salary->name}}
+                                    </a>
                                 </li>
-                                <li>
+                                <li data-placement="bottom" data-toggle="tooltip" title="Work Experience">
                                     <a><i class="fa fa-briefcase"></i>&ensp;At least {{$vacancy->pengalaman > 1 ?
-                                    $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}</a>
+                                    $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
+                                    </a>
+                                </li>
+                                <li data-placement="right" data-toggle="tooltip" title="Total Applicant">
+                                    <a><i class="fa fa-paper-plane"></i>&ensp;<strong>{{$applicants}}</strong>
+                                        applicants</a>
                                 </li>
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
                                 @php
                                     $content = '';
+                                    $style = 'none';
                                     if($vacancy->isPost == false){
                                         $content = 'This vacancy is INACTIVE.';
                                         $style = 'inline-block';
-                                        $style_applicant = 'none';
                                     } else{
                                         if(now() < $vacancy->recruitmentDate_start || is_null($vacancy
                                         ->recruitmentDate_start)){
                                             $content = 'The recruitment date of this vacancy hasn\'t started yet.';
                                             $style = 'inline-block';
-                                            $style_applicant = 'none';
                                         } elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
                                         ->recruitmentDate_end)){
                                             $content = 'The recruitment date of this vacancy has been ended.';
                                             $style = 'inline-block';
-                                            $style_applicant = 'none';
-                                        } else {
-                                            $content = '';
-                                            $style = 'none';
-                                            $style_applicant = 'inline-block';
                                         }
                                     }
                                 @endphp
@@ -111,12 +111,9 @@
                                         <div class="anim-icon anim-icon-md info" style="display: {{$style}};">
                                             <input type="checkbox" id="info">
                                             <label for="info" style="cursor: help;" data-toggle="popover"
-                                                   data-placement="top" title="FYI" data-content="{{$content}}"></label>
+                                                   data-placement="top"
+                                                   title="FYI" data-content="{{$content}}"></label>
                                         </div>
-                                        <span class="label label-default"
-                                              style="background: #fa5555;display: {{$style_applicant}};">
-                                            <strong>{{$applicants}}&ensp;applicants</strong>
-                                        </span>
                                     </form>
                                 </li>
                                 <li class="{{$vacancy->isPost == false || Auth::check() && Auth::user()->isAgency() ||
@@ -186,16 +183,6 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="fa fa-briefcase"></i></td>
-                                                    <td>&nbsp;</td>
-                                                    <td>
-                                                        <span data-placement="right" data-toggle="tooltip"
-                                                              title="Work Experience">At least
-                                                            {{$vacancy->pengalaman > 1 ? $vacancy->pengalaman.' years' :
-                                                            $vacancy->pengalaman.' year'}}</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
                                                     <td><i class="fa fa-graduation-cap"></i></td>
                                                     <td>&nbsp;</td>
                                                     <td>
@@ -211,23 +198,95 @@
                                                               title="Education Major">{{$majors->name}}</span>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td><i class="fa fa-briefcase"></i></td>
+                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <span data-placement="right" data-toggle="tooltip"
+                                                              title="Work Experience">At least
+                                                            {{$vacancy->pengalaman > 1 ? $vacancy->pengalaman.' years' :
+                                                            $vacancy->pengalaman.' year'}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><i class="fa fa-paper-plane"></i></td>
+                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <span data-placement="right" data-toggle="tooltip"
+                                                              title="Total Applicant">{{$applicants}} applicants</span>
+                                                    </td>
+                                                </tr>
                                             </table>
                                             <hr>
                                             <table class="stats">
                                                 <tr>
                                                     <td><i class="fa fa-users"></i></td>
-                                                    <td>&nbsp;Recruitment Date</td>
-                                                    <td style="text-transform: none">: {{$vacancy->recruitmentDate_start &&
-                                                    $vacancy->recruitmentDate_end != "" ? \Carbon\Carbon::parse
-                                                    ($vacancy->recruitmentDate_start)->format('d-m-Y')." to ".
-                                                    \Carbon\Carbon::parse($vacancy->recruitmentDate_end)
-                                                    ->format('d-m-Y') : '-'}}</td>
+                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <span data-placement="right" data-toggle="tooltip"
+                                                              title="Recruitment Date">
+                                                            {{$vacancy->recruitmentDate_start &&
+                                                            $vacancy->recruitmentDate_end != "" ? \Carbon\Carbon::parse
+                                                            ($vacancy->recruitmentDate_start)->format('j F Y')." - ".
+                                                            \Carbon\Carbon::parse($vacancy->recruitmentDate_end)
+                                                            ->format('j F Y') : '-'}}
+                                                        </span>
+                                                    </td>
                                                 </tr>
+                                                @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
+                                                    <tr>
+                                                        <td><i class="fa fa-grin-beam"></i></td>
+                                                        <td>&nbsp;</td>
+                                                        <td>
+                                                            <span data-placement="right" data-toggle="tooltip"
+                                                                  title="Quiz (Online TPA & TKD) Date">
+                                                                {{$vacancy->quizDate_start && $vacancy->quizDate_end !=
+                                                                "" ? \Carbon\Carbon::parse($vacancy->quizDate_start)
+                                                                ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                                ($vacancy->quizDate_end)->format('j F Y') : '-'}}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                @elseif($vacancy->plan_id != "" &&
+                                                $vacancy->plan_id == 3)
+                                                    <tr>
+                                                        <td><i class="fa fa-grin-beam"></i></td>
+                                                        <td>&nbsp;</td>
+                                                        <td>
+                                                            <span data-placement="right" data-toggle="tooltip"
+                                                                  title="Quiz (Online TPA & TKD) Date">
+                                                                {{$vacancy->quizDate_start && $vacancy->quizDate_end !=
+                                                                "" ? \Carbon\Carbon::parse($vacancy->quizDate_start)
+                                                                ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                                ($vacancy->quizDate_end)->format('j F Y') : '-'}}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i class="fa fa-comments"></i></td>
+                                                        <td>&nbsp;</td>
+                                                        <td>
+                                                            <span data-placement="right" data-toggle="tooltip"
+                                                                  title="Psycho Test (Online Interview) Date">
+                                                                {{$vacancy->psychoTestDate_start &&
+                                                                $vacancy->psychoTestDate_end != "" ?
+                                                                \Carbon\Carbon::parse($vacancy->psychoTestDate_start)
+                                                                ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                                ($vacancy->psychoTestDate_end)->format('j F Y') : '-'}}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                                 <tr>
-                                                    <td><i class="fa fa-comments"></i></td>
-                                                    <td>&nbsp;Interview Date</td>
-                                                    <td>: {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
-                                                    ($vacancy->interview_date)->format('l, j F Y') : '-'}}</td>
+                                                    <td><i class="fa fa-user-tie"></i></td>
+                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <span data-placement="right" data-toggle="tooltip"
+                                                              title="Job Interview Date">
+                                                            {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
+                                                            ($vacancy->interview_date)->format('l, j F Y') : '-'}}
+                                                        </span>
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -298,7 +357,7 @@
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
                                             @foreach(\App\Vacancies::where('agency_id',$agency->id)
-                                            ->where('isPost',true)->orderByDesc('id')->get() as $row)
+                                            ->where('isPost',true)->orderByDesc('updated_at')->get() as $row)
                                                 @php
                                                     $agency_list = \App\Agencies::find($row->agency_id);
                                                     $user_list = \App\User::find(\App\Agencies::find($row->agency_id)->user_id);
@@ -403,10 +462,65 @@
                                                                                 ->format('j F Y') : '-'}}
                                                                             </td>
                                                                         </tr>
+                                                                        @if($row->plan_id != "" &&
+                                                                                $row->plan_id == 2)
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <i class="fa fa-grin-beam">
+                                                                                    </i>
+                                                                                </td>
+                                                                                <td>&nbsp;Quiz
+                                                                                    (Online TPA & TKD) Date
+                                                                                </td>
+                                                                                <td>: {{$row->quizDate_start &&
+                                                                                        $row->quizDate_end != "" ?
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->quizDate_start)
+                                                                                        ->format('j F Y')." - ".
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->quizDate_end)
+                                                                                        ->format('j F Y') : '-'}}
+                                                                                </td>
+                                                                            </tr>
+                                                                        @elseif($row->plan_id != "" &&
+                                                                        $row->plan_id == 3)
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <i class="fa fa-grin-beam"></i>
+                                                                                </td>
+                                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date
+                                                                                </td>
+                                                                                <td>: {{$row->quizDate_start &&
+                                                                                $row->quizDate_end != "" ?
+                                                                                \Carbon\Carbon::parse
+                                                                                ($row->quizDate_start)->format('j F Y').
+                                                                                " - ".\Carbon\Carbon::parse
+                                                                                ($row->quizDate_end)->format('j F Y') : '-'}}
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <i class="fa fa-comments"></i>
+                                                                                </td>
+                                                                                <td>&nbsp;Psycho Test (Online Interview)
+                                                                                    Date
+                                                                                </td>
+                                                                                <td>:
+                                                                                    {{$row->psychoTestDate_start &&
+                                                                                    $row->psychoTestDate_end != "" ?
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->psychoTestDate_start)
+                                                                                    ->format('j F Y')." - ".
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->psychoTestDate_end)
+                                                                                    ->format('j F Y') : '-'}}
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endif
                                                                         <tr>
-                                                                            <td><i class="fa fa-comments"></i>
+                                                                            <td><i class="fa fa-user-tie"></i>
                                                                             </td>
-                                                                            <td>&nbsp;Interview Date</td>
+                                                                            <td>&nbsp;Job Interview Date</td>
                                                                             <td>:
                                                                                 {{$row->interview_date != "" ?
                                                                                 \Carbon\Carbon::parse
@@ -521,6 +635,12 @@
                                                                 $vacancy->pengalaman.' year'}}
                                                             </a>
                                                         </li>
+                                                        <li>
+                                                            <a class="tag tag-plans">
+                                                                <i class="fa fa-paper-plane"></i>&ensp;
+                                                                <strong>{{$applicants}}</strong> applicants
+                                                            </a>
+                                                        </li>
                                                     </ul>
                                                     <table style="font-size: 12px;margin-top: -.5em">
                                                         <tr>
@@ -534,10 +654,44 @@
                                                                 ($vacancy->recruitmentDate_end)->format('j F Y') : '-'}}
                                                             </td>
                                                         </tr>
+                                                        @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
+                                                            <tr>
+                                                                <td><i class="fa fa-grin-beam"></i></td>
+                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                                <td>: {{$vacancy->quizDate_start &&
+                                                                $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
+                                                                ($vacancy->quizDate_start)->format('j F Y')." - ".
+                                                                \Carbon\Carbon::parse($vacancy->quizDate_end)
+                                                                ->format('j F Y') : '-'}}
+                                                                </td>
+                                                            </tr>
+                                                        @elseif($vacancy->plan_id != "" &&
+                                                        $vacancy->plan_id == 3)
+                                                            <tr>
+                                                                <td><i class="fa fa-grin-beam"></i></td>
+                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                                <td>: {{$vacancy->quizDate_start &&
+                                                                $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
+                                                                ($vacancy->quizDate_start)->format('j F Y')." - ".
+                                                                \Carbon\Carbon::parse($vacancy->quizDate_end)
+                                                                ->format('j F Y') : '-'}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><i class="fa fa-comments"></i></td>
+                                                                <td>&nbsp;Psycho Test (Online Interview) Date</td>
+                                                                <td>:
+                                                                    {{$vacancy->psychoTestDate_start &&
+                                                                    $vacancy->psychoTestDate_end != "" ?
+                                                                    \Carbon\Carbon::parse($vacancy->psychoTestDate_start)
+                                                                    ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                                    ($vacancy->psychoTestDate_end)->format('j F Y') : '-'}}
+                                                                </td>
+                                                            </tr>
+                                                        @endif
                                                         <tr>
-                                                            <td><i class="fa fa-comments"></i>
-                                                            </td>
-                                                            <td>&nbsp;Interview Date</td>
+                                                            <td><i class="fa fa-user-tie"></i></td>
+                                                            <td>&nbsp;Job Interview Date</td>
                                                             <td>:
                                                                 {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
                                                                 ($vacancy->interview_date)->format('l, j F Y') : '-'}}

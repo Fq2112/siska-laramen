@@ -126,9 +126,17 @@
             });
         });
 
-        $("#txt_keyword").on('keyup', function () {
-            loadVacancy();
+        $('#txt_keyword').on('input', function () {
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $(this).trigger('search');
+            }.bind(this), 800);
+        }).on('search', function () {
+            if (this.value) {
+                loadVacancy();
+            }
         });
+
         $("#form-src-vacancies").on('submit', function (event) {
             event.preventDefault();
             loadVacancy();
@@ -235,7 +243,7 @@
 
         function successLoad(data, keyword, page) {
             var title, $result = '', pagination = '', $page = '', $class1, $class2, $style, $attr, $prop, $label,
-                $tooltip, $recruitmentDate, $pengalaman;
+                $tooltip, $recruitmentDate, $pengalaman, $style_quiz, $style_psychoTest;
 
             title = 'for <strong>"' + keyword + '"</strong>';
             if (data.total != 0) {
@@ -272,15 +280,22 @@
                     $class2 = '';
                     $tooltip = 'Unmark';
                 }
-                if (val.recruitmentDate_start == "-" || val.recruitmentDate_end == "-") {
-                    $recruitmentDate = '-';
-                } else {
-                    $recruitmentDate = val.recruitmentDate_start + ' - ' + val.recruitmentDate_end;
-                }
-                if (val.pengalaman > 1) {
-                    $pengalaman = 'At least ' + val.pengalaman + ' years';
-                } else {
-                    $pengalaman = 'At least ' + val.pengalaman + ' year';
+
+                $recruitmentDate = val.recruitmentDate_start == "-" || val.recruitmentDate_end == "-" ? '-' :
+                    val.recruitmentDate_start + ' - ' + val.recruitmentDate_end;
+
+                $pengalaman = val.pengalaman > 1 ? 'At least ' + val.pengalaman + ' years' :
+                    'At least ' + val.pengalaman + ' year';
+
+                if (val.plan_id == 1) {
+                    $style_quiz = 'none';
+                    $style_psychoTest = 'none';
+                } else if (val.plan_id == 2) {
+                    $style_quiz = '';
+                    $style_psychoTest = 'none';
+                } else if (val.plan_id == 3) {
+                    $style_quiz = '';
+                    $style_psychoTest = '';
                 }
                 $result +=
                     '<div class="media">' +
@@ -327,8 +342,14 @@
                     '<tr><td><i class="fa fa-users"></i></td>' +
                     '<td>&nbsp;Recruitment Date</td>' +
                     '<td>: ' + $recruitmentDate + '</td></tr>' +
-                    '<tr><td><i class="fa fa-comments"></i></td>' +
-                    '<td>&nbsp;Interview Date</td>' +
+                    '<tr style="display: ' + $style_quiz + '"><td><i class="fa fa-grin-beam"></i></td>' +
+                    '<td>&nbsp;Quiz (Online TPA & TKD) Date</td>' +
+                    '<td>: ' + val.quizDate + '</td></tr>' +
+                    '<tr style="display: ' + $style_psychoTest + '"><td><i class="fa fa-comments"></i></td>' +
+                    '<td>&nbsp;Psycho Test (Online Interview) Date</td>' +
+                    '<td>: ' + val.psychoTestDate + '</td></tr>' +
+                    '<tr><td><i class="fa fa-user-tie"></i></td>' +
+                    '<td>&nbsp;Job Interview Date</td>' +
                     '<td>: ' + val.interview_date + '</td></tr>' +
                     '<tr><td><i class="fa fa-clock"></i></td>' +
                     '<td>&nbsp;Last Update</td>' +
@@ -505,7 +526,7 @@
         });
 
         $("#btn_more").on("click", function () {
-            window.location.href = '{{route('search.vacancy')}}'
+            window.location.href = '{{route('search.vacancy')}}?q=' + $("#txt_keyword").val()
         });
     </script>
 @endpush

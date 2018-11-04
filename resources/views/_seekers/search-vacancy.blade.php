@@ -294,9 +294,17 @@
         });
 
         // search form navbar
-        $("#txt_keyword").on('keyup', function () {
-            loadVacancy();
+        $('#txt_keyword').on('input', function () {
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $(this).trigger('search');
+            }.bind(this), 800);
+        }).on('search', function () {
+            if (this.value) {
+                loadVacancy();
+            }
         });
+
         $("#list-lokasi li a").click(function () {
             setTimeout(loadVacancy, 100);
         });

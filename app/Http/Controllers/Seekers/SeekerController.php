@@ -390,13 +390,24 @@ class SeekerController extends Controller
                 Carbon::parse($vacancy['recruitmentDate_start'])->format('j F Y'));
             $endDate = array('recruitmentDate_end' => is_null($vacancy['recruitmentDate_end']) ? '-' :
                 Carbon::parse($vacancy['recruitmentDate_end'])->format('j F Y'));
+
+            $quizDate = array('quizDate' => is_null($vacancy['quizDate_start']) || is_null($vacancy['quizDate_end']) ?
+                '-' : Carbon::parse($vacancy['quizDate_start'])->format('j F Y') . ' - ' .
+                Carbon::parse($vacancy['quizDate_end'])->format('j F Y'));
+
+            $psychoTestDate = array('psychoTestDate' => is_null($vacancy['psychoTestDate_start']) ||
+            is_null($vacancy['psychoTestDate_end']) ? '-' : Carbon::parse($vacancy['psychoTestDate_start'])
+                    ->format('j F Y') . ' - ' . Carbon::parse($vacancy['psychoTestDate_end'])
+                    ->format('j F Y'));
+
             $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
                 $vacancy['updated_at'])->diffForHumans());
             $acc = array('acc' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->first());
             $totalApp = array('total_app' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->count());
 
             $result['data'][$i] = array_replace($ava, $result['data'][$i], $city, $degrees, $majors, $jobfunc,
-                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc, $totalApp);
+                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc, $totalApp,
+                $quizDate, $psychoTestDate);
             $i = $i + 1;
         }
 

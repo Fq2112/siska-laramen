@@ -137,28 +137,56 @@
                                                     <td>:
                                                         {{$vacancy->recruitmentDate_start &&
                                                         $vacancy->recruitmentDate_end != "" ?
-                                                        \Carbon\Carbon::parse
-                                                        ($vacancy->recruitmentDate_start)
-                                                        ->format('j F Y')." - ".
-                                                        \Carbon\Carbon::parse
-                                                        ($vacancy->recruitmentDate_end)
-                                                        ->format('j F Y') : '-'}}
+                                                        \Carbon\Carbon::parse($vacancy->recruitmentDate_start)
+                                                        ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                        ($vacancy->recruitmentDate_end)->format('j F Y') : '-'}}
                                                     </td>
                                                 </tr>
+                                                @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
+                                                    <tr>
+                                                        <td><i class="fa fa-grin-beam"></i></td>
+                                                        <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                        <td>: {{$vacancy->quizDate_start &&
+                                                                $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
+                                                                ($vacancy->quizDate_start)->format('j F Y')." - ".
+                                                                \Carbon\Carbon::parse($vacancy->quizDate_end)
+                                                                ->format('j F Y') : '-'}}
+                                                        </td>
+                                                    </tr>
+                                                @elseif($vacancy->plan_id != "" &&
+                                                $vacancy->plan_id == 3)
+                                                    <tr>
+                                                        <td><i class="fa fa-grin-beam"></i></td>
+                                                        <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                        <td>: {{$vacancy->quizDate_start &&
+                                                                $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
+                                                                ($vacancy->quizDate_start)->format('j F Y')." - ".
+                                                                \Carbon\Carbon::parse($vacancy->quizDate_end)
+                                                                ->format('j F Y') : '-'}}
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><i class="fa fa-comments"></i></td>
+                                                        <td>&nbsp;Psycho Test (Online Interview) Date</td>
+                                                        <td>:
+                                                            {{$vacancy->psychoTestDate_start &&
+                                                            $vacancy->psychoTestDate_end != "" ?
+                                                            \Carbon\Carbon::parse($vacancy->psychoTestDate_start)
+                                                            ->format('j F Y')." - ".\Carbon\Carbon::parse
+                                                            ($vacancy->psychoTestDate_end)->format('j F Y') : '-'}}
+                                                        </td>
+                                                    </tr>
+                                                @endif
                                                 <tr>
-                                                    <td><i class="fa fa-comments"></i>
-                                                    </td>
-                                                    <td>&nbsp;Interview Date</td>
+                                                    <td><i class="fa fa-user-tie"></i></td>
+                                                    <td>&nbsp;Job Interview Date</td>
                                                     <td>:
-                                                        {{$vacancy->interview_date != "" ?
-                                                        \Carbon\Carbon::parse
-                                                        ($vacancy->interview_date)
-                                                        ->format('l, j F Y') : '-'}}
+                                                        {{$vacancy->interview_date != "" ? \Carbon\Carbon::parse
+                                                        ($vacancy->interview_date)->format('l, j F Y') : '-'}}
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td><i class="fa fa-clock"></i>
-                                                    </td>
+                                                    <td><i class="fa fa-clock"></i></td>
                                                     <td>&nbsp;Last Update</td>
                                                     <td>:
                                                         {{$vacancy->updated_at->diffForHumans()}}
