@@ -36,7 +36,6 @@ class WebContentsController extends Controller
             'image' => $name,
             'title' => $request->title,
             'captions' => $request->captions,
-            'admin_id' => $request->admin_id
         ]);
 
         return back()->with('success', 'Carousel (' . $request->title . ') is successfully created!');
@@ -196,14 +195,31 @@ class WebContentsController extends Controller
 
     public function createPlans(Request $request)
     {
+        $checkIsBest = Plan::where('isBest', true)->count();
+        if ($checkIsBest > 0 && $request->isBest == true) {
+            foreach (Plan::where('isBest', true)->get() as $row) {
+                $row->update([
+                    'caption' => 'Job Posting ' . $row->name . ' Package',
+                    'isBest' => false
+                ]);
+            }
+        }
+
         Plan::create([
             'name' => $request->name,
-            'price' => $request->price,
             'caption' => $request->caption,
+            'price' => $request->price,
+            'discount' => $request->discount,
             'job_ads' => $request->job_ads,
-            'benefit' => $request->benefit,
+            'isQuiz' => $request->isQuiz == 1 ? true : false,
+            'quiz_applicant' => $request->quiz_applicant == null ? 0 : $request->quiz_applicant,
+            'price_quiz_applicant' => $request->price_quiz_applicant == null ? 0 : $request->price_quiz_applicant,
+            'isPsychoTest' => $request->isPsychoTest == 1 ? true : false,
+            'psychoTest_applicant' => $request->psychoTest_applicant == null ? 0 : $request->psychoTest_applicant,
+            'price_psychoTest_applicant' => $request->price_psychoTest_applicant == null ? 0 :
+                $request->price_psychoTest_applicant,
+            'benefit' => preg_replace('/\s+/', ' ', trim($request->benefit)),
             'isBest' => $request->isBest,
-            'admin_id' => $request->admin_id,
         ]);
 
         return back()->with('success', '' . $request->name . ' is successfully created!');
@@ -211,13 +227,31 @@ class WebContentsController extends Controller
 
     public function updatePlans(Request $request)
     {
+        $checkIsBest = Plan::where('isBest', true)->count();
+        if ($checkIsBest > 0 && $request->isBest == true) {
+            foreach (Plan::where('isBest', true)->get() as $row) {
+                $row->update([
+                    'caption' => 'Job Posting ' . $row->name . ' Package',
+                    'isBest' => false
+                ]);
+            }
+        }
+
         $plan = Plan::find($request->id);
         $plan->update([
             'name' => $request->name,
-            'price' => $request->price,
             'caption' => $request->caption,
+            'price' => $request->price,
+            'discount' => $request->discount,
             'job_ads' => $request->job_ads,
-            'benefit' => $request->benefit,
+            'isQuiz' => $request->isQuiz == 1 ? true : false,
+            'quiz_applicant' => $request->quiz_applicant == null ? 0 : $request->quiz_applicant,
+            'price_quiz_applicant' => $request->price_quiz_applicant == null ? 0 : $request->price_quiz_applicant,
+            'isPsychoTest' => $request->isPsychoTest == 1 ? true : false,
+            'psychoTest_applicant' => $request->psychoTest_applicant == null ? 0 : $request->psychoTest_applicant,
+            'price_psychoTest_applicant' => $request->price_psychoTest_applicant == null ? 0 :
+                $request->price_psychoTest_applicant,
+            'benefit' => preg_replace('/\s+/', ' ', trim($request->benefit)),
             'isBest' => $request->isBest,
         ]);
 

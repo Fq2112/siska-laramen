@@ -69,7 +69,7 @@ class HomeContentSeeder extends Seeder
             'name' => 'Enterprise',
             'price' => 3500000,
             'discount' => 30,
-            'caption' => 'Job Posting Plus Package',
+            'caption' => 'Best Job Posting Package',
             'job_ads' => '3 Job Ads + Quiz + Psycho Test (Online Interview)',
             'isQuiz' => true,
             'quiz_applicant' => 100,

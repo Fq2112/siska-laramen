@@ -734,7 +734,7 @@
         });
 
         $("#total_ads").on("blur", function () {
-            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads) {
+            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads || parseInt($(this).val()) > '{{count($vacancies)}}') {
                 $(this).val(old_total_ads);
             }
 
@@ -902,7 +902,7 @@
 
         $("#plans_id").on('change', function () {
             $.get('{{route('get.plansReviewData',['plan'=>''])}}/' + $(this).val(), function (data) {
-                if (data == 0) {
+                if (data.total_vac < data.job_ads) {
                     $("#plans_id").val('default').selectpicker("refresh");
                     swal({
                         title: 'ATTENTION!',

@@ -189,7 +189,7 @@ class UserSeeder extends Seeder
                         'awards' => $faker->sentence(5, true),
                         'nilai' => $faker->randomFloat(8, 3, 4),
                         'start_period' => (today()->subYears(rand(1, 4)))->format('Y'),
-                        'end_period' => rand(0, 1) ? null : today()->format('Y'),
+                        'end_period' => today()->format('Y'),
                     ]);
                     $exp = Experience::create([
                         'seeker_id' => $seeker->id,

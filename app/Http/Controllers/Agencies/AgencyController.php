@@ -35,14 +35,15 @@ class AgencyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'agency'])->except(['index', 'showProfile']);
+        $this->middleware(['auth', 'agency'])->except(['index', 'showProfile', 'invoiceJobPosting']);
+        $this->middleware(['agency', 'admin'])->only('invoiceJobPosting');
     }
 
     public function index()
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
-        $plans = Plan::take(3)->get();
+        $plans = Plan::all();
 
         return view('home-agency', compact('provinces', 'carousels', 'plans'));
     }
@@ -161,16 +162,12 @@ class AgencyController extends Controller
         $plans = Plan::find($plan)->toArray();
         $totalAds = array_sum(str_split(filter_var($plans['job_ads'], FILTER_SANITIZE_NUMBER_INT)));
         $price = $plans['price'] - ($plans['price'] * $plans['discount'] / 100);
-        $plans = array_replace($plans, array('job_ads' => $totalAds),
+        $plans = array_replace($plans, array('total_vac' => $vacancies), array('job_ads' => $totalAds),
             array('main_feature' => $plans['job_ads']),
             array('price' => $price),
             array('rp_price' => number_format($price, 2, ',', '.')));
 
-        if ($vacancies < $totalAds) {
-            return 0;
-        } else {
-            return $plans;
-        }
+        return $plans;
     }
 
     public function getPaymentMethod($id)

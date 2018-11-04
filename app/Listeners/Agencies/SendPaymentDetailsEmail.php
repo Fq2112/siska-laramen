@@ -28,9 +28,6 @@ class SendPaymentDetailsEmail
      */
     public function handle(VacancyPaymentDetails $event)
     {
-        if ($event->data['confirmAgency']->isPaid) {
-            return;
-        }
         Mail::to(User::find(Agencies::find($event->data['confirmAgency']->agency_id)->user_id)->email)
             ->send(new PaymentDetailsEmail($event->data));
     }

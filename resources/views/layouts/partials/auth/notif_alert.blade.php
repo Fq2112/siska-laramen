@@ -10,8 +10,8 @@
             <div class="alert-banner">
                 <div class="alert-banner-content">
                     <div class="alert-banner-text">
-                        There seems to be <strong>{{$vacancies->count()}}</strong> of your vacancy schedules
-                        {{$vacancies->count() > 1 ? 'haven\'t' : 'hasn\'t'}} been set yet!
+                        There seems to be <strong>{{$vacancies->count()}}</strong> of your vacancy schedules that
+                        {{$vacancies->count() > 1 ? ' haven\'t' : ' hasn\'t'}} been set yet!
                     </div>
                     <a class="alert-banner-button" href="{{route('agency.vacancy.show')}}"
                        style="text-decoration: none">
@@ -20,5 +20,21 @@
                 <div class="alert-banner-close"></div>
             </div>
         @endif
+    @endif
+@endauth
+@auth('admin')
+    @php $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')->count(); @endphp
+    @if($posting > 0)
+        <div class="alert-banner">
+            <div class="alert-banner-content">
+                <div class="alert-banner-text">
+                    There seems to be <strong>{{$posting}}</strong> job posting request that
+                    {{$posting > 1 ? ' haven\'t' : ' hasn\'t'}} been approve yet!
+                </div>
+                <a class="alert-banner-button" href="{{route('table.jobPostings')}}" style="text-decoration: none">
+                    Redirect me to the Job Posting Table page</a>
+            </div>
+            <div class="alert-banner-close"></div>
+        </div>
     @endif
 @endauth

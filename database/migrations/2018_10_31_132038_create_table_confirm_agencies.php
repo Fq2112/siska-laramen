@@ -37,6 +37,7 @@ class CreateTableConfirmAgencies extends Migration
             $table->text('payment_proof')->nullable();
             $table->boolean('isPaid')->default(false);
             $table->dateTime('date_payment')->nullable();
+            $table->boolean('isAbort')->default(false);
             $table->boolean('isUpgrade')->default(false);
             $table->integer('from_plan')->nullable();
             $table->integer('admin_id')->unsigned()->nullable();

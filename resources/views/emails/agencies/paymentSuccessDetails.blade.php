@@ -4,18 +4,12 @@
     \App\Support\RomanConverter::numberToRoman($date->format('m'));
     $invoice = '#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
     $reference = '#PYM/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
-    $total = number_format($data['total_payment'],0,"",".");
-    if($data['total_payment'] < 1000000){
-        $first = substr($total,0,4);
-    } else{
-        $first = substr($total,0,6);
-    }
-    $last = substr($total, -3);
+    $total = number_format($data['total_payment'],2,",",".");
 @endphp
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scaleable=no">
-    <title>Payment Details! ({{$invoice}})</title>
+    <title>Payment Success Details! ({{$invoice}})</title>
     <style type="text/css">
         /*Bootstrap*/
         .alert {
@@ -488,10 +482,10 @@
                                                         <td>
                                                             <small style="line-height: 2em">
                                                                 <strong style="font-size: 22px">
-                                                                    Please, complete your payment immediately</strong>
-                                                                <br>Checkout was successfully
-                                                                on {{$data['confirmAgency']->created_at->format('l, j F Y')}}
-                                                                at {{$data['confirmAgency']->created_at->format('H:i')}}
+                                                                    We have approved the vacancies in your order
+                                                                </strong><br>
+                                                                Thank you for completing the transaction on SISKA
+                                                                with {{$data['payment_category']->name}}.
                                                             </small>
                                                         </td>
                                                     </tr>
@@ -531,7 +525,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['plan_price'],0,',','.')}}</strong>
+                                                                        ($data['plan_price'],2,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -543,7 +537,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['price_totalVacancy'],0,',','.')}}</strong>
+                                                                        ($data['price_totalVacancy'],2,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr data-placement="left" data-toggle="tooltip"
@@ -556,7 +550,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['price_totalQuiz'],0,',','.')}}</strong>
+                                                                        ($data['price_totalQuiz'],2,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr data-placement="left" data-toggle="tooltip"
@@ -569,7 +563,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['price_totalPsychoTest'],0,',','.')}}
+                                                                        ($data['price_totalPsychoTest'],2,',','.')}}
                                                                         </strong>
                                                                     </td>
                                                                 </tr>
@@ -579,7 +573,7 @@
                                                                     <td align="center"><strong>-</strong></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <strong>-Rp{{$data['payment_code']}}</strong>
+                                                                        <strong>-Rp{{$data['payment_code']}},00</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr style="border-top: 1px solid #eee">
@@ -588,22 +582,9 @@
                                                                     <td>&emsp;</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        @if($data['payment_category']->id == 1)
-                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$first}}
-                                                                                <span style="border:1px solid #fa5555;">{{$last}}</span></strong>
-                                                                        @else
-                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
-                                                                        @endif
+                                                                        <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
                                                                     </td>
                                                                 </tr>
-                                                                @if($data['payment_category']->id == 1)
-                                                                    <tr>
-                                                                        <td colspan="5" align="right"
-                                                                            style="font-size:12px;color:#fa5555;font-weight:bold;">
-                                                                            Transfer right up to the last 3 digits
-                                                                        </td>
-                                                                    </tr>
-                                                                @endif
                                                             </table>
                                                         </td>
                                                     </tr>
@@ -612,16 +593,6 @@
                                             <td valign="top" width="50%">
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%"
                                                        style="margin-left: 1em">
-                                                    <tr>
-                                                        <td>
-                                                            <small><strong>Payment Deadline</strong></small>
-                                                            <hr class="hr-divider">
-                                                            <span>{{$data['confirmAgency']->created_at->addDay()
-                                                            ->format('l, j F Y').' at '.
-                                                            $data['confirmAgency']->created_at->addDay()->format('H:i')}}
-                                                            </span>
-                                                        </td>
-                                                    </tr>
                                                     <tr>
                                                         <td>
                                                             <small><strong>Payment Reference</strong></small>
@@ -674,7 +645,7 @@
                                                         <td>
                                                             <small><strong>Payment Status</strong></small>
                                                             <hr class="hr-divider">
-                                                            <span>Waiting for Payment</span>
+                                                            <span>Verified</span>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -691,25 +662,6 @@
                                         <tr>
                                             <td>
                                                 <div style="font-size:20px;line-height:20px;">&nbsp;</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="alert alert-info text-center">
-                                                    <a target="_blank" style="color: #00ADB5;text-decoration: none"
-                                                       href="{{route('agency.vacancy.status',
-                                                    ['id'=>encrypt($data['confirmAgency']->id),'invoice'=>$invoice])}}">
-                                                        <strong>Upload Payment Proof</strong>
-                                                    </a> to speed up verification
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="alert alert-warning text-center">
-                                                    Make sure not to inform payment details and proof
-                                                    <strong>to any party</strong> except SISKA.
-                                                </div>
                                             </td>
                                         </tr>
                                         <tr>

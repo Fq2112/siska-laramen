@@ -112,7 +112,7 @@
                                                                       class="label label-info">
                                                                         <strong><i class="fa fa-user-graduate"></i>&ensp;
                                                                             {{$last_edu->count() ?
-                                                                            \App\Tingkatpend::find($last_edu->first()
+                                                                            \App\Jurusanpend::find($last_edu->first()
                                                                             ->jurusanpend_id)->name : '-'}}
                                                                         </strong>
                                                                     </span>
@@ -141,9 +141,31 @@
                                                     <table style="margin: 0">
                                                         <tr>
                                                             <td>
-                                                                <a href="{{route('detail.vacancy',['id' => $vacancy->id])}}"
-                                                                   target="_blank"><strong>{{$vacancy->judul}}</strong>
-                                                                </a>
+                                                                <a href="{{route('detail.vacancy',['id' =>
+                                                                $vacancy->id])}}" target="_blank">
+                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;&nbsp;
+                                                                @if($vacancy->isPost == true)
+                                                                    <span data-toggle="tooltip" data-placement="bottom"
+                                                                          title="Plan" class="label label-info">
+                                                                        <strong style="text-transform: uppercase">
+                                                                            <i class="fa fa-thumbtack"></i>&ensp;
+                                                                            {{\App\Plan::find($vacancy->plan_id)->name}}
+                                                                        </strong> Package</span>&nbsp;|
+                                                                @endif
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Status" class="label label-default"
+                                                                      style="background: {{$vacancy->isPost == true ?
+                                                                      '#00adb5' : '#fa5555'}}">
+                                                                    <strong style="text-transform: uppercase">{{$vacancy->isPost == true ?
+                                                                    'Active' : 'Inactive'}}</strong></span>&nbsp;|
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Active Period"
+                                                                      style="text-transform: uppercase"
+                                                                      class="label label-{{$vacancy->active_period != "" ?
+                                                                      'primary' : 'warning'}}">
+                                                                    {{$vacancy->active_period != "" ? 'Until '.
+                                                                    \Carbon\Carbon::parse($vacancy->active_period)
+                                                                    ->format('j F Y') : 'Unknown'}}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -165,13 +187,44 @@
                                                                     ($vacancy->recruitmentDate_start)
                                                                     ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                     ($vacancy->recruitmentDate_end)
-                                                                    ->format('j F Y') : '(empty)'}}
+                                                                    ->format('j F Y') : 'Unknown'}}
                                                                 </strong> |
+                                                                @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
+                                                                    <strong data-toggle="tooltip" data-placement="right"
+                                                                            title="Quiz (Online TPA & TKD) Date">
+                                                                        {{$vacancy->quizDate_start != "" &&
+                                                                        $vacancy->quizDate_end != "" ?
+                                                                        \Carbon\Carbon::parse($vacancy->quizDate_start)
+                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                        ($vacancy->quizDate_end)->format('j F Y') :
+                                                                        'Unknown'}}
+                                                                    </strong><br>
+                                                                @elseif($vacancy->plan_id != "" && $vacancy->plan_id == 3)
+                                                                    <strong data-toggle="tooltip" data-placement="right"
+                                                                            title="Quiz (Online TPA & TKD) Date">
+                                                                        {{$vacancy->quizDate_start != "" &&
+                                                                        $vacancy->quizDate_end != "" ?
+                                                                        \Carbon\Carbon::parse($vacancy->quizDate_start)
+                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                        ($vacancy->quizDate_end)->format('j F Y') :
+                                                                        'Unknown'}}
+                                                                    </strong><br>
+                                                                    <strong data-toggle="tooltip" data-placement="left"
+                                                                            title="Psycho Test (Online Interview) Date">
+                                                                        {{$vacancy->psychoTestDate_start != "" &&
+                                                                        $vacancy->psychoTestDate_end != "" ?
+                                                                        \Carbon\Carbon::parse
+                                                                        ($vacancy->psychoTestDate_start)
+                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                        ($vacancy->psychoTestDate_end)
+                                                                        ->format('j F Y') : 'Unknown'}}
+                                                                    </strong> |
+                                                                @endif
                                                                 <strong data-toggle="tooltip" data-placement="right"
-                                                                        title="Interview Date">
+                                                                        title="Job Interview Date">
                                                                     {{$vacancy->interview_date != "" ?
                                                                     \Carbon\Carbon::parse($vacancy->interview_date)
-                                                                    ->format('l, j F Y') : '(empty)'}}
+                                                                    ->format('l, j F Y') : 'Unknown'}}
                                                                 </strong>
                                                             </td>
                                                         </tr>

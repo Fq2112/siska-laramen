@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Admins\DataTransaction;
 
 use App\ConfirmAgency;
+use App\Events\Agencies\VacancyPaymentDetails;
+use App\PaymentCategory;
+use App\PaymentMethod;
+use App\Plan;
 use App\Support\RomanConverter;
 use App\Vacancies;
 use Illuminate\Http\Request;
@@ -40,7 +44,7 @@ class TransactionAgencyController extends Controller
         $vacancies = Vacancies::whereIn('id', $posting->vacancy_ids)->get();
 
         foreach ($vacancies as $vacancy) {
-            if ($request->isPost == 1) {
+            if ($request->isPaid == 1) {
                 $vacancy->update([
                     'isPost' => true,
                     'active_period' => today()->addMonth()
@@ -51,23 +55,93 @@ class TransactionAgencyController extends Controller
                     'admin_id' => Auth::guard('admin')->user()->id
                 ]);
 
-            } else {
+            } elseif ($request->isPaid == 0) {
                 $vacancy->update([
                     'isPost' => false,
                     'active_period' => null,
-                    'interview_date' => null,
                     'recruitmentDate_start' => null,
-                    'recruitmentDate_end' => null
+                    'recruitmentDate_end' => null,
+                    'quizDate_start' => null,
+                    'quizDate_end' => null,
+                    'psychoTestDate_start' => null,
+                    'psychoTestDate_end' => null,
+                    'interview_date' => null,
                 ]);
                 $posting->update([
                     'isPaid' => false,
                     'date_payment' => null,
+                    'isAbort' => $request->isAbort == 1 ? true : false,
                     'admin_id' => Auth::guard('admin')->user()->id
                 ]);
             }
         }
 
+        if ($request->isPaid == 1 || $request->isAbort == 1) {
+            $this->paymentDetailsMail($posting);
+        }
+
         return back()->with('success', '' . $request->invoice . ' is successfully updated!');
+    }
+
+    private function paymentDetailsMail($posting)
+    {
+        $pm = PaymentMethod::find($posting->payment_method_id);
+        $pc = PaymentCategory::find($pm->payment_category_id);
+        $pl = Plan::find($posting->plans_id);
+        if ($pc->id == 1) {
+            $payment_code = $posting->payment_code;
+        } else {
+            $payment_code = 0;
+        }
+
+        $plan_price = $pl->price - ($pl->price * $pl->discount / 100);
+        $price_per_ads = Plan::find(1)->price - (Plan::find(1)->price * Plan::find(1)->discount / 100);
+
+        $old_totalVacancy = array_sum(str_split(filter_var($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
+        $totalVacancy = $old_totalVacancy;
+        $diffTotalVacancy = $posting->total_ads - $old_totalVacancy;
+        $price_totalVacancy = 0;
+        if ($diffTotalVacancy > 0) {
+            $totalVacancy = $old_totalVacancy . "(+" . $diffTotalVacancy . ")";
+            $price_totalVacancy = $diffTotalVacancy * $price_per_ads;
+        }
+
+        $old_totalQuizApplicant = $pl->quiz_applicant;
+        $totalQuizApplicant = $old_totalQuizApplicant;
+        $diffTotalQuizApplicant = $posting->total_quiz - $old_totalQuizApplicant;
+        $price_totalQuiz = 0;
+        if ($diffTotalQuizApplicant > 0) {
+            $totalQuizApplicant = $old_totalQuizApplicant . "(+" . $diffTotalQuizApplicant . ")";
+            $price_totalQuiz = $diffTotalQuizApplicant * $pl->price_quiz_applicant;
+        }
+
+        $old_totalPsychoTest = $pl->psychoTest_applicant;
+        $totalPsychoTest = $old_totalPsychoTest;
+        $diffTotalPsychoTest = $posting->total_psychoTest - $old_totalPsychoTest;
+        $price_totalPsychoTest = 0;
+        if ($diffTotalPsychoTest > 0) {
+            $totalPsychoTest = $old_totalPsychoTest . "(+" . $diffTotalPsychoTest . ")";
+            $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
+        }
+
+        $total = ($plan_price + $price_totalVacancy + $price_totalQuiz + $price_totalPsychoTest) - $payment_code;
+
+        $data = [
+            'confirmAgency' => $posting,
+            'payment_method' => $pm,
+            'payment_category' => $pc,
+            'plans' => $pl,
+            'plan_price' => $plan_price,
+            'totalVacancy' => $totalVacancy,
+            'price_totalVacancy' => $price_totalVacancy,
+            'totalQuizApplicant' => $totalQuizApplicant,
+            'price_totalQuiz' => $price_totalQuiz,
+            'totalPsychoTest' => $totalPsychoTest,
+            'price_totalPsychoTest' => $price_totalPsychoTest,
+            'payment_code' => $payment_code,
+            'total_payment' => $total,
+        ];
+        event(new VacancyPaymentDetails($data));
     }
 
     public function deleteJobPostings($id)

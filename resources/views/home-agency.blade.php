@@ -119,19 +119,7 @@
                 <div class="row">
                     @foreach($plans as $plan)
                         @php
-                            if($plan->id == 1){
-                                $price = number_format($plan->price -
-                                ($plan->price * $plan->discount/100),2,',','.');
-
-                            } elseif($plan->id == 2){
-                                $price = number_format($plan->price -
-                                ($plan->price * $plan->discount/100),2,',','.');
-
-                            } elseif($plan->id == 3){
-                                $price = number_format($plan->price -
-                                ($plan->price * $plan->discount/100),2,',','.');
-                            }
-
+                            $price = number_format($plan->price - ($plan->price * $plan->discount/100),2,',','.');
                             $number = filter_var($plan->job_ads,FILTER_SANITIZE_NUMBER_INT);
                             $totalAds = array_sum(str_split($number));
                         @endphp

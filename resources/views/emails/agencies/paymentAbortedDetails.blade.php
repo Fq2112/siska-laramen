@@ -4,18 +4,12 @@
     \App\Support\RomanConverter::numberToRoman($date->format('m'));
     $invoice = '#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
     $reference = '#PYM/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
-    $total = number_format($data['total_payment'],0,"",".");
-    if($data['total_payment'] < 1000000){
-        $first = substr($total,0,4);
-    } else{
-        $first = substr($total,0,6);
-    }
-    $last = substr($total, -3);
+    $total = number_format($data['total_payment'],2,",",".");
 @endphp
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scaleable=no">
-    <title>Payment Details! ({{$invoice}})</title>
+    <title>Payment Success Details! ({{$invoice}})</title>
     <style type="text/css">
         /*Bootstrap*/
         .alert {
@@ -487,11 +481,11 @@
                                                     <tr>
                                                         <td>
                                                             <small style="line-height: 2em">
-                                                                <strong style="font-size: 22px">
-                                                                    Please, complete your payment immediately</strong>
-                                                                <br>Checkout was successfully
-                                                                on {{$data['confirmAgency']->created_at->format('l, j F Y')}}
-                                                                at {{$data['confirmAgency']->created_at->format('H:i')}}
+                                                                <strong style="font-size: 22px">Payment via
+                                                                    {{$data['payment_category']->name}} aborted
+                                                                </strong><br>We have aborted your payment!
+                                                                <span style="color: #fa5555">Please, don't pay for this order.
+                                                                </span>
                                                             </small>
                                                         </td>
                                                     </tr>
@@ -531,7 +525,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['plan_price'],0,',','.')}}</strong>
+                                                                        ($data['plan_price'],2,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -543,7 +537,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['price_totalVacancy'],0,',','.')}}</strong>
+                                                                        ($data['price_totalVacancy'],2,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr data-placement="left" data-toggle="tooltip"
@@ -556,7 +550,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['price_totalQuiz'],0,',','.')}}</strong>
+                                                                        ($data['price_totalQuiz'],2,',','.')}}</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr data-placement="left" data-toggle="tooltip"
@@ -569,7 +563,7 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         <strong>Rp{{number_format
-                                                                        ($data['price_totalPsychoTest'],0,',','.')}}
+                                                                        ($data['price_totalPsychoTest'],2,',','.')}}
                                                                         </strong>
                                                                     </td>
                                                                 </tr>
@@ -579,7 +573,7 @@
                                                                     <td align="center"><strong>-</strong></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <strong>-Rp{{$data['payment_code']}}</strong>
+                                                                        <strong>-Rp{{$data['payment_code']}},00</strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr style="border-top: 1px solid #eee">
@@ -588,22 +582,9 @@
                                                                     <td>&emsp;</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        @if($data['payment_category']->id == 1)
-                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$first}}
-                                                                                <span style="border:1px solid #fa5555;">{{$last}}</span></strong>
-                                                                        @else
-                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
-                                                                        @endif
+                                                                        <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
                                                                     </td>
                                                                 </tr>
-                                                                @if($data['payment_category']->id == 1)
-                                                                    <tr>
-                                                                        <td colspan="5" align="right"
-                                                                            style="font-size:12px;color:#fa5555;font-weight:bold;">
-                                                                            Transfer right up to the last 3 digits
-                                                                        </td>
-                                                                    </tr>
-                                                                @endif
                                                             </table>
                                                         </td>
                                                     </tr>
@@ -674,7 +655,7 @@
                                                         <td>
                                                             <small><strong>Payment Status</strong></small>
                                                             <hr class="hr-divider">
-                                                            <span>Waiting for Payment</span>
+                                                            <span>Payment Aborted</span>
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -695,25 +676,6 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <div class="alert alert-info text-center">
-                                                    <a target="_blank" style="color: #00ADB5;text-decoration: none"
-                                                       href="{{route('agency.vacancy.status',
-                                                    ['id'=>encrypt($data['confirmAgency']->id),'invoice'=>$invoice])}}">
-                                                        <strong>Upload Payment Proof</strong>
-                                                    </a> to speed up verification
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="alert alert-warning text-center">
-                                                    Make sure not to inform payment details and proof
-                                                    <strong>to any party</strong> except SISKA.
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
                                                 <div style="font-size:20px;line-height:20px;">&nbsp;</div>
                                             </td>
                                         </tr>
@@ -726,20 +688,15 @@
                                                        style="margin: .5em 1em">
                                                     <tr>
                                                         <td>
-                                                            <small style="line-height: 2em">
-                                                                <strong style="font-size: 20px">
-                                                                    Keep an eye for your payment on the Vacancy Status
-                                                                    page</strong><br>To redirect you to the Vacancy
-                                                                Status page, click the Vacancy Status button below
-                                                            </small>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="center" width="600" class="full-width"
-                                                            style="padding-left: 20px; padding-right:20px" valign="top">
-                                                            <a class="zoom" id="activate"
-                                                               href="{{route('agency.vacancy.status')}}"
-                                                               target="_blank">VACANCY STATUS</a>
+                                                            <div class="alert alert-warning text-center">
+                                                                If you receive this email but you have made a payment,
+                                                                please Contact Us <br>
+                                                                (<a href="tel:+628563094333"
+                                                                    style="text-decoration: none">+62-85-6309 4333</a>
+                                                                | <a href="mailto:info@karir.org"
+                                                                     style="text-decoration: none">info@karir.org</a>)
+                                                                as soon as possible.
+                                                            </div>
                                                         </td>
                                                     </tr>
                                                 </table>

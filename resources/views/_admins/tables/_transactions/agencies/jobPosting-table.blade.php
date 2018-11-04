@@ -35,7 +35,7 @@
                                 @php
                                     $agency = \App\Agencies::find($posting->agency_id);
                                     $user = \App\User::find($agency->user_id);
-                                    $vacancies = \App\Vacancies::whereIn('id',$posting->vacancy_ids);
+                                    $vacancies = \App\Vacancies::whereIn('id',$posting->vacancy_ids)->get();
                                     $plan = \App\Plan::find($posting->plans_id);
                                     $pm = \App\PaymentMethod::find($posting->payment_method_id);
                                     $pc = \App\PaymentCategory::find($pm->payment_category_id);
@@ -50,7 +50,11 @@
                                         <table style="margin: 0">
                                             <tr style="border-bottom: 1px solid #eee">
                                                 <td>
-                                                    <span style="font-size: 15px">INVOICE <strong>{{$invoice}}</strong></span>
+                                                    <span style="font-size: 15px">INVOICE
+                                                        <a target="_blank" href="{{route('invoice.job.posting',['id'=>
+                                                        encrypt($posting->id)])}}"><strong>{{$invoice}}</strong>
+                                                        </a>
+                                                    </span>
                                                     <hr style="margin-top: 0">
                                                     <a href="{{route('agency.profile',['id' => $posting->agency_id])}}"
                                                        target="_blank"
@@ -92,9 +96,9 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <strong>{{$vacancies->count() > 1 ? 'Vacancies' : 'Vacancy'}}</strong>
+                                                    <strong>{{count($vacancies) > 1 ? 'Vacancies' : 'Vacancy'}}</strong>
                                                     <ul>
-                                                        @foreach($vacancies->get() as $vacancy)
+                                                        @foreach($vacancies as $vacancy)
                                                             <li>
                                                                 <a href="{{route('detail.vacancy',['id' => $vacancy->id])}}"
                                                                    target="_blank">{{$vacancy->judul}}</a>
@@ -157,29 +161,33 @@
                                             $posting->id])}}" id="form-approval{{$posting->id}}">
                                             {{csrf_field()}} {{method_field('PUT')}}
                                             <input type="hidden" name="invoice" value="{{$invoice}}">
-                                            <input type="hidden" name="isPost" value="1">
+                                            <input type="hidden" name="isPaid" id="input_isPaid{{$posting->id}}">
+                                            <input type="hidden" name="isAbort" id="input_isAbort{{$posting->id}}">
                                         </form>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-success btn-sm"
-                                                    style="font-weight: 600"
-                                                    onclick="approving('{{$posting->id}}','{{$invoice}}')"
-                                                    {{$vacancies->first()->isPost == false ? '' : 'disabled'}}>
-                                                {{$vacancies->first()->isPost == false ? 'APPROVE' : 'APPROVED'}}
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle"
+                                            @if(now() <= $posting->created_at->addDay())
+                                                <button type="button" class="btn btn-success btn-sm"
+                                                        style="font-weight: 600"
+                                                        onclick="approving('{{$posting->id}}','{{$invoice}}')"
+                                                        {{$posting->isPaid == false ? '' : 'disabled'}}>
+                                                    {{$posting->isPaid == false ? 'APPROVE' : 'APPROVED'}}
+                                                </button>
+                                            @else
+                                                <button type="button" class="btn btn-danger btn-sm"
+                                                        style="font-weight: 600"
+                                                        onclick="aborting('{{$posting->id}}','{{$invoice}}')"
+                                                        {{$posting->isAbort == true ? 'disabled' : ''}}>
+                                                    {{$posting->isAbort == true ? 'ABORTED' : 'ABORT'}}
+                                                </button>
+                                            @endif
+                                            <button type="button" class="btn btn-{{now() <= $posting->created_at->addDay()
+                                            ? 'success' : 'danger'}} btn-sm dropdown-toggle"
                                                     data-toggle="dropdown" aria-expanded="false">
                                                 <span class="caret"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
-                                                @if($vacancies->first()->isPost == true)
-                                                    <form method="post"
-                                                          action="{{route('table.jobPostings.update',['id' =>
-                                                          $posting->id])}}" id="form-revert{{$posting->id}}">
-                                                        {{csrf_field()}} {{method_field('PUT')}}
-                                                        <input type="hidden" name="invoice" value="{{$invoice}}">
-                                                        <input type="hidden" name="isPost" value="0">
-                                                    </form>
+                                                @if($posting->isPaid == true)
                                                     <li><a onclick="revertApproval('{{$posting->id}}','{{$invoice}}')">
                                                             <i class="fa fa-undo"></i>&ensp;Revert</a></li>
                                                 @endif
@@ -226,6 +234,8 @@
 
                 preConfirm: function () {
                     return new Promise(function (resolve) {
+                        $("#input_isPaid" + id).val(1);
+                        $("#input_isAbort" + id).val(0);
                         $("#form-approval" + id)[0].submit();
                     });
                 },
@@ -246,7 +256,31 @@
 
                 preConfirm: function () {
                     return new Promise(function (resolve) {
-                        $("#form-revert" + id)[0].submit();
+                        $("#input_isPaid" + id).val(0);
+                        $("#input_isAbort" + id).val(0);
+                        $("#form-approval" + id)[0].submit();
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
+        }
+
+        function aborting(id, invoice) {
+            swal({
+                title: 'Aborting ' + invoice,
+                text: 'Are you sure to abort it? You won\'t be able to revert this!',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, abort it!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        $("#input_isPaid" + id).val(0);
+                        $("#input_isAbort" + id).val(1);
+                        $("#form-approval" + id)[0].submit();
                     });
                 },
                 allowOutsideClick: false
