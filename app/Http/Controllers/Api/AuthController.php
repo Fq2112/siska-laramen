@@ -36,7 +36,11 @@ class AuthController extends Controller
         if ($check<1) {
             if($password != $repassword)
             {
-                echo json_encode("Password Doesn't Match!!!");
+//                echo json_encode("Password Doesn't Match!!!");
+                return response()->json([
+                    'status' => 'Warning',
+                    'message' => 'Password Doesn\'t Match!!'
+                ]);
             }
             else {
                 $user = new User([
@@ -49,14 +53,19 @@ class AuthController extends Controller
                 ]);
 
                 $user->save();
-                echo json_encode("User Successfully Created");
-//                return response()->json([
-//                    'message' => 'Successfully created user!'
-//                ], 201);
+//                echo json_encode("User Successfully Created");
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Successfully created user!'
+                ], 201);
             }
         }
         else
-           echo json_encode("Email Already Taken!!!");
+//           echo json_encode("Email Already Taken!!!");
+        return response()->json([
+           'status' => 'Warning',
+            'message' => 'Email Already Taken!!'
+        ]);
     }
 
     /**
