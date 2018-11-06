@@ -734,8 +734,10 @@
         });
 
         $("#total_ads").on("blur", function () {
-            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads || parseInt($(this).val()) > '{{count($vacancies)}}') {
+            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads) {
                 $(this).val(old_total_ads);
+            } else if (parseInt($(this).val()) > '{{count($vacancies)}}') {
+                $(this).val('{{count($vacancies)}}');
             }
 
             new_total_ads = $(this).val();
