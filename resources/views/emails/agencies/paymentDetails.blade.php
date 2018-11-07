@@ -589,8 +589,9 @@
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
                                                                         @if($data['payment_category']->id == 1)
-                                                                            <strong style="font-size: 18px;color: #00adb5">Rp{{$first}}
-                                                                                <span style="border:1px solid #fa5555;">{{$last}}</span></strong>
+                                                                            <strong style="font-size: 18px;color: #00adb5">
+                                                                                Rp{{$first}}<span
+                                                                                        style="border:1px solid #fa5555;">{{$last}}</span></strong>
                                                                         @else
                                                                             <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
                                                                         @endif

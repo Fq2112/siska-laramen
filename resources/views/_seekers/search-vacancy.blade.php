@@ -319,7 +319,7 @@
             $(this).addClass("active");
             $("#filter-bar").removeClass().addClass($(this).attr("data-target"));
             sort.val(data);
-            loadVacancy();
+            setTimeout(loadVacancy, 100);
         });
         // reset filter
         $("#btn_reset").click(function () {
@@ -347,7 +347,7 @@
                         "<i class='tag-close'></i><i class='fa fa-money-bill-wave tag-icon'></i>" +
                         "&ensp;IDR " + $(this).text() + "</a></li>");
 
-                    loadVacancy();
+                    setTimeout(loadVacancy, 100);
                 });
             });
             $('#tag-salary').on('click', ".tag", function () {
@@ -369,7 +369,7 @@
                         "<i class='tag-close'></i><i class='fa fa-warehouse tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy();
+                    setTimeout(loadVacancy, 100);
                 });
             });
             $('#tag-jobfunc').on('click', ".tag", function () {
@@ -391,7 +391,7 @@
                         "<i class='tag-close'></i><i class='fa fa-industry tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy();
+                    setTimeout(loadVacancy, 100);
                 });
             });
             $('#tag-industry').on('click', ".tag", function () {
@@ -413,7 +413,7 @@
                         "<i class='tag-close'></i><i class='fa fa-graduation-cap tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy();
+                    setTimeout(loadVacancy, 100);
                 });
             });
             $('#tag-degrees').on('click', ".tag", function () {
@@ -435,7 +435,7 @@
                         "<i class='tag-close'></i><i class='fa fa-user-graduate tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy();
+                    setTimeout(loadVacancy, 100);
                 });
             });
             $('#tag-majors').on('click', ".tag", function () {

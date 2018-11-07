@@ -31,7 +31,6 @@
                                     </ul>
                                     <form action="{{route('submit.job.posting')}}" method="post" id="pm-form">
                                         {{csrf_field()}}
-                                        <input type="hidden" name="payment_code" id="payment_code">
                                         <fieldset id="vacancy_setup">
                                             <div class="row form-group text-center">
                                                 <div class="col-lg-12">
@@ -42,7 +41,7 @@
                                             </div>
                                             <div class="row form-group" id="vacancy_list">
                                                 <div class="col-lg-12">
-                                                    <small>Job Vacancy</small>
+                                                    <small>Total Ads & Vacancy List</small>
                                                     <div class="input-group">
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-briefcase"></i></span>
@@ -50,7 +49,7 @@
                                                                class="form-control" placeholder="0" style="width: 15%"
                                                                value="{{$totalAds}}" min="{{$totalAds}}" required>
                                                         <select id="vacancy_id" class="form-control selectpicker"
-                                                                title="-- Choose Vacancy --" data-live-search="true"
+                                                                title="-- Select Vacancy --" data-live-search="true"
                                                                 multiple data-max-options="{{$totalAds}}"
                                                                 data-selected-text-format="count > 2"
                                                                 name="vacancy_ids[]" data-container="body"
@@ -62,64 +61,28 @@
                                                         </select>
                                                     </div>
                                                     <span class="help-block">
-                                                        <small class="aj_vacancy"
+                                                        <small class="vacancy_errorTxt"
                                                                style="text-transform: none;float: left"></small>
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div class="row form-group">
-                                                @php
-                                                    if($plan->id == 1){
-                                                        $attr_passingGrade = 'disabled';
-                                                        $attr_quiz = 'disabled';
-                                                        $attr_psychoTest = 'disabled';
-
-                                                    } elseif($plan->id == 2){
-                                                        $attr_passingGrade = '';
-                                                        $attr_quiz = '';
-                                                        $attr_psychoTest = 'disabled';
-
-                                                    } elseif($plan->id == 3){
-                                                        $attr_passingGrade = '';
-                                                        $attr_quiz = '';
-                                                        $attr_psychoTest = '';
-                                                    }
-                                                @endphp
-                                                <div class="col-lg-6" id="quiz_setup">
-                                                    <small>Passing Grade & Total Applicant Quiz</small>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-grin-beam"></i></span>
-                                                        <input id="passing_grade" name="passing_grade"
-                                                               type="number" class="form-control" style="width: 30%"
-                                                               placeholder="0.00"
-                                                               value="{{$plan->id == 1 ? '0.00' : ''}}"
-                                                               min="1" step=".01" {{$attr_passingGrade}} required>
-                                                        <input id="total_quiz" name="total_quiz" style="width: 70%"
-                                                               type="number" class="form-control"
-                                                               placeholder="0" value="{{$plan->quiz_applicant}}"
-                                                               min="{{$plan->quiz_applicant}}" {{$attr_quiz}} required>
-                                                    </div>
-                                                    <span class="help-block">
-                                                        <small id="quiz_errorTxt"
-                                                               style="text-transform: none;float: left"></small>
-                                                    </span>
+                                            <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
+                                            <img src="{{asset('images/loading3.gif')}}" id="image"
+                                                 class="img-responsive ld ld-fade" style="display:none">
+                                            <div id="input_quiz_psychoTest"></div>
+                                            <div class="row form-group" style="margin-top: -1em">
+                                                <div class="col-lg-6" id="quiz_error">
+                                                    <span class="help-block"><small
+                                                                style="text-transform: none;float: left;text-align: justify"></small></span>
                                                 </div>
-                                                <div class="col-lg-6">
-                                                    <small>Total Applicant for Psycho Test</small>
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-comments"></i></span>
-                                                        <input id="total_psychoTest" name="total_psychoTest"
-                                                               type="number" class="form-control" placeholder="0"
-                                                               value="{{$plan->psychoTest_applicant}}"
-                                                               min="{{$plan->psychoTest_applicant}}"
-                                                               {{$attr_psychoTest}} required>
-                                                    </div>
+                                                <div class="col-lg-6" id="psychoTest_error">
+                                                    <span class="help-block"><small
+                                                                style="text-transform: none;float: left;text-align: justify"></small></span>
                                                 </div>
                                             </div>
-                                            <input type="button" name="next" class="next action-button"
-                                                   value="Next" style="display: table">
+                                            <hr class="hr-divider">
+                                            <input type="button" name="next" class="next action-button" value="Next"
+                                                   style="display: table">
                                         </fieldset>
                                         <fieldset id="order_summary">
                                             <h2 class="fs-title text-center">Order Summary</h2>
@@ -189,30 +152,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <small>
-                                                        Quiz & Psycho Test Details
-                                                        <span class="show_vacancy_setup pull-right"
-                                                              style="color: #00ADB5;cursor: pointer; font-size: 15px">
-                                                            <i class="fa fa-edit"></i>&nbsp;EDIT</span>
-                                                    </small>
-                                                    <hr class="hr-divider">
-                                                    <ul class="list-inline" style="margin-top: -1em">
-                                                        <li>
-                                                            <a class="tag tag-plans">
-                                                                <i class="fa fa-grin-beam"></i>&ensp;
-                                                                Quiz with <strong id="detail_passing_grade">0.00
-                                                                </strong> passing grade&ensp;&ndash;&nbsp;for&nbsp;&ndash;&ensp;<strong
-                                                                        id="detail_quiz_applicant">0</strong> applicants
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="tag tag-plans">
-                                                                <i class="fa fa-comments"></i>&ensp;Psycho Test for
-                                                                <strong id="detail_psychoTest_applicant">0</strong>
-                                                                applicants
-                                                            </a>
-                                                        </li>
-                                                    </ul>
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <small>Billing Details</small>
@@ -258,7 +197,8 @@
                                                             </td>
                                                         </tr>
                                                         <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Applicant for">
+                                                            title="Total Applicant for"
+                                                            style="border-bottom: 1px solid #eee">
                                                             <td>Psycho Test</td>
                                                             <td>&emsp;</td>
                                                             <td align="center">
@@ -270,7 +210,7 @@
                                                                     Rp{{number_format(0,2,',','.')}}</strong>
                                                             </td>
                                                         </tr>
-                                                        <tr style="border-top: 1px solid #eee">
+                                                        <tr>
                                                             <td><strong>SUBTOTAL</strong></td>
                                                             <td>&emsp;</td>
                                                             <td>&emsp;</td>
@@ -285,7 +225,7 @@
                                             </div>
                                             <div class="row" style="margin-top: 1em;">
                                                 <div class="col-lg-12">
-                                                    <small>Vacancy List
+                                                    <small>Vacancy Details
                                                         <span class="show_vacancy_setup pull-right"
                                                               style="color: #00ADB5;cursor: pointer; font-size: 15px">
                                                 <i class="fa fa-edit"></i>&nbsp;EDIT</span>
@@ -411,11 +351,14 @@
                                                     <hr class="hr-divider" style="margin-bottom: 0">
                                                 @endforeach
                                             </div>
-                                            <input type="hidden" name="total_payment" id="total_payment">
                                             <input type="button" name="previous" class="previous action-button"
                                                    value="Previous">
                                             <input type="button" class="submit action-button" value="Submit">
                                         </fieldset>
+                                        <input type="hidden" id="payment_code" name="payment_code">
+                                        <input type="hidden" id="total_quiz" name="total_quiz">
+                                        <input type="hidden" id="total_psychoTest" name="total_psychoTest">
+                                        <input type="hidden" name="total_payment" id="total_payment">
                                     </form>
                                     @if(session('confirmAgency'))
                                         @php
@@ -438,7 +381,7 @@
 
                                             $old_totalQuizApplicant = $pl->quiz_applicant;
                                             $totalQuizApplicant = $old_totalQuizApplicant;
-                                            $diffTotalQuizApplicant = old('total_quiz') - $old_totalQuizApplicant;
+                                            $diffTotalQuizApplicant = session('confirmAgency')->total_quiz - $old_totalQuizApplicant;
                                             $price_totalQuiz = 0;
                                             if($diffTotalQuizApplicant > 0){
                                                 $totalQuizApplicant = $old_totalQuizApplicant.
@@ -449,7 +392,7 @@
 
                                             $old_totalPsychoTest = $pl->psychoTest_applicant;
                                             $totalPsychoTest = $old_totalPsychoTest;
-                                            $diffTotalPsychoTest = old('total_psychoTest') - $old_totalPsychoTest;
+                                            $diffTotalPsychoTest = session('confirmAgency')->total_psychoTest - $old_totalPsychoTest;
                                             $price_totalPsychoTest = 0;
                                             if($diffTotalPsychoTest > 0){
                                                 $totalPsychoTest = $old_totalPsychoTest."(+".$diffTotalPsychoTest.")";
@@ -622,14 +565,14 @@
                                                                 <strong>Rp{{$price_totalPsychoTest}}</strong>
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr style="border-bottom: 1px solid #eee">
                                                             <td>Unique Code</td>
                                                             <td>&emsp;</td>
                                                             <td align="center"><strong>-</strong></td>
                                                             <td>&emsp;</td>
                                                             <td align="right"><strong id="uCode"></strong></td>
                                                         </tr>
-                                                        <tr style="border-top: 1px solid #eee">
+                                                        <tr>
                                                             <td><strong>TOTAL</strong></td>
                                                             <td>&emsp;</td>
                                                             <td>&emsp;</td>
@@ -710,16 +653,19 @@
     <script src="{{asset('js/TweenMax.min.js')}}"></script>
     <script>
         var plan_price = '{{$price}}', subtotal = 0, payment_code_value = 0,
+
+            $attr_passingGrade = '{{$plan->id == 1 ? 'readonly' : ''}}',
+            $attr_quiz = '{{$plan->id == 1 ? 'readonly' : ''}}',
+            $attr_psychoTest = '{{$plan->id == 1 || $plan->id == 2 ? 'readonly' : ''}}',
+
             old_total_ads = '{{$totalAds}}',
             new_total_ads = '{{$totalAds}}',
             price_per_ads = '{{\App\Plan::find(1)->price - (\App\Plan::find(1)->price * \App\Plan::find(1)->discount/100)}}',
 
             old_total_quiz = '{{$plan->quiz_applicant}}',
-            new_total_quiz = '{{$plan->quiz_applicant}}',
             price_per_quiz = '{{$plan->price_quiz_applicant}}',
 
             old_total_psychoTest = '{{$plan->psychoTest_applicant}}',
-            new_total_psychoTest = '{{$plan->psychoTest_applicant}}',
             price_per_psychoTest = '{{$plan->price_psychoTest_applicant}}';
 
         $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
@@ -733,9 +679,21 @@
             $("#order_summary .previous").click();
         });
 
-        $("#total_ads").on("blur", function () {
-            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads || parseInt($(this).val()) > '{{count($vacancies)}}') {
+        $("#total_ads").on("change", function () {
+            if ($(this).val() == "" || parseInt($(this).val()) < old_total_ads) {
                 $(this).val(old_total_ads);
+                $("#vacancy_list").addClass('has-error');
+                $(".vacancy_errorTxt").text("The ads/vacancy amount you've entered doesn't meet " +
+                    "the minimum requirements of this package (" + old_total_ads + " job ads).");
+
+            } else if (parseInt($(this).val()) > '{{count($vacancies)}}') {
+                $(this).val('{{count($vacancies)}}');
+                $("#vacancy_list").addClass('has-error');
+                $(".vacancy_errorTxt").text("The ads/vacancy amount you've entered is more than that you have " +
+                    "({{count($vacancies) > 1 ? count($vacancies).' vacancies' : count($vacancies).' vacancy'}}).");
+            } else {
+                $("#vacancy_list").removeClass('has-error');
+                $(".vacancy_errorTxt").text('');
             }
 
             new_total_ads = $(this).val();
@@ -749,91 +707,61 @@
                 $(".total_price_vacancy").text('Rp0,00');
             }
 
+            total_quiz_applicant = 0;
+            total_psychoTest_applicant = 0;
+
+            $("#vacancy_data").html('');
+            $("#input_quiz_psychoTest").html('');
+            $("#quiz_error, #psychoTest_error").removeClass('has-error');
+            $("#quiz_error small, #psychoTest_error small").text('');
+            $("#vacancySetupDivider").css('display', 'none');
             $("#vacancy_id").val('default').selectpicker({maxOptions: new_total_ads}).selectpicker('refresh');
 
             subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
-                parseInt((new_total_quiz - old_total_quiz) * price_per_quiz) +
-                parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest);
-            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
-        });
-
-        $("#passing_grade").on("blur", function () {
-            if ($(this).val() == "" || parseFloat($(this).val()) == 0.00) {
-                $(this).val(75.50);
-            }
-            $("#quiz_setup").removeClass('has-error');
-            $("#quiz_errorTxt").text('');
-            $("#detail_passing_grade").text($(this).val());
-        });
-
-        $("#total_quiz").on("blur", function () {
-            if ($(this).val() == "" || parseInt($(this).val()) < old_total_quiz) {
-                $(this).val(old_total_quiz);
-            }
-            $("#detail_quiz_applicant").text($(this).val());
-
-            new_total_quiz = $(this).val();
-
-            if (parseInt(new_total_quiz - old_total_quiz) > 0) {
-                $(".bill_quiz_applicant").text(old_total_quiz + '(+' + parseInt(new_total_quiz - old_total_quiz) + ')');
-                $(".total_price_quiz").text('Rp' +
-                    thousandSeparator(parseInt((new_total_quiz - old_total_quiz) * price_per_quiz)) + ',00');
-            } else {
-                $(".bill_quiz_applicant").text(old_total_quiz);
-                $(".total_price_quiz").text('Rp0,00');
-            }
-
-            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
-                parseInt((new_total_quiz - old_total_quiz) * price_per_quiz) +
-                parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest);
-            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
-        });
-
-        $("#total_psychoTest").on("blur", function () {
-            if ($(this).val() == "" || parseInt($(this).val()) < old_total_psychoTest) {
-                $(this).val(old_total_psychoTest);
-            }
-            $("#detail_psychoTest_applicant").text($(this).val());
-
-            new_total_psychoTest = $(this).val();
-
-            if (parseInt(new_total_psychoTest - old_total_psychoTest) > 0) {
-                $(".bill_psychoTest_applicant").text(old_total_psychoTest + '(+' +
-                    parseInt(new_total_psychoTest - old_total_psychoTest) + ')');
-                $(".total_price_psychoTest").text('Rp' +
-                    thousandSeparator(parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest)) +
-                    ',00');
-            } else {
-                $(".bill_psychoTest_applicant").text(old_total_psychoTest);
-                $(".total_price_psychoTest").text('Rp0,00');
-            }
-
-            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
-                parseInt((new_total_quiz - old_total_quiz) * price_per_quiz) +
-                parseInt((new_total_psychoTest - old_total_psychoTest) * price_per_psychoTest);
+                parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz) +
+                parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
             $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         });
 
         $("#vacancy_id").on('change', function () {
+            var $id = $(this).val();
+
+            $('#vacancy_id option:selected').each(function (i, selected) {
+                setTimeout(loadVacancyReviewData($id), 1000);
+            });
+
+            total_quiz_applicant = 0;
+            total_psychoTest_applicant = 0;
+
+            $("#vacancySetupDivider").css('display', 'block');
+            $("#vacancy_list").removeClass('has-error');
+            $(".vacancy_errorTxt").text('');
+
             $('html, body').animate({
                 scrollTop: $('#job-posting').offset().top
             }, 500);
+        });
 
-            var $id = $(this).val();
-            $("#vacancy_list").removeClass('has-error');
-            $(".aj_vacancy").text('');
+        function loadVacancyReviewData($id) {
+            $.ajax({
+                url: '{{route('get.vacancyReviewData',['vacancy'=>''])}}/' + $id,
+                type: "GET",
+                data: $("#vacancy_id"),
+                beforeSend: function () {
+                    $('#image').show();
+                    $('#input_quiz_psychoTest').hide();
+                },
+                complete: function () {
+                    $('#image').hide();
+                    $('#input_quiz_psychoTest').show();
+                },
+                success: function (data) {
+                    var $vacancy_list = '', input_quiz_psychoTest = '', $pengalaman;
 
-            $('#vacancy_id option:selected').each(function (i, selected) {
-                $.get('{{route('get.vacancyReviewData',['vacancy'=>''])}}/' + $id, function (data) {
-                    var $pengalaman;
-                    $result = '';
                     $.each(data, function (i, val) {
-                        if (val.pengalaman > 1) {
-                            $pengalaman = 'At least ' + val.pengalaman + ' years';
-                        } else {
-                            $pengalaman = 'At least ' + val.pengalaman + ' year';
-                        }
-                        $result +=
+                        $pengalaman = val.pengalaman > 1 ? 'At least ' + val.pengalaman + ' years' :
+                            'At least ' + val.pengalaman + ' year';
+                        $vacancy_list +=
                             '<div class="media">' +
                             '<div class="media-left media-middle">' +
                             '<a href="{{route('agency.profile',['id' => ''])}}/' + val.agency_id + '">' +
@@ -864,40 +792,169 @@
                             '<li><a class="tag" target="_blank" ' +
                             'href="{{route('search.vacancy',['majors_ids' => ''])}}/' + val.jurusanpend_id + '">' +
                             '<i class="fa fa-user-graduate"></i>&ensp;' + val.majors + '</a></li>' +
-                            '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman +
-                            '</a></li></ul><small>Requirements</small>' + val.syarat +
+                            '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
+                            '<li><a class="tag tag-plans"><i class="fa fa-grin-beam"></i>&ensp;' +
+                            'Quiz with <strong id="detail_passing_grade' + val.id + '">0.00</strong> ' +
+                            'passing grade &ndash; for &ndash; <strong id="detail_quiz_applicant' + val.id + '">' +
+                            '' + old_total_quiz + '</strong> applicants</a></li>' +
+                            '<li><a class="tag tag-plans"><i class="fa fa-comments"></i>&ensp;Psycho Test for ' +
+                            '<strong id="detail_psychoTest_applicant' + val.id + '">' +
+                            '' + old_total_psychoTest + '</strong> applicants</a></li>' +
+                            '</ul>' +
+                            '<small>Requirements</small>' + val.syarat +
                             '<small>Responsibilities</small>' + val.tanggungjawab + '</blockquote>' +
-                            '</div></div><hr class="hr-divider">'
-                    });
-                    $("#vacancy_data").empty().append($result);
-                });
-            });
-        });
+                            '</div></div><hr class="hr-divider">';
 
-        $("#vacancy_setup .next").click(function () {
+                        input_quiz_psychoTest +=
+                            '<div class="row form-group" style="margin-bottom: 0">' +
+                            '<div class="col-lg-12">' +
+                            '<small><strong>' + val.judul + '</strong></small></div></div>' +
+                            '<div class="row form-group" style="margin-bottom: 1.5em">' +
+                            '<div class="col-lg-6 quiz_setup">' +
+                            '<small>Passing Grade & Applicant for Quiz</small>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-addon"><i class="fa fa-grin-beam"></i></span>' +
+                            '<input id="passing_grade' + val.id + '" name="passing_grade[]" ' +
+                            'type="number" class="form-control" style="width: 30%" placeholder="0.00" value="0.00" ' +
+                            'min="0" onchange="passingGrade(' + val.id + ')" ' +
+                            'step=".01" ' + $attr_passingGrade + '  required>' +
+                            '<input id="quiz_applicant' + val.id + '" name="quiz_applicant[]" ' +
+                            'style="width: 70%" type="number" class="form-control" placeholder="0" value="0" ' +
+                            'min="0" ' + $attr_quiz + ' onchange="quizApplicant(' + val.id + ')" required>' +
+                            '</div></div>' +
+                            '<div class="col-lg-6 psychoTest_setup">' +
+                            '<small>Applicant for Psycho Test</small>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-addon"><i class="fa fa-comments"></i></span>' +
+                            '<input id="psychoTest_applicant' + val.id + '" ' +
+                            'name="psychoTest_applicant[]" type="number" class="form-control" ' +
+                            'placeholder="0" value="0" min="0" ' + $attr_psychoTest + ' ' +
+                            'onchange="psychoTestApplicant(' + val.id + ')" required></div>' +
+                            '</div></div>'
+
+                    });
+                    $("#vacancy_data").html($vacancy_list);
+                    $("#input_quiz_psychoTest").html(input_quiz_psychoTest);
+                },
+                error: function () {
+                    swal({
+                        title: 'Oops...',
+                        text: 'Something went wrong! Please refresh the page.',
+                        type: 'error',
+                        timer: '1500'
+                    })
+                }
+            });
+            return false;
+        }
+
+        function passingGrade(id) {
+            if ($("#passing_grade" + id).val() == "" || parseFloat($("#passing_grade" + id).val()) <= 0.00) {
+                $("#passing_grade" + id).val(75.5);
+            }
+            $("#detail_passing_grade" + id).text($("#passing_grade" + id).val());
+        }
+
+        var total_quiz_applicant = 0;
+
+        function quizApplicant(id) {
+            if ($("#quiz_applicant" + id).val() == "" || parseInt($("#quiz_applicant" + id).val()) < 0) {
+                $("#quiz_applicant" + id).val(0);
+            }
+            $("#detail_quiz_applicant" + id).text($("#quiz_applicant" + id).val());
+
+            total_quiz_applicant += parseInt($("#quiz_applicant" + id).val());
+        }
+
+        var total_psychoTest_applicant = 0;
+
+        function psychoTestApplicant(id) {
+            if ($("#psychoTest_applicant" + id).val() == "" ||
+                parseInt($("#psychoTest_applicant" + id).val()) < 0) {
+                $("#psychoTest_applicant" + id).val(0);
+            }
+            $("#detail_psychoTest_applicant" + id).text($("#psychoTest_applicant" + id).val());
+
+            total_psychoTest_applicant += parseInt($("#psychoTest_applicant" + id).val());
+        }
+
+        function totalQuiz() {
+            if (parseInt(total_quiz_applicant - old_total_quiz) > 0) {
+                $(".bill_quiz_applicant").text(old_total_quiz + '(+' + parseInt(total_quiz_applicant - old_total_quiz) + ')');
+                $(".total_price_quiz").text('Rp' +
+                    thousandSeparator(parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz)) + ',00');
+            } else {
+                $(".bill_quiz_applicant").text(old_total_quiz);
+                $(".total_price_quiz").text('Rp0,00');
+            }
+
+            $("#total_quiz").val(total_quiz_applicant);
+
+            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
+                parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz) +
+                parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
+            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
+        }
+
+        function totalPsychoTest() {
+            if (parseInt(total_psychoTest_applicant - old_total_psychoTest) > 0) {
+                $(".bill_psychoTest_applicant").text(old_total_psychoTest + '(+' +
+                    parseInt(total_psychoTest_applicant - old_total_psychoTest) + ')');
+                $(".total_price_psychoTest").text('Rp' +
+                    thousandSeparator(parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest)) + ',00');
+            } else {
+                $(".bill_psychoTest_applicant").text(old_total_psychoTest);
+                $(".total_price_psychoTest").text('Rp0,00');
+            }
+
+            $("#total_psychoTest").val(total_psychoTest_applicant);
+
+            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
+                parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz) +
+                parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
+            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
+        }
+
+        $("#vacancy_setup .next").on("click", function () {
             if (!$("#vacancy_id").val()) {
                 $("#vacancy_list").addClass('has-error');
-                $(".aj_vacancy").text('Please select a vacancy in order to posting it.');
-                swal({
-                    title: 'ATTENTION!',
-                    text: 'There\'s empty field! Please fill in all the form fields with a valid data.',
-                    type: 'warning',
-                    timer: '3500'
-                });
+                $(".vacancy_errorTxt").text('Please select some vacancy that you\'re going to post.');
                 $("#order_summary .previous").click();
-            }
 
-            if (!$("#passing_grade").val()) {
-                $("#quiz_setup").addClass('has-error');
-                $("#quiz_errorTxt").text('Please fill in the Passing Grade Quiz field.');
-                swal({
-                    title: 'ATTENTION!',
-                    text: 'There\'s empty field! Please fill in all the form fields with a valid data.',
-                    type: 'warning',
-                    timer: '3500'
-                });
+            } else if ($("#vacancy_id :selected").length < new_total_ads) {
+                $("#vacancy_list").addClass('has-error');
+                $(".vacancy_errorTxt").text('The ads/vacancy amount you\'ve entered doesn\'t match ' +
+                    'with the vacancy that you select!');
                 $("#order_summary .previous").click();
+
+            } else {
+                totalQuiz();
+                totalPsychoTest();
+
+                if (total_quiz_applicant < old_total_quiz) {
+                    $(".quiz_setup, #quiz_error").addClass('has-error');
+                    $("#quiz_error small").text("The applicant amount you've entered doesn't meet " +
+                        "the requirements for total applicant (" + old_total_quiz + " applicants).");
+                    $("#order_summary .previous").click();
+
+                } else {
+                    $(".quiz_setup").removeClass('has-error');
+                    $("#quiz_error small").text('');
+                }
+
+                if (total_psychoTest_applicant < old_total_psychoTest) {
+                    $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
+                    $("#psychoTest_error small").text("The applicant amount you've entered doesn't meet " +
+                        "the requirements for total applicant (" + old_total_psychoTest + " applicants).");
+                    $("#order_summary .previous").click();
+
+                } else {
+                    $(".psychoTest_setup").removeClass('has-error');
+                    $("#psychoTest_error small").text('');
+                }
+
             }
+            console.log('Quiz: ' + total_quiz_applicant + ' | Interview: ' + total_psychoTest_applicant);
         });
 
         $("#plans_id").on('change', function () {
@@ -929,6 +986,11 @@
                     price_per_quiz = data.price_quiz_applicant;
                     old_total_psychoTest = data.psychoTest_applicant;
                     price_per_psychoTest = data.price_psychoTest_applicant;
+                    total_quiz_applicant = 0;
+                    total_psychoTest_applicant = 0;
+                    $("#vacancy_data").html('');
+                    $("#input_quiz_psychoTest").html('');
+                    $("#vacancySetupDivider").css('display', 'none');
 
                     $("#show_plans_settings").click();
                     $(".plans_name").text(data.name);
@@ -936,9 +998,6 @@
                     $(".total_vacancy").text(old_total_ads);
                     $(".quiz_applicant, .bill_quiz_applicant").text(old_total_quiz);
                     $(".psychoTest_applicant, .bill_psychoTest_applicant").text(old_total_psychoTest);
-                    $("#detail_passing_grade").text(0.00);
-                    $("#detail_quiz_applicant").text(old_total_quiz);
-                    $("#detail_psychoTest_applicant").text(old_total_psychoTest);
                     $(".total_price_vacancy").text('Rp0,00');
                     $(".total_price_quiz").text('Rp0,00');
                     $(".total_price_psychoTest").text('Rp0,00');
@@ -946,47 +1005,50 @@
                     $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
 
                     if (data.id == 1) {
+                        $attr_passingGrade = 'readonly';
+                        $attr_quiz = 'readonly';
+                        $attr_psychoTest = 'readonly';
+
                         swal({
                             title: 'ATTENTION!',
-                            text: 'You\'ve just select BASIC Package, it means you are only permitted to ' +
-                                'select one of your vacancies.',
+                            text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
+                                'select at least ' + data.job_ads + ' vacancy!',
                             type: 'warning',
-                            timer: '5000'
+                            timer: '7000'
                         });
                         $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#passing_grade").val(0.00).prop('disabled', true);
-                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('disabled', true);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('disabled', true);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
 
                     } else if (data.id == 2) {
+                        $attr_passingGrade = '';
+                        $attr_quiz = '';
+                        $attr_psychoTest = 'readonly';
+
                         swal({
                             title: 'ATTENTION!',
-                            text: 'You\'ve just select PLUS Package, it means you are permitted to perform ' +
-                                'multi-select of your vacancies.',
+                            text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
+                                'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
-                            timer: '5000'
+                            timer: '7000'
                         });
                         $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#passing_grade").val("").prop('disabled', false);
-                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('disabled', false);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('disabled', true);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
 
                     } else if (data.id == 3) {
+                        $attr_passingGrade = '';
+                        $attr_quiz = '';
+                        $attr_psychoTest = '';
+
                         swal({
                             title: 'ATTENTION!',
-                            text: 'You\'ve just select ENTERPRISE Package, it means you are permitted to perform ' +
-                                'multi-select of your vacancies.',
+                            text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
+                                'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
-                            timer: '5000'
+                            timer: '7000'
                         });
                         $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#passing_grade").val("").prop('disabled', false);
-                        $("#total_quiz").val(data.quiz_applicant).prop('min', data.quiz_applicant).prop('disabled', false);
-                        $("#total_psychoTest").val(data.psychoTest_applicant).prop('min', data.psychoTest_applicant).prop('disabled', false);
                         $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
                         $("#order_summary .previous").click();
                     }
@@ -1178,7 +1240,7 @@
 
         @php
             $agency = \App\Agencies::where('user_id', Auth::user()->id)->firstOrFail();
-            $vacancies = \App\Vacancies::whereIn('id',(array)old('vacancy_id'))->where('agency_id',$agency->id)->get();
+            $vacancies = \App\Vacancies::whereIn('id',(array)old('vacancy_ids'))->where('agency_id',$agency->id)->get();
             $confirm = session('confirmAgency');
             $expDay = \Carbon\Carbon::parse($confirm->created_at)->addDay()->format('l, j F Y');
             $expTime = \Carbon\Carbon::parse($confirm->created_at)->addDay()->format('H:i');
@@ -1188,8 +1250,8 @@
         @endforeach
         $(".countdown-h2").html('<sub>Expired <strong>Time</strong>: {{$expDay." at ".$expTime}}</sub>');
 
-        var code = '{{session('confirmAgency')->payment_code}}', billTotal = '{{old('total_payment')}}',
-            $strTotal, $first, $last;
+        var code = '{{session('confirmAgency')->payment_code}}',
+            billTotal = '{{session('confirmAgency')->total_payment}}', $strTotal, $first, $last;
         @if(\App\PaymentMethod::find($confirm->payment_method_id)->payment_category_id == 1)
         $("#uCode").text("-Rp" + code);
         if (billTotal < 1000000) {

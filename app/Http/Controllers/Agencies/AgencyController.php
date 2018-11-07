@@ -180,13 +180,28 @@ class AgencyController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
+        $it = new \MultipleIterator();
+        $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
+        $it->attachIterator(new \ArrayIterator($request->passing_grade));
+        $it->attachIterator(new \ArrayIterator($request->quiz_applicant));
+        $it->attachIterator(new \ArrayIterator($request->psychoTest_applicant));
+        foreach ($it as $value) {
+            $vacancy = Vacancies::find($value[0]);
+            $vacancy->update([
+                'plan_id' => $request->plans_id,
+                'passing_grade' => $value[1] != 0.00 ? $value[1] : null,
+                'quiz_applicant' => $value[2] != 0 ? $value[2] : null,
+                'psychoTest_applicant' => $value[3] != 0 ? $value[3] : null,
+            ]);
+        }
+
         $confirmAgency = ConfirmAgency::create([
             'agency_id' => $agency->id,
             'plans_id' => $request->plans_id,
             'total_ads' => $request->total_ads,
             'vacancy_ids' => $request->vacancy_ids,
-            'total_quiz' => $request->total_quiz != null ? $request->total_quiz : 0,
-            'total_psychoTest' => $request->total_psychoTest != null ? $request->total_psychoTest : 0,
+            'total_quiz' => $request->total_quiz,
+            'total_psychoTest' => $request->total_psychoTest,
             'payment_method_id' => $request->pm_id,
             'payment_code' => strtoupper($request->payment_code),
             'cc_number' => $request->number,
@@ -195,16 +210,6 @@ class AgencyController extends Controller
             'cc_cvc' => $request->cvc,
             'total_payment' => $request->total_payment,
         ]);
-
-        foreach ((array)$request->vacancy_ids as $id) {
-            $vacancy = Vacancies::find($id);
-            $vacancy->update([
-                'plan_id' => $request->plans_id,
-                'passing_grade' => $request->passing_grade,
-                'quiz_applicant' => $request->total_quiz,
-                'psychoTest_applicant' => $request->total_psychoTest,
-            ]);
-        }
 
         $this->paymentDetailsMail($confirmAgency);
 
