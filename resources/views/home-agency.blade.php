@@ -458,18 +458,9 @@
 
         function vacancyCheck(id, job_ads) {
             @guest
-            @if(Auth::guard('admin')->check())
-            swal({
-                title: 'ATTENTION!',
-                text: 'This feature only works when you\'re signed in as a Job Agency.',
-                type: 'warning',
-                timer: '3500'
-            });
-            @else
             openLoginModal();
-            @endif
             @else
-            @if(Auth::user()->isSeeker())
+            @if(Auth::user()->isSeeker() || Auth::guard('admin')->check())
             swal({
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Agency.',
@@ -478,13 +469,13 @@
             });
             @else
             if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-            ->count()}}' > 0) {
+                    ->count()}}' > 0) {
 
                 if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-                ->where('isPost',false)->count()}}' > 0) {
+                        ->where('isPost',false)->count()}}' > 0) {
 
                     if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-                    ->where('isPost', false)->count()}}' >= job_ads) {
+                            ->where('isPost', false)->count()}}' >= job_ads) {
                         $("#form-plans-" + id)[0].submit();
                     }
                     else {
@@ -527,8 +518,6 @@
                     });
                     return false;
                 }
-                @endif
-                @endguest
 
             } else {
                 swal({
@@ -550,6 +539,8 @@
                 });
                 return false;
             }
+            @endif
+            @endguest
         }
     </script>
 @endpush

@@ -33,7 +33,7 @@ class CreateTableConfirmAgencies extends Migration
             $table->string('cc_name')->nullable();
             $table->string('cc_expiry', '9')->nullable();
             $table->string('cc_cvc', '4')->nullable();
-            $table->integer('total_payment');
+            $table->text('total_payment');
             $table->text('payment_proof')->nullable();
             $table->boolean('isPaid')->default(false);
             $table->dateTime('date_payment')->nullable();

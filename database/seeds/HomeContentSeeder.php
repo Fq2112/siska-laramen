@@ -54,12 +54,12 @@ class HomeContentSeeder extends Seeder
 
         Plan::find(2)->update([
             'name' => 'Plus',
-            'price' => 2000000,
+            'price' => 2500000,
             'discount' => 20,
             'caption' => 'Job Posting Plus Package',
             'job_ads' => '2 Job Ads + Quiz (Online TPA & TKD)',
             'isQuiz' => true,
-            'quiz_applicant' => 100,
+            'quiz_applicant' => 150,
             'price_quiz_applicant' => 10000,
             'psychoTest_applicant' => 0,
             'price_psychoTest_applicant' => 0,
@@ -67,15 +67,15 @@ class HomeContentSeeder extends Seeder
 
         Plan::find(3)->update([
             'name' => 'Enterprise',
-            'price' => 3500000,
+            'price' => 6750000,
             'discount' => 30,
             'caption' => 'Best Job Posting Package',
             'job_ads' => '3 Job Ads + Quiz + Psycho Test (Online Interview)',
             'isQuiz' => true,
-            'quiz_applicant' => 100,
+            'quiz_applicant' => 225,
             'price_quiz_applicant' => 10000,
             'isPsychoTest' => true,
-            'psychoTest_applicant' => 5,
+            'psychoTest_applicant' => 15,
             'price_psychoTest_applicant' => 200000,
             'isBest' => true,
         ]);
