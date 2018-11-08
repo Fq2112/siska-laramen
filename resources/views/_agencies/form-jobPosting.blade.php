@@ -662,9 +662,11 @@
             new_total_ads = '{{$totalAds}}',
             price_per_ads = '{{\App\Plan::find(1)->price - (\App\Plan::find(1)->price * \App\Plan::find(1)->discount/100)}}',
 
+            total_quiz_applicant = 0,
             old_total_quiz = '{{$plan->quiz_applicant}}',
             price_per_quiz = '{{$plan->price_quiz_applicant}}',
 
+            total_psychoTest_applicant = 0,
             old_total_psychoTest = '{{$plan->psychoTest_applicant}}',
             price_per_psychoTest = '{{$plan->price_psychoTest_applicant}}';
 
@@ -819,7 +821,7 @@
                             'min="0" onchange="passingGrade(' + val.id + ')" ' +
                             'step=".01" ' + $attr_passingGrade + '  required>' +
                             '<input id="quiz_applicant' + val.id + '" name="quiz_applicant[]" ' +
-                            'style="width: 70%" type="number" class="form-control" placeholder="0" value="0" ' +
+                            'style="width: 70%" type="number" class="form-control input_quiz_applicant" placeholder="0" value="0" ' +
                             'min="0" ' + $attr_quiz + ' onchange="quizApplicant(' + val.id + ')" required>' +
                             '</div></div>' +
                             '<div class="col-lg-6 psychoTest_setup">' +
@@ -827,11 +829,10 @@
                             '<div class="input-group">' +
                             '<span class="input-group-addon"><i class="fa fa-comments"></i></span>' +
                             '<input id="psychoTest_applicant' + val.id + '" ' +
-                            'name="psychoTest_applicant[]" type="number" class="form-control" ' +
+                            'name="psychoTest_applicant[]" type="number" class="form-control input_psychoTest_applicant" ' +
                             'placeholder="0" value="0" min="0" ' + $attr_psychoTest + ' ' +
                             'onchange="psychoTestApplicant(' + val.id + ')" required></div>' +
                             '</div></div>'
-
                     });
                     $("#vacancy_data").html($vacancy_list);
                     $("#input_quiz_psychoTest").html(input_quiz_psychoTest);
@@ -855,30 +856,27 @@
             $("#detail_passing_grade" + id).text($("#passing_grade" + id).val());
         }
 
-        var total_quiz_applicant = 0;
-
         function quizApplicant(id) {
             if ($("#quiz_applicant" + id).val() == "" || parseInt($("#quiz_applicant" + id).val()) < 0) {
                 $("#quiz_applicant" + id).val(0);
             }
             $("#detail_quiz_applicant" + id).text($("#quiz_applicant" + id).val());
-
-            total_quiz_applicant += parseInt($("#quiz_applicant" + id).val());
         }
 
-        var total_psychoTest_applicant = 0;
-
         function psychoTestApplicant(id) {
-            if ($("#psychoTest_applicant" + id).val() == "" ||
-                parseInt($("#psychoTest_applicant" + id).val()) < 0) {
+            if ($("#psychoTest_applicant" + id).val() == "" || parseInt($("#psychoTest_applicant" + id).val()) < 0) {
                 $("#psychoTest_applicant" + id).val(0);
             }
             $("#detail_psychoTest_applicant" + id).text($("#psychoTest_applicant" + id).val());
-
-            total_psychoTest_applicant += parseInt($("#psychoTest_applicant" + id).val());
         }
 
         function totalQuiz() {
+            total_quiz_applicant = 0;
+            obj=$('.input_quiz_applicant');
+            for(i=0;i<obj.length;i++){
+                total_quiz_applicant+=parseInt(obj.eq(i).val());
+            }
+
             if (parseInt(total_quiz_applicant - old_total_quiz) > 0) {
                 $(".bill_quiz_applicant").text(old_total_quiz + '(+' + parseInt(total_quiz_applicant - old_total_quiz) + ')');
                 $(".total_price_quiz").text('Rp' +
@@ -897,6 +895,12 @@
         }
 
         function totalPsychoTest() {
+            total_psychoTest_applicant = 0;
+            obj=$('.input_psychoTest_applicant');
+            for(i=0;i<obj.length;i++){
+                total_psychoTest_applicant+=parseInt(obj.eq(i).val());
+            }
+
             if (parseInt(total_psychoTest_applicant - old_total_psychoTest) > 0) {
                 $(".bill_psychoTest_applicant").text(old_total_psychoTest + '(+' +
                     parseInt(total_psychoTest_applicant - old_total_psychoTest) + ')');
@@ -1012,7 +1016,7 @@
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
-                                'select at least ' + data.job_ads + ' vacancy!',
+                            'select at least ' + data.job_ads + ' vacancy!',
                             type: 'warning',
                             timer: '7000'
                         });
@@ -1028,7 +1032,7 @@
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
-                                'select at least ' + data.job_ads + ' vacancies!',
+                            'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
                             timer: '7000'
                         });
@@ -1044,7 +1048,7 @@
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
-                                'select at least ' + data.job_ads + ' vacancies!',
+                            'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
                             timer: '7000'
                         });
@@ -1495,8 +1499,8 @@
                                     swal({
                                         title: 'Job Posting',
                                         text: 'Payment proof is successfully uploaded! To check whether ' +
-                                            'your vacancy is already posted or not, please check ' +
-                                            'Vacancy Status in your dashboard.',
+                                        'your vacancy is already posted or not, please check ' +
+                                        'Vacancy Status in your dashboard.',
                                         type: 'success',
                                         timer: '7000'
                                     });
