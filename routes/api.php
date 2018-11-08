@@ -11,6 +11,36 @@
 |
 */
 
+/**
+ *
+ * JWT Auth
+ */
+$router->group(['prefix' => 'jwt','middleware' => 'api'], function ($router){
+    $router->post('register', 'AuthController@register');
+    $router->post('login', 'AuthController@login');
+    $router->post('recover', 'AuthController@recover');
+    $router->post('me', 'AuthController@me');
+    $router->group(['middleware' => ['jwt.auth']], function($router) {
+        $router->get('logout', 'AuthController@logout');
+        $router->get('test', function(){
+            return response()->json(['foo'=>'bar']);
+        });
+
+    });
+});
+
+/**
+ * Route coba coba
+ *
+ */
+//$router->group(['prefix' => 'tes', 'namespace' => 'Tes', 'middleware' => 'api'], function ($router) {
+//    $router->post('login', 'AuthController@login');
+//    $router->post('logout', 'AuthController@logout');
+//    $router->post('refresh', 'AuthController@refresh');
+//    $router->post('me', 'AuthController@me');
+//
+//});
+
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
     $router->get('vacancies/search', [
