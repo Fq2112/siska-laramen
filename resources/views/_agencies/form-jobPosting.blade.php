@@ -363,6 +363,7 @@
                                     @if(session('confirmAgency'))
                                         @php
                                             $pm = \App\PaymentMethod::find(session('confirmAgency')->payment_method_id);
+                                            $pc = \App\PaymentCategory::find($pm->payment_category_id);
                                             $pl = \App\Plan::find(old('plans_id'));
                                             $plan_price = $pl->price - ($pl->price * $pl->discount/100);
                                             $price_per_ads = \App\Plan::find(1)->price -
@@ -399,6 +400,10 @@
                                                 $price_totalPsychoTest = number_format
                                                 ($diffTotalPsychoTest * $pl->price_psychoTest_applicant,0,',','.');
                                             }
+
+                                            $total = number_format(session('confirmAgency')->total_payment,0,"",".");
+                                            $first = substr($total,0,-3);
+                                            $last = substr($total, -3);
                                         @endphp
                                         <style>
                                             .msform {
@@ -474,11 +479,7 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-lg-6" id="stats_payment">
-                                                    @if($pm->payment_category_id == 1)
-                                                        <small>Banking Details</small>
-                                                    @elseif($pm->payment_category_id == 4)
-                                                        <small>Convenience Store Details</small>
-                                                    @endif
+                                                    <small>{{$pc->name}} Details</small>
                                                     <hr class="hr-divider">
                                                     <div class="media">
                                                         <div class="media-left media-middle">
@@ -490,25 +491,34 @@
                                                                 <ul class="list-inline">
                                                                     <li>
                                                                         <a class="tag tag-plans"
-                                                                           style="font-size: 16px">
-                                                                            @if($pm->payment_category_id == 1)
-                                                                                <strong>{{number_format($pm
+                                                                           style="font-size: 15px">
+                                                                            @if($pc->id == 1)
+                                                                                <strong data-toggle="tooltip"
+                                                                                        title="Account Number">
+                                                                                    {{number_format($pm
                                                                                     ->account_number,0," "," ")}}
                                                                                 </strong>
-                                                                            @elseif($pm->payment_category_id == 4)
-                                                                                <strong>{{session('confirmAgency')
-                                                                                ->payment_code}}</strong>
+                                                                            @elseif($pc->id == 4)
+                                                                                <strong data-toggle="tooltip"
+                                                                                        title="Payment Code">
+                                                                                    {{session('confirmAgency')
+                                                                                    ->payment_code}}
+                                                                                </strong>
                                                                             @endif
                                                                         </a>
                                                                     </li>
-                                                                    <li>
+                                                                    <li data-toggle="tooltip" data-placement="bottom">
                                                                         <a class="tag tag-plans">
-                                                                            @if($pm->payment_category_id == 1)
-                                                                                a/n <strong>{{$pm->account_name}}
+                                                                            @if($pc->id == 1)
+                                                                                <strong data-toggle="tooltip"
+                                                                                        title="Account Name">
+                                                                                    a/n {{$pm->account_name}}
                                                                                 </strong>
-                                                                            @elseif($pm->payment_category_id == 4)
-                                                                                <strong>{{$pm->name}}</strong>
-                                                                                Payment Code
+                                                                            @elseif($pc->id == 4)
+                                                                                <strong data-toggle="tooltip"
+                                                                                        title="Payment Method">
+                                                                                    {{$pm->name}}
+                                                                                </strong>
                                                                             @endif
                                                                         </a>
                                                                     </li>
@@ -529,7 +539,8 @@
                                                             <td align="center"><strong>-</strong></td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
-                                                                <strong>Rp{{number_format($plan_price,0,',','.')}}</strong>
+                                                                <strong>Rp{{number_format($plan_price,0,',','.')}}
+                                                                </strong>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -570,7 +581,10 @@
                                                             <td>&emsp;</td>
                                                             <td align="center"><strong>-</strong></td>
                                                             <td>&emsp;</td>
-                                                            <td align="right"><strong id="uCode"></strong></td>
+                                                            <td align="right">
+                                                                <strong>-Rp{{$pc->id == 1 ? session('confirmAgency')
+                                                                ->payment_code : 0}}</strong>
+                                                            </td>
                                                         </tr>
                                                         <tr>
                                                             <td><strong>TOTAL</strong></td>
@@ -578,11 +592,17 @@
                                                             <td>&emsp;</td>
                                                             <td>&emsp;</td>
                                                             <td align="right">
-                                                                <strong id="toPay"
-                                                                        style="font-size: 18px;color: #00adb5"></strong>
+                                                                @if($pc->id == 1)
+                                                                    <strong style="font-size: 18px;color: #00adb5">
+                                                                        Rp{{$first}}<span
+                                                                                style="border:1px solid #fa5555;">{{$last}}</span>
+                                                                    </strong>
+                                                                @else
+                                                                    <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
+                                                                @endif
                                                             </td>
                                                         </tr>
-                                                        @if($pm->payment_category_id == 1)
+                                                        @if($pc->id == 1)
                                                             <tr>
                                                                 <td colspan="5" align="right"
                                                                     style="font-size:12px;color:#fa5555;font-weight:bold;">
@@ -602,7 +622,7 @@
                                                         {{csrf_field()}}
                                                         {{ method_field('put') }}
                                                         <input type="hidden" name="confirmAgency_id"
-                                                               value="{{session('confirmAgency')->id}}">
+                                                               value="{{session('posting_id')}}">
                                                         <div class="uploader">
                                                             <input id="file-upload" type="file" name="payment_proof"
                                                                    accept="image/*">
@@ -633,8 +653,8 @@
                                                     </form>
                                                 </div>
                                             </div>
-                                            <a href="{{route('invoice.job.posting', ['id' =>
-                                            encrypt(session('confirmAgency')->id)])}}" target="_blank">
+                                            <a target="_blank" href="{{route('invoice.job.posting', ['id' =>
+                                            encrypt(session('posting_id'))])}}">
                                                 <input type="button" class="btn-upload" value="Get your invoice here!">
                                             </a>
                                         </fieldset>
@@ -652,11 +672,12 @@
     <script src="{{asset('js/jquery.cc.js')}}"></script>
     <script src="{{asset('js/TweenMax.min.js')}}"></script>
     <script>
-        var plan_price = '{{$price}}', subtotal = 0, payment_code_value = 0,
+        var isQuiz = '{{$plan->isQuiz}}', isPsychoTest = '{{$plan->isPsychoTest}}', plan_price = '{{$price}}',
+            subtotal = 0, payment_code_value = 0,
 
-            $attr_passingGrade = '{{$plan->id == 1 ? 'readonly' : ''}}',
-            $attr_quiz = '{{$plan->id == 1 ? 'readonly' : ''}}',
-            $attr_psychoTest = '{{$plan->id == 1 || $plan->id == 2 ? 'readonly' : ''}}',
+            $attr_passingGrade = '{{$plan->isQuiz == false ? 'readonly' : ''}}',
+            $attr_quiz = '{{$plan->isQuiz == false ? 'readonly' : ''}}',
+            $attr_psychoTest = '{{$plan->isPsychoTest == false ? 'readonly' : ''}}',
 
             old_total_ads = '{{$totalAds}}',
             new_total_ads = '{{$totalAds}}',
@@ -817,11 +838,11 @@
                             '<div class="input-group">' +
                             '<span class="input-group-addon"><i class="fa fa-grin-beam"></i></span>' +
                             '<input id="passing_grade' + val.id + '" name="passing_grade[]" ' +
-                            'type="number" class="form-control" style="width: 30%" placeholder="0.00" value="0.00" ' +
-                            'min="0" onchange="passingGrade(' + val.id + ')" ' +
+                            'type="number" class="form-control input_passing_grade" style="width: 30%" ' +
+                            'placeholder="0.00" value="0.00" min="0" onchange="passingGrade(' + val.id + ')" ' +
                             'step=".01" ' + $attr_passingGrade + '  required>' +
-                            '<input id="quiz_applicant' + val.id + '" name="quiz_applicant[]" ' +
-                            'style="width: 70%" type="number" class="form-control input_quiz_applicant" placeholder="0" value="0" ' +
+                            '<input id="quiz_applicant' + val.id + '" name="quiz_applicant[]" style="width: 70%" ' +
+                            'type="number" class="form-control input_quiz_applicant" placeholder="0" value="0" ' +
                             'min="0" ' + $attr_quiz + ' onchange="quizApplicant(' + val.id + ')" required>' +
                             '</div></div>' +
                             '<div class="col-lg-6 psychoTest_setup">' +
@@ -850,31 +871,33 @@
         }
 
         function passingGrade(id) {
-            if ($("#passing_grade" + id).val() == "" || parseFloat($("#passing_grade" + id).val()) <= 0.00) {
+            if ($("#passing_grade" + id).val() == "" || parseFloat($("#passing_grade" + id).val()) < 0.00) {
+                $("#passing_grade" + id).val(0.00);
+            } else if (parseFloat($("#passing_grade" + id).val()) > 100) {
                 $("#passing_grade" + id).val(75.5);
             }
-            $("#detail_passing_grade" + id).text($("#passing_grade" + id).val());
+            $("#detail_passing_grade" + id).text(parseFloat($("#passing_grade" + id).val()));
         }
 
         function quizApplicant(id) {
             if ($("#quiz_applicant" + id).val() == "" || parseInt($("#quiz_applicant" + id).val()) < 0) {
                 $("#quiz_applicant" + id).val(0);
             }
-            $("#detail_quiz_applicant" + id).text($("#quiz_applicant" + id).val());
+            $("#detail_quiz_applicant" + id).text(parseInt($("#quiz_applicant" + id).val()));
         }
 
         function psychoTestApplicant(id) {
             if ($("#psychoTest_applicant" + id).val() == "" || parseInt($("#psychoTest_applicant" + id).val()) < 0) {
                 $("#psychoTest_applicant" + id).val(0);
             }
-            $("#detail_psychoTest_applicant" + id).text($("#psychoTest_applicant" + id).val());
+            $("#detail_psychoTest_applicant" + id).text(parseInt($("#psychoTest_applicant" + id).val()));
         }
 
         function totalQuiz() {
             total_quiz_applicant = 0;
-            obj=$('.input_quiz_applicant');
-            for(i=0;i<obj.length;i++){
-                total_quiz_applicant+=parseInt(obj.eq(i).val());
+            obj = $('.input_quiz_applicant');
+            for (i = 0; i < obj.length; i++) {
+                total_quiz_applicant += parseInt(obj.eq(i).val());
             }
 
             if (parseInt(total_quiz_applicant - old_total_quiz) > 0) {
@@ -896,9 +919,9 @@
 
         function totalPsychoTest() {
             total_psychoTest_applicant = 0;
-            obj=$('.input_psychoTest_applicant');
-            for(i=0;i<obj.length;i++){
-                total_psychoTest_applicant+=parseInt(obj.eq(i).val());
+            obj = $('.input_psychoTest_applicant');
+            for (i = 0; i < obj.length; i++) {
+                total_psychoTest_applicant += parseInt(obj.eq(i).val());
             }
 
             if (parseInt(total_psychoTest_applicant - old_total_psychoTest) > 0) {
@@ -920,6 +943,9 @@
         }
 
         $("#vacancy_setup .next").on("click", function () {
+            totalQuiz();
+            totalPsychoTest();
+
             if (!$("#vacancy_id").val()) {
                 $("#vacancy_list").addClass('has-error');
                 $(".vacancy_errorTxt").text('Please select some vacancy that you\'re going to post.');
@@ -932,33 +958,50 @@
                 $("#order_summary .previous").click();
 
             } else {
-                totalQuiz();
-                totalPsychoTest();
-
-                if (total_quiz_applicant < old_total_quiz) {
+                if (isQuiz == 1 && parseFloat($(".input_passing_grade").val()) == 0.00) {
                     $(".quiz_setup, #quiz_error").addClass('has-error');
-                    $("#quiz_error small").text("The applicant amount you've entered doesn't meet " +
-                        "the requirements for total applicant (" + old_total_quiz + " applicants).");
+                    $("#quiz_error small").text("Passing grade value can't be 0.00! " +
+                        "Please fill it correctly for each vacancy that you've selected.");
                     $("#order_summary .previous").click();
 
                 } else {
-                    $(".quiz_setup").removeClass('has-error');
-                    $("#quiz_error small").text('');
+                    if (isQuiz == 1 && parseInt($(".input_quiz_applicant").val()) == 0) {
+                        $(".quiz_setup, #quiz_error").addClass('has-error');
+                        $("#quiz_error small").text("Quiz applicant value can't be 0! " +
+                            "Please fill it correctly for each vacancy that you've selected.");
+                        $("#order_summary .previous").click();
+
+                    } else if (isQuiz == 1 && total_quiz_applicant < old_total_quiz) {
+                        $(".quiz_setup, #quiz_error").addClass('has-error');
+                        $("#quiz_error small").text("The applicant amount you've entered doesn't meet " +
+                            "the requirements for total applicant (" + old_total_quiz + " applicants).");
+                        $("#order_summary .previous").click();
+
+                    } else if (isQuiz == 1 && parseInt($(".input_quiz_applicant").val()) != 0 &&
+                        total_quiz_applicant > old_total_quiz) {
+                        $(".quiz_setup").removeClass('has-error');
+                        $("#quiz_error small").text('');
+                    }
                 }
 
-                if (total_psychoTest_applicant < old_total_psychoTest) {
+                if (isPsychoTest == 1 && parseInt($(".input_psychoTest_applicant").val()) == 0) {
+                    $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
+                    $("#psychoTest_error small").text("Psycho test applicant value can't be 0! " +
+                        "Please fill it correctly for each vacancy that you've selected.");
+                    $("#order_summary .previous").click();
+
+                } else if (isPsychoTest == 1 && total_psychoTest_applicant < old_total_psychoTest) {
                     $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
                     $("#psychoTest_error small").text("The applicant amount you've entered doesn't meet " +
                         "the requirements for total applicant (" + old_total_psychoTest + " applicants).");
                     $("#order_summary .previous").click();
 
-                } else {
+                } else if (isPsychoTest == 1 && parseInt($(".input_psychoTest_applicant").val()) != 0 &&
+                    total_psychoTest_applicant > old_total_psychoTest) {
                     $(".psychoTest_setup").removeClass('has-error');
                     $("#psychoTest_error small").text('');
                 }
-
             }
-            console.log('Quiz: ' + total_quiz_applicant + ' | Interview: ' + total_psychoTest_applicant);
         });
 
         $("#plans_id").on('change', function () {
@@ -986,6 +1029,11 @@
                 } else {
                     plan_price = data.price;
                     old_total_ads = data.job_ads;
+                    isQuiz = data.isQuiz;
+                    isPsychoTest = data.isPsychoTest;
+                    $attr_passingGrade = isQuiz == 0 ? 'readonly' : '';
+                    $attr_quiz = isQuiz == 0 ? 'readonly' : '';
+                    $attr_psychoTest = isPsychoTest == 0 ? 'readonly' : '';
                     old_total_quiz = data.quiz_applicant;
                     price_per_quiz = data.price_quiz_applicant;
                     old_total_psychoTest = data.psychoTest_applicant;
@@ -1009,53 +1057,35 @@
                     $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
 
                     if (data.id == 1) {
-                        $attr_passingGrade = 'readonly';
-                        $attr_quiz = 'readonly';
-                        $attr_psychoTest = 'readonly';
-
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
-                            'select at least ' + data.job_ads + ' vacancy!',
+                                'select at least ' + data.job_ads + ' vacancy!',
                             type: 'warning',
                             timer: '7000'
                         });
-                        $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
-                        $("#order_summary .previous").click();
 
                     } else if (data.id == 2) {
-                        $attr_passingGrade = '';
-                        $attr_quiz = '';
-                        $attr_psychoTest = 'readonly';
-
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
-                            'select at least ' + data.job_ads + ' vacancies!',
+                                'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
                             timer: '7000'
                         });
-                        $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
-                        $("#order_summary .previous").click();
 
                     } else if (data.id == 3) {
-                        $attr_passingGrade = '';
-                        $attr_quiz = '';
-                        $attr_psychoTest = '';
-
                         swal({
                             title: 'ATTENTION!',
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
-                            'select at least ' + data.job_ads + ' vacancies!',
+                                'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
                             timer: '7000'
                         });
-                        $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
-                        $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
-                        $("#order_summary .previous").click();
                     }
+                    $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
+                    $("#vacancy_id").val('default').selectpicker({maxOptions: data.job_ads}).selectpicker('refresh');
+                    $("#order_summary .previous").click();
                 }
                 $(".accordion-toggle").addClass('collapsed');
                 $(".panel-collapse").removeClass('in');
@@ -1253,24 +1283,6 @@
         $("#vac_id option[value='{{$row->id}}']").attr('selected', 'selected');
         @endforeach
         $(".countdown-h2").html('<sub>Expired <strong>Time</strong>: {{$expDay." at ".$expTime}}</sub>');
-
-        var code = '{{session('confirmAgency')->payment_code}}',
-            billTotal = '{{session('confirmAgency')->total_payment}}', $strTotal, $first, $last;
-        @if(\App\PaymentMethod::find($confirm->payment_method_id)->payment_category_id == 1)
-        $("#uCode").text("-Rp" + code);
-        if (billTotal < 1000000) {
-            $first = thousandSeparator(billTotal).substr(0, 4);
-        }
-        else {
-            $first = thousandSeparator(billTotal).substr(0, 6);
-        }
-        $last = thousandSeparator(billTotal).substr(thousandSeparator(billTotal).length - 3);
-        $strTotal = "Rp" + $first + "<span style='border:1px solid #fa5555;'>" + $last + "</span>";
-        @else
-        $("#uCode").text("-Rp0");
-        $strTotal = "Rp" + thousandSeparator(billTotal);
-        @endif
-        $("#toPay").html($strTotal);
 
         var Countdown = {
             $el: $('.countdown'),
@@ -1499,8 +1511,8 @@
                                     swal({
                                         title: 'Job Posting',
                                         text: 'Payment proof is successfully uploaded! To check whether ' +
-                                        'your vacancy is already posted or not, please check ' +
-                                        'Vacancy Status in your dashboard.',
+                                            'your vacancy is already posted or not, please check ' +
+                                            'Vacancy Status in your dashboard.',
                                         type: 'success',
                                         timer: '7000'
                                     });

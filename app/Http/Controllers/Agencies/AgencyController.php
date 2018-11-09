@@ -216,6 +216,7 @@ class AgencyController extends Controller
         return back()->withInput(Input::all())->with([
             'jobPosting' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted as soon as your payment is completed.',
             'confirmAgency' => $confirmAgency,
+            'posting_id' => $confirmAgency->id
         ]);
     }
 
@@ -224,11 +225,6 @@ class AgencyController extends Controller
         $pm = PaymentMethod::find($confirmAgency->payment_method_id);
         $pc = PaymentCategory::find($pm->payment_category_id);
         $pl = Plan::find($confirmAgency->plans_id);
-        if ($pc->id == 1) {
-            $payment_code = $confirmAgency->payment_code;
-        } else {
-            $payment_code = 0;
-        }
 
         $plan_price = $pl->price - ($pl->price * $pl->discount / 100);
         $price_per_ads = Plan::find(1)->price - (Plan::find(1)->price * Plan::find(1)->discount / 100);
@@ -260,8 +256,6 @@ class AgencyController extends Controller
             $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
         }
 
-        $total = ($plan_price + $price_totalVacancy + $price_totalQuiz + $price_totalPsychoTest) - $payment_code;
-
         $data = [
             'confirmAgency' => $confirmAgency,
             'payment_method' => $pm,
@@ -274,8 +268,6 @@ class AgencyController extends Controller
             'price_totalQuiz' => $price_totalQuiz,
             'totalPsychoTest' => $totalPsychoTest,
             'price_totalPsychoTest' => $price_totalPsychoTest,
-            'payment_code' => $payment_code,
-            'total_payment' => $total,
         ];
         event(new VacancyPaymentDetails($data));
     }

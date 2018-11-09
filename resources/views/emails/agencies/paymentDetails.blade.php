@@ -4,12 +4,8 @@
     \App\Support\RomanConverter::numberToRoman($date->format('m'));
     $invoice = '#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
     $reference = '#PYM/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
-    $total = number_format($data['total_payment'],0,"",".");
-    if($data['total_payment'] < 1000000){
-        $first = substr($total,0,4);
-    } else{
-        $first = substr($total,0,6);
-    }
+    $total = number_format($data['confirmAgency']->total_payment,0,"",".");
+    $first = substr($total,0,-3);
     $last = substr($total, -3);
 @endphp
 <head>
@@ -579,7 +575,9 @@
                                                                     <td align="center"><strong>-</strong></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <strong>-Rp{{$data['payment_code']}}</strong>
+                                                                        <strong>-Rp{{$data['payment_category']->id == 1
+                                                                        ? $data['confirmAgency']->payment_code : 0}}
+                                                                        </strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr style="border-top: 1px solid #eee">
