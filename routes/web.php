@@ -704,6 +704,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'table.jobPostings'
                     ]);
 
+                    Route::get('{id}/invoice', [
+                        'uses' => 'TransactionAgencyController@showJobPostingsInvoice',
+                        'as' => 'table.jobPostings.invoice'
+                    ]);
+
                     Route::put('{id}/update', [
                         'uses' => 'TransactionAgencyController@updateJobPostings',
                         'as' => 'table.jobPostings.update'

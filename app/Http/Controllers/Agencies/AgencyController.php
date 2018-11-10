@@ -35,8 +35,7 @@ class AgencyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'agency'])->except(['index', 'showProfile', 'invoiceJobPosting']);
-        $this->middleware(['agency', 'admin'])->only('invoiceJobPosting');
+        $this->middleware(['auth', 'agency'])->except(['index', 'showProfile']);
     }
 
     public function index()
@@ -230,31 +229,19 @@ class AgencyController extends Controller
         $price_per_ads = Plan::find(1)->price - (Plan::find(1)->price * Plan::find(1)->discount / 100);
 
         $old_totalVacancy = array_sum(str_split(filter_var($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
-        $totalVacancy = $old_totalVacancy;
         $diffTotalVacancy = $confirmAgency->total_ads - $old_totalVacancy;
-        $price_totalVacancy = 0;
-        if ($diffTotalVacancy > 0) {
-            $totalVacancy = $old_totalVacancy . "(+" . $diffTotalVacancy . ")";
-            $price_totalVacancy = $diffTotalVacancy * $price_per_ads;
-        }
+        $totalVacancy = $old_totalVacancy . "(+" . $diffTotalVacancy . ")";
+        $price_totalVacancy = $diffTotalVacancy * $price_per_ads;
 
         $old_totalQuizApplicant = $pl->quiz_applicant;
-        $totalQuizApplicant = $old_totalQuizApplicant;
         $diffTotalQuizApplicant = $confirmAgency->total_quiz - $old_totalQuizApplicant;
-        $price_totalQuiz = 0;
-        if ($diffTotalQuizApplicant > 0) {
-            $totalQuizApplicant = $old_totalQuizApplicant . "(+" . $diffTotalQuizApplicant . ")";
-            $price_totalQuiz = $diffTotalQuizApplicant * $pl->price_quiz_applicant;
-        }
+        $totalQuizApplicant = $old_totalQuizApplicant . "(+" . $diffTotalQuizApplicant . ")";
+        $price_totalQuiz = $diffTotalQuizApplicant * $pl->price_quiz_applicant;
 
         $old_totalPsychoTest = $pl->psychoTest_applicant;
-        $totalPsychoTest = $old_totalPsychoTest;
         $diffTotalPsychoTest = $confirmAgency->total_psychoTest - $old_totalPsychoTest;
-        $price_totalPsychoTest = 0;
-        if ($diffTotalPsychoTest > 0) {
-            $totalPsychoTest = $old_totalPsychoTest . "(+" . $diffTotalPsychoTest . ")";
-            $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
-        }
+        $totalPsychoTest = $old_totalPsychoTest . "(+" . $diffTotalPsychoTest . ")";
+        $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
 
         $data = [
             'confirmAgency' => $confirmAgency,
@@ -283,43 +270,24 @@ class AgencyController extends Controller
         $pm = PaymentMethod::find($confirmAgency->payment_method_id);
         $pc = PaymentCategory::find($pm->payment_category_id);
         $pl = Plan::find($confirmAgency->plans_id);
-        if ($pc->id == 1) {
-            $payment_code = $confirmAgency->payment_code;
-        } else {
-            $payment_code = 0;
-        }
 
         $plan_price = $pl->price - ($pl->price * $pl->discount / 100);
         $price_per_ads = Plan::find(1)->price - (Plan::find(1)->price * Plan::find(1)->discount / 100);
 
         $old_totalVacancy = array_sum(str_split(filter_var($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
-        $totalVacancy = $old_totalVacancy;
         $diffTotalVacancy = $confirmAgency->total_ads - $old_totalVacancy;
-        $price_totalVacancy = 0;
-        if ($diffTotalVacancy > 0) {
-            $totalVacancy = $old_totalVacancy . "(+" . $diffTotalVacancy . ")";
-            $price_totalVacancy = $diffTotalVacancy * $price_per_ads;
-        }
+        $totalVacancy = $old_totalVacancy . "(+" . $diffTotalVacancy . ")";
+        $price_totalVacancy = $diffTotalVacancy * $price_per_ads;
 
         $old_totalQuizApplicant = $pl->quiz_applicant;
-        $totalQuizApplicant = $old_totalQuizApplicant;
         $diffTotalQuizApplicant = $confirmAgency->total_quiz - $old_totalQuizApplicant;
-        $price_totalQuiz = 0;
-        if ($diffTotalQuizApplicant > 0) {
-            $totalQuizApplicant = $old_totalQuizApplicant . "(+" . $diffTotalQuizApplicant . ")";
-            $price_totalQuiz = $diffTotalQuizApplicant * $pl->price_quiz_applicant;
-        }
+        $totalQuizApplicant = $old_totalQuizApplicant . "(+" . $diffTotalQuizApplicant . ")";
+        $price_totalQuiz = $diffTotalQuizApplicant * $pl->price_quiz_applicant;
 
         $old_totalPsychoTest = $pl->psychoTest_applicant;
-        $totalPsychoTest = $old_totalPsychoTest;
         $diffTotalPsychoTest = $confirmAgency->total_psychoTest - $old_totalPsychoTest;
-        $price_totalPsychoTest = 0;
-        if ($diffTotalPsychoTest > 0) {
-            $totalPsychoTest = $old_totalPsychoTest . "(+" . $diffTotalPsychoTest . ")";
-            $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
-        }
-
-        $total = ($plan_price + $price_totalVacancy + $price_totalQuiz + $price_totalPsychoTest) - $payment_code;
+        $totalPsychoTest = $old_totalPsychoTest . "(+" . $diffTotalPsychoTest . ")";
+        $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
 
         $date = Carbon::parse($confirmAgency->created_at);
         $romanDate = RomanConverter::numberToRoman($date->format('y')) . '/' .
@@ -328,7 +296,7 @@ class AgencyController extends Controller
 
         return view('_agencies.inv-jobPosting', compact('confirmAgency', 'vacancies', 'agency', 'user',
             'pm', 'pc', 'pl', 'plan_price', 'totalVacancy', 'price_per_ads', 'price_totalVacancy', 'totalQuizApplicant',
-            'price_totalQuiz', 'totalPsychoTest', 'price_totalPsychoTest', 'payment_code', 'total', 'invoice'));
+            'price_totalQuiz', 'totalPsychoTest', 'price_totalPsychoTest', 'invoice'));
     }
 
     public function uploadPaymentProof(Request $request)

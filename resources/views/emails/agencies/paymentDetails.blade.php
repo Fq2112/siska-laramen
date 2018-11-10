@@ -504,7 +504,7 @@
                                     <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
                                            align="center">
                                         <tr>
-                                            <td valign="top" width="50%">
+                                            <td valign="top" width="60%">
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%"
                                                        style="margin-left: 1em">
                                                     <tr>
@@ -608,7 +608,7 @@
                                                     </tr>
                                                 </table>
                                             </td>
-                                            <td valign="top" width="50%">
+                                            <td valign="top" width="40%">
                                                 <table border="0" cellpadding="10" cellspacing="0" width="100%"
                                                        style="margin-left: 1em">
                                                     <tr>
@@ -616,8 +616,9 @@
                                                             <small><strong>Payment Deadline</strong></small>
                                                             <hr class="hr-divider">
                                                             <span>{{$data['confirmAgency']->created_at->addDay()
-                                                            ->format('l, j F Y').' at '.
-                                                            $data['confirmAgency']->created_at->addDay()->format('H:i')}}
+                                                            ->format('l, j F Y')}}<br>
+                                                            at {{$data['confirmAgency']->created_at->addDay()
+                                                            ->format('H:i')}}
                                                             </span>
                                                         </td>
                                                     </tr>
@@ -696,8 +697,8 @@
                                             <td>
                                                 <div class="alert alert-info text-center">
                                                     <a target="_blank" style="color: #00ADB5;text-decoration: none"
-                                                       href="{{route('agency.vacancy.status',
-                                                    ['id'=>encrypt($data['confirmAgency']->id),'invoice'=>$invoice])}}">
+                                                       href="{{route('agency.vacancy.status',['id' => encrypt
+                                                       ($data['confirmAgency']->id),'invoice'=>$invoice])}}">
                                                         <strong>Upload Payment Proof</strong>
                                                     </a> to speed up verification
                                                 </div>

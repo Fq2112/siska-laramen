@@ -50,6 +50,9 @@
                                                 @if(count($vacancies) != 0)
                                                     @foreach($vacancies as $row)
                                                         @php
+                                                            if($row->plan_id != null){
+                                                                $plan = \App\Plan::find($row->plan_id);
+                                                            }
                                                             $city = \App\Cities::find($row->cities_id)->name;
                                                             $salary = \App\Salaries::find($row->salary_id);
                                                             $jobfunc = \App\FungsiKerja::find($row->fungsikerja_id);
@@ -183,12 +186,34 @@
                                                                                         <a class="tag tag-plans">
                                                                                             <i class="fa fa-thumbtack">
                                                                                             </i>&ensp;Plan:
-                                                                                            <strong style="text-transform: uppercase">
-                                                                                                {{\App\Plan::find
-                                                                                                ($row->plan_id)->name}}
-                                                                                            </strong> Package
+                                                                                            {{$plan->name}} Package
                                                                                         </a>
                                                                                     </li>
+                                                                                    @if($plan->isQuiz == true)
+                                                                                        <li>
+                                                                                            <a class="tag tag-plans">
+                                                                                                <i class="fa fa-grin-beam">
+                                                                                                </i>&ensp;Quiz with
+                                                                                                {{$row->passing_grade}}
+                                                                                                passing grade &ndash;
+                                                                                                for &ndash;
+                                                                                                {{$row->quiz_applicant}}
+                                                                                                applicants
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    @endif
+                                                                                    @if($plan->isPsychoTest == true)
+                                                                                        <li>
+                                                                                            <a class="tag tag-plans">
+                                                                                                <i class="fa fa-comments">
+                                                                                                </i>&ensp;Psycho Test
+                                                                                                for
+                                                                                                {{$row
+                                                                                                ->psychoTest_applicant}}
+                                                                                                applicants
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    @endif
                                                                                 @endif
                                                                             </ul>
                                                                             <small>Requirements</small>

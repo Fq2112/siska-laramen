@@ -62,14 +62,11 @@
                     </tr>
                     </tbody>
                 </table>
-                <table width="100%" cellspacing="0" cellpadding="0" style="width: 100%; padding-bottom: 20px;">
+                <table width="100%" cellspacing="0" cellpadding="0" style="width: 100%; padding-bottom: 15px;">
                     <tbody>
                     <tr style="font-size: 20px; font-weight: 600;">
-                        <td style="padding: 0 10px;"><span>Bill to</span></td>
-                        <td style="padding: 0 10px;"><span>Invoice</span></td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 0 10px;vertical-align: text-top">
+                        <td width="30%" style="padding: 0 10px;">
+                            <span>Bill to</span>
                             <table style="width: 100%; border-collapse: collapse;" width="100%" cellspacing="0"
                                    cellpadding="0">
                                 <tr>
@@ -78,8 +75,7 @@
                                                cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
-                                                <td style="font-size: 16px;padding: 3px 0;font-weight: 600">
-                                                    {{$user->name}}</td>
+                                                <td style="font-size: 16px;padding: 3px 0;font-weight: 600">{{$user->name}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -91,7 +87,7 @@
                                                cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
-                                                <td style="padding: 3px 0;">{{$agency->alamat}}</td>
+                                                <td>{{$agency->alamat}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -103,7 +99,7 @@
                                                cellspacing="0" cellpadding="0">
                                             <tbody>
                                             <tr>
-                                                <td style="padding: 3px 0;">{{$agency->phone}}</td>
+                                                <td>{{$agency->phone}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -111,7 +107,8 @@
                                 </tr>
                             </table>
                         </td>
-                        <td style="padding: 0 10px;vertical-align: text-top">
+                        <td width="40%" style="padding: 0 10px;">
+                            <span>Invoice</span>
                             <table style="width: 100%; border-collapse: collapse;" width="100%" cellspacing="0"
                                    cellpadding="0">
                                 <tr style="font-size: 13px;">
@@ -162,6 +159,37 @@
 
                             </table>
                         </td>
+                        <td width="30%" style="padding: 0 10px;">
+                            <span>Payment</span>
+                            <table style="width: 100%; border-collapse: collapse;" width="100%" cellspacing="0"
+                                   cellpadding="0">
+                                <tr>
+                                    <td style="font-size: 16px;padding: 3px 0;font-weight: 600">{{$pc->name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <table>
+                                            <tr>
+                                                <td width="35%">
+                                                    <img src="{{asset('images/paymentMethod/'.$pm->logo)}}"
+                                                         style="width: 90%;" alt="{{$pm->name}}">
+                                                </td>
+                                                <td width="65%" style="font-size: 15px">
+                                                    @if($pc->id == 1)
+                                                        {{number_format($pm->account_number,0," "," ")}}<br>
+                                                        a/n {{$pm->account_name}}
+                                                    @elseif($pc->id == 4)
+                                                        <strong style="font-size: 15px;text-transform: uppercase">
+                                                            {{$confirmAgency->payment_code}}</strong>
+                                                        <br>Payment Code
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
@@ -206,17 +234,31 @@
                     </tr>
                     </tbody>
                 </table>
-                <table style="width: 100%; text-align: center; border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 15px 0;"
+                <table style="width: 100%; text-align: center; border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1); padding: 0 0 15px 0;"
                        width="100%" cellspacing="0" cellpadding="0">
                     <tbody>
                     <tr style="font-size: 13px;">
                         <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">
                             <span style="text-transform: uppercase">Job Vacancy</span>
-                            <ul style="margin: 0 auto">
+                            <ol style="margin: 0 auto">
                                 @foreach($vacancies as $vacancy)
-                                    <li>{{$vacancy->judul}}</li>
+                                    <li style="margin-bottom: .5em">
+                                        {{$vacancy->judul}}
+                                        <ul>
+                                            <li>
+                                                Quiz with <strong>{{$vacancy->passing_grade != null ?
+                                                $vacancy->passing_grade : 0}}</strong> passing grade&nbsp;&ndash;&nbsp;for&nbsp;&ndash;
+                                                <strong>{{$vacancy->quiz_applicant != null ?
+                                                $vacancy->quiz_applicant : 0}}</strong> applicants
+                                            </li>
+                                            <li>
+                                                Psycho Test for <strong>{{$vacancy->psychoTest_applicant != null ?
+                                                $vacancy->psychoTest_applicant : 0}}</strong> applicants
+                                            </li>
+                                        </ul>
+                                    </li>
                                 @endforeach
-                            </ul>
+                            </ol>
                         </td>
                         <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
                             <strong>{{$totalVacancy}}</strong></td>
@@ -234,7 +276,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <table style="width: 100%; text-align: center; padding: 15px 0;" width="100%" cellspacing="0"
+                <table style="width: 100%; text-align: center; padding: 0 0 15px 0;" width="100%" cellspacing="0"
                        cellpadding="0">
                     <tbody>
                     <tr style="font-size: 13px;">
@@ -264,16 +306,19 @@
                             Code
                         </td>
                         <td colspan="2" style="width: 120px;padding: 8px 5px"><strong>&ndash;</strong></td>
-                        <td style="width: 115px; padding: 8px 5px;" width="115">Rp{{$payment_code}}</td>
+                        <td style="width: 115px; padding: 8px 5px;" width="115">
+                            Rp{{$pc->id == 1 ? $confirmAgency->payment_code : 0}},00
+                        </td>
                         <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
-                            -Rp{{$payment_code}}</td>
+                            -Rp{{$pc->id == 1 ? $confirmAgency->payment_code : 0}},00
+                        </td>
                     </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
                         <td colspan="4" style="font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
                             Subtotal
                         </td>
                         <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
-                            width="115">Rp{{number_format($total,2,",",".")}}</td>
+                            width="115">Rp{{number_format($confirmAgency->total_payment,2,",",".")}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -289,7 +334,7 @@
                                     style="font-size: 15px; background-color: rgba(0,0,0,0.1);">
                                     <td style="padding: 15px 0 15px 30px; font-weight: 600;">Total</td>
                                     <td style="padding: 15px 30px 15px 0; font-weight: 600; text-align: right;">
-                                        Rp{{number_format($total,2,",",".")}}
+                                        Rp{{number_format($confirmAgency->total_payment,2,",",".")}}
                                     </td>
                                 </tr>
                             </table>
@@ -302,40 +347,6 @@
                                    style="width: 100%; border-collapse: collapse;">
                             </table>
                         </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <table width="100%" cellspacing="0" cellpadding="0"
-                       style="width: 100%; border-top: 1px dashed #DDD; padding: 25px 0;">
-                    <tbody>
-                    <tr>
-                        <td style="font-size: 20px;"><strong>Payment</strong>
-                            <sub>{{$pc->name}}</sub></td>
-                    </tr>
-                    <tr>
-                        <td style="font-size: 16px; line-height: 20px; padding: 10px 0;">
-                            <table>
-                                <tr>
-                                    <td width="50%">
-                                        <img src="{{asset('images/paymentMethod/'.$pm->logo)}}"
-                                             style="width: 90%;"
-                                             alt="{{$pm->name}}">
-                                    </td>
-                                    <td>
-                                        @if($pc->id == 1)
-                                            <strong style="font-size: 18px">
-                                                {{number_format($pm->account_number,0," "," ")}}</strong>
-                                            <br>a/n {{$pm->account_name}}
-                                        @elseif($pc->id == 4)
-                                            <strong style="font-size: 18px;text-transform: uppercase">{{$confirmAgency->payment_code}}</strong>
-                                            <br>Payment Code
-                                        @endif
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td style="font-size: 13px; line-height: 20px; padding: 10px 0;" width="50%" valign="top"></td>
                     </tr>
                     </tbody>
                 </table>

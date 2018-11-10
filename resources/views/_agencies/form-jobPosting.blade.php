@@ -371,35 +371,22 @@
 
                                             $old_totalVacancy = array_sum(str_split(filter_var
                                             ($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
-                                            $totalVacancy = $old_totalVacancy;
                                             $diffTotalVacancy = old('total_ads') - $old_totalVacancy;
-                                            $price_totalVacancy = 0;
-                                            if($diffTotalVacancy > 0){
-                                                $totalVacancy = $old_totalVacancy."(+".$diffTotalVacancy.")";
-                                                $price_totalVacancy = number_format
-                                                ($diffTotalVacancy * $price_per_ads,0,',','.');
-                                            }
+                                            $totalVacancy = $old_totalVacancy."(+".$diffTotalVacancy.")";
+                                            $price_totalVacancy = number_format
+                                            ($diffTotalVacancy * $price_per_ads,0,',','.');
 
                                             $old_totalQuizApplicant = $pl->quiz_applicant;
-                                            $totalQuizApplicant = $old_totalQuizApplicant;
                                             $diffTotalQuizApplicant = session('confirmAgency')->total_quiz - $old_totalQuizApplicant;
-                                            $price_totalQuiz = 0;
-                                            if($diffTotalQuizApplicant > 0){
-                                                $totalQuizApplicant = $old_totalQuizApplicant.
-                                                "(+".$diffTotalQuizApplicant.")";
-                                                $price_totalQuiz = number_format
-                                                ($diffTotalQuizApplicant * $pl->price_quiz_applicant,0,',','.');
-                                            }
+                                            $totalQuizApplicant = $old_totalQuizApplicant."(+".$diffTotalQuizApplicant.")";
+                                            $price_totalQuiz = number_format
+                                            ($diffTotalQuizApplicant * $pl->price_quiz_applicant,0,',','.');
 
                                             $old_totalPsychoTest = $pl->psychoTest_applicant;
-                                            $totalPsychoTest = $old_totalPsychoTest;
                                             $diffTotalPsychoTest = session('confirmAgency')->total_psychoTest - $old_totalPsychoTest;
-                                            $price_totalPsychoTest = 0;
-                                            if($diffTotalPsychoTest > 0){
-                                                $totalPsychoTest = $old_totalPsychoTest."(+".$diffTotalPsychoTest.")";
-                                                $price_totalPsychoTest = number_format
-                                                ($diffTotalPsychoTest * $pl->price_psychoTest_applicant,0,',','.');
-                                            }
+                                            $totalPsychoTest = $old_totalPsychoTest."(+".$diffTotalPsychoTest.")";
+                                            $price_totalPsychoTest = number_format
+                                            ($diffTotalPsychoTest * $pl->price_psychoTest_applicant,0,',','.');
 
                                             $total = number_format(session('confirmAgency')->total_payment,0,"",".");
                                             $first = substr($total,0,-3);
@@ -673,7 +660,7 @@
     <script src="{{asset('js/TweenMax.min.js')}}"></script>
     <script>
         var isQuiz = '{{$plan->isQuiz}}', isPsychoTest = '{{$plan->isPsychoTest}}', plan_price = '{{$price}}',
-            subtotal = 0, payment_code_value = 0,
+            subtotal = parseInt(plan_price), payment_code_value = 0,
 
             $attr_passingGrade = '{{$plan->isQuiz == false ? 'readonly' : ''}}',
             $attr_quiz = '{{$plan->isQuiz == false ? 'readonly' : ''}}',
@@ -691,7 +678,7 @@
             old_total_psychoTest = '{{$plan->psychoTest_applicant}}',
             price_per_psychoTest = '{{$plan->price_psychoTest_applicant}}';
 
-        $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
+        $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
 
         $("#show_plans_settings").click(function () {
             $(".stats_plans").toggle(300);
@@ -739,11 +726,6 @@
             $("#quiz_error small, #psychoTest_error small").text('');
             $("#vacancySetupDivider").css('display', 'none');
             $("#vacancy_id").val('default').selectpicker({maxOptions: new_total_ads}).selectpicker('refresh');
-
-            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
-                parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz) +
-                parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
-            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         });
 
         $("#vacancy_id").on('change', function () {
@@ -910,11 +892,6 @@
             }
 
             $("#total_quiz").val(total_quiz_applicant);
-
-            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
-                parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz) +
-                parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
-            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         }
 
         function totalPsychoTest() {
@@ -935,72 +912,79 @@
             }
 
             $("#total_psychoTest").val(total_psychoTest_applicant);
+        }
 
-            subtotal = parseInt(plan_price) + parseInt((new_total_ads - old_total_ads) * price_per_ads) +
-                parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz) +
-                parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
+        function subtotalJobPosting() {
+            totalQuiz();
+            totalPsychoTest();
+
+            var price_total_ads = parseInt((new_total_ads - old_total_ads) * price_per_ads),
+                price_total_quiz = parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz),
+                price_total_psychoTest = parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest);
+
+            subtotal = parseInt(plan_price);
+            subtotal += price_total_ads + price_total_quiz + price_total_psychoTest;
+
             $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
         }
 
         $("#vacancy_setup .next").on("click", function () {
-            totalQuiz();
-            totalPsychoTest();
+            subtotalJobPosting();
 
             if (!$("#vacancy_id").val()) {
                 $("#vacancy_list").addClass('has-error');
                 $(".vacancy_errorTxt").text('Please select some vacancy that you\'re going to post.');
-                $("#order_summary .previous").click();
 
             } else if ($("#vacancy_id :selected").length < new_total_ads) {
                 $("#vacancy_list").addClass('has-error');
                 $(".vacancy_errorTxt").text('The ads/vacancy amount you\'ve entered doesn\'t match ' +
                     'with the vacancy that you select!');
-                $("#order_summary .previous").click();
 
             } else {
-                if (isQuiz == 1 && parseFloat($(".input_passing_grade").val()) == 0.00) {
-                    $(".quiz_setup, #quiz_error").addClass('has-error');
-                    $("#quiz_error small").text("Passing grade value can't be 0.00! " +
-                        "Please fill it correctly for each vacancy that you've selected.");
-                    $("#order_summary .previous").click();
-
-                } else {
-                    if (isQuiz == 1 && parseInt($(".input_quiz_applicant").val()) == 0) {
+                if (isQuiz == 1) {
+                    if (parseFloat($(".input_passing_grade").val()) <= 0.00) {
                         $(".quiz_setup, #quiz_error").addClass('has-error');
-                        $("#quiz_error small").text("Quiz applicant value can't be 0! " +
+                        $("#quiz_error small").text("Passing grade value can't be 0.00! " +
                             "Please fill it correctly for each vacancy that you've selected.");
-                        $("#order_summary .previous").click();
 
-                    } else if (isQuiz == 1 && total_quiz_applicant < old_total_quiz) {
-                        $(".quiz_setup, #quiz_error").addClass('has-error');
-                        $("#quiz_error small").text("The applicant amount you've entered doesn't meet " +
-                            "the requirements for total applicant (" + old_total_quiz + " applicants).");
-                        $("#order_summary .previous").click();
+                    } else {
+                        if (parseInt($(".input_quiz_applicant").val()) > 0 && total_quiz_applicant > old_total_quiz) {
+                            $(".quiz_setup").removeClass('has-error');
+                            $("#quiz_error small").text('');
 
-                    } else if (isQuiz == 1 && parseInt($(".input_quiz_applicant").val()) != 0 &&
-                        total_quiz_applicant > old_total_quiz) {
-                        $(".quiz_setup").removeClass('has-error');
-                        $("#quiz_error small").text('');
+                        } else if (parseInt($(".input_quiz_applicant").val()) <= 0) {
+                            $(".quiz_setup, #quiz_error").addClass('has-error');
+                            $("#quiz_error small").text("Quiz applicant value can't be 0! " +
+                                "Please fill it correctly for each vacancy that you've selected.");
+
+                        } else if (total_quiz_applicant < old_total_quiz) {
+                            $(".quiz_setup, #quiz_error").addClass('has-error');
+                            $("#quiz_error small").text("The applicant amount you've entered doesn't meet " +
+                                "the requirements for total applicant (" + old_total_quiz + " applicants).");
+                        }
                     }
                 }
 
-                if (isPsychoTest == 1 && parseInt($(".input_psychoTest_applicant").val()) == 0) {
-                    $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
-                    $("#psychoTest_error small").text("Psycho test applicant value can't be 0! " +
-                        "Please fill it correctly for each vacancy that you've selected.");
-                    $("#order_summary .previous").click();
+                if (isPsychoTest == 1) {
+                    if (parseInt($(".input_psychoTest_applicant").val()) > 0 && total_psychoTest_applicant > old_total_psychoTest) {
+                        $(".psychoTest_setup").removeClass('has-error');
+                        $("#psychoTest_error small").text('');
 
-                } else if (isPsychoTest == 1 && total_psychoTest_applicant < old_total_psychoTest) {
-                    $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
-                    $("#psychoTest_error small").text("The applicant amount you've entered doesn't meet " +
-                        "the requirements for total applicant (" + old_total_psychoTest + " applicants).");
-                    $("#order_summary .previous").click();
+                    } else if (parseInt($(".input_psychoTest_applicant").val()) <= 0) {
+                        $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
+                        $("#psychoTest_error small").text("Psycho test applicant value can't be 0! " +
+                            "Please fill it correctly for each vacancy that you've selected.");
 
-                } else if (isPsychoTest == 1 && parseInt($(".input_psychoTest_applicant").val()) != 0 &&
-                    total_psychoTest_applicant > old_total_psychoTest) {
-                    $(".psychoTest_setup").removeClass('has-error');
-                    $("#psychoTest_error small").text('');
+                    } else if (total_psychoTest_applicant < old_total_psychoTest) {
+                        $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
+                        $("#psychoTest_error small").text("The applicant amount you've entered doesn't meet " +
+                            "the requirements for total applicant (" + old_total_psychoTest + " applicants).");
+                    }
                 }
+            }
+
+            if ($("#vacancy_list").hasClass('has-error') || $(".quiz_setup").hasClass('has-error') || $(".psychoTest_setup").hasClass('has-error')) {
+                $("#order_summary .previous").click();
             }
         });
 
@@ -1040,6 +1024,7 @@
                     price_per_psychoTest = data.price_psychoTest_applicant;
                     total_quiz_applicant = 0;
                     total_psychoTest_applicant = 0;
+                    subtotal = parseInt(plan_price);
                     $("#vacancy_data").html('');
                     $("#input_quiz_psychoTest").html('');
                     $("#vacancySetupDivider").css('display', 'none');
@@ -1054,7 +1039,7 @@
                     $(".total_price_quiz").text('Rp0,00');
                     $(".total_price_psychoTest").text('Rp0,00');
                     $(".plan_price").text('Rp' + data.rp_price);
-                    $(".subtotal").text("Rp" + thousandSeparator(plan_price) + ",00");
+                    $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
 
                     if (data.id == 1) {
                         swal({

@@ -31,6 +31,9 @@
                             @php $no = 1; @endphp
                             @foreach($vacancies as $vacancy)
                                 @php
+                                    if($vacancy->plan_id != null){
+                                        $plan = \App\Plan::find($vacancy->plan_id);
+                                    }
                                     $agency = \App\Agencies::find($vacancy->agency_id);
                                     $user = \App\User::find($agency->user_id);
                                     $city = \App\Cities::find($vacancy->cities_id)->name;
@@ -112,7 +115,7 @@
                                                                     </strong>
                                                                 </span>&nbsp;|
 
-                                                                @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
+                                                                @if($vacancy->plan_id != null && $plan->isQuiz == true)
                                                                     <span data-toggle="tooltip" data-placement="bottom"
                                                                           title="Quiz (Online TPA & TKD) Date"
                                                                           class="label label-warning">
@@ -126,24 +129,12 @@
                                                                             'Unknown'}}
                                                                         </strong>
                                                                     </span>&nbsp;|
-                                                                @elseif($vacancy->plan_id != "" && $vacancy->plan_id == 3)
-                                                                    <span data-toggle="tooltip" data-placement="bottom"
-                                                                          title="Quiz (Online TPA & TKD) Date"
-                                                                          class="label label-warning">
-                                                                        <strong><i class="fa fa-grin-beam"></i>&ensp;
-                                                                            {{$vacancy->quizDate_start != "" &&
-                                                                            $vacancy->quizDate_end != "" ?
-                                                                            \Carbon\Carbon::parse
-                                                                            ($vacancy->quizDate_start)->format('j F Y')
-                                                                            .' - '.\Carbon\Carbon::parse
-                                                                            ($vacancy->quizDate_end)->format('j F Y') :
-                                                                            'Unknown'}}
-                                                                        </strong>
-                                                                    </span>&nbsp;|
+                                                                @endif
+                                                                @if($vacancy->plan_id != null && $plan->isPsychoTest == true)
                                                                     <span data-toggle="tooltip" data-placement="bottom"
                                                                           title="Psycho Test (Online Interview) Date"
                                                                           class="label label-danger">
-                                                                        <strong><i class="fa fa-grin-beam"></i>&ensp;
+                                                                        <strong><i class="fa fa-comments"></i>&ensp;
                                                                             {{$vacancy->psychoTestDate_start &&
                                                                             $vacancy->psychoTestDate_end != "" ?
                                                                             \Carbon\Carbon::parse
@@ -221,10 +212,29 @@
                                                 <td><i class="fa fa-paper-plane"></i></td>
                                                 <td>Total Applicant</td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td>{{\App\Accepting::where('vacancy_id',$vacancy->id)
-                                                ->where('isApply',true)->count()}} applicants
+                                                <td><strong>{{\App\Accepting::where('vacancy_id',$vacancy->id)
+                                                ->where('isApply',true)->count()}}</strong> applicants
                                                 </td>
                                             </tr>
+                                            @if($vacancy->plan_id != null && $plan->isQuiz == true)
+                                                <tr>
+                                                    <td><i class="fa fa-grin-beam"></i></td>
+                                                    <td>Quiz with <strong>{{$vacancy->passing_grade}}</strong>
+                                                        passing grade
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td><strong>{{$vacancy->quiz_applicant}}</strong> applicants</td>
+                                                </tr>
+                                            @endif
+                                            @if($vacancy->plan_id != null && $plan->isPsychoTest == true)
+                                                <tr>
+                                                    <td><i class="fa fa-comments"></i></td>
+                                                    <td>Total Applicant for Psycho Test</td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td><strong>{{$vacancy->psychoTest_applicant}}</strong> applicants
+                                                    </td>
+                                                </tr>
+                                            @endif
                                         </table>
                                         <hr style="margin: .5em auto">
                                         <strong>Requirements</strong><br>{!! $vacancy->syarat !!}
