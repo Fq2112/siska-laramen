@@ -46,6 +46,7 @@ class AuthController extends Controller
         $password = $request->password;
 
         $user = User::create([
+            'ava' => 'seeker.png',
             'name' => $name,
             'email' => $email,
             'password' => bcrypt($password),
@@ -55,9 +56,11 @@ class AuthController extends Controller
         ]);
 
         $verification_code = str_random(30); //Generate verification code
-        DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
+
+        //DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
+
         $subject = "Please verify your email address.";
-        Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
+        Mail::send('email.verify', ['name' => $name, 'email' => $user->email, 'verification_code' => $user->verifyToken],
             function($mail) use ($email, $name, $subject){
                 $mail->from(getenv('Ilham Saputra'), "ilham.puji100@gmail.com");
                 $mail->to($email, $name);
@@ -74,17 +77,21 @@ class AuthController extends Controller
      */
     public function verifyUser($verification_code)
     {
-        $check = DB::table('user_verifications')->where('token',$verification_code)->first();
+        //$check = DB::table('user_verifications')->where('token',$verification_code)->first();
+        $check = User::where('verifyToken',$verification_code)->first();
         if(!is_null($check)){
-            $user = User::find($check->user_id);
-            if($user->is_verified == 1){
+            $user = User::find($check->id);
+            if($user->status == 1){
                 return response()->json([
                     'success'=> true,
                     'message'=> 'Account already verified..'
                 ]);
             }
-            $user->update(['is_verified' => 1]);
-            DB::table('user_verifications')->where('token',$verification_code)->delete();
+            $user->update([
+                'status' => true,
+                'verifyToken' => null
+            ]);
+            //DB::table('user_verifications')->where('token',$verification_code)->delete();
             return response()->json([
                 'success'=> true,
                 'message'=> 'You have successfully verified your email address.'
@@ -113,7 +120,7 @@ class AuthController extends Controller
             return response()->json(['success'=> false, 'error'=> $validator->messages()], 401);
         }
 
-        $credentials['is_verified'] = 1;
+        $credentials['status'] = 1;
 
         try {
             // attempt to verify the credentials and create a token for the user
