@@ -170,11 +170,10 @@
                                     <td>
                                         <table>
                                             <tr>
-                                                <td width="35%">
+                                                <td style="font-size: 13px">
                                                     <img src="{{asset('images/paymentMethod/'.$pm->logo)}}"
-                                                         style="width: 90%;" alt="{{$pm->name}}">
-                                                </td>
-                                                <td width="65%" style="font-size: 15px">
+                                                         style="width: 35%;float:left;margin-right: 10px"
+                                                         alt="{{$pm->name}}">
                                                     @if($pc->id == 1)
                                                         {{number_format($pm->account_number,0," "," ")}}<br>
                                                         a/n {{$pm->account_name}}

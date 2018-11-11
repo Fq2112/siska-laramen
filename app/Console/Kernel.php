@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        Commands\Agencies\abortingPayment::class,
+        Commands\deleteInactiveUser::class,
     ];
 
     /**
@@ -24,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('abortPayment:send')->daily();
+        $schedule->command('inactiveUser:delete')->weekly();
     }
 
     /**

@@ -52,7 +52,7 @@
                                                 <td>
                                                     <span style="font-size: 15px">INVOICE
                                                         <a target="_blank" href="{{route('table.jobPostings.invoice',
-                                                        ['id'=> encrypt($posting->id),'invoice'=>$invoice])}}">
+                                                        ['id'=> encrypt($posting->id)])}}">
                                                             <strong>{{$invoice}}</strong>
                                                         </a>
                                                     </span>

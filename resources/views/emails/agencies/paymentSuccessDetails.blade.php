@@ -4,7 +4,7 @@
     \App\Support\RomanConverter::numberToRoman($date->format('m'));
     $invoice = '#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
     $reference = '#PYM/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
-    $total = number_format($data['total_payment'],2,",",".");
+    $total = number_format($data['confirmAgency']->total_payment,2,",",".");
 @endphp
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -573,7 +573,9 @@
                                                                     <td align="center"><strong>-</strong></td>
                                                                     <td>&emsp;</td>
                                                                     <td align="right">
-                                                                        <strong>-Rp{{$data['payment_code']}},00</strong>
+                                                                        <strong>-Rp{{$data['payment_category']->id == 1
+                                                                        ? $data['confirmAgency']->payment_code : 0}},00
+                                                                        </strong>
                                                                     </td>
                                                                 </tr>
                                                                 <tr style="border-top: 1px solid #eee">
