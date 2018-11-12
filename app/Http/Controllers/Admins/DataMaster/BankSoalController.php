@@ -17,11 +17,6 @@ class BankSoalController extends Controller
         return view('_admins.tables.bankSoal.topic-table', compact('topics'));
     }
 
-    public function loadQuizTopics()
-    {
-        return QuizType::all();
-    }
-
     public function createQuizTopics(Request $request)
     {
         QuizType::create(['name' => $request->name]);
@@ -47,23 +42,9 @@ class BankSoalController extends Controller
 
     public function showQuizQuestions()
     {
-        $questions = QuizQuestions::all();
+        $questions = QuizQuestions::orderByDesc('id')->get();
 
         return view('_admins.tables.bankSoal.question-table', compact('questions'));
-    }
-
-    public function loadQuizQuestions()
-    {
-        $questions = QuizQuestions::all()->toArray();
-        $i = 0;
-        $result = array();
-        foreach ($questions as $question) {
-            $topic = array('topic' => QuizType::find($question['quiztype_id'])->name);
-            $result[$i] = array_replace($questions[$i], $topic);
-            $i = $i + 1;
-        }
-
-        return $result;
     }
 
     public function createQuizQuestions(Request $request)
@@ -114,22 +95,34 @@ class BankSoalController extends Controller
 
     public function showQuizOptions()
     {
-        $options = QuizOptions::all();
+        $options = QuizOptions::orderByDesc('question_id')->get();
 
         return view('_admins.tables.bankSoal.option-table', compact('options'));
     }
 
     public function createQuizOptions(Request $request)
     {
-        QuizOptions::create([
-            'question_id' => $request->question_id,
-            'option' => $request->option,
-            'correct' => $request->correct
-        ]);
-
         $question = QuizQuestions::find($request->question_id);
 
-        return back()->with('success', '' . $question->question_text . '\'s option (' . $request->option . ') is successfully created!');
+        $checkOptions = QuizOptions::where('question_id', $request->question_id)->get();
+        if (count($checkOptions) == 5) {
+            return back()->with('error', 'Add option for ' . $question->question_text . ' is failed! It\'s already have 5 options.');
+
+        } else {
+            foreach ($checkOptions as $row) {
+                if ($request->correct == true) {
+                    $row->update(['correct' => false]);
+                }
+            }
+
+            QuizOptions::create([
+                'question_id' => $request->question_id,
+                'option' => $request->option,
+                'correct' => $request->correct == null ? false : $request->correct
+            ]);
+
+            return back()->with('success', '' . $question->question_text . '\'s option (' . $request->option . ') is successfully created!');
+        }
     }
 
     public function updateQuizOptions(Request $request)
@@ -145,12 +138,17 @@ class BankSoalController extends Controller
         $option->update([
             'question_id' => $request->question_id,
             'option' => $request->option,
-            'correct' => $request->correct
+            'correct' => $request->correct == null ? false : $request->correct
         ]);
 
         $question = QuizQuestions::find($option->question_id);
+        $checkOptions = QuizOptions::where('question_id', $request->question_id)->where('correct', true)->count();
 
-        return back()->with('success', '' . $question->question_text . '\'s option (' . $option->option . ') is successfully updated!');
+        if ($checkOptions > 0) {
+            return back()->with('success', '' . $question->question_text . '\'s option (' . $option->option . ') is successfully updated!');
+        } else {
+            return back()->with('warning', '' . $question->question_text . '\'s option (' . $option->option . ') is successfully updated! But there\'s no correct answer for it, so please select an option as the correct answer.');
+        }
     }
 
     public function deleteQuizOptions($id)
@@ -159,7 +157,13 @@ class BankSoalController extends Controller
         $option->delete();
 
         $question = QuizQuestions::find($option->question_id);
+        $checkOptions = QuizOptions::where('question_id', $option->question_id)->count();
 
-        return back()->with('success', '' . $question->question_text . '\'s option (' . $option->option . ') is successfully deleted!');
+        if ($checkOptions < 5) {
+            return back()->with('warning', '' . $question->question_text . '\'s option (' . $option->option . ') is successfully deleted! But now it\'s only have ' . $checkOptions . ' option, so please create ' . (5 - $checkOptions) . ' more option.');
+
+        } else {
+            return back()->with('success', '' . $question->question_text . '\'s option (' . $option->option . ') is successfully deleted!');
+        }
     }
 }

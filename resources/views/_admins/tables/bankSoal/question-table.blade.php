@@ -69,71 +69,42 @@
                     </button>
                     <h4 class="modal-title">Create Form</h4>
                 </div>
-                <form method="post" action="{{route('quiz.create.questions')}}">
+                <form method="post" action="{{route('quiz.create.questions')}}" id="form-quiz-question">
                     {{csrf_field()}}
+                    <input type="hidden" name="_method">
                     <div class="modal-body">
                         <div class="row form-group">
-                            <div class="col-lg-12 has-feedback">
+                            <div class="col-lg-12">
                                 <label for="quiztype_id">Topic <span class="required">*</span></label>
-                                <select id="quiztype_id" class="form-control" name="quiztype_id" required>
-                                    <option value="">-- Choose --</option>
-                                    @foreach(\App\QuizType::all() as $topic)
-                                        <option value="{{$topic->id}}">{{$topic->name}}</option>
-                                    @endforeach
-                                </select>
-                                <span class="fa fa-star form-control-feedback right"
-                                      aria-hidden="true"></span>
-                            </div>
-                        </div>
-                        <div class="row form-group">
-                            <div class="col-lg-12 has-feedback">
-                                <label for="question_text">Question <span class="required">*</span></label>
-                                <textarea id="question_text" name="question_text" class="form-control"
-                                          placeholder="Question" style="resize: vertical" required></textarea>
-                                <span class="fa fa-question-circle form-control-feedback right"
-                                      aria-hidden="true"></span>
-                            </div>
-                        </div>
-                        @for($i=1;$i<=5;$i++)
-                            <div class="row form-group">
-                                <div class="col-lg-12 has-feedback">
-                                    <label for="option{{$i}}">Option #{{$i}} <span class="required">*</span></label>
-                                    <input id="option{{$i}}" name="option{{$i}}" class="form-control"
-                                           placeholder="Option #{{$i}}" required>
-                                    <span class="fa fa-list-ul form-control-feedback right" aria-hidden="true"></span>
+                                <div class="input-group">
+                                    <select id="quiztype_id" class="form-control selectpicker"
+                                            title="-- Select Topic --" data-live-search="true"
+                                            name="quiztype_id" required>
+                                        @foreach(\App\QuizType::all() as $topic)
+                                            <option value="{{$topic->id}}">{{$topic->name}}</option>
+                                        @endforeach
+                                    </select>
+                                    <span class="input-group-addon"><i class="fa fa-star"></i></span>
                                 </div>
                             </div>
-                        @endfor
+                        </div>
                         <div class="row form-group">
-                            <div class="col-lg-12 has-feedback">
-                                <label for="correct">Correct Answer <span class="required">*</span></label>
-                                <select id="correct" name="correct" class="form-control" required>
-                                    <option value="">-- Choose --</option>
-                                    @for($i=1;$i<=5;$i++)
-                                        <option value="option{{$i}}">Option #{{$i}}</option>
-                                    @endfor
-                                </select>
-                                <span class="fa fa-check-circle form-control-feedback right" aria-hidden="true"></span>
+                            <div class="col-lg-12">
+                                <label for="question_text">Question <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <textarea id="question_text" name="question_text" class="form-control"
+                                              placeholder="Question" style="resize: vertical" required></textarea>
+                                    <span class="input-group-addon"><i class="fa fa-question-circle"></i></span>
+                                </div>
                             </div>
                         </div>
+                        <div id="input_quiz_options"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="btn_quiz_question">Submit</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="width: 50%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Edit Form</h4>
-                </div>
-                <div id="editModalContent"></div>
             </div>
         </div>
     </div>
@@ -141,41 +112,61 @@
 @push("scripts")
     <script>
         function createQuestion() {
+            var $result = '', i;
+
+            $('#quiztype_id').val('default').selectpicker('refresh');
+            $('#question_text').val('');
+
+            for (i = 1; i <= 5; i++) {
+                $result +=
+                    '<div class="row form-group">' +
+                    '<div class="col-lg-12">' +
+                    '<label for="option' + i + '">Option #' + i + ' <span class="required">*</span></label>' +
+                    '<div class="input-group">' +
+                    '<input id="option' + i + '" name="option' + i + '" class="form-control" ' +
+                    'placeholder="Option #' + i + '" required>' +
+                    '<span class="input-group-addon"><i class="fa fa-list-ul"></i></span>' +
+                    '</div></div></div>';
+            }
+            $result +=
+                '<div class="row form-group">' +
+                '<div class="col-lg-12">' +
+                '<label for="correct">Correct Answer <span class="required">*</span></label>' +
+                '<div class="input-group">' +
+                '<select id="correct" class="form-control selectpicker" title="-- Select Correct Answer --" ' +
+                'data-live-search="true" name="correct" required>' +
+                '<option value="option1">Option #1</option>' +
+                '<option value="option2">Option #2</option>' +
+                '<option value="option3">Option #3</option>' +
+                '<option value="option4">Option #4</option>' +
+                '<option value="option5">Option #5</option>' +
+                '</select>' +
+                '<span class="input-group-addon"><i class="fa fa-check-circle"></i></span>' +
+                '</div></div></div>';
+
+            $('#input_quiz_options').html($result);
+
+            $('#correct').val('default').selectpicker('refresh');
+
+            $("#form-quiz-question").prop('action', '{{route('quiz.create.questions')}}');
+            $("#form-quiz-question input[name=_method]").val('');
+            $("#createModal .modal-title").text('Create Form');
+            $("#btn_quiz_question").text('Submit');
+
             $("#createModal").modal('show');
         }
 
         function editQuestion(id, topic, question) {
-            $('#editModalContent').html(
-                '<form method="post" id="' + id + '" action="{{url('admin/tables/bank_soal/questions')}}/' + id + '/update">' +
-                '{{csrf_field()}} {{method_field('PUT')}}' +
-                '<div class="modal-body">' +
-                '<div class="row form-group">' +
-                '<div class="col-lg-12 has-feedback">' +
-                '<label for="quiztype_id' + id + '">Topic <span class="required">*</span></label>' +
-                '<select id="quiztype_id' + id + '" class="form-control" name="quiztype_id" required></select>' +
-                '<span class="fa fa-star form-control-feedback right" aria-hidden="true"></span></div></div>' +
-                '<div class="row form-group">' +
-                '<div class="col-lg-12 has-feedback">' +
-                '<label for="question_text' + id + '">Question <span class="required">*</span></label>' +
-                '<textarea id="question_text' + id + '" name="question_text" class="form-control" ' +
-                'placeholder="Question" style="resize: vertical" required>' + question + '</textarea>' +
-                '<span class="fa fa-question-circle form-control-feedback right" aria-hidden="true"></span>' +
-                '</div></div></div>' +
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-                '<button type="submit" class="btn btn-primary">Save changes</button></div></form>'
-            );
+            $('#quiztype_id').val(topic).selectpicker('refresh');
+            $('#question_text').val(question);
+            $('#input_quiz_options').html('');
 
-            $.get('/admin/quiz/topics/load', function (data) {
-                var $attr, $result = '';
-                $.each(data, function (i, val) {
-                    $attr = val.id == topic ? 'selected' : '';
-                    $result += '<option value="' + val.id + '" ' + $attr + '>' + val.name + '</option>';
-                });
-                $("#quiztype_id" + id).empty().append($result);
-            });
+            $("#form-quiz-question").prop('action', '{{url('admin/tables/bank_soal/questions')}}/' + id + '/update');
+            $("#form-quiz-question input[name=_method]").val('PUT');
+            $("#createModal .modal-title").text('Edit Form');
+            $("#btn_quiz_question").text('Save Changes');
 
-            $("#editModal").modal('show');
+            $("#createModal").modal('show');
         }
     </script>
 @endpush

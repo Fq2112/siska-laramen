@@ -22,7 +22,7 @@ class CreateTableConfirmAgencies extends Migration
             $table->foreign('plans_id')->references('id')->on('plans')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->integer('total_ads');
-            $table->string('vacancy_ids');
+            $table->text('vacancy_ids');
             $table->integer('total_quiz');
             $table->integer('total_psychoTest');
             $table->integer('payment_method_id')->unsigned();

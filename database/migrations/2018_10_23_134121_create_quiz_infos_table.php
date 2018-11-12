@@ -16,7 +16,7 @@ class CreateQuizInfosTable extends Migration
         Schema::create('quiz_infos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('total_question');
-            $table->string('question_ids');
+            $table->text('question_ids');
             $table->string('unique_code', 6);
             $table->integer('time_limit');
             $table->timestamps();

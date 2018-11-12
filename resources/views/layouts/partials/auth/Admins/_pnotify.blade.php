@@ -6,6 +6,13 @@
         type: 'success',
         styling: 'bootstrap3'
     });
+    @elseif(session('warning'))
+    new PNotify({
+        title: 'ATTENTION!',
+        text: '{{session('warning')}}',
+        type: 'warning',
+        styling: 'bootstrap3'
+    });
     @elseif(session('error'))
     new PNotify({
         title: 'Error!',

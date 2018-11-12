@@ -10,8 +10,6 @@ use App\ConfirmAgency;
 use App\Feedback;
 use App\Http\Controllers\Controller;
 use App\QuizInfo;
-use App\QuizOptions;
-use App\QuizQuestions;
 use App\Seekers;
 use App\User;
 use Illuminate\Http\Request;
@@ -128,15 +126,9 @@ class AdminController extends Controller
         return view('_admins.quiz', compact('infos'));
     }
 
-    public function loadQuizQuestion($topic)
-    {
-        return QuizQuestions::where('quiztype_id', $topic)->get();
-    }
-
     public function createQuizInfo(Request $request)
     {
         $info = QuizInfo::create([
-            'quiztype_id' => $request->quiztype_id,
             'total_question' => $request->total_question,
             'question_ids' => $request->question_ids,
             'unique_code' => $request->unique_code,
@@ -150,7 +142,6 @@ class AdminController extends Controller
     {
         $info = QuizInfo::find($request->id);
         $info->update([
-            'quiztype_id' => $request->quiztype_id,
             'total_question' => $request->total_question,
             'question_ids' => $request->question_ids,
             'unique_code' => $request->unique_code,

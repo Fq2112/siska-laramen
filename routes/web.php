@@ -103,11 +103,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
             'as' => 'quiz.info'
         ]);
 
-        Route::get('question/{topic}/load', [
-            'uses' => 'AdminController@loadQuizQuestion',
-            'as' => 'quiz.question.load'
-        ]);
-
         Route::post('create', [
             'uses' => 'AdminController@createQuizInfo',
             'as' => 'quiz.create.info'
@@ -212,11 +207,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'quiz.topics'
                     ]);
 
-                    Route::get('load', [
-                        'uses' => 'BankSoalController@loadQuizTopics',
-                        'as' => 'quiz.topics.load'
-                    ]);
-
                     Route::post('create', [
                         'uses' => 'BankSoalController@createQuizTopics',
                         'as' => 'quiz.create.topics'
@@ -239,11 +229,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                     Route::get('/', [
                         'uses' => 'BankSoalController@showQuizQuestions',
                         'as' => 'quiz.questions'
-                    ]);
-
-                    Route::get('load', [
-                        'uses' => 'BankSoalController@loadQuizQuestions',
-                        'as' => 'quiz.questions.load'
                     ]);
 
                     Route::post('create', [

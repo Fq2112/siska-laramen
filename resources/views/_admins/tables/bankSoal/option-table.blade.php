@@ -74,16 +74,22 @@
                     </button>
                     <h4 class="modal-title">Create Form</h4>
                 </div>
-                <form method="post" action="{{route('quiz.create.options')}}">
+                <form method="post" action="{{route('quiz.create.options')}}" id="form-quiz-option">
                     {{csrf_field()}}
+                    <input type="hidden" name="_method">
                     <div class="modal-body">
                         <div class="row form-group">
                             <div class="col-lg-12 has-feedback">
                                 <label for="question_id">Question <span class="required">*</span></label>
-                                <select id="question_id" class="form-control" name="question_id" required>
-                                    <option value="">-- Choose --</option>
-                                    @foreach(\App\QuizQuestions::all() as $question)
-                                        <option value="{{$question->id}}">{{$question->question_text}}</option>
+                                <select id="question_id" class="form-control selectpicker" title="-- Select Question --"
+                                        data-live-search="true" name="question_id" required>
+                                    @foreach(\App\QuizType::all() as $type)
+                                        <optgroup label="{{$type->name}}">
+                                            @foreach(\App\QuizQuestions::all() as $question)
+                                                <option value="{{$question->id}}">{{$question->question_text}}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
                                     @endforeach
                                 </select>
                                 <span class="fa fa-question-circle form-control-feedback right"
@@ -106,21 +112,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="btn_quiz_option">Submit</button>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
-    <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg" style="width: 50%">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Edit Form</h4>
-                </div>
-                <div id="editModalContent"></div>
             </div>
         </div>
     </div>
@@ -128,49 +122,33 @@
 @push("scripts")
     <script>
         function createOption() {
+            $("#question_id").val('default').selectpicker('refresh');
+            $("#option").val('');
+            $("#correct").iCheck('uncheck');
+
+            $("#form-quiz-option").prop('action', '{{route('quiz.create.options')}}');
+            $("#form-quiz-option input[name=_method]").val('');
+            $("#createModal .modal-title").text('Create Form');
+            $("#btn_quiz_option").text('Submit');
+
             $("#createModal").modal('show');
         }
 
         function editOption(id, question, option, correct) {
-            $('#editModalContent').html(
-                '<form method="post" id="' + id + '" action="{{url('admin/tables/bank_soal/options')}}/' + id + '/update">' +
-                '{{csrf_field()}} {{method_field('PUT')}}' +
-                '<div class="modal-body">' +
-                '<div class="row form-group">' +
-                '<div class="col-lg-12 has-feedback">' +
-                '<label for="question_id' + id + '">Question <span class="required">*</span></label>' +
-                '<select id="question_id' + id + '" class="form-control" name="question_id" required></select>' +
-                '<span class="fa fa-question-circle form-control-feedback right" aria-hidden="true"></span></div></div>' +
-                '<div class="row form-group">' +
-                '<div class="col-lg-10 has-feedback">' +
-                '<label for="option' + id + '">Option <span class="required">*</span></label>' +
-                '<input id="option' + id + '" name="option" class="form-control" placeholder="Option" ' +
-                'value="' + option + '" required>' +
-                '<span class="fa fa-list-ul form-control-feedback right" aria-hidden="true"></span></div>' +
-                '<div class="col-lg-2 has-feedback">' +
-                '<label for="correct' + id + '">Status <span class="required">*</span></label>' +
-                '<label><input type="checkbox" name="correct" class="flat iCheck" ' +
-                'id="correct' + id + '" value="1"> Correct</label></div></div></div>' +
-                '<div class="modal-footer">' +
-                '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-                '<button type="submit" class="btn btn-primary">Save changes</button></div></form>'
-            );
-
-            $.get('/admin/quiz/questions/load', function (data) {
-                var $attr, $result = '';
-                $.each(data, function (i, val) {
-                    $attr = val.id == question ? 'selected' : '';
-                    $result += '<option value="' + val.id + '" ' + $attr + '>' + val.question_text + '</option>';
-                });
-                $("#question_id" + id).empty().append($result);
-            });
-
-            $('.iCheck').iCheck({checkboxClass: 'icheckbox_flat-green', radioClass: 'iradio_flat-green'});
+            $("#question_id").val(question).selectpicker('refresh');
+            $("#option").val(option);
             if (correct == 1) {
-                $("#correct" + id).iCheck('check');
+                $("#correct").iCheck('check');
+            } else {
+                $("#correct").iCheck('uncheck');
             }
 
-            $("#editModal").modal('show');
+            $("#form-quiz-option").prop('action', '{{url('admin/tables/bank_soal/options')}}/' + id + '/update');
+            $("#form-quiz-option input[name=_method]").val('PUT');
+            $("#createModal .modal-title").text('Edit Form');
+            $("#btn_quiz_option").text('Save Changes');
+
+            $("#createModal").modal('show');
         }
     </script>
 @endpush
