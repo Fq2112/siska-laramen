@@ -123,7 +123,7 @@ class AdminController extends Controller
     {
         $infos = QuizInfo::all();
 
-        return view('_admins.quiz', compact('infos'));
+        return view('_admins.quiz-setup', compact('infos'));
     }
 
     public function createQuizInfo(Request $request)
