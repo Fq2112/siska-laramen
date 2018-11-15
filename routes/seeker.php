@@ -266,5 +266,10 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
             'as' => 'show.quiz'
         ]);
 
+        Route::get('{id}/answers/load', [
+            'uses' => 'QuizController@loadQuizAnswers',
+            'as' => 'load.quiz.answers'
+        ]);
+
     });
 });
