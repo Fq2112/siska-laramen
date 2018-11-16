@@ -27,7 +27,8 @@ class QuizController extends Controller
     {
         $quiz = QuizInfo::find($id);
         $questions = QuizQuestions::whereIn('id', $quiz->question_ids)->get()->pluck('id')->toArray();
-        $answers = QuizOptions::whereIn('question_id', $questions)->where('correct', true)->get()->pluck('id')->toJson();
+        $answers = QuizOptions::whereIn('question_id', $questions)->where('correct', true)
+            ->orderBy('question_id')->get()->pluck('option')->toJson();
 
         return $answers;
     }

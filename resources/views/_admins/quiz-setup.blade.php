@@ -35,7 +35,8 @@
                                     <td align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
                                         <i class="fa fa-shield-alt"></i> Quiz Code:
-                                        <strong>{{$info->unique_code}}</strong>&ensp;|&ensp;<i class="fa fa-clock"></i>
+                                        <strong>{{$info->unique_code}}</strong>&ensp;|&ensp;<i
+                                                class="fa fa-stopwatch"></i>
                                         Time Limit:
                                         <strong>{{$info->time_limit}}</strong> minutes
                                         <hr style="margin: .5em auto">
@@ -96,7 +97,7 @@
                                                placeholder="in minutes" maxlength="3"
                                                onkeypress="return numberOnly(event, false)"
                                                required>
-                                        <span class="input-group-addon"><i class="fa fa-clock"></i></span>
+                                        <span class="input-group-addon"><i class="fa fa-stopwatch"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">

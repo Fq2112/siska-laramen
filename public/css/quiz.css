@@ -19,9 +19,14 @@ button[disabled] {
     background: #fff;
 }
 
+.status-timer {
+    float: right;
+    margin: 2em 2em 0 0;
+    color: #00adb5;
+}
+
 .mm-survey-results-container {
     width: 100%;
-    min-height: 430px;
     background: #fff;
 }
 
@@ -42,6 +47,7 @@ button[disabled] {
 }
 
 .mm-survey-results-controller {
+    margin-top: 3em;
     position: relative;
     height: 60px;
     background: #41444B;
@@ -131,7 +137,6 @@ button[disabled] {
 
 .mm-survey-q li {
     display: block;
-    /*padding: 20px 0;*/
     margin-bottom: 10px;
     width: 100%;
     background: #fff;
@@ -232,13 +237,18 @@ input[type="radio"]:checked + label span {
     display: none;
 }
 
+.mm-survey-details {
+    margin: 1em;
+    font-size: 18px;
+}
+
+.mm-survey-results-container > table {
+    width: 96%;
+}
+
 .mm-survey-results-score {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    font-size: 80px;
+    font-size: 28px;
     font-weight: 600;
-    letter-spacing: -6px;
 }
 
 .mm-survey-results-list {
@@ -255,23 +265,20 @@ input[type="radio"]:checked + label span {
 }
 
 .mm-survey-results-item.correct {
-    background: linear-gradient(to left, #00adb5, #66ced3);
+    background: linear-gradient(to left, #007f87, #66ced3);
 }
 
 .mm-survey-results-item.incorrect {
-    background: linear-gradient(to left, #fa5555, #fb7777);
+    background: linear-gradient(to left, #9b3f3f, #fb7777);
 }
 
 .mm-item-number {
     height: 40px;
     position: relative;
-    padding: 17px;
-    background: #333;
+    padding: 19px;
+    background: #41444B;
     color: #fff;
-}
-
-.mm-item-info {
-    float: right;
+    margin-right: 19px;
 }
 
 .animate {
