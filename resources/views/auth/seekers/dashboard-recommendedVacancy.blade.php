@@ -343,7 +343,7 @@
                     '<td>&nbsp;Recruitment Date</td>' +
                     '<td>: ' + $recruitmentDate + '</td></tr>' +
                     '<tr style="display: ' + $style_quiz + '"><td><i class="fa fa-grin-beam"></i></td>' +
-                    '<td>&nbsp;Quiz (Online TPA & TKD) Date</td>' +
+                    '<td>&nbsp;Online Quiz (TPA & TKD) Date</td>' +
                     '<td>: ' + val.quizDate + '</td></tr>' +
                     '<tr style="display: ' + $style_psychoTest + '"><td><i class="fa fa-comments"></i></td>' +
                     '<td>&nbsp;Psycho Test (Online Interview) Date</td>' +

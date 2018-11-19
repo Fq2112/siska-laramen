@@ -15,11 +15,11 @@ class CreateQuizResultsTable extends Migration
     {
         Schema::create('quiz_results', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('question_id')->unsigned();
-            $table->foreign('question_id')->references('id')->on('quiz_questions');
-            $table->text('correct');
+            $table->integer('quiz_id')->unsigned();
+            $table->foreign('quiz_id')->references('id')->on('quiz_infos');
+            $table->integer('seeker_id')->unsigned();
+            $table->foreign('seeker_id')->references('id')->on('seekers');
+            $table->decimal('score', 8, 2);
             $table->timestamps();
         });
     }

@@ -239,7 +239,7 @@
                                                         <td>&nbsp;</td>
                                                         <td>
                                                             <span data-placement="right" data-toggle="tooltip"
-                                                                  title="Quiz (Online TPA & TKD) Date">
+                                                                  title="Online Quiz (TPA & TKD) Date">
                                                                 {{$vacancy->quizDate_start && $vacancy->quizDate_end !=
                                                                 "" ? \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                 ->format('j F Y')." - ".\Carbon\Carbon::parse
@@ -254,7 +254,7 @@
                                                         <td>&nbsp;</td>
                                                         <td>
                                                             <span data-placement="right" data-toggle="tooltip"
-                                                                  title="Quiz (Online TPA & TKD) Date">
+                                                                  title="Online Quiz (TPA & TKD) Date">
                                                                 {{$vacancy->quizDate_start && $vacancy->quizDate_end !=
                                                                 "" ? \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                 ->format('j F Y')." - ".\Carbon\Carbon::parse
@@ -488,7 +488,7 @@
                                                                                 <td>
                                                                                     <i class="fa fa-grin-beam"></i>
                                                                                 </td>
-                                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date
+                                                                                <td>&nbsp;Online Quiz (TPA & TKD) Date
                                                                                 </td>
                                                                                 <td>: {{$row->quizDate_start &&
                                                                                 $row->quizDate_end != "" ?
@@ -657,7 +657,7 @@
                                                         @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
                                                             <tr>
                                                                 <td><i class="fa fa-grin-beam"></i></td>
-                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                                <td>&nbsp;Online Quiz (TPA & TKD) Date</td>
                                                                 <td>: {{$vacancy->quizDate_start &&
                                                                 $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
                                                                 ($vacancy->quizDate_start)->format('j F Y')." - ".
@@ -669,7 +669,7 @@
                                                         $vacancy->plan_id == 3)
                                                             <tr>
                                                                 <td><i class="fa fa-grin-beam"></i></td>
-                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                                <td>&nbsp;Online Quiz (TPA & TKD) Date</td>
                                                                 <td>: {{$vacancy->quizDate_start &&
                                                                 $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
                                                                 ($vacancy->quizDate_start)->format('j F Y')." - ".

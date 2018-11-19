@@ -156,7 +156,7 @@
                                                 @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
                                                     <tr>
                                                         <td><i class="fa fa-grin-beam"></i></td>
-                                                        <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                        <td>&nbsp;Online Quiz (TPA & TKD) Date</td>
                                                         <td>: {{$vacancy->quizDate_start &&
                                                                 $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
                                                                 ($vacancy->quizDate_start)->format('j F Y')." - ".
@@ -168,7 +168,7 @@
                                                 $vacancy->plan_id == 3)
                                                     <tr>
                                                         <td><i class="fa fa-grin-beam"></i></td>
-                                                        <td>&nbsp;Quiz (Online TPA & TKD) Date</td>
+                                                        <td>&nbsp;Online Quiz (TPA & TKD) Date</td>
                                                         <td>: {{$vacancy->quizDate_start &&
                                                                 $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
                                                                 ($vacancy->quizDate_start)->format('j F Y')." - ".

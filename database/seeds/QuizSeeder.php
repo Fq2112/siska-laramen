@@ -4,6 +4,7 @@ use App\QuizType;
 use App\QuizQuestions;
 use App\QuizOptions;
 use App\QuizInfo;
+use App\Vacancies;
 use Faker\Factory;
 use Illuminate\Database\Seeder;
 
@@ -28,7 +29,7 @@ class QuizSeeder extends Seeder
         for ($c = 0; $c < 40; $c++) {
             $question = QuizQuestions::create([
                 'quiztype_id' => 1,
-                'question_text' => $faker->words(6, true) . '?',
+                'question_text' => '<p>' . ucfirst($faker->words(6, true)) . '?</p>',
             ]);
 
             QuizOptions::create([
@@ -57,7 +58,7 @@ class QuizSeeder extends Seeder
         for ($c = 0; $c < 60; $c++) {
             $question = QuizQuestions::create([
                 'quiztype_id' => 2,
-                'question_text' => $faker->words(8, true) . '?',
+                'question_text' => '<p>' . ucfirst($faker->words(8, true)) . '?</p>',
             ]);
 
             QuizOptions::create([
@@ -84,9 +85,10 @@ class QuizSeeder extends Seeder
         }
 
         QuizInfo::create([
+            'vacancy_id' => Vacancies::where('plan_id', 3)->first()->id,
+            'unique_code' => str_random(6),
             'total_question' => 100,
             'question_ids' => QuizQuestions::get()->pluck('id')->toArray(),
-            'unique_code' => str_random(6),
             'time_limit' => 120
         ]);
     }

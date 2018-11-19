@@ -271,5 +271,10 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
             'as' => 'load.quiz.answers'
         ]);
 
+        Route::post('submit', [
+            'uses' => 'QuizController@submitQuiz',
+            'as' => 'submit.quiz'
+        ]);
+
     });
 });

@@ -265,7 +265,7 @@
                                                                         @if($row->plan_id != "" && $row->plan_id == 2)
                                                                             <tr>
                                                                                 <td><i class="fa fa-grin-beam"></i></td>
-                                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date
+                                                                                <td>&nbsp;Online Quiz (TPA & TKD) Date
                                                                                 </td>
                                                                                 <td>:
                                                                                     {{$row->quizDate_start &&
@@ -282,7 +282,7 @@
                                                                         $row->plan_id == 3)
                                                                             <tr>
                                                                                 <td><i class="fa fa-grin-beam"></i></td>
-                                                                                <td>&nbsp;Quiz (Online TPA & TKD) Date
+                                                                                <td>&nbsp;Online Quiz (TPA & TKD) Date
                                                                                 </td>
                                                                                 <td>:
                                                                                     {{$row->quizDate_start &&

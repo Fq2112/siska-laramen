@@ -117,7 +117,7 @@
 
                                                                 @if($vacancy->plan_id != null && $plan->isQuiz == true)
                                                                     <span data-toggle="tooltip" data-placement="bottom"
-                                                                          title="Quiz (Online TPA & TKD) Date"
+                                                                          title="Online Quiz (TPA & TKD) Date"
                                                                           class="label label-warning">
                                                                         <strong><i class="fa fa-grin-beam"></i>&ensp;
                                                                             {{$vacancy->quizDate_start != "" &&

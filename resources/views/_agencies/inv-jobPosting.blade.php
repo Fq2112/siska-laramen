@@ -279,8 +279,8 @@
                        cellpadding="0">
                     <tbody>
                     <tr style="font-size: 13px;">
-                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">Quiz
-                            (Online TPA & TKD)
+                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">
+                            Online Quiz (TPA & TKD)
                         </td>
                         <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
                             <strong>{{$totalQuizApplicant}}</strong></td>

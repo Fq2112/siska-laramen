@@ -255,8 +255,8 @@
                                                                                             <i class="fa fa-grin-beam">
                                                                                             </i>
                                                                                         </td>
-                                                                                        <td>&nbsp;Quiz
-                                                                                            (Online TPA & TKD) Date
+                                                                                        <td>&nbsp;Online Quiz
+                                                                                            (TPA & TKD) Date
                                                                                         </td>
                                                                                         <td>: {{$row->quizDate_start &&
                                                                                         $row->quizDate_end != "" ?
@@ -275,8 +275,8 @@
                                                                                             <i class="fa fa-grin-beam">
                                                                                             </i>
                                                                                         </td>
-                                                                                        <td>&nbsp;Quiz
-                                                                                            (Online TPA & TKD) Date
+                                                                                        <td>&nbsp;Online Quiz
+                                                                                            (TPA & TKD) Date
                                                                                         </td>
                                                                                         <td>: {{$row->quizDate_start &&
                                                                                         $row->quizDate_end != "" ?
