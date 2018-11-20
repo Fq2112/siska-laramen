@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Online Quiz (TPA and TKD) Invitation | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Psycho Test (Online Interview) Invitation | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_seeker')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
@@ -7,14 +7,14 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <div class="col-lg-12">
-                            <h4 style="margin-bottom: 10px">Online Quiz (TPA & TKD) Invitation</h4>
-                            <small>Here is the current and previous status of your quiz invitations.</small>
+                            <h4 style="margin-bottom: 10px">Psycho Test (Online Interview) Invitation</h4>
+                            <small>Here is the current and previous status of your psycho test invitations.</small>
                             <hr>
                         </div>
                     </div>
                     <div class="row" style="margin-bottom: .5em">
                         <div class="col-lg-3 to-animate-2">
-                            <form id="form-time" action="{{route('seeker.invitation.quiz')}}">
+                            <form id="form-time" action="{{route('seeker.invitation.psychoTest')}}">
                                 <select class="form-control selectpicker" name="time" data-container="body">
                                     <option value="1" {{$time == 1 ? 'selected' : ''}}>All Time</option>
                                     <option value="2" {{$time == 2 ? 'selected' : ''}}>Today</option>
@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-lg-9 to-animate">
                             <small class="pull-right">
-                                <em>There seems to be none of the quiz invitation was found&hellip;</em>
+                                <em>There seems to be none of the psycho test invitation was found&hellip;</em>
                             </small>
                         </div>
                     </div>

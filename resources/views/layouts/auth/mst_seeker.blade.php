@@ -77,6 +77,10 @@
                                             <li><a href="{{route('seeker.invitation.quiz')}}">Quiz Invitation
                                                     <span class="badge">0</span></a>
                                             </li>
+                                            <li><a href="{{route('seeker.invitation.psychoTest')}}">Psycho Test
+                                                    Invitation
+                                                    <span class="badge" style="background: #FA5555;">0</span></a>
+                                            </li>
                                             <li><a href="{{route('seeker.invitation.interview')}}">Interview Invitation
                                                     <span class="badge" style="background: #FA5555;">0</span></a>
                                             </li>

@@ -61,6 +61,13 @@
                         </td>
                     </tr>
                     <tr>
+                        <td><i class="fa fa-briefcase"></i></td>
+                        <td>&nbsp;</td>
+                        <td style="text-transform: none">
+                            Total Exp: {{$seeker->total_exp != "" ? $seeker->total_exp.' years' : '0 year'}}
+                        </td>
+                    </tr>
+                    <tr>
                         <td><i class="fa fa-graduation-cap"></i></td>
                         <td>&nbsp;</td>
                         <td>

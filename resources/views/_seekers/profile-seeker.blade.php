@@ -4,6 +4,26 @@
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+    <style>
+        .site-name {
+            font-size: 36px;
+            margin-top: -120px;
+        }
+
+        .site-jobTitle {
+            color: #fff;
+            font-size: 26px;
+            float: left;
+            margin-top: -80px;
+            margin-left: 16px;
+            text-shadow: 0 4px 3px rgba(0, 0, 0, 0.4), 0 8px 13px rgba(0, 0, 0, 0.1), 0 18px 23px rgba(0, 0, 0, 0.1);
+        }
+
+        .site-description {
+            font-size: 20px;
+            margin-top: -40px;
+        }
+    </style>
 @endpush
 @section('content')
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
@@ -45,20 +65,14 @@
                                 @endif
                             </a>
                             <span class="site-name">{{$user->name}}</span>
+                            <span class="site-jobTitle">
+                                {{count($job_title->get()) != 0 ? '['.$job_title->first()->job_title.']' : '[Looking for a Job]'}}
+                            </span>
                             <span class="site-description">{{$seeker->address}}</span>
                         </div>
                         <div class="collapse navbar-collapse" id="mainNav">
                             <ul class="nav main-menu navbar-nav to-animate">
-                                <li data-placement="left" data-toggle="tooltip"
-                                    title="{{count($job_title->get()) != 0 ? 'Current Job Title' : 'Current Status'}}">
-                                    <a><i class="fa fa-briefcase"></i>
-                                        @if(count($job_title->get()) != 0)
-                                            &nbsp;{{$job_title->first()->job_title}}
-                                        @else
-                                            &nbsp;Looking for a Job
-                                        @endif
-                                    </a></li>
-                                <li data-placement="bottom" data-toggle="tooltip" title="Expected Salary">
+                                <li data-placement="left" data-toggle="tooltip" title="Expected Salary">
                                     <a id="salary">
                                         @if($seeker->lowest_salary != "")
                                             <script>
@@ -71,31 +85,31 @@
                                         @else
                                             <i class='fa fa-hand-holding-usd'></i> &nbsp;Anything
                                         @endif
-                                    </a></li>
+                                    </a>
+                                </li>
+                                <li data-placement="bottom" data-toggle="tooltip" title="Total Work Experience">
+                                    <a><i class="fa fa-briefcase"></i>
+                                        &nbsp;{{$seeker->total_exp != "" ? $seeker->total_exp.' years' : '0 year'}}
+                                    </a>
+                                </li>
                                 <li data-placement="bottom" data-toggle="tooltip" title="Latest Degree">
                                     <a><i class="fa fa-graduation-cap"></i>
-                                        @if(count($last_edu->get()) != 0)
-                                            &nbsp;{{\App\Tingkatpend::find($last_edu->first()->tingkatpend_id)->name}}
-                                        @else
-                                            &nbsp;Latest Degree (-)
-                                        @endif
-                                    </a></li>
+                                        &nbsp;{{count($last_edu->get()) != 0 ? \App\Tingkatpend::find($last_edu->first()
+                                        ->tingkatpend_id)->name : 'Latest Degree (-)'}}
+                                    </a>
+                                </li>
                                 <li data-placement="bottom" data-toggle="tooltip" title="Latest Major">
                                     <a><i class="fa fa-user-graduate"></i>
-                                        @if(count($last_edu->get()) != 0)
-                                            &nbsp;{{\App\Jurusanpend::find($last_edu->first()->jurusanpend_id)->name}}
-                                        @else
-                                            &nbsp;Latest Major (-)
-                                        @endif
-                                    </a></li>
+                                        &nbsp;{{count($last_edu->get()) != 0 ? \App\Jurusanpend::find($last_edu->first()
+                                        ->jurusanpend_id)->name : 'Latest Major (-)'}}
+                                    </a>
+                                </li>
                                 <li data-placement="right" data-toggle="tooltip" title="Latest GPA">
                                     <a><i class="fa fa-grin-stars"></i>
-                                        @if(count($last_edu->get()) != 0 && $last_edu->first()->nilai != "")
-                                            &nbsp;{{$last_edu->first()->nilai}}
-                                        @else
-                                            &nbsp;Latest GPA (-)
-                                        @endif
-                                    </a></li>
+                                        &nbsp;{{count($last_edu->get()) != 0 && $last_edu->first()->nilai != "" ?
+                                        $last_edu->first()->nilai : 'Latest GPA (-)'}}
+                                    </a>
+                                </li>
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
                                 @auth
@@ -503,7 +517,7 @@
                                             </small>
                                             <hr class="hr-divider">
                                             <blockquote>
-                                                {!!$seeker->summary != "" ? $seeker->summary : '(empty)'!!}
+                                                {!!$seeker->summary != "" ? $seeker->summary : '<p>(empty)</p>'!!}
                                             </blockquote>
                                         </div>
                                     </div>

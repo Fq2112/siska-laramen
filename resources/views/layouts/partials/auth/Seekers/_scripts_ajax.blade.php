@@ -473,13 +473,15 @@
                     $("#btn_cancel_exp").show();
                     document.getElementById("cb_end_date").checked = false;
                     $("#end_date").show();
-
                     $('#job_title').val(data.job_title);
                     $('#company').val(data.company);
                     $('#start_date').val(data.start_date);
-                    $('#end_date input').val(data.end_date);
+                    $('#end_date input').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: data.start_date,
+                    }).val(data.end_date);
                     $('#report_to').val(data.report_to);
-                    $('#job_desc').val(data.job_desc);
+                    tinyMCE.get('job_desc').setContent(data.job_desc);
                     $('#job_level').val(data.joblevel_id).selectpicker("refresh");
                     $('#job_funct').val(data.fungsikerja_id).selectpicker("refresh");
                     $('#job_type').val(data.jobtype_id).selectpicker("refresh");
@@ -518,7 +520,7 @@
                     $("#end_period").show();
 
                     $('#school_name').val(data.school_name);
-                    $('#awards').val(data.awards);
+                    tinyMCE.get('awards').setContent(data.awards);
                     $('#start_period ').val(data.start_period);
                     $('#end_period input').val(data.end_period);
                     $('#nilai').val(data.nilai);
@@ -556,7 +558,7 @@
                     $('#name_cert').val(data.name);
                     $('#issuedby').val(data.issuedby);
                     $('#issueddate ').val(data.issueddate);
-                    $('#desc_cert').val(data.descript);
+                    tinyMCE.get('desc_cert').setContent(data.descript);
                 },
                 error: function () {
                     swal({
@@ -592,7 +594,7 @@
                     $('#org_title').val(data.title);
                     $('#start_period2 ').val(data.start_period);
                     $('#end_period2 input ').val(data.end_period);
-                    $('#org_desc').val(data.descript);
+                    tinyMCE.get('org_desc').setContent(data.descript);
                 },
                 error: function () {
                     swal({

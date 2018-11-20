@@ -979,23 +979,18 @@
                                             </small>
                                             <hr class="hr-divider">
                                             <blockquote id="stats_summary">
-                                                <p align="justify" class="aj_summary">
-                                                    @if($seeker->summary != "")
-                                                        {{$seeker->summary}}
-                                                    @else
-                                                        A Resume summary is a short, snappy
-                                                        introduction highlighting your career
-                                                        progress and skill set. Grab the hiring
-                                                        Managers’s attention!
-                                                    @endif
-                                                </p>
+                                                {!!$seeker->summary != "" ? $seeker->summary :
+                                                '<p align="justify">A Resume summary is a short, snappy introduction '.
+                                                'highlighting your career progress and skill set. '.
+                                                'Grab the hiring Managers’s attention!</p>'!!}
                                             </blockquote>
 
                                             <div id="summary_settings" style="display: none">
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                     <textarea name="summary" class="form-control use-tinymce"
-                                                              placeholder="Write your summary here...">{{$seeker->summary != "" ? $seeker->summary : ''}}</textarea>
+                                                              placeholder="Write your summary here...">{{$seeker
+                                                              ->summary != "" ? $seeker->summary : ''}}</textarea>
                                                     </div>
                                                 </div>
                                             </div>

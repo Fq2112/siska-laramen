@@ -197,14 +197,19 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'compare.application'
             ]);
 
-            Route::get('interview', [
-                'uses' => 'SeekerController@showInterviewInv',
-                'as' => 'seeker.invitation.interview'
-            ]);
-
-            Route::get('quiz', [
+            Route::get('quiz_invitation', [
                 'uses' => 'SeekerController@showQuizInv',
                 'as' => 'seeker.invitation.quiz'
+            ]);
+
+            Route::get('psychoTest_invitation', [
+                'uses' => 'SeekerController@showPsychoTestInv',
+                'as' => 'seeker.invitation.psychoTest'
+            ]);
+
+            Route::get('interview_invitation', [
+                'uses' => 'SeekerController@showInterviewInv',
+                'as' => 'seeker.invitation.interview'
             ]);
 
             Route::get('job_invitation', [

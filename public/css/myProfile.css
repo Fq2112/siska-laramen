@@ -73,7 +73,7 @@
     color: #fff;
     font-size: 36px;
     float: left;
-    margin-top: -85px !important;
+    margin-top: -85px;
     margin-left: 15px;
     text-shadow: 0 4px 3px rgba(0, 0, 0, 0.4), 0 8px 13px rgba(0, 0, 0, 0.1), 0 18px 23px rgba(0, 0, 0, 0.1);
 }
@@ -82,7 +82,7 @@
     color: #fff;
     font-size: 20px;
     float: left;
-    margin-top: -40px !important;
+    margin-top: -40px;
     margin-left: 16px;
     text-shadow: 0 4px 3px rgba(0, 0, 0, 0.4), 0 8px 13px rgba(0, 0, 0, 0.1), 0 18px 23px rgba(0, 0, 0, 0.1);
 }

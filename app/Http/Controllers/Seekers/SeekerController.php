@@ -220,6 +220,50 @@ class SeekerController extends Controller
         return $result;
     }
 
+    public function showQuizInv(Request $request)
+    {
+        $user = Auth::user();
+        $provinces = Provinces::all();
+        $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
+
+        $job_title = Experience::where('seeker_id', $seeker->id)->where('end_date', null)
+            ->orderby('id', 'desc')->take(1);
+
+        $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
+            ->orderby('tingkatpend_id', 'desc')->take(1);
+
+        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
+
+        $time = $request->time;
+
+        return view('auth.seekers.dashboard-quiz', compact('user', 'provinces', 'seeker',
+            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time'));
+    }
+
+    public function showPsychoTestInv(Request $request)
+    {
+        $user = Auth::user();
+        $provinces = Provinces::all();
+        $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
+
+        $job_title = Experience::where('seeker_id', $seeker->id)->where('end_date', null)
+            ->orderby('id', 'desc')->take(1);
+
+        $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
+            ->orderby('tingkatpend_id', 'desc')->take(1);
+
+        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
+        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
+
+        $time = $request->time;
+
+        return view('auth.seekers.dashboard-psychoTest', compact('user', 'provinces', 'seeker',
+            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time'));
+    }
+
     public function showInterviewInv(Request $request)
     {
         $provinces = Provinces::all();
@@ -240,26 +284,6 @@ class SeekerController extends Controller
 
         return view('auth.seekers.dashboard-interview', compact('user', 'provinces', 'seeker',
             'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time'));
-    }
-
-    public function showQuizInv()
-    {
-        $user = Auth::user();
-        $provinces = Provinces::all();
-        $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
-
-        $job_title = Experience::where('seeker_id', $seeker->id)->where('end_date', null)
-            ->orderby('id', 'desc')->take(1);
-
-        $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
-            ->orderby('tingkatpend_id', 'desc')->take(1);
-
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
-        $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
-
-        return view('auth.seekers.dashboard-quiz', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply'));
     }
 
     public function showJobInvitation()
