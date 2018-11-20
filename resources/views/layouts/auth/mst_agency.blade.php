@@ -16,14 +16,6 @@
             background: #00ADB5;
         }
 
-        ul.nav-menu-list-style .nav-header {
-            border-top: 1px solid #004e55;
-        }
-
-        ul.nav-menu-list-style > li a {
-            border-top: 1px solid #004e55;
-        }
-
         .site-wrapper_left-col .logo:before {
             content: '{{substr($user->name,0,1)}}';
         }
@@ -33,20 +25,19 @@
         }
 
         .site-wrapper_left-col .logo {
-            background: #00ADB5;
+            background: linear-gradient(#00939b, #00434a), #00242c;
         }
 
         .site-wrapper_left-col .logo:hover, .site-wrapper_left-col .logo:focus {
-            background: #009da5;
+            background: linear-gradient(#00858d, #00353c), #00181e;
         }
 
         .site-wrapper_left-col .left-nav a {
             border-left: 0 solid #006269;
         }
 
-        .site-wrapper_left-col .left-nav a:hover, .site-wrapper_left-col .left-nav a:focus, .site-wrapper_left-col .left-nav a.active {
+        .site-wrapper_left-col .left-nav a:hover, .site-wrapper_left-col .left-nav a:focus, .site-wrapper_left-col .left-nav a.current-page {
             background: #004e55;
-            border-left-color: #00ADB5;
         }
 
         .site-wrapper_top-bar a {
@@ -55,6 +46,11 @@
 
         .site-wrapper_top-bar a:hover, .site-wrapper_top-bar a.active {
             background: #00ADB5;
+        }
+
+        ul.nav-menu-list-style .nav-header.active {
+            border-right: 5px solid #00adb5;
+            background: linear-gradient(#00adb5, #004e55), #003037;
         }
 
         .user-item_info .name {
@@ -155,81 +151,58 @@
                         <a href="{{route('agency.profile',['id' => $agency->id])}}"
                            class="logo">{{\Illuminate\Support\Str::words($user->name,2,"")}}</a>
                         <div class="left-nav">
-                            <div class="well">
-                                <div>
-                                    <ul class="nav nav-list nav-menu-list-style">
-                                        <li>
-                                            <label class="tree-toggle nav-header glyphicon-icon-rpad">
+                            <div class="well" id="sidebar-menu">
+                                <ul class="nav nav-list nav-menu-list-style">
+                                    <li class="nav-menu-header">
+                                        <label class="nav-header glyphicon-icon-rpad">
                                                 <span class="fa fa-tachometer-alt m5"
-                                                      style="font-size:22px;padding-right: 5px"></span>Dashboard
-                                                <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
+                                                      style="margin-right: 15px"></span>Dashboard
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
                                                 </span>
-                                            </label>
-                                            <ul class="nav nav-list tree bullets">
-                                                <li><a href="{{route('agency.dashboard')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/dashboard/application_received') ? 'active' : '' }}">
-                                                        Application Received<span
-                                                                class="badge">{{$acc > 999 ? '999+' : $acc}}</span></a>
-                                                </li>
-                                                <li><a href="{{route('agency.recommended.seeker')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/dashboard/recommended_seeker') ? 'active' : '' }}">
-                                                        Recommended Seeker<span class="badge">
-                                                            {{$rec > 999 ? '999+' : $rec}}</span></a>
-                                                </li>
-                                                <li><a href="{{route('agency.invited.seeker')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/dashboard/invited_seeker') ? 'active' : '' }}">
-                                                        Invited Seeker<span
-                                                                class="badge">{{$inv > 999 ? '999+' : $inv}}</span></a>
-                                                </li>
-                                                <li>
-                                                    <label class="tree-toggle nav-header glyphicon-icon-rpad">
-                                                        <span class="fa fa-briefcase m5"
-                                                              style="font-size:22px;padding-right: 5px"></span>Job
-                                                        Vacancy
-                                                        <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
+                                        </label>
+                                        <ul class="nav nav-list tree bullets">
+                                            <li><a href="{{route('agency.dashboard')}}">Application Received
+                                                    <span class="badge">{{$acc > 999 ? '999+' : $acc}}</span></a>
+                                            </li>
+                                            <li><a href="{{route('agency.recommended.seeker')}}">Recommended Seeker
+                                                    <span class="badge">{{$rec > 999 ? '999+' : $rec}}</span></a>
+                                            </li>
+                                            <li><a href="{{route('agency.invited.seeker')}}">Invited Seeker
+                                                    <span class="badge">{{$inv > 999 ? '999+' : $inv}}</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-menu-header">
+                                        <label class="nav-header glyphicon-icon-rpad">
+                                            <span class="fa fa-briefcase m5" style="margin-right: 15px"></span>Job
+                                            Vacancy
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
                                                         </span>
-                                                    </label>
-                                                    <ul class="nav nav-list tree bullets">
-                                                        <li><a href="{{route('agency.vacancy.status')}}"
-                                                               class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/vacancy/status') ? 'active' : '' }}">
-                                                                Vacancy Status<span class="badge">
+                                        </label>
+                                        <ul class="nav nav-list tree bullets">
+                                            <li><a href="{{route('agency.vacancy.status')}}">Vacancy Status
+                                                    <span class="badge">
                                                                     {{$confirm > 999 ? '999+' : $confirm}}</span></a>
-                                                        </li>
-                                                        <li><a href="{{route('agency.vacancy.show')}}"
-                                                               class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/vacancy') ? 'active' : '' }}">
-                                                                Vacancy Setup<span
-                                                                        class="badge">{{$vac > 999 ? '999+' : $vac}}</span></a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li>
-                                            <label class="tree-toggle nav-header glyphicon-icon-rpad">
+                                            </li>
+                                            <li><a href="{{route('agency.vacancy.show')}}">Vacancy Setup
+                                                    <span class="badge">
+                                                                    {{$vac > 999 ? '999+' : $vac}}</span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-menu-header">
+                                        <label class="nav-header glyphicon-icon-rpad">
                                                 <span class="fa fa-user-edit m5"
-                                                      style="font-size:22px;padding-right: 5px"></span>Account Settings
-                                                <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
+                                                      style="margin-right: 10px"></span>Account Settings
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
                                                 </span>
-                                            </label>
-                                            <ul class="nav nav-list tree">
-                                                <li><a href="{{route('agency.edit.profile')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/profile') ? 'active' : '' }}">
-                                                        Edit Profile</a></li>
-                                                <li><a href="{{route('agency.settings')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/agency/settings') ? 'active' : '' }}">
-                                                        Change Password</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        </label>
+                                        <ul class="nav nav-list tree bullets">
+                                            <li><a href="{{route('agency.edit.profile')}}">Edit Profile</a></li>
+                                            <li><a href="{{route('agency.settings')}}">Change Password</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -248,11 +221,45 @@
 @push('scripts')
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
     <script>
-        $("#toggle").click(function () {
-            $(".logo").text(function (i, text) {
-                return text === "{{\Illuminate\Support\Str::words($user->name,2,"")}}" ? "{{\Illuminate\Support\Str::words($user->name, 1,"")}}" : "{{\Illuminate\Support\Str::words($user->name,2,"")}}";
+        var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
+            $SIDEBAR_MENU = $('#sidebar-menu'), $TREE_TOGGLE = $('.nav-header');
+
+        function init_sidebar() {
+            $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').addClass('current-page')
+                .parents('.nav-menu-header').children('label').addClass('active')
+                .parent().children('ul.tree').slideDown().find('a').css('border-right', '5px solid #00adb5');
+
+            $TREE_TOGGLE.on('click', function () {
+                var $this = $(this);
+
+                $TREE_TOGGLE.removeClass('active');
+                $this.addClass('active');
+
+                if ($this.next().hasClass('show')) {
+                    $this.next().slideUp().find('a').css('border-right', 'none');
+
+                } else {
+                    $this.parent().parent().find('.tree').slideUp();
+                    $this.next().slideDown().find('a').css('border-right', '5px solid #00adb5');
+                }
             });
-            $('.tree-toggle').parent().children('ul.tree').toggle(200);
+        }
+
+        function init_toggleMenu() {
+            $("#toggle").on('click', function () {
+                $(".logo").text(function (i, text) {
+                    return text === "{{\Illuminate\Support\Str::words($user->name,2,"")}}" ?
+                        "{{\Illuminate\Support\Str::words($user->name, 1,"")}}" :
+                        "{{\Illuminate\Support\Str::words($user->name,2,"")}}";
+                });
+
+                $('.nav-header:not(.active)').find('.tree').slideUp();
+            });
+        }
+
+        $(function () {
+            init_sidebar();
+            init_toggleMenu();
         });
     </script>
 @endpush

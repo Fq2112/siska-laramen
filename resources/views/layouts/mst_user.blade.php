@@ -91,7 +91,8 @@
                    href="{{Auth::check() && Auth::user()->isAgency() ? route('home-agency') : route('home-seeker')}}">
                     SISKA</a>
                 @if(Auth::guest() || Auth::user()->isAgency() && \Illuminate\Support\Facades\Request::is('search*') ||
-                Auth::user()->isSeeker() && !\Illuminate\Support\Facades\Request::is(['account/dashboard/recommended_vacancy','quiz']))
+                Auth::user()->isSeeker() && !\Illuminate\Support\Facades\Request::is
+                (['account/job_vacancy/recommended_vacancy','quiz']))
                     <form class="navbar-form search-form form-horizontal" role="search"
                           action="{{route('search.vacancy')}}">
                         <div id="custom-search-input">

@@ -217,6 +217,10 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.jobInvitation.apply'
             ]);
 
+        });
+
+        Route::group(['prefix' => 'job_vacancy'], function () {
+
             Route::get('recommended_vacancy', [
                 'uses' => 'SeekerController@recommendedVacancy',
                 'as' => 'seeker.recommended.vacancy'

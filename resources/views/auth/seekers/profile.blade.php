@@ -25,7 +25,7 @@
                                                             </div>
                                                         @else
                                                             <div class="item show_background"
-                                                                 style="background-image: url({{asset('images/carousel/c3.jpg')}});">
+                                                                 style="background-image: url({{asset('images/carousel/c0.png')}});">
                                                                 <div class="carousel-overlay"></div>
                                                             </div>
                                                         @endif

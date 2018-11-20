@@ -14,6 +14,35 @@
     color: #fff;
 }
 
+ul.nav-menu-list-style li .badge, ul.nav-menu-list-style li .pull-right, ul.nav-menu-list-style li span.badge,
+ul.nav-menu-list-style li label.badge {
+    float: right;
+    margin-top: 13px;
+}
+
+ul.nav-menu-list-style .nav-header .menu-collapsible-icon {
+    position: absolute;
+    right: 3px;
+    top: 16px;
+    font-size: 9px;
+}
+
+ul.nav-menu-list-style > li {
+    position: relative;
+    border-bottom: 1px solid rgba(95, 38, 38, 0.3);
+}
+
+ul.nav-menu-list-style > li a {
+    padding: 0 10px;
+    line-height: 32px;
+}
+
+ul.nav-menu-list-style {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 .glyphicon-icon-rpad .glyphicon, .glyphicon-icon-rpad .glyphicon.m8, .fa-icon-rpad .fa, .fa-icon-rpad .fa.m8 {
     padding-right: 8px;
 }
@@ -46,50 +75,31 @@
     padding-left: 15px;
 }
 
-ul.nav-menu-list-style .nav-header .menu-collapsible-icon {
-    position: absolute;
-    right: 3px;
-    top: 16px;
+ul.kas-icon-aero li a:before {
+    font-family: 'Glyphicons Halflings';
     font-size: 9px;
-}
-
-ul.nav-menu-list-style {
-    margin: 0;
+    content: "\e258";
+    padding-right: 8px;
 }
 
 ul.nav-menu-list-style .nav-header {
-    border-top: 1px solid #5f2626;
-    /*border-bottom: 1px solid #5f2626;*/
     display: block;
     margin: 0;
     line-height: 42px;
     padding: 0 8px;
     font-weight: 600;
+    cursor: pointer;
 }
 
-ul.nav-menu-list-style > li {
-    position: relative;
+ul.nav-menu-list-style .nav-header.active {
+    border-right: 5px solid #fa5555;
+    text-shadow: rgba(0, 0, 0, .25) 0 -1px 0;
+    background: linear-gradient(#fa5555, #872f2f), #5f2626;
+    box-shadow: rgba(0, 0, 0, .25) 0 1px 0, inset rgba(255, 255, 255, .16) 0 1px 0;
 }
 
-ul.nav-menu-list-style > li a {
-    border-top: 1px solid #5f2626;
-    /*border-bottom: 1px solid #5f2626;*/
-    padding: 0 10px;
-    line-height: 32px;
-}
-
-ul.nav-menu-list-style > li:first-child a {
-}
-
-ul.nav-menu-list-style {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-ul.nav-menu-list-style li .badge, ul.nav-menu-list-style li .pull-right, ul.nav-menu-list-style li span.badge, ul.nav-menu-list-style li label.badge {
-    float: right;
-    margin-top: 13px;
+.nav-menu-header .tree {
+    display: none;
 }
 
 ul.bullets {
@@ -98,14 +108,4 @@ ul.bullets {
 
 ul.numerics {
     list-style: inside decimal
-}
-
-.ul.kas-icon-aero {
-}
-
-ul.kas-icon-aero li a:before {
-    font-family: 'Glyphicons Halflings';
-    font-size: 9px;
-    content: "\e258";
-    padding-right: 8px;
 }

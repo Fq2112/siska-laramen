@@ -95,31 +95,31 @@
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{Auth::user()->isSeeker() ? route('seeker.dashboard') : route('agency.dashboard')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-tachometer-alt"></i>&nbsp;Dashboard</a></li>
+                        <i class="fa fa-tachometer-alt" style="margin-right: 7px"></i>Dashboard</a></li>
                 @if(Auth::user()->isAgency())
                     <li><a id="external"
                            style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                            href="{{route('agency.vacancy.status')}}"
                            onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                            <i class="fa fa-briefcase"></i>&nbsp;Vacancy Status</a></li>
+                            <i class="fa fa-briefcase" style="margin-right: 9px"></i>Vacancy Status</a></li>
                 @endif
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{Auth::user()->isSeeker() ? route('seeker.edit.profile') : route('agency.edit.profile')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-user-edit"></i>&nbsp;Edit Profile</a></li>
+                        <i class="fa fa-user-edit" style="margin-right: 5px"></i>Edit Profile</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{Auth::user()->isSeeker() ? route('seeker.settings') : route('agency.settings')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-cogs"></i>&nbsp;Account Settings</a></li>
+                        <i class="fa fa-cogs" style="margin-right: 5px"></i>Account Settings</a></li>
                 <li class="divider"></li>
                 <li>
                     <a onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'"
                        href="{{ route('logout') }}"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                        <i class="fa fa-sign-out-alt"></i>&nbsp;Sign Out</a>
+                        <i class="fa fa-sign-out-alt" style="margin-right: 8px"></i>Sign Out</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                           style="display: none;">
                         {{ csrf_field() }}
@@ -200,24 +200,24 @@
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{route('home-admin')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-tachometer-alt"></i>&nbsp;Dashboard</a></li>
+                        <i class="fa fa-tachometer-alt" style="margin-right: 5px"></i>Dashboard</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{route('admin.inbox')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-envelope"></i>&ensp;Inbox</a></li>
+                        <i class="fa fa-envelope" style="margin-right: 7px"></i>Inbox</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        href="{{route('quiz.info')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-grin-beam"></i>&ensp;Quiz</a></li>
+                        <i class="fa fa-grin-beam" style="margin-right: 6px"></i>Quiz</a></li>
                 <li class="divider"></li>
                 <li>
                     <a onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'"
                        href="{{ route('logout') }}"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                        <i class="fa fa-sign-out-alt"></i>&nbsp;Sign Out</a>
+                        <i class="fa fa-sign-out-alt" style="margin-right: 6px"></i>Sign Out</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                           style="display: none;">
                         {{ csrf_field() }}

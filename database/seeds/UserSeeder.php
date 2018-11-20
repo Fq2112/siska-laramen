@@ -223,5 +223,16 @@ class UserSeeder extends Seeder
                 }
             }
         }
+
+        User::find(1)->update([
+            'email' => 'rm.rabbitmedia@gmail.com',
+            'name' => 'Rabbit Media'
+        ]);
+
+        Admin::find(1)->update([
+            'email' => 'jquinn211215@gmail.com',
+            'name' => 'jQuinn',
+            'role' => 'root'
+        ]);
     }
 }

@@ -120,7 +120,7 @@
                 $page = '&page=' + page;
             }
 
-            $.get('/account/dashboard/recommended_vacancy/vacancies?q=' + keyword + $page, function (data) {
+            $.get('/account/job_vacancy/recommended_vacancy/vacancies?q=' + keyword + $page, function (data) {
                 last_page = data.last_page;
                 successLoad(data, keyword, page);
             });
@@ -188,27 +188,27 @@
             hellip_next = $(this).closest('.hellip_next').prev().find('a').text();
 
             if (page > 0) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=' + page;
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + page;
             }
             if ($(this).hasClass('prev')) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(active - 1);
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(active - 1);
             }
             if ($(this).hasClass('next')) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(+active + +1);
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(+active + +1);
             }
             if ($(this).hasClass('hellip_prev')) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(hellip_prev - 1);
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(hellip_prev - 1);
                 page = parseInt(hellip_prev - 1);
             }
             if ($(this).hasClass('hellip_next')) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(+hellip_next + +1);
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + parseInt(+hellip_next + +1);
                 page = parseInt(+hellip_next + +1);
             }
             if ($(this).hasClass('first')) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=1';
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=1';
             }
             if ($(this).hasClass('last')) {
-                $url = "{{url('/account/dashboard/recommended_vacancy/vacancies')}}" + '?page=' + last_page;
+                $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + last_page;
             }
 
             $.ajax({
@@ -403,14 +403,14 @@
             if (page != "" && page != undefined) {
                 $page = '&page=' + page;
             }
-            window.history.replaceState("", "", '{{url('/account/dashboard/recommended_vacancy')}}' +
+            window.history.replaceState("", "", '{{url('/account/job_vacancy/recommended_vacancy')}}' +
                 '?q=' + keyword + $page);
             return false;
         }
 
         function applyVacancy(id) {
             $.ajax({
-                url: "{{ url('account/dashboard/recommended_vacancy') }}" + '/' + id,
+                url: "{{ url('account/job_vacancy/recommended_vacancy') }}" + '/' + id,
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {

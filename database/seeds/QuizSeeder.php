@@ -86,7 +86,7 @@ class QuizSeeder extends Seeder
 
         QuizInfo::create([
             'vacancy_id' => Vacancies::where('plan_id', 3)->first()->id,
-            'unique_code' => str_random(6),
+            'unique_code' => '3wvEnU',
             'total_question' => 100,
             'question_ids' => QuizQuestions::get()->pluck('id')->toArray(),
             'time_limit' => 120

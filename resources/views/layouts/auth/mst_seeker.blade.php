@@ -60,80 +60,61 @@
                         <a href="{{route('seeker.profile',['id' => $seeker->id])}}"
                            class="logo">{{\Illuminate\Support\Str::words($user->name,2,"")}}</a>
                         <div class="left-nav">
-                            <div class="well">
-                                <div>
-                                    <ul class="nav nav-list nav-menu-list-style">
-                                        <li>
-                                            <label class="tree-toggle nav-header glyphicon-icon-rpad">
+                            <div class="well" id="sidebar-menu">
+                                <ul class="nav nav-list nav-menu-list-style">
+                                    <li class="nav-menu-header">
+                                        <label class="nav-header glyphicon-icon-rpad">
                                                 <span class="fa fa-tachometer-alt m5"
-                                                      style="font-size:22px;padding-right: 5px"></span>Dashboard
-                                                <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
+                                                      style="margin-right: 15px"></span>Dashboard
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
                                                 </span>
-                                            </label>
-                                            <ul class="nav nav-list tree bullets">
-                                                <li><a href="{{route('seeker.dashboard')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/application_status') ? 'active' : '' }}">Application
-                                                        Status <span class="badge">
-                                                            {{$totalApp > 999 ? '999+' : $totalApp }}</span></a>
-                                                </li>
-                                                <li><a href="{{route('seeker.invitation.quiz')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/quiz') ? 'active' : '' }}">Quiz
-                                                        Invitation<span class="badge">0</span></a>
-                                                </li>
-                                                <li><a href="{{route('seeker.invitation.interview')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/interview') ? 'active' : '' }}">Interview
-                                                        Invitation<span class="badge"
-                                                                        style="background: #FA5555;">0</span></a>
-                                                </li>
-                                                <li><a href="{{route('seeker.jobInvitation')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/job_invitation') ? 'active' : '' }}">Job
-                                                        Invitation <span class="badge" style="background: #FA5555;">
-                                                            {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}
-                                                        </span></a>
-                                                </li>
-                                                <li>
-                                                    <label class="tree-toggle nav-header glyphicon-icon-rpad">
-                                                        <span class="fa fa-briefcase m5"
-                                                              style="font-size:22px;padding-right: 5px"></span>Job
-                                                        Vacancy
-                                                        <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
-                                                        </span>
-                                                    </label>
-                                                    <ul class="nav nav-list tree bullets">
-                                                        <li><a href="{{route('seeker.recommended.vacancy')}}"
-                                                               class="{{ \Illuminate\Support\Facades\Request::is
-                                                       ('account/dashboard/recommended_vacancy') ? 'active' : '' }}">
-                                                                Recommended Vacancy
-                                                                <span class="badge">
-                                                                    {{$rec > 999 ? '999+' : $rec}}</span></a>
-                                                        </li>
-                                                        <li><a href="{{route('seeker.bookmarked.vacancy')}}"
-                                                               class="{{ \Illuminate\Support\Facades\Request::is('account/dashboard/bookmarked_vacancy') ? 'active' : '' }}">Bookmarked
-                                                                Vacancy<span class="badge">
-                                                            {{$totalBook > 999 ? '999+' : $totalBook}}</span></a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li>
-                                            <label class="tree-toggle nav-header glyphicon-icon-rpad">
-                                                <span class="fa fa-user-edit m5"
-                                                      style="font-size:22px;padding-right: 5px"></span>Account Settings
-                                                <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
-                                                </span>
-                                            </label>
-                                            <ul class="nav nav-list tree">
-                                                <li><a href="{{route('seeker.edit.profile')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/profile') ? 'active' : '' }}">Edit
-                                                        Profile</a></li>
-                                                <li><a href="{{route('seeker.settings')}}"
-                                                       class="{{ \Illuminate\Support\Facades\Request::is('account/settings') ? 'active' : '' }}">Change
-                                                        Password</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        </label>
+                                        <ul class="nav nav-list tree bullets">
+                                            <li><a href="{{route('seeker.dashboard')}}">Application Status
+                                                    <span class="badge">{{$totalApp > 999 ? '999+' : $totalApp }}</span>
+                                                </a>
+                                            </li>
+                                            <li><a href="{{route('seeker.invitation.quiz')}}">Quiz Invitation
+                                                    <span class="badge">0</span></a>
+                                            </li>
+                                            <li><a href="{{route('seeker.invitation.interview')}}">Interview Invitation
+                                                    <span class="badge" style="background: #FA5555;">0</span></a>
+                                            </li>
+                                            <li><a href="{{route('seeker.jobInvitation')}}">Job Invitation
+                                                    <span class="badge" style="background: #FA5555;">
+                                                        {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-menu-header">
+                                        <label class="nav-header glyphicon-icon-rpad">
+                                            <span class="fa fa-briefcase m5"
+                                                  style="margin-right: 15px"></span>Job Vacancy
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
+                                        </label>
+                                        <ul class="nav nav-list tree bullets">
+                                            <li><a href="{{route('seeker.recommended.vacancy')}}">Recommended Vacancy
+                                                    <span class="badge">{{$rec > 999 ? '999+' : $rec}}</span></a>
+                                            </li>
+                                            <li><a href="{{route('seeker.bookmarked.vacancy')}}">Bookmarked Vacancy
+                                                    <span class="badge">{{$totalBook > 999 ? '999+' : $totalBook}}
+                                                    </span></a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-menu-header">
+                                        <label class="nav-header glyphicon-icon-rpad">
+                                            <span class="fa fa-user-cog m5" style="margin-right: 10px"></span>Account
+                                            Settings
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
+                                        </label>
+                                        <ul class="nav nav-list tree bullets">
+                                            <li><a href="{{route('seeker.edit.profile')}}">Edit Profile</a></li>
+                                            <li><a href="{{route('seeker.settings')}}">Change Password</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -152,11 +133,45 @@
 @push('scripts')
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
     <script>
-        $("#toggle").click(function () {
-            $(".logo").text(function (i, text) {
-                return text === "{{\Illuminate\Support\Str::words($user->name,2,"")}}" ? "{{\Illuminate\Support\Str::words($user->name, 1,"")}}" : "{{\Illuminate\Support\Str::words($user->name,2,"")}}";
+        var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
+            $SIDEBAR_MENU = $('#sidebar-menu'), $TREE_TOGGLE = $('.nav-header');
+
+        function init_sidebar() {
+            $SIDEBAR_MENU.find('a[href="' + CURRENT_URL + '"]').addClass('current-page')
+                .parents('.nav-menu-header').children('label').addClass('active')
+                .parent().children('ul.tree').slideDown().find('a').css('border-right', '5px solid #fa5555');
+
+            $TREE_TOGGLE.on('click', function () {
+                var $this = $(this);
+
+                $TREE_TOGGLE.removeClass('active');
+                $this.addClass('active');
+
+                if ($this.next().hasClass('show')) {
+                    $this.next().slideUp().find('a').css('border-right', 'none');
+
+                } else {
+                    $this.parent().parent().find('.tree').slideUp();
+                    $this.next().slideDown().find('a').css('border-right', '5px solid #fa5555');
+                }
             });
-            $('.tree-toggle').parent().children('ul.tree').toggle(200);
+        }
+
+        function init_toggleMenu() {
+            $("#toggle").on('click', function () {
+                $(".logo").text(function (i, text) {
+                    return text === "{{\Illuminate\Support\Str::words($user->name,2,"")}}" ?
+                        "{{\Illuminate\Support\Str::words($user->name, 1,"")}}" :
+                        "{{\Illuminate\Support\Str::words($user->name,2,"")}}";
+                });
+
+                $('.nav-header:not(.active)').find('.tree').slideUp();
+            });
+        }
+
+        $(function () {
+            init_sidebar();
+            init_toggleMenu();
         });
     </script>
 @endpush
