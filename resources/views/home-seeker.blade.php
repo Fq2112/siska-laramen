@@ -374,6 +374,16 @@
                         </div>
                     @endforeach
                 </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <hr style="margin-top: 0">
+                        <a href="#">
+                            <button class="btn btn myBtn">
+                                show more blog <i class="fa fa-search-plus"></i>
+                            </button>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

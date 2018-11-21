@@ -43,7 +43,7 @@ class SeekerController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
-        $blogs = Blog::all();
+        $blogs = Blog::orderByDesc('id')->take(4)->get();
 
         $id = [4, 9, 13, 26, 29, 30, 38, 40, 41, 45, 47, 49, 52, 58, 59, 61, 62, 63];
         $favIndustries = Industri::whereIn('id', $id)->get();

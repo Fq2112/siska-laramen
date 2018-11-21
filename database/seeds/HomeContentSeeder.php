@@ -1,6 +1,5 @@
 <?php
 
-use App\Admin;
 use App\Carousel;
 use App\Plan;
 use Faker\Factory;

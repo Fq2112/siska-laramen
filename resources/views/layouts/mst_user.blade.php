@@ -354,8 +354,8 @@
                                     {{session('status')}}
                                 </div>
                             @endif
-                            <form method="post" html="{:multipart=>true}" data-remote="true" accept-charset="UTF-8"
-                                  class="form-horizontal" action="{{ route('password.email') }}">
+                            <form method="post" accept-charset="UTF-8" class="form-horizontal"
+                                  action="{{ route('password.email') }}">
                                 {{ csrf_field() }}
 
                                 <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
@@ -384,8 +384,8 @@
                 <div class="box">
                     <div class="content passwordBox" style="display:none;">
                         <div class="form">
-                            <form method="post" html="{:multipart=>true}" data-remote="true" accept-charset="UTF-8"
-                                  class="form-horizontal" action="{{ route('password.request') }}">
+                            <form method="post" accept-charset="UTF-8" class="form-horizontal"
+                                  action="{{ route('password.request') }}">
                                 {{ csrf_field() }}
                                 <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">
@@ -432,13 +432,12 @@
             </div>
             <div class="modal-footer">
                 <div class="forgot login-footer">
-                            <span>Looking to
-                                 <a href="javascript:showRegisterForm()" style="color: #00ADB5;">create an account</a>
-                            ?</span>
+                    <span>Looking to <a href="javascript:showRegisterForm()"
+                                        style="color: #00ADB5;">create an account</a>?</span>
                 </div>
                 <div class="forgot register-footer" style="display:none">
-                    <span>Already have an account?</span>
-                    <a href="javascript:showLoginForm()" style="color: #FA5555">Sign In</a>
+                    <span>Already have an account? <a href="javascript:showLoginForm()"
+                                                      style="color: #FA5555">Sign In</a></span>
                 </div>
             </div>
         </div>
