@@ -109,13 +109,9 @@
                                             <div style="font-size: 14px; margin-top: 0"
                                                  class="stats_video">
                                                 <p align="justify" class="aj_video_name">
-                                                    @if($seeker->video_summary != "")
-                                                        Filename: {{$seeker->video_summary}}
-                                                    @else
-                                                        Video that describes You. Allowed extension:
-                                                        mp4, webm, and ogg. Allowed size: < 30 MB.
-                                                        <br><br>
-                                                    @endif
+                                                    {{$seeker->video_summary != "" ? 'Filename: '.
+                                                    $seeker->video_summary : 'Video that describes You. '.
+                                                    'Allowed extension: mp4, webm, and ogg. Allowed size: < 30 MB.'}}
                                                 </p>
                                             </div>
                                             <div id="video_settings" style="display: none">
@@ -126,11 +122,7 @@
                                                             <div class="filename" id="attached-video"
                                                                  data-toggle="tooltip" data-placement="top"
                                                                  title="Allowed extension: mp4, webm, and ogg. Allowed size: < 30 MB">
-                                                                @if($seeker->video_summary != "")
-                                                                    {{$seeker->video_summary}}
-                                                                @else
-                                                                    Select a file or drag here
-                                                                @endif
+                                                                {{$seeker->video_summary == "" ? 'Select a file "or" drag here' : $seeker->video_summary}}
                                                             </div>
                                                         </label>
                                                         <input id="attach-video" type="file"
@@ -260,12 +252,9 @@
                                     <input type="hidden" name="_method">
                                     <div class="card-content">
                                         <div class="card-title">
-                                            <small id="show_lang_settings">
-                                                Language Skill
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i
-                                                            class="fa fa-language"></i>&ensp;Add
-                                                </span>
+                                            <small id="show_lang_settings">Language Skill
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555">
+                                                    <i class="fa fa-language"></i>&ensp;Add</span>
                                             </small>
                                             <hr class="hr-divider">
                                             <div id="stats_lang" style="font-size: 14px; margin-top: 0">
@@ -277,65 +266,57 @@
                                                             <div class="col-lg-12">
                                                                 <div class="media">
                                                                     <div class="media-left media-middle">
-                                                                        <img width="64"
-                                                                             class="media-object"
+                                                                        <img width="64" class="media-object"
                                                                              src="{{asset('images/lang.png')}}">
                                                                     </div>
                                                                     <div class="media-body">
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-language"></i>&nbsp;
-                                                                            <small style="text-transform: uppercase">
-                                                                                {{$row->name}}
-                                                                            </small>
+                                                                            <small style="text-transform: uppercase">{{$row->name}}</small>
                                                                             <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editLang('{{encrypt
                                                                                    ($row->id)}}')">
                                                                                    EDIT&ensp;<i class="fa fa-edit"></i></a>
-                                                                                <small style="color: #7f7f7f">
-                                                                                    &nbsp;&#124;&nbsp;
-                                                                                </small>
-                                                                                <a href="{{route('delete.languages',['id' => encrypt($row->id),'lang' => $row->name])}}"
+                                                                                <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
+                                                                                <a href="{{route('delete.languages',
+                                                                                ['id' => encrypt($row->id),
+                                                                                'lang' => $row->name])}}"
                                                                                    class="delete-lang"
                                                                                    style="color: #FA5555;">
-                                                                                    <i class="fa fa-eraser"></i>&ensp;DELETE</a>
+                                                                                    <i class="fa fa-eraser"></i>&ensp;DELETE
+                                                                                </a>
                                                                             </span>
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 12px;text-transform: none">
                                                                             <table style="font-size: 12px;margin-top: 0">
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-comments"></i>
+                                                                                    <td><i class="fa fa-comments"></i>
                                                                                     </td>
-                                                                                    <td>&nbsp;Speaking
-                                                                                        Level
-                                                                                    </td>
-                                                                                    <td>&nbsp;:&nbsp;
-                                                                                    </td>
+                                                                                    <td>&nbsp;</td>
                                                                                     <td align="justify">
-                                                                                        @if($row->spoken_lvl != "")
-                                                                                            <span style="text-transform: uppercase">{{$row->spoken_lvl}}</span>
-                                                                                        @else
-                                                                                            -
-                                                                                        @endif
+                                                                                        <span style="text-transform: uppercase"
+                                                                                              data-toggle="tooltip"
+                                                                                              data-placement="right"
+                                                                                              title="Speaking Level">
+                                                                                            {{$row->spoken_lvl != "" ?
+                                                                                            $row->spoken_lvl : '-'}}
+                                                                                        </span>
                                                                                     </td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-pencil-alt"></i>
+                                                                                    <td><i class="fa fa-pencil-alt"></i>
                                                                                     </td>
-                                                                                    <td>&nbsp;Writing
-                                                                                        Level
-                                                                                    </td>
-                                                                                    <td>&nbsp;:&nbsp;
-                                                                                    </td>
+                                                                                    <td>&nbsp;</td>
                                                                                     <td align="justify">
-                                                                                        @if($row->written_lvl != "")
-                                                                                            <span style="text-transform: uppercase">{{$row->written_lvl}}</span>
-                                                                                        @else
-                                                                                            -
-                                                                                        @endif
+                                                                                        <span style="text-transform: uppercase"
+                                                                                              data-toggle="tooltip"
+                                                                                              data-placement="right"
+                                                                                              title="Writing Level">
+                                                                                            {{$row->written_lvl != "" ?
+                                                                                            $row->written_lvl : '-'}}
+                                                                                        </span>
                                                                                     </td>
                                                                                 </tr>
                                                                             </table>
@@ -354,9 +335,9 @@
                                                     <div class="col-lg-12">
                                                         <small>Language</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-language"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-language"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    placeholder="e.g: English"
                                                                    name="name" maxlength="100"
@@ -368,15 +349,14 @@
                                                     <div class="col-lg-12">
                                                         <small>Speaking Level
                                                             <span class="optional-label">
-                                                                                (Optional)</span></small>
+                                                                (Optional)</span></small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-comments"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-comments"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     name="spoken_lvl" id="spoken_lvl">
-                                                                <option value="" selected>-- Choose --
-                                                                </option>
+                                                                <option value="" selected>Rather not say</option>
                                                                 <option value="good">Good</option>
                                                                 <option value="fair">Fair</option>
                                                                 <option value="poor">Poor</option>
@@ -387,16 +367,14 @@
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
                                                         <small>Writing Level
-                                                            <span class="optional-label">
-                                                                                (Optional)</span></small>
+                                                            <span class="optional-label">(Optional)</span></small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-pencil-alt"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-pencil-alt"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     name="written_lvl" id="written_lvl">
-                                                                <option value="" selected>-- Choose --
-                                                                </option>
+                                                                <option value="" selected>Rather not say</option>
                                                                 <option value="good">Good</option>
                                                                 <option value="fair">Fair</option>
                                                                 <option value="poor">Poor</option>
@@ -433,11 +411,9 @@
                                     <input type="hidden" name="_method">
                                     <div class="card-content">
                                         <div class="card-title">
-                                            <small id="show_skill_settings">
-                                                Skill
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i
-                                                            class="fa fa-user-secret"></i>&ensp;Add
+                                            <small id="show_skill_settings">Skill
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555">
+                                                    <i class="fa fa-user-secret"></i>&ensp;Add
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -461,17 +437,13 @@
                                                                     <div class="media-body">
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-user-secret"></i>&nbsp;
-                                                                            <small style="text-transform: uppercase">
-                                                                                {{$row->name}}
-                                                                            </small>
+                                                                            <small style="text-transform: uppercase">{{$row->name}}</small>
                                                                             <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editSkill('{{encrypt
                                                                                    ($row->id)}}')">
                                                                                     EDIT&ensp;<i class="fa fa-edit"></i></a>
-                                                                                <small style="color: #7f7f7f">
-                                                                                    &nbsp;&#124;&nbsp;
-                                                                                </small>
+                                                                                <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
                                                                                 <a href="{{route('delete.skills',
                                                                                 ['id' => encrypt($row->id),
                                                                                 'skill' => $row->name])}}"
@@ -482,13 +454,22 @@
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 12px;text-transform: none">
-                                                                            <i class="fa fa-chart-line"></i>&nbsp;
-                                                                            @if($row->level != "")
-                                                                                <span style="text-transform: uppercase">
-                                                                                            {{$row->level}}</span>
-                                                                            @else
-                                                                                -
-                                                                            @endif
+                                                                            <table style="font-size: 12px;margin-top: 0">
+                                                                                <tr>
+                                                                                    <td><i class="fa fa-chart-line"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;</td>
+                                                                                    <td align="justify">
+                                                                                        <span style="text-transform: uppercase"
+                                                                                              data-toggle="tooltip"
+                                                                                              data-placement="right"
+                                                                                              title="Skill Level">
+                                                                                            {{$row->level != "" ?
+                                                                                            $row->level : '-'}}
+                                                                                        </span>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
                                                                         </blockquote>
                                                                     </div>
                                                                 </div>
@@ -504,9 +485,9 @@
                                                     <div class="col-lg-12">
                                                         <small>Skill Name</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-user-secret"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-user-secret"></i>
+                                                            </span>
                                                             <input class="form-control" name="name"
                                                                    type="text" required maxlength="100"
                                                                    placeholder="e.g: Programming"
@@ -518,15 +499,14 @@
                                                     <div class="col-lg-12">
                                                         <small>Skill Level
                                                             <span class="optional-label">
-                                                                                (Optional)</span></small>
+                                                                (Optional)</span></small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-chart-line"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-chart-line"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     name="level" id="skill_lvl">
-                                                                <option value="" selected>-- Choose --
-                                                                </option>
+                                                                <option value="" selected>Rather not say</option>
                                                                 <option value="good">Good</option>
                                                                 <option value="fair">Fair</option>
                                                                 <option value="poor">Poor</option>
@@ -591,57 +571,38 @@
                                                 <tr>
                                                     <td><i class="fa fa-transgender"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->gender != "")
-                                                            {{$seeker->gender}}
-                                                        @else
-                                                            Gender (-)
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->gender != "" ? $seeker->gender : 'Gender (-)'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-hand-holding-heart"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->relationship != "")
-                                                            {{$seeker->relationship}}
-                                                        @else
-                                                            Relationship Status (-)
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->relationship != "" ? $seeker->relationship :
+                                                    'Relationship Status (-)'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-flag"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->nationality != "")
-                                                            {{$seeker->nationality}}
-                                                        @else
-                                                            Nationality (-)
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->nationality != "" ? $seeker->nationality :
+                                                    'Nationality (-)'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-globe"></i></td>
                                                     <td>&nbsp;</td>
                                                     <td style="text-transform: none">
-                                                        @if($seeker->website != "")
-                                                            {{$seeker->website}}
-                                                        @else
-                                                            Personal Website (-)
-                                                        @endif
+                                                        {{$seeker->website != "" ? $seeker->website :
+                                                        'Personal Website (-)'}}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-hand-holding-usd"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td style="text-transform: none"
-                                                        id="expected_salary2">
+                                                    <td style="text-transform: none" id="expected_salary2">
                                                         @if($seeker->lowest_salary != "")
                                                             <script>
-                                                                var low = ("{{$seeker->lowest_salary}}").split(',').join("") / 1000000,
-                                                                    high = ("{{$seeker->highest_salary}}").split(',').join("") / 1000000;
-                                                                document.getElementById("expected_salary2").innerText = "IDR " + low + " to " + high + " millions";
+                                                                var low = ("{{$seeker->lowest_salary}}") / 1000000,
+                                                                    high = ("{{$seeker->highest_salary}}") / 1000000;
+                                                                document.getElementById("expected_salary2").innerText =
+                                                                    "IDR " + low + " to " + high + " millions";
                                                             </script>
                                                         @else
                                                             Expected Salary (anything)
@@ -655,9 +616,8 @@
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-user"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon"><i class="fa fa-user"></i>
+                                                            </span>
                                                             <input placeholder="Name" maxlength="191"
                                                                    value="{{$user->name}}"
                                                                    type="text" class="form-control"
@@ -669,14 +629,13 @@
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-birthday-cake"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-birthday-cake"></i>
+                                                            </span>
                                                             <input class="form-control datepicker"
                                                                    name="birthday" type="text" required
                                                                    placeholder="yyyy-mm-dd"
-                                                                   value="@if($seeker->birthday != ""){{$seeker->birthday}}@endif"
-                                                                   maxlength="10">
+                                                                   value="{{$seeker->birthday}}" maxlength="10">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -684,23 +643,19 @@
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-transgender"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-transgender"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
-                                                                    title="-- Choose --" name="gender"
-                                                                    required>
-                                                                <option value="male"
-                                                                        @if($seeker->gender == "male") selected @endif>
-                                                                    Male
+                                                                    title="-- Choose --" name="gender" required>
+                                                                <option value="male" {{$seeker->gender == "male" ?
+                                                                'selected' : ''}}>Male
                                                                 </option>
-                                                                <option value="female"
-                                                                        @if($seeker->gender == "female") selected @endif>
-                                                                    Female
+                                                                <option value="female" {{$seeker->gender == "female" ?
+                                                                'selected' : ''}}>Female
                                                                 </option>
-                                                                <option value="other"
-                                                                        @if($seeker->gender == "other") selected @endif>
-                                                                    Rather not say
+                                                                <option value="other"{{$seeker->gender == "other" ?
+                                                                'selected' : ''}}>Rather not say
                                                                 </option>
                                                             </select>
                                                         </div>
@@ -711,74 +666,62 @@
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-hand-holding-heart">
-                                                                                </i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-hand-holding-heart"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     title="-- Choose --"
                                                                     name="relationship" required>
-                                                                <option value="single"
-                                                                        {{$seeker->relationship == "single" ?
-                                                                        'selected' : ''}}>Single
+                                                                <option value="single" {{$seeker->relationship ==
+                                                                "single" ? 'selected' : ''}}>Single
                                                                 </option>
-                                                                <option value="married"
-                                                                        {{$seeker->relationship == "married" ?
-                                                                        'selected' : ''}}>Married
+                                                                <option value="married" {{$seeker->relationship ==
+                                                                "married" ? 'selected' : ''}}>Married
                                                                 </option>
-                                                                <option value="divorced"
-                                                                        {{$seeker->relationship == "divorced" ?
-                                                                        'selected' : ''}}>Divorced
+                                                                <option value="divorced" {{$seeker->relationship ==
+                                                                "divorced" ? 'selected' : ''}}>Divorced
                                                                 </option>
-                                                                <option value="widowed"
-                                                                        {{$seeker->relationship == "widowed" ?
-                                                                        'selected' : ''}}>Widowed
+                                                                <option value="widowed" {{$seeker->relationship ==
+                                                                "widowed" ? 'selected' : ''}}>Widowed
                                                                 </option>
-                                                                <option value="other"
-                                                                        {{$seeker->relationship == "other" ?
-                                                                        'selected' : ''}}>Rather not say
+                                                                <option value="other" {{$seeker->relationship ==
+                                                                "other" ? 'selected' : ''}}>Rather not say
                                                                 </option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <small>Nationality
-                                                    <span class="optional-label">(Optional)</span>
-                                                </small>
+                                                <small>Nationality<span class="optional-label">(Optional)</span></small>
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-flag"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon"><i class="fa fa-flag"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
-                                                                    name="nationality"
-                                                                    data-live-search="true">
-                                                                <option value="" selected>-- Choose --
-                                                                </option>
+                                                                    name="nationality" data-live-search="true">
+                                                                <option value="" selected>Rather not say</option>
                                                                 @foreach($nations as $row)
-                                                                    <option value="{{$row->name}}"
-                                                                            @if($row->name == $seeker->nationality) selected @endif>{{$row->name}}</option>
+                                                                    <option value="{{$row->name}}" {{$row->name ==
+                                                                    $seeker->nationality ? 'selected' : ''}}>
+                                                                        {{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <small>Personal Website
-                                                    <span class="optional-label">(Optional)</span>
+                                                <small>Personal Website<span class="optional-label">(Optional)</span>
                                                 </small>
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-globe"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon"><i class="fa fa-globe"></i>
+                                                            </span>
                                                             <input placeholder="http://example.com"
                                                                    type="text" class="form-control"
                                                                    name="website" maxlength="191"
-                                                                   value="@if($seeker->website != ""){{$seeker->website}}@endif">
+                                                                   value="{{$seeker->website}}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -787,8 +730,7 @@
                                                 <div class="row form-group checkRupiahValue">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <strong>Rp</strong></span>
+                                                            <span class="input-group-addon"><strong>Rp</strong></span>
                                                             <input type="text" name="lowest"
                                                                    placeholder="1,000,000" id="lowest"
                                                                    maxlength="15" minlength="5"
@@ -801,8 +743,7 @@
                                                 <div class="row form-group checkRupiahValue">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <strong>Rp</strong></span>
+                                                            <span class="input-group-addon"><strong>Rp</strong></span>
                                                             <input type="text" name="highest"
                                                                    placeholder="5,000,000" id="highest"
                                                                    class="form-control rupiah" required
@@ -811,9 +752,8 @@
                                                                    value="{{$seeker->highest_salary}}">
                                                         </div>
                                                         <span class="help-block">
-                                                                            <small class="aj_rp"
-                                                                                   style="text-transform: none"></small>
-                                                                        </span>
+                                                            <small class="aj_rp" style="text-transform: none"></small>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -837,15 +777,13 @@
                                     <input type="hidden" name="check_form" value="contact">
                                     <div class="card-content">
                                         <div class="card-title">
-                                            <small id="show_contact_settings">
-                                                Contact
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i class="fa fa-edit"></i>&nbsp;EDIT
+                                            <small id="show_contact_settings">Contact
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555"><i
+                                                            class="fa fa-edit"></i>&nbsp;EDIT
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
-                                            <table style="font-size: 14px; margin-top: 0"
-                                                   id="stats_contact">
+                                            <table style="font-size: 14px; margin-top: 0" id="stats_contact">
                                                 <tr>
                                                     <td><i class="fa fa-envelope"></i></td>
                                                     <td>&nbsp;</td>
@@ -854,35 +792,20 @@
                                                 <tr>
                                                     <td><i class="fa fa-phone"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->phone != "")
-                                                            {{$seeker->phone}}
-                                                        @else
-                                                            Phone number (-)
-                                                        @endif
+                                                    <td>{{$seeker->phone != "" ? $seeker->phone : 'Phone number (-)'}}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-home"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->address != "")
-                                                            {{$seeker->address}}
-                                                        @else
-                                                            Address (-)
-                                                        @endif
+                                                    <td>{{$seeker->address != "" ? $seeker->address : 'Address (-)'}}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-address-card"></i></td>
                                                     <td>&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->zip_code != "")
-                                                            {{$seeker->zip_code}}
-                                                        @else
-                                                            ZIP/Post Code (-)
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->zip_code != "" ? $seeker->zip_code :
+                                                    'ZIP/Post Code (-)'}}</td>
                                                 </tr>
                                             </table>
 
@@ -895,55 +818,45 @@
                                                         <span class="glyphicon glyphicon-check form-control-feedback"></span>
                                                     </div>
                                                 </div>
-                                                <small>Phone
-                                                    <span class="optional-label">(Optional)</span>
-                                                </small>
+                                                <small>Phone<span class="optional-label">(Optional)</span></small>
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                            <span class="input-group-addon">
-                                                                <i class="fa fa-phone"></i>
+                                                            <span class="input-group-addon"><i class="fa fa-phone"></i>
                                                             </span>
                                                             <input placeholder="08123xxxxxxx"
                                                                    type="text" maxlength="13"
                                                                    class="form-control" name="phone"
                                                                    onkeypress="return numberOnly(event, false)"
-                                                                   value="@if($seeker->phone != ""){{$seeker->phone}}@endif">
+                                                                   value="{{$seeker->phone}}">
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <small>Address
-                                                    <span class="optional-label">(Optional)</span>
-                                                </small>
+                                                <small>Address<span class="optional-label">(Optional)</span></small>
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-home"></i>
-                                                                            </span>
-                                                            <textarea style="resize:vertical"
-                                                                      name="address"
+                                                            <span class="input-group-addon"><i class="fa fa-home"></i>
+                                                            </span>
+                                                            <textarea style="resize:vertical" name="address"
                                                                       placeholder="Current address..."
-                                                                      class="form-control">@if($seeker->address != ""){{$seeker->address}}@endif</textarea>
+                                                                      class="form-control">{{$seeker->address}}</textarea>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <small>Zip Code
-                                                    <span class="optional-label">(Optional)</span>
-                                                </small>
+                                                <small>Zip Code<span class="optional-label">(Optional)</span></small>
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-address-card"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-address-card"></i>
+                                                            </span>
                                                             <input placeholder="612xx" type="text"
                                                                    class="form-control" name="zip_code"
                                                                    onkeypress="return numberOnly(event, false)"
-                                                                   value="@if($seeker->zip_code != ""){{$seeker->zip_code}}@endif"
-                                                                   maxlength="5">
+                                                                   value="{{$seeker->zip_code}}" maxlength="5">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -951,8 +864,7 @@
                                         </div>
                                     </div>
                                     <div class="card-read-more">
-                                        <button id="btn_save_contact"
-                                                class="btn btn-link btn-block" disabled>
+                                        <button id="btn_save_contact" class="btn btn-link btn-block" disabled>
                                             <i class="fa fa-address-book"></i>&nbsp;SAVE CHANGES
                                         </button>
                                     </div>
@@ -1018,8 +930,7 @@
                                         <div class="card-title">
                                             <small id="show_exp_settings">
                                                 Work Experience
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555"><i
                                                             class="fa fa-briefcase"></i>&ensp;Add
                                                 </span>
                                             </small>
@@ -1050,13 +961,10 @@
                                                                                    onclick="editExp('{{encrypt($row->id)}}')">
                                                                                     EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
-                                                                                <small style="color: #7f7f7f">
-                                                                                    &nbsp;&#124;&nbsp;
-                                                                                </small>
+                                                                                <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
                                                                                 <a href="{{route('delete.experiences',
-                                                                                ['id' => encrypt
-                                                                                ($row->id),'exp' =>
-                                                                                $row->job_title])}}"
+                                                                                ['id' => encrypt($row->id),
+                                                                                'exp' => $row->job_title])}}"
                                                                                    class="delete-exp"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
@@ -1115,12 +1023,9 @@
                                                                                     </td>
                                                                                     <td>&nbsp;Salary</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>@if($row->salary_id != "")
-                                                                                            {{\App\Salaries::find
-                                                                                            ($row->salary_id)->name}}
-                                                                                        @else
-                                                                                            Rather not say
-                                                                                        @endif</td>
+                                                                                    <td>{{$row->salary_id != "" ?
+                                                                                    \App\Salaries::find($row->salary_id)
+                                                                                    ->name : 'Rather not say'}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
@@ -1138,40 +1043,33 @@
                                                                                     </td>
                                                                                     <td>&nbsp;Until</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>@if($row->end_date != "")
-                                                                                            {{\Carbon\Carbon::parse
-                                                                                            ($row->end_date)->format('j F Y')}}
-                                                                                        @else
-                                                                                            Present
-                                                                                        @endif</td>
+                                                                                    <td>{{$row->end_date != "" ?
+                                                                                    \Carbon\Carbon::parse($row->end_date)
+                                                                                    ->format('j F Y') : 'Present'}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-user-clock"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;Job Type</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>@if($row->jobtype_id != "")
-                                                                                            {{\App\JobType::find
-                                                                                            ($row->jobtype_id)->name}}
-                                                                                        @else
-                                                                                            (empty)
-                                                                                        @endif</td>
+                                                                                    <td>{{$row->jobtype_id != "" ?
+                                                                                    \App\JobType::find($row->jobtype_id)
+                                                                                    ->name : '(empty)'}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-user-tie"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;Report to</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>@if($row->report_to != "")
-                                                                                            {{$row->report_to}}
-                                                                                        @else
-                                                                                            (empty)
-                                                                                        @endif</td>
+                                                                                    <td>{{$row->report_to != "" ?
+                                                                                    $row->report_to : '(empty)'}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;Job Description</td>
+                                                                                    <td>&nbsp;:&nbsp;</td>
+                                                                                    <td>&nbsp;</td>
                                                                                 </tr>
                                                                             </table>
                                                                             {!! $row->job_desc != "" ?
@@ -1191,9 +1089,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Job Title</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-briefcase"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-briefcase"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    id="job_title" name="job_title"
                                                                    placeholder="Job Title"
@@ -1203,9 +1101,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Job Level</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-level-up-alt"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-level-up-alt"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     title="-- Choose --" id="job_level"
                                                                     data-live-search="true"
@@ -1222,9 +1120,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Company Name</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-building"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-building"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    id="company" name="company"
                                                                    placeholder="e.g: PT. SISKA"
@@ -1234,9 +1132,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Job Function</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-warehouse"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-warehouse"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     title="-- Choose --" id="job_funct"
                                                                     data-live-search="true"
@@ -1253,9 +1151,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Industry</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-industry"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-industry"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     title="-- Choose --" id="industry"
                                                                     data-live-search="true"
@@ -1270,9 +1168,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Location</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-map-marked"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-map-marked"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     title="-- Choose --" id="city_id"
                                                                     data-live-search="true"
@@ -1282,10 +1180,12 @@
                                                                             label="{{$province->name}}">
                                                                         @foreach($province->cities as $city)
                                                                             @if(substr($city->name, 0, 2)=="Ko")
-                                                                                <option value="{{$city->id}}">{{substr($city->name,4)}}
+                                                                                <option value="{{$city->id}}">
+                                                                                    {{substr($city->name,4)}}
                                                                                 </option>
                                                                             @else
-                                                                                <option value="{{$city->id}}">{{substr($city->name,9)}}
+                                                                                <option value="{{$city->id}}">
+                                                                                    {{substr($city->name,9)}}
                                                                                 </option>
                                                                             @endif
                                                                         @endforeach
@@ -1297,21 +1197,16 @@
                                                 </div>
                                                 <div class="row form-group">
                                                     <div class="col-lg-6">
-                                                        <small>Salary <span class="optional-label">
-                                                                                (Optional)</span>
+                                                        <small>Salary <span class="optional-label">(Optional)</span>
                                                         </small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <strong>Rp</strong></span>
+                                                            <span class="input-group-addon"><strong>Rp</strong></span>
                                                             <select class="form-control selectpicker"
-                                                                    id="salary_id"
-                                                                    data-live-search="true"
+                                                                    id="salary_id" data-live-search="true"
                                                                     name="salary_id">
-                                                                <option value="" selected>-- Choose --
-                                                                </option>
+                                                                <option value="" selected>-- Choose --</option>
                                                                 @foreach($salaries as $row)
-                                                                    <option value="{{$row->id}}">
-                                                                        {{$row->name}}</option>
+                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -1319,9 +1214,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Start Date</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-calendar-alt"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-calendar-alt"></i>
+                                                            </span>
                                                             <input class="form-control"
                                                                    name="start_date" type="text"
                                                                    id="start_date" required
@@ -1330,28 +1225,24 @@
                                                         </div>
                                                         <small>
                                                             <input type="checkbox" id="cb_end_date"
-                                                                   onclick="showEndDate()"
-                                                                   name="end_date" checked>
+                                                                   onclick="showEndDate()" name="end_date" checked>
                                                             &nbsp;Currently work here
                                                         </small>
                                                     </div>
                                                 </div>
                                                 <div class="row form-group" style="margin-top: -.5em">
                                                     <div class="col-lg-6">
-                                                        <small>Job Type <span class="optional-label">
-                                                                                (Optional)</span>
+                                                        <small>Job Type <span class="optional-label">(Optional)</span>
                                                         </small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-user-clock"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-user-clock"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
                                                                     id="job_type" name="jobtype_id">
-                                                                <option value="" selected>-- Choose --
-                                                                </option>
+                                                                <option value="" selected>-- Choose --</option>
                                                                 @foreach($job_types as $row)
-                                                                    <option value="{{$row->id}}">
-                                                                        {{$row->name}}</option>
+                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -1359,28 +1250,24 @@
                                                     <div class="col-lg-6" id="end_date">
                                                         <small>End Date</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-calendar-check"></i>
-                                                                            </span>
-                                                            <input class="form-control"
-                                                                   name="end_date" type="text"
-                                                                   placeholder="yyyy-mm-dd"
-                                                                   maxlength="10">
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-calendar-check"></i>
+                                                            </span>
+                                                            <input class="form-control" name="end_date" type="text"
+                                                                   placeholder="yyyy-mm-dd" maxlength="10">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
-                                                        <small>Report To <span class="optional-label">
-                                                                                (Optional)</span>
+                                                        <small>Report To <span class="optional-label">(Optional)</span>
                                                         </small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-user-tie"></i>
-                                                                            </span>
-                                                            <input class="form-control" type="text"
-                                                                   name="report_to" id="report_to"
-                                                                   placeholder="Your leader job title"
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-user-tie"></i>
+                                                            </span>
+                                                            <input class="form-control" type="text" name="report_to"
+                                                                   id="report_to" placeholder="Your leader job title"
                                                                    maxlength="100">
                                                         </div>
                                                     </div>
@@ -1388,8 +1275,7 @@
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
                                                         <small>Job Description
-                                                            <span class="optional-label">
-                                                                                (Optional)</span>
+                                                            <span class="optional-label">(Optional)</span>
                                                         </small>
                                                         <textarea id="job_desc" name="job_desc"
                                                                   class="form-control use-tinymce"
@@ -1398,8 +1284,7 @@
                                                 </div>
                                                 <div class="row form-group" id="btn_cancel_exp">
                                                     <div class="col-lg-12">
-                                                        <input type="reset" value="CANCEL"
-                                                               class="btn btn-default">
+                                                        <input type="reset" value="CANCEL" class="btn btn-default">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1427,9 +1312,8 @@
                                         <div class="card-title">
                                             <small id="show_edu_settings">
                                                 Education
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i
-                                                            class="fa fa-graduation-cap"></i>&ensp;Add
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555">
+                                                    <i class="fa fa-graduation-cap"></i>&ensp;Add
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -1444,8 +1328,7 @@
                                                             <div class="col-lg-12">
                                                                 <div class="media">
                                                                     <div class="media-left media-middle">
-                                                                        <img width="100"
-                                                                             class="media-object"
+                                                                        <img width="100" class="media-object"
                                                                              src="{{asset('images/edu.png')}}">
                                                                     </div>
                                                                     <div class="media-body">
@@ -1456,18 +1339,14 @@
                                                                             </small>
                                                                             <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
-
                                                                                    onclick="editEdu('{{encrypt
                                                                                    ($row->id)}}')">
                                                                                     EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
-                                                                                <small style="color: #7f7f7f">
-                                                                                    &nbsp;&#124;&nbsp;
-                                                                                </small>
+                                                                                <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
                                                                                 <a href="{{route('delete.educations',
-                                                                                ['id' => encrypt
-                                                                                ($row->id),'edu' =>
-                                                                                $row->school_name])}}"
+                                                                                ['id' => encrypt($row->id),
+                                                                                'edu' => $row->school_name])}}"
                                                                                    class="delete-edu"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
@@ -1484,7 +1363,7 @@
                                                                                     <td>&nbsp;Education Degree</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
                                                                                     <td>{{\App\Tingkatpend::find
-                                                                                ($row->tingkatpend_id)->name}}</td>
+                                                                                    ($row->tingkatpend_id)->name}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
@@ -1493,7 +1372,7 @@
                                                                                     <td>&nbsp;Education Major</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
                                                                                     <td>{{\App\Jurusanpend::find
-                                                                                ($row->jurusanpend_id)->name}}</td>
+                                                                                    ($row->jurusanpend_id)->name}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>
@@ -1510,23 +1389,22 @@
                                                                                     <td>&nbsp;End Period</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
                                                                                     <td>{{$row->end_period == "" ?
-                                                                                'Present' : $row->end_period}}</td>
+                                                                                    'Present' : $row->end_period}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-grin-stars"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;GPA</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>@if($row->nilai != "")
-                                                                                            {{$row->nilai}}
-                                                                                        @else
-                                                                                            (-)
-                                                                                        @endif</td>
+                                                                                    <td>{{$row->nilai != "" ?
+                                                                                    $row->nilai : '(-)'}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-trophy"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;Honors/Awards</td>
+                                                                                    <td>&nbsp;:&nbsp;</td>
+                                                                                    <td>&nbsp;</td>
                                                                                 </tr>
                                                                             </table>
                                                                             {!! $row->awards != "" ?
@@ -1546,9 +1424,8 @@
                                                     <div class="col-lg-12">
                                                         <small>School Name</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-school"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon"><i class="fa fa-school"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    placeholder="Universitas Negeri Surabaya"
                                                                    name="school_name" id="school_name"
@@ -1560,17 +1437,15 @@
                                                     <div class="col-lg-6">
                                                         <small>Degree</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-graduation-cap"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-graduation-cap"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
-                                                                    title="-- Choose --"
-                                                                    id="tingkatpend"
+                                                                    title="-- Choose --" id="tingkatpend"
                                                                     data-live-search="true"
                                                                     name="tingkatpend_id" required>
                                                                 @foreach($degrees as $row)
-                                                                    <option value="{{$row->id}}">
-                                                                        {{$row->name}}</option>
+                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -1579,8 +1454,7 @@
                                                         <small>GPA <span class="optional-label">(Optional)</span>
                                                         </small>
                                                         <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-grin-stars"></i>
+                                                        <span class="input-group-addon"><i class="fa fa-grin-stars"></i>
                                                         </span>
                                                             <input class="form-control gpa"
                                                                    name="nilai" type="text"
@@ -1594,17 +1468,15 @@
                                                     <div class="col-lg-12">
                                                         <small>Major</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-user-graduate"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-user-graduate"></i>
+                                                            </span>
                                                             <select class="form-control selectpicker"
-                                                                    title="-- Choose --"
-                                                                    id="jurusanpend"
+                                                                    title="-- Choose --" id="jurusanpend"
                                                                     data-live-search="true"
                                                                     name="jurusanpend_id" required>
                                                                 @foreach($majors as $row)
-                                                                    <option value="{{$row->id}}">
-                                                                        {{$row->name}}</option>
+                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -1614,9 +1486,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Start Period</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-hourglass-start"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-hourglass-start"></i>
+                                                            </span>
                                                             <input class="form-control"
                                                                    name="start_period" type="text"
                                                                    id="start_period" placeholder="yyyy"
@@ -1633,9 +1505,9 @@
                                                     <div class="col-lg-6" id="end_period">
                                                         <small>End Period</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-hourglass-end"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-hourglass-end"></i>
+                                                            </span>
                                                             <input class="form-control"
                                                                    name="end_period" type="text"
                                                                    placeholder="yyyy" maxlength="4">
@@ -1654,8 +1526,7 @@
                                                 </div>
                                                 <div class="row form-group" id="btn_cancel_edu">
                                                     <div class="col-lg-12">
-                                                        <input type="reset" value="CANCEL"
-                                                               class="btn btn-default">
+                                                        <input type="reset" value="CANCEL" class="btn btn-default">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1683,9 +1554,8 @@
                                         <div class="card-title">
                                             <small id="show_cert_settings">
                                                 Training / Certification
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i
-                                                            class="fa fa-certificate"></i>&ensp;Add
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555">
+                                                    <i class="fa fa-certificate"></i>&ensp;Add
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -1716,12 +1586,10 @@
                                                                                    ($row->id)}}')">
                                                                                     EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
-                                                                                <small style="color: #7f7f7f">
-                                                                                    &nbsp;&#124;&nbsp;
-                                                                                </small>
-                                                                                <a href="{{route('delete
-                                                                                .trainings',['id' => encrypt
-                                                                                ($row->id),'cert' => $row->name])}}"
+                                                                                <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
+                                                                                <a href="{{route('delete.trainings', [
+                                                                                'id' => encrypt($row->id),
+                                                                                'cert' => $row->name])}}"
                                                                                    class="delete-cert"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
@@ -1745,12 +1613,15 @@
                                                                                     <td>&nbsp;Issued Date</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
                                                                                     <td>{{\Carbon\Carbon::parse
-                                                                                ($row->isseuddate)->format('j F Y')}}</td>
+                                                                                    ($row->isseuddate)->format
+                                                                                    ('j F Y')}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;Job Description</td>
+                                                                                    <td>&nbsp;:&nbsp;</td>
+                                                                                    <td>&nbsp;</td>
                                                                                 </tr>
                                                                             </table>
                                                                             {!! $row->descript != "" ?
@@ -1770,9 +1641,9 @@
                                                     <div class="col-lg-12">
                                                         <small>Name</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-certificate"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-certificate"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    placeholder="e.g: Professional Web Programming"
                                                                    name="name" maxlength="100"
@@ -1784,9 +1655,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Issued By</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-university"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-university"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    placeholder="Company or institution name"
                                                                    name="issuedby" maxlength="100"
@@ -1796,9 +1667,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Issued Date</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-calendar-alt"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-calendar-alt"></i>
+                                                            </span>
                                                             <input class="form-control datepicker"
                                                                    name="issueddate" maxlength="10"
                                                                    placeholder="yyyy-mm-dd"
@@ -1809,8 +1680,7 @@
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
                                                         <small>Description
-                                                            <span class="optional-label">
-                                                                                (Optional)</span></small>
+                                                            <span class="optional-label">(Optional)</span></small>
                                                         <textarea class="form-control use-tinymce" name="descript"
                                                                   placeholder="Write something here..."
                                                                   id="desc_cert"></textarea>
@@ -1818,8 +1688,7 @@
                                                 </div>
                                                 <div class="row form-group" id="btn_cancel_cert">
                                                     <div class="col-lg-12">
-                                                        <input type="reset" value="CANCEL"
-                                                               class="btn btn-default">
+                                                        <input type="reset" value="CANCEL" class="btn btn-default">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1847,8 +1716,7 @@
                                         <div class="card-title">
                                             <small id="show_org_settings">
                                                 Organization Experience
-                                                <span class="pull-right"
-                                                      style="cursor: pointer; color: #FA5555"><i
+                                                <span class="pull-right" style="cursor: pointer; color: #FA5555"><i
                                                             class="fa fa-users"></i>&ensp;Add
                                                 </span>
                                             </small>
@@ -1882,13 +1750,10 @@
                                                                                    ($row->id)}}')">
                                                                                     EDIT&ensp;<i class="fa fa-edit"></i>
                                                                                 </a>
-                                                                                <small style="color: #7f7f7f">
-                                                                                    &nbsp;&#124;&nbsp;
-                                                                                </small>
-                                                                                <a href="{{route('delete
-                                                                                .organizations',['id' =>
-                                                                                encrypt($row->id),'org' =>
-                                                                                $row->name])}}"
+                                                                                <small style="color: #7f7f7f">&nbsp;&#124;&nbsp;</small>
+                                                                                <a href="{{route('delete.organizations',
+                                                                                ['id' => encrypt($row->id),
+                                                                                'org' => $row->name])}}"
                                                                                    class="delete-org"
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;
@@ -1913,12 +1778,14 @@
                                                                                     <td>&nbsp;End Period</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
                                                                                     <td>{{$row->end_period == "" ?
-                                                                                'Present' : $row->end_period}}</td>
+                                                                                    'Present' : $row->end_period}}</td>
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
                                                                                     <td>&nbsp;Description</td>
+                                                                                    <td>&nbsp;:&nbsp;</td>
+                                                                                    <td>&nbsp;</td>
                                                                                 </tr>
                                                                             </table>
                                                                             {!! $row->descript != "" ?
@@ -1938,9 +1805,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Organization Name</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-users"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-users"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    placeholder="e.g: Rabbit Media"
                                                                    name="name" maxlength="40"
@@ -1950,9 +1817,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Organization Title</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-briefcase"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-briefcase"></i>
+                                                            </span>
                                                             <input class="form-control" type="text"
                                                                    placeholder="e.g: General Advisor"
                                                                    name="title" maxlength="60"
@@ -1964,9 +1831,9 @@
                                                     <div class="col-lg-6">
                                                         <small>Start Period</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-hourglass-start"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-hourglass-start"></i>
+                                                            </span>
                                                             <input class="form-control"
                                                                    placeholder="yyyy" type="text"
                                                                    name="start_period" required
@@ -1983,9 +1850,9 @@
                                                     <div class="col-lg-6" id="end_period2">
                                                         <small>End Period</small>
                                                         <div class="input-group">
-                                                                            <span class="input-group-addon">
-                                                                                <i class="fa fa-hourglass-end"></i>
-                                                                            </span>
+                                                            <span class="input-group-addon">
+                                                                <i class="fa fa-hourglass-end"></i>
+                                                            </span>
                                                             <input class="form-control"
                                                                    placeholder="yyyy" type="text"
                                                                    name="end_period" maxlength="4">
@@ -1995,8 +1862,7 @@
                                                 <div class="row form-group">
                                                     <div class="col-lg-12">
                                                         <small>Description
-                                                            <span class="optional-label">
-                                                                                (Optional)</span></small>
+                                                            <span class="optional-label">(Optional)</span></small>
                                                         <textarea class="form-control use-tinymce" name="descript"
                                                                   placeholder="Write something here..."
                                                                   id="org_desc"></textarea>
@@ -2004,8 +1870,7 @@
                                                 </div>
                                                 <div class="row form-group" id="btn_cancel_org">
                                                     <div class="col-lg-12">
-                                                        <input type="reset" value="CANCEL"
-                                                               class="btn btn-default">
+                                                        <input type="reset" value="CANCEL" class="btn btn-default">
                                                     </div>
                                                 </div>
                                             </div>

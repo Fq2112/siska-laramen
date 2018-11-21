@@ -521,8 +521,16 @@
 
                     $('#school_name').val(data.school_name);
                     tinyMCE.get('awards').setContent(data.awards);
-                    $('#start_period ').val(data.start_period);
-                    $('#end_period input').val(data.end_period);
+                    $('#start_period').val(data.start_period);
+                    $('#end_period input').datepicker({
+                        format: "yyyy",
+                        viewMode: "years",
+                        minViewMode: "years",
+                        autoclose: true,
+                        todayHighlight: true,
+                        todayBtn: true,
+                        startDate: data.start_period,
+                    }).val(data.end_period);
                     $('#nilai').val(data.nilai);
                     $('#tingkatpend').val(data.tingkatpend_id).selectpicker("refresh");
                     $('#jurusanpend').val(data.jurusanpend_id).selectpicker("refresh");
@@ -593,7 +601,15 @@
                     $('#name_org').val(data.name);
                     $('#org_title').val(data.title);
                     $('#start_period2 ').val(data.start_period);
-                    $('#end_period2 input ').val(data.end_period);
+                    $('#end_period2 input').datepicker({
+                        format: "yyyy",
+                        viewMode: "years",
+                        minViewMode: "years",
+                        autoclose: true,
+                        todayHighlight: true,
+                        todayBtn: true,
+                        startDate: data.start_period,
+                    }).val(data.end_period);
                     tinyMCE.get('org_desc').setContent(data.descript);
                 },
                 error: function () {
@@ -657,7 +673,7 @@
                     $("#btn_cancel_skill").show();
 
                     $('#name_skill').val(data.name);
-                    $('#level').val(data.level).selectpicker("refresh");
+                    $('#skill_lvl').val(data.level).selectpicker("refresh");
                 },
                 error: function () {
                     swal({

@@ -39,8 +39,7 @@
                                         <div class="carousel-overlay"></div>
                                     </div>
                                 @else
-                                    <div class="item show_background"
-                                         style="background-image: url({{asset('storage/users/seekers/background/'
+                                    <div class="item show_background" style="background-image: url({{asset('storage/users/seekers/background/'
                                          .$seeker->background)}});">
                                         <div class="carousel-overlay"></div>
                                     </div>
@@ -59,14 +58,17 @@
                             </button>
                             <a class="profilebar-brand" style="cursor: pointer">
                                 @if($user->ava == ""||$user->ava == "seeker.png")
-                                    <img class="img-responsive" src="{{asset('images/seeker.png')}}">
+                                    <img class="img-responsive" src="{{asset('images/seeker.png')}}"
+                                         style="width: 100%;height: 100%">
                                 @else
-                                    <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}">
+                                    <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}"
+                                         style="width: 100%;height: 100%">
                                 @endif
                             </a>
                             <span class="site-name">{{$user->name}}</span>
                             <span class="site-jobTitle">
-                                {{count($job_title->get()) != 0 ? '['.$job_title->first()->job_title.']' : '[Looking for a Job]'}}
+                                {{count($job_title->get()) != 0 ? '['.$job_title->first()->job_title.']' :
+                                '[Looking for a Job]'}}
                             </span>
                             <span class="site-description">{{$seeker->address}}</span>
                         </div>
@@ -76,8 +78,8 @@
                                     <a id="salary">
                                         @if($seeker->lowest_salary != "")
                                             <script>
-                                                var low = ("{{$seeker->lowest_salary}}").split(',').join("") / 1000000,
-                                                    high = ("{{$seeker->highest_salary}}").split(',').join("") / 1000000;
+                                                var low = ("{{$seeker->lowest_salary}}") / 1000000,
+                                                    high = ("{{$seeker->highest_salary}}") / 1000000;
                                                 document.getElementById("salary").innerHTML =
                                                     "<i class='fa fa-hand-holding-usd'></i> &nbsp;IDR " + low +
                                                     " to " + high + " millions";
@@ -192,37 +194,20 @@
                                                     <td><i class="fa fa-transgender"></i></td>
                                                     <td>&nbsp;Gender</td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->gender != "")
-                                                            {{$seeker->gender}}
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->gender != "" ? $seeker->gender : '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-hand-holding-heart"></i></td>
                                                     <td>&nbsp;Relationship</td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->relationship != "")
-                                                            {{$seeker->relationship}}
-                                                        @else
-                                                            -
-                                                        @endif
+                                                    <td>{{$seeker->relationship != "" ? $seeker->relationship : '-'}}
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-flag"></i></td>
                                                     <td>&nbsp;Nationality</td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->nationality != "")
-                                                            {{$seeker->nationality}}
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->nationality != "" ? $seeker->nationality : '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-globe"></i></td>
@@ -245,9 +230,10 @@
                                                     <td style="text-transform: none" id="expected_salary2">
                                                         @if($seeker->lowest_salary != "")
                                                             <script>
-                                                                var low = ("{{$seeker->lowest_salary}}").split(',').join("") / 1000000,
-                                                                    high = ("{{$seeker->highest_salary}}").split(',').join("") / 1000000;
-                                                                document.getElementById("expected_salary2").innerText = "IDR " + low + " to " + high + " millions";
+                                                                var low = ("{{$seeker->lowest_salary}}") / 1000000,
+                                                                    high = ("{{$seeker->highest_salary}}") / 1000000;
+                                                                document.getElementById("expected_salary2").innerText =
+                                                                    "IDR " + low + " to " + high + " millions";
                                                             </script>
                                                         @else
                                                             Anything
@@ -293,25 +279,13 @@
                                                     <td><i class="fa fa-home"></i></td>
                                                     <td>&nbsp;Address</td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->address != "")
-                                                            {{$seeker->address}}
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->address != "" ? $seeker->address : '-'}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td><i class="fa fa-address-card"></i></td>
                                                     <td>&nbsp;ZIP Code</td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td>
-                                                        @if($seeker->zip_code != "")
-                                                            {{$seeker->zip_code}}
-                                                        @else
-                                                            -
-                                                        @endif
-                                                    </td>
+                                                    <td>{{$seeker->zip_code != "" ? $seeker->zip_code : '-'}}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -341,9 +315,7 @@
                                                                 <div class="media-body">
                                                                     <p class="media-heading">
                                                                         <i class="fa fa-language">&nbsp;</i>
-                                                                        <small style="text-transform: uppercase">
-                                                                            {{$row->name}}
-                                                                        </small>
+                                                                        <small style="text-transform: uppercase">{{$row->name}}</small>
                                                                     </p>
                                                                     <blockquote
                                                                             style="font-size: 12px;text-transform: none">
@@ -355,7 +327,7 @@
                                                                                 <td>&nbsp;:&nbsp;</td>
                                                                                 <td style="text-transform: uppercase">
                                                                                     {{$row->spoken_lvl == "" ? '(-)' :
-                                                                                $row->spoken_lvl}}</td>
+                                                                                    $row->spoken_lvl}}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td><i class="fa fa-pencil-alt"></i>
@@ -364,7 +336,7 @@
                                                                                 <td>&nbsp;:&nbsp;</td>
                                                                                 <td style="text-transform: uppercase">
                                                                                     {{$row->written_lvl == "" ?
-                                                                                '(-)' : $row->written_lvl}}</td>
+                                                                                    '(-)' : $row->written_lvl}}</td>
                                                                             </tr>
                                                                         </table>
                                                                     </blockquote>
@@ -402,9 +374,7 @@
                                                                 <div class="media-body">
                                                                     <p class="media-heading">
                                                                         <i class="fa fa-user-secret">&nbsp;</i>
-                                                                        <small style="text-transform: uppercase">
-                                                                            {{$row->name}}
-                                                                        </small>
+                                                                        <small style="text-transform: uppercase">{{$row->name}}</small>
                                                                     </p>
                                                                     <blockquote
                                                                             style="font-size: 12px;text-transform: none">
@@ -416,7 +386,7 @@
                                                                                 <td>&nbsp;:&nbsp;</td>
                                                                                 <td style="text-transform: uppercase">
                                                                                     {{$row->level == "" ? '(-)' :
-                                                                                $row->level}}</td>
+                                                                                    $row->level}}</td>
                                                                             </tr>
                                                                         </table>
                                                                     </blockquote>
@@ -451,8 +421,7 @@
                                                             <small class="media-heading">
                                                                 EF Standard English Test - Express
                                                             </small>
-                                                            <blockquote style="font-size: 12px">
-                                                                <p>(empty)</p>
+                                                            <blockquote style="font-size: 12px"><p>(empty)</p>
                                                             </blockquote>
                                                         </div>
                                                     </div>
@@ -468,11 +437,9 @@
                                                                  src="{{asset('images/comm_test.png')}}">
                                                         </div>
                                                         <div class="media-body">
-                                                            <small class="media-heading">
-                                                                Communication Style Test
+                                                            <small class="media-heading">Communication Style Test
                                                             </small>
-                                                            <blockquote style="font-size: 12px">
-                                                                <p>(empty)</p>
+                                                            <blockquote style="font-size: 12px"><p>(empty)</p>
                                                             </blockquote>
                                                         </div>
                                                     </div>
@@ -488,11 +455,8 @@
                                                                  src="{{asset('images/int_test.png')}}">
                                                         </div>
                                                         <div class="media-body">
-                                                            <small class="media-heading">
-                                                                Interest Test
-                                                            </small>
-                                                            <blockquote style="font-size: 12px">
-                                                                <p>(empty)</p>
+                                                            <small class="media-heading">Interest Test</small>
+                                                            <blockquote style="font-size: 12px"><p>(empty)</p>
                                                             </blockquote>
                                                         </div>
                                                     </div>
@@ -510,10 +474,9 @@
                                 <div class="card">
                                     <div class="card-content">
                                         <div class="card-title">
-                                            <small>
-                                                Summary
+                                            <small>Summary
                                                 <span class="pull-right" style="color: #FA5555">
-                                                        Last Update: {{$seeker->updated_at->diffForHumans()}}</span>
+                                                    Last Update: {{$seeker->updated_at->diffForHumans()}}</span>
                                             </small>
                                             <hr class="hr-divider">
                                             <blockquote>
@@ -538,7 +501,8 @@
                                                             @if(strtolower(pathinfo($row->files, PATHINFO_EXTENSION)) == "jpg"||strtolower(pathinfo($row->files, PATHINFO_EXTENSION)) == "jpeg"||strtolower(pathinfo($row->files, PATHINFO_EXTENSION)) == "png"||strtolower(pathinfo($row->files, PATHINFO_EXTENSION)) == "gif")
                                                                 <img width="100"
                                                                      class="media-object"
-                                                                     src="{{asset('storage/users/seekers/attachments/'.$row->files)}}">
+                                                                     src="{{asset('storage/users/seekers/attachments/'
+                                                                     .$row->files)}}">
                                                             @else
                                                                 <img width="100"
                                                                      class="media-object"
@@ -655,15 +619,13 @@
                                                                                 </td>
                                                                                 <td>&nbsp;Salary</td>
                                                                                 <td>&nbsp;:&nbsp;</td>
-                                                                                <td>@if($row->salary_id != "")
-                                                                                        {{\App\Salaries::find
-                                                                                        ($row->salary_id)->name}}
-                                                                                    @else
-                                                                                        Rather not say
-                                                                                    @endif</td>
+                                                                                <td>{{$row->salary_id != "" ?
+                                                                                    \App\Salaries::find($row->salary_id)
+                                                                                    ->name : 'Rather not say'}}</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td><i class="fa fa-calendar-alt"></i>
+                                                                                <td>
+                                                                                    <i class="fa fa-calendar-alt"></i>
                                                                                 </td>
                                                                                 <td>&nbsp;Since</td>
                                                                                 <td>&nbsp;:&nbsp;</td>
@@ -676,38 +638,33 @@
                                                                                 </td>
                                                                                 <td>&nbsp;Until</td>
                                                                                 <td>&nbsp;:&nbsp;</td>
-                                                                                <td>@if($row->end_date != "")
-                                                                                        {{\Carbon\Carbon::parse
-                                                                                        ($row->end_date)->format('j F Y')}}
-                                                                                    @else
-                                                                                        Present
-                                                                                    @endif</td>
+                                                                                <td>{{$row->end_date != "" ?
+                                                                                    \Carbon\Carbon::parse($row->end_date)
+                                                                                    ->format('j F Y') : 'Present'}}</td>
                                                                             </tr>
                                                                             <tr>
                                                                                 <td><i class="fa fa-user-clock"></i>
                                                                                 </td>
                                                                                 <td>&nbsp;Job Type</td>
                                                                                 <td>&nbsp;:&nbsp;</td>
-                                                                                <td>@if($row->jobtype_id != "")
-                                                                                        {{\App\JobType::find
-                                                                                        ($row->jobtype_id)->name}}
-                                                                                    @else
-                                                                                        (empty)
-                                                                                    @endif</td>
+                                                                                <td>{{$row->jobtype_id != "" ?
+                                                                                    \App\JobType::find($row->jobtype_id)
+                                                                                    ->name : '(empty)'}}</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td><i class="fa fa-user-tie"></i></td>
+                                                                                <td><i class="fa fa-user-tie"></i>
+                                                                                </td>
                                                                                 <td>&nbsp;Report to</td>
                                                                                 <td>&nbsp;:&nbsp;</td>
-                                                                                <td>@if($row->report_to != "")
-                                                                                        {{$row->report_to}}
-                                                                                    @else
-                                                                                        (empty)
-                                                                                    @endif</td>
+                                                                                <td>{{$row->report_to != "" ?
+                                                                                    $row->report_to : '(empty)'}}</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td><i class="fa fa-comments"></i></td>
+                                                                                <td><i class="fa fa-comments"></i>
+                                                                                </td>
                                                                                 <td>&nbsp;Job Description</td>
+                                                                                <td>&nbsp;:&nbsp;</td>
+                                                                                <td>&nbsp;</td>
                                                                             </tr>
                                                                         </table>
                                                                         {!! $row->job_desc != "" ?
@@ -791,15 +748,15 @@
                                                                                 </td>
                                                                                 <td>&nbsp;GPA</td>
                                                                                 <td>&nbsp;:&nbsp;</td>
-                                                                                <td>@if($row->nilai != "")
-                                                                                        {{$row->nilai}}
-                                                                                    @else
-                                                                                        (-)
-                                                                                    @endif</td>
+                                                                                <td>{{$row->nilai != "" ?
+                                                                                    $row->nilai : '(-)'}}</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td><i class="fa fa-trophy"></i></td>
+                                                                                <td><i class="fa fa-trophy"></i>
+                                                                                </td>
                                                                                 <td>&nbsp;Honors/Awards</td>
+                                                                                <td>&nbsp;:&nbsp;</td>
+                                                                                <td>&nbsp;</td>
                                                                             </tr>
                                                                         </table>
                                                                         {!! $row->awards != "" ?
@@ -862,8 +819,11 @@
                                                                                 ($row->isseuddate)->format('j F Y')}}</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td><i class="fa fa-comments"></i></td>
-                                                                                <td>&nbsp;Description</td>
+                                                                                <td><i class="fa fa-comments"></i>
+                                                                                </td>
+                                                                                <td>&nbsp;Job Description</td>
+                                                                                <td>&nbsp;:&nbsp;</td>
+                                                                                <td>&nbsp;</td>
                                                                             </tr>
                                                                         </table>
                                                                         {!! $row->descript != "" ?
@@ -927,8 +887,11 @@
                                                                                 'Present' : $row->end_period}}</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td><i class="fa fa-comments"></i></td>
+                                                                                <td><i class="fa fa-comments"></i>
+                                                                                </td>
                                                                                 <td>&nbsp;Description</td>
+                                                                                <td>&nbsp;:&nbsp;</td>
+                                                                                <td>&nbsp;</td>
                                                                             </tr>
                                                                         </table>
                                                                         {!! $row->descript != "" ?
@@ -954,16 +917,16 @@
     <div class="modal fade login" id="avaModal">
         <div class="modal-dialog login animated">
             @if($user->ava == ""||$user->ava == "seeker.png")
-                <img class="img-responsive" src="{{asset('images/seeker.png')}}">
+                <img style="width: 100%" class="img-responsive" src="{{asset('images/seeker.png')}}">
             @else
-                <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}">
+                <img style="width: 100%" class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}">
             @endif
         </div>
     </div>
     <div class="modal fade login" id="backgroundModal">
         <div class="modal-dialog login animated">
-            @if($seeker->background == ""||$seeker->background == "c2.jpg")
-                <img class="img-responsive" src="{{asset('images/carousel/c2.jpg')}}">
+            @if($seeker->background == "")
+                <img class="img-responsive" src="{{asset('images/carousel/c0.png')}}">
             @else
                 <img class="img-responsive" src="{{asset('storage/users/seekers/background/'.$seeker->background)}}">
             @endif
@@ -1020,12 +983,9 @@
                                                                 <li>
                                                                     <a class="tag">
                                                                         <i class="fa fa-user-tie"></i>&ensp;
-                                                                        @if(count($job_title->get()) != 0)
-                                                                            Current
-                                                                            Title: {{$job_title->first()->job_title}}
-                                                                        @else
-                                                                            Current Status: Looking for a Job
-                                                                        @endif
+                                                                        {{count($job_title->get()) != 0 ?
+                                                                        'Current Title: '.$job_title->first()->job_title
+                                                                        : 'Current Status: Looking for a Job'}}
                                                                     </a>
                                                                 </li>
                                                                 <li>
@@ -1038,8 +998,8 @@
                                                                     <a class="tag" id="expected_salary3">
                                                                         @if($seeker->lowest_salary != "")
                                                                             <script>
-                                                                                var low = ("{{$seeker->lowest_salary}}").split(',').join("") / 1000000,
-                                                                                    high = ("{{$seeker->highest_salary}}").split(',').join("") / 1000000;
+                                                                                var low = ("{{$seeker->lowest_salary}}") / 1000000,
+                                                                                    high = ("{{$seeker->highest_salary}}") / 1000000;
                                                                                 document.getElementById("expected_salary3").innerHTML = "<i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary: IDR " + low + " to " + high + " millions";
                                                                             </script>
                                                                         @else
@@ -1050,23 +1010,19 @@
                                                                 <li>
                                                                     <a class="tag">
                                                                         <i class="fa fa-graduation-cap"></i>&ensp;
-                                                                        @if(count($last_edu->get()) != 0)
-                                                                            Latest Degree: {{\App\Tingkatpend::find
-                                                                        ($last_edu->first()->tingkatpend_id)->name}}
-                                                                        @else
-                                                                            Latest Degree (-)
-                                                                        @endif
+                                                                        {{count($last_edu->get()) != 0 ?
+                                                                        'Latest Degree: '.\App\Tingkatpend::find
+                                                                        ($last_edu->first()->tingkatpend_id)->name :
+                                                                        'Latest Degree (-)'}}
                                                                     </a>
                                                                 </li>
                                                                 <li>
                                                                     <a class="tag">
                                                                         <i class="fa fa-user-graduate"></i>&ensp;
-                                                                        @if(count($last_edu->get()) != 0)
-                                                                            Latest Major: {{\App\Jurusanpend::find
-                                                                        ($last_edu->first()->jurusanpend_id)->name}}
-                                                                        @else
-                                                                            Latest Major (-)
-                                                                        @endif
+                                                                        {{count($last_edu->get()) != 0 ?
+                                                                        'Latest Major: '.\App\Jurusanpend::find
+                                                                        ($last_edu->first()->jurusanpend_id)->name :
+                                                                        'Latest Major (-)'}}
                                                                     </a>
                                                                 </li>
                                                             </ul>
@@ -1116,8 +1072,7 @@
                                                                     </div>
                                                                     <small style="font-size: 10px;color: #00ADB5;float: left">
                                                                         P.S.: You're only permitted to select your
-                                                                        vacancy
-                                                                        that has been posted.
+                                                                        vacancy that has been posted.
                                                                     </small>
                                                                 </div>
                                                             </div>

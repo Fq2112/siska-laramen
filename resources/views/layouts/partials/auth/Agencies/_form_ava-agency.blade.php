@@ -54,64 +54,32 @@
                     <tr>
                         <td><i class="fa fa-industry"></i></td>
                         <td>&nbsp;</td>
-                        <td>
-                            @if($agency->industri_id != "")
-                                {{$industry->nama}}
-                            @else
-                                (empty)
-                            @endif
-                        </td>
+                        <td>{{$agency->industri_id != "" ? $industry->nama : '(empty)'}}</td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-building"></i></td>
                         <td>&nbsp;</td>
-                        <td>
-                            @if($agency->kantor_pusat != null)
-                                {{$agency->kantor_pusat}}
-                            @else
-                                (empty)
-                            @endif
-                        </td>
+                        <td>{{$agency->kantor_pusat != "" ? $agency->kantor_pusat : '(empty)'}}</td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-calendar-alt"></i></td>
                         <td>&nbsp;</td>
-                        <td style="text-transform: none">
-                            @if($agency->hari_kerja != "")
-                                {{$agency->hari_kerja}}
-                            @else
-                                (empty)
-                            @endif
-                        </td>
+                        <td style="text-transform: none">{{$agency->hari_kerja != "" ? $agency->hari_kerja : '(empty)'}}</td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-clock"></i></td>
                         <td>&nbsp;</td>
-                        <td>
-                            @if($agency->jam_kerja != "")
-                                {{$agency->jam_kerja}}
-                            @else
-                                (empty)
-                            @endif
-                        </td>
+                        <td>{{$agency->jam_kerja != "" ? $agency->jam_kerja : '(empty)'}}</td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-phone"></i></td>
                         <td>&nbsp;</td>
-                        <td>
-                            @if($agency->phone != "")
-                                {{$agency->phone}}
-                            @else
-                                (empty)
-                            @endif
-                        </td>
+                        <td>{{$agency->phone != "" ? $agency->phone : '(empty)'}}</td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-map-marker-alt"></i></td>
                         <td>&nbsp;</td>
-                        <td>
-                            {{$agency->alamat != "" ? $agency->alamat : ''}}
-                        </td>
+                        <td>{{$agency->alamat != "" ? $agency->alamat : ''}}</td>
                     </tr>
                 </table>
                 <hr class="stats_personal_data">
@@ -136,13 +104,9 @@
                     <div class="row form-group">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                    <span class="input-group-addon">
-                                        <i class="fa fa-user-tie"></i>
-                                    </span>
-                                <input placeholder="Name" maxlength="191"
-                                       value="{{$user->name}}"
-                                       type="text" class="form-control"
-                                       name="name" required autofocus>
+                                <span class="input-group-addon"><i class="fa fa-user-tie"></i></span>
+                                <input placeholder="Name" maxlength="191" value="{{$user->name}}" type="text"
+                                       class="form-control" name="name" required autofocus>
                             </div>
                         </div>
                     </div>
@@ -151,15 +115,13 @@
                     <div class="row form-group">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-industry"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-industry"></i></span>
                                 <select class="form-control selectpicker"
                                         title="-- Choose --"
                                         name="industri_id" required>
                                     @foreach(App\Industri::all() as $row)
-                                        <option value="{{$row->id}}" {{$agency->industri_id ==
-                                                                $row->id ? 'selected' : ''}}>{{$row->nama}}</option>
+                                        <option value="{{$row->id}}" {{$agency->industri_id == $row->id ?
+                                         'selected' : ''}}>{{$row->nama}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -170,13 +132,10 @@
                     <div class="row form-group">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-hand-holding-heart"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-hand-holding-heart"></i></span>
                                 <input type="text" class="form-control" name="kantor_pusat"
                                        placeholder="Surabaya" required maxlength="60"
-                                       value="{{$agency->kantor_pusat == "" ? '' :
-                                                               $agency->kantor_pusat}}">
+                                       value="{{$agency->kantor_pusat == "" ? '' : $agency->kantor_pusat}}">
                             </div>
                         </div>
                     </div>
@@ -186,38 +145,29 @@
                         <div class="col-lg-6">
                             <small>Start Day</small>
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-calendar-alt"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-calendar-alt"></i></span>
                                 <select class="form-control selectpicker" name="start_day"
                                         title="-- Start Day --" required>
                                     <option value="Monday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Mon' ?
-                                            'selected' : ''}}>Monday
+                                            {{substr($agency->hari_kerja,0,3) == 'Mon' ? 'selected' : ''}}>Monday
                                     </option>
                                     <option value="Tuesday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Tue' ?
-                                            'selected' : ''}}>Tuesday
+                                            {{substr($agency->hari_kerja,0,3) == 'Tue' ? 'selected' : ''}}>Tuesday
                                     </option>
                                     <option value="Wednesday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Wed' ?
-                                            'selected' : ''}}>Wednesday
+                                            {{substr($agency->hari_kerja,0,3) == 'Wed' ? 'selected' : ''}}>Wednesday
                                     </option>
                                     <option value="Thursday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Thu' ?
-                                            'selected' : ''}}>Thursday
+                                            {{substr($agency->hari_kerja,0,3) == 'Thu' ? 'selected' : ''}}>Thursday
                                     </option>
                                     <option value="Friday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Fri' ?
-                                            'selected' : ''}}>Friday
+                                            {{substr($agency->hari_kerja,0,3) == 'Fri' ? 'selected' : ''}}>Friday
                                     </option>
                                     <option value="Saturday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Sat' ?
-                                            'selected' : ''}}>Saturday
+                                            {{substr($agency->hari_kerja,0,3) == 'Sat' ? 'selected' : ''}}>Saturday
                                     </option>
                                     <option value="Sunday"
-                                            {{substr($agency->hari_kerja,0,3) == 'Sun' ?
-                                            'selected' : ''}}>Sunday
+                                            {{substr($agency->hari_kerja,0,3) == 'Sun' ? 'selected' : ''}}>Sunday
                                     </option>
                                 </select>
                             </div>
@@ -268,38 +218,28 @@
                         <div class="col-lg-6">
                             <small>Start Time</small>
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-hourglass-start"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-hourglass-start"></i></span>
                                 <input class="form-control timepicker" name="start_time"
-                                       type="text" placeholder="08:00"
-                                       value="{{$agency->jam_kerja != "" ?
-                                                                   substr($agency->jam_kerja,0,5) : ''}}" required>
+                                       type="text" placeholder="08:00" value="{{$agency->jam_kerja != "" ?
+                                       substr($agency->jam_kerja,0,5) : ''}}" required>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <small>End Time</small>
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-hourglass-end"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-hourglass-end"></i></span>
                                 <input class="form-control timepicker" name="end_time"
-                                       type="text" placeholder="16:00"
-                                       value="{{$agency->jam_kerja != "" ?
-                                                                   substr($agency->jam_kerja,8,5) : ''}}" required>
+                                       type="text" placeholder="16:00" value="{{$agency->jam_kerja != "" ?
+                                       substr($agency->jam_kerja,8,5) : ''}}" required>
                             </div>
                         </div>
                     </div>
 
-                    <small>Phone
-                        <span class="optional-label">(Optional)</span>
-                    </small>
+                    <small>Phone<span class="optional-label">(Optional)</span></small>
                     <div class="row form-group">
                         <div class="col-md-12">
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-phone"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-phone"></i></span>
                                 <input placeholder="08123xxxxxxx"
                                        type="text" maxlength="13"
                                        class="form-control" name="phone"
@@ -309,15 +249,11 @@
                         </div>
                     </div>
 
-                    <small>Website
-                        <span class="optional-label">(Optional)</span>
-                    </small>
+                    <small>Website<span class="optional-label">(Optional)</span></small>
                     <div class="row form-group">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                                        <span class="input-group-addon">
-                                                            <i class="fa fa-globe"></i>
-                                                        </span>
+                                <span class="input-group-addon"><i class="fa fa-globe"></i></span>
                                 <input class="form-control" name="link" type="text"
                                        placeholder="http://example.com"
                                        value="{{$agency->link == "" ? '' : $agency->link}}">

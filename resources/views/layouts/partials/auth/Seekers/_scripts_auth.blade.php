@@ -79,12 +79,15 @@
             btn.attr('disabled', 'disabled');
         }
         $("#end_date").hide();
+        form.attr('action', '{{route('create.experiences')}}');
         $("#form-exp input[name='_method']").val('POST');
     });
 
     $("#show_edu_settings, #btn_cancel_edu input[type=reset]").click(function () {
+        var form = $("#form-edu");
+
         $("#btn_cancel_edu").hide();
-        $("#form-edu")[0].reset();
+        form[0].reset();
         $("#edu_settings .selectpicker").val('default').selectpicker("refresh");
         $("#edu_settings").toggle(300);
         $("#stats_edu").toggle(300);
@@ -94,12 +97,15 @@
             $("#btn_save_edu").attr('disabled', 'disabled');
         }
         $("#end_period").hide();
+        form.attr('action', '{{route('create.educations')}}');
         $("#form-edu input[name='_method']").val('POST');
     });
 
     $("#show_cert_settings, #btn_cancel_cert input[type=reset]").click(function () {
+        var form = $("#form-cert");
+
         $("#btn_cancel_cert").hide();
-        $("#form-cert")[0].reset();
+        form[0].reset();
         $("#cert_settings").toggle(300);
         $("#stats_cert").toggle(300);
         if ($("#btn_save_cert").attr('disabled')) {
@@ -107,12 +113,15 @@
         } else {
             $("#btn_save_cert").attr('disabled', 'disabled');
         }
+        form.attr('action', '{{route('create.trainings')}}');
         $("#form-cert input[name='_method']").val('POST');
     });
 
     $("#show_org_settings, #btn_cancel_org input[type=reset]").click(function () {
+        var form = $("#form-org");
+
         $("#btn_cancel_org").hide();
-        $("#form-org")[0].reset();
+        form[0].reset();
         $("#org_settings").toggle(300);
         $("#stats_org").toggle(300);
         if ($("#btn_save_org").attr('disabled')) {
@@ -121,12 +130,14 @@
             $("#btn_save_org").attr('disabled', 'disabled');
         }
         $("#end_period2").hide();
+        form.attr('action', '{{route('create.organizations')}}');
         $("#form-org input[name='_method']").val('POST');
     });
 
     $("#show_lang_settings, #btn_cancel_lang input[type=reset]").click(function () {
+        var form = $("#form-lang");
         $("#btn_cancel_lang").hide();
-        $("#form-lang")[0].reset();
+        form[0].reset();
         $("#lang_settings .selectpicker").val('default').selectpicker("refresh");
         $("#lang_settings").toggle(300);
         $("#stats_lang").toggle(300);
@@ -135,12 +146,15 @@
         } else {
             $("#btn_save_lang").attr('disabled', 'disabled');
         }
+        form.attr('action', '{{route('create.languages')}}');
         $("#form-lang input[name='_method']").val('POST');
     });
 
     $("#show_skill_settings, #btn_cancel_skill input[type=reset]").click(function () {
+        var form = $("#form-skill");
+
         $("#btn_cancel_skill").hide();
-        $("#form-skill")[0].reset();
+        form[0].reset();
         $("#skill_settings .selectpicker").val('default').selectpicker("refresh");
         $("#skill_settings").toggle(300);
         $("#stats_skill").toggle(300);
@@ -149,6 +163,7 @@
         } else {
             $("#btn_save_skill").attr('disabled', 'disabled');
         }
+        form.attr('action', '{{route('create.skills')}}');
         $("#form-skill input[name='_method']").val('POST');
     });
 

@@ -49,9 +49,11 @@
                             </button>
                             <a class="profilebar-brand" style="cursor: pointer">
                                 @if($user->ava == ""||$user->ava == "agency.png")
-                                    <img class="img-responsive" src="{{asset('images/agency.png')}}">
+                                    <img class="img-responsive" src="{{asset('images/agency.png')}}"
+                                         style="width: 100%;height: 100%">
                                 @else
-                                    <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}">
+                                    <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}"
+                                         style="width: 100%;height: 100%">
                                 @endif
                             </a>
                             <span class="site-name">{{$user->name}}</span>
@@ -343,9 +345,9 @@
     <div class="modal fade login" id="avaModal">
         <div class="modal-dialog login animated">
             @if($user->ava == ""||$user->ava == "agency.png")
-                <img class="img-responsive" src="{{asset('images/agency.png')}}">
+                <img class="img-responsive" src="{{asset('images/agency.png')}}" style="width: 100%">
             @else
-                <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}">
+                <img class="img-responsive" src="{{asset('storage/users/'.$user->ava)}}" style="width: 100%">
             @endif
         </div>
     </div>

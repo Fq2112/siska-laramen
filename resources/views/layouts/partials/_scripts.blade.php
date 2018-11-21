@@ -87,6 +87,33 @@
         @endif
     });
 
+    $("#form-register").on("submit", function (e) {
+        if ($.trim($("#reg_email,#reg_name,#reg_password,#reg_password_confirm").val()) === "") {
+            return false;
+
+        } else {
+            if ($("#reg_password_confirm").val() != $("#reg_password").val()) {
+                return false;
+
+            } else {
+                $("#reg_errorAlert").html('');
+                return true;
+            }
+        }
+    });
+
+    $("#reg_password_confirm").on("change", function () {
+        if ($(this).val() != $("#reg_password").val()) {
+            $("#reg_errorAlert").html(
+                '<div class="alert alert-danger alert-dismissible">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                '<h4><i class="icon fa fa-times"></i> Alert!</h4>Your password confirmation doesn\'t match!</div>'
+            );
+        } else {
+            $("#reg_errorAlert").html('');
+        }
+    });
+
     function checkRupiahValue() {
         var low = parseInt($("#lowest").val().split(',').join("")), input = $("#highest"),
             high = parseInt(input.val().split(',').join(""));

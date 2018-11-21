@@ -221,19 +221,14 @@
                                   action="{{ route('login') }}" id="form-login">
                                 {{ csrf_field() }}
 
-                                <div class="row {{ $errors->has('email') ? ' has-error' : '' }} has-feedback">
+                                <div class="row has-feedback">
                                     <div class="col-lg-12">
                                         <input class="form-control" type="email" placeholder="Email"
                                                name="email" value="{{ old('email') }}" required>
                                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                                        @if ($errors->has('email'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
                                     </div>
                                 </div>
-                                <div class="row {{ $errors->has('password') ? ' has-error' : '' }} has-feedback">
+                                <div class="row has-feedback">
                                     <div class="col-lg-12">
                                         <input class="form-control" type="password" placeholder="Password"
                                                name="password" minlength="6" required>
@@ -273,54 +268,53 @@
                 <div class="box">
                     <div class="content registerBox" style="display:none;">
                         <div class="form">
-                            <form method="post" html="{:multipart=>true}" data-remote="true" accept-charset="UTF-8"
-                                  class="form-horizontal" action="{{ route('register') }}">
+                            @if ($errors->has('email'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                    </button>
+                                    <h4><i class="icon fa fa-times"></i> Alert!</h4>
+                                    {{ $errors->first('email') }}
+                                </div>
+                            @elseif($errors->has('password') || $errors->has('name'))
+                                <div class="alert alert-danger alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                                    </button>
+                                    <h4><i class="icon fa fa-times"></i> Alert!</h4>
+                                    {{ $errors->has('password') ? $errors->first('password') : $errors->first('name') }}
+                                </div>
+                            @endif
+                            <div id="reg_errorAlert"></div>
+                            <form method="post" accept-charset="UTF-8" class="form-horizontal"
+                                  action="{{ route('register') }}" id="form-register">
                                 {{ csrf_field() }}
-                                @if(\Illuminate\Support\Facades\Request::is(['/*','vacancy*','search*','agency/*']))
-                                    <input type="hidden" name="role" value="seeker">
-                                @elseif(\Illuminate\Support\Facades\Request::is('agency*'))
-                                    <input type="hidden" name="role" value="agency">
-                                @endif
-                                <div class="row {{ $errors->has('name') ? ' has-error' : '' }} has-feedback">
+                                <input type="hidden" name="role" value="{{\Illuminate\Support\Facades\Request::is
+                                ('agency*') ? 'agency' : 'seeker'}}">
+                                <div class="row has-feedback">
                                     <div class="col-lg-12">
-                                        <input type="text" placeholder="Full name" class="form-control" id="fname"
-                                               name="name" required>
+                                        <input id="reg_name" type="text" placeholder="Full name"
+                                               class="form-control" name="name" required>
                                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
-                                        @if ($errors->has('name'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('name') }}</strong>
-                                            </span>
-                                        @endif
                                     </div>
                                 </div>
-                                <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
+                                <div class="row has-feedback">
                                     <div class="col-lg-12">
-                                        <input class="form-control" type="email" placeholder="Email" name="email"
-                                               required>
+                                        <input id="reg_email" class="form-control" type="email"
+                                               placeholder="Email" name="email" required>
                                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                                        @if ($errors->has('email'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('email') }}</strong>
-                                            </span>
-                                        @endif
                                     </div>
                                 </div>
-                                <div class="row {{ $errors->has('password') ? ' has-error' : '' }} has-feedback">
+                                <div class="row has-feedback">
                                     <div class="col-lg-12">
                                         <input class="form-control" type="password" placeholder="Password"
-                                               name="password" minlength="6" required>
+                                               id="reg_password" name="password" minlength="6" required>
                                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
-                                        @if ($errors->has('password'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('password') }}</strong>
-                                            </span>
-                                        @endif
                                     </div>
                                 </div>
-                                <div class="row {{ $errors->has('password_confirmation') ? ' has-error' : '' }} has-feedback">
+                                <div class="row has-feedback">
                                     <div class="col-lg-12">
                                         <input class="form-control" type="password" placeholder="Retype password"
-                                               name="password_confirmation" minlength="6" required>
+                                               id="reg_password_confirm" name="password_confirmation"
+                                               minlength="6" required>
                                         <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
                                     </div>
                                 </div>
@@ -338,8 +332,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <input class="btn btn-default btn-register" type="submit"
-                                               value="CREATE ACCOUNT" name="commit"
-                                               style="background: #00ADB5;border-color: #00ADB5">
+                                               value="CREATE ACCOUNT" style="background: #00ADB5;border-color: #00ADB5">
                                     </div>
                                 </div>
                             </form>
