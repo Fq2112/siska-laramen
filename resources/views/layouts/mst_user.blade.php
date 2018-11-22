@@ -62,8 +62,9 @@
     <link rel="stylesheet" href="{{asset('css/scroll-to-top.css')}}">
     <link rel="stylesheet" href="{{asset('css/responsive-list.css')}}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
-@stack('styles')
-<!-- Sweet Alert v2 -->
+    <link rel="stylesheet" href="{{ asset('css/media-query.css') }}">
+    @stack('styles')
+    <!-- Sweet Alert v2 -->
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- Modal -->
@@ -451,21 +452,20 @@
         <div class="row">
             <div class="col-lg-4 to-animate">
                 <h3 class="section-title">Unduh Aplikasi Kami, Gratis!</h3>
-                <div class="row">
-                    <div class="col-lg-7 to-animate">
-                        <img src="{{asset('images/phone.png')}}" style="width: 100%">
-                    </div>
-                    <div class="col-lg-5 to-animate">
-                        <a href="https://play.google.com/store/apps/details?id=com.siska.mobile">
-                            <img class="zoom" src="{{asset('images/GooglePlay.png')}}" style="width: 100%">
+                <div class="row" style="border-bottom: 1px solid #eee">
+                    <div class="col-lg-12 to-animate">
+                        <img class="download-phone-ico" src="{{asset('images/phone.png')}}">
+                        <div class="download-apps-ico">
+                            <a href="https://play.google.com/store/apps/details?id=com.siska.mobile">
+                                <img class="zoom img-responsive" src="{{asset('images/GooglePlay.png')}}">
+                            </a>
                             <hr>
-                        </a>
-                        <a href="https://itunes.apple.com/id/app/siska.com/id1143444473?mt=8">
-                            <img class="zoom" src="{{asset('images/AppStore.png')}}" style="width: 100%">
-                        </a>
+                            <a href="https://itunes.apple.com/id/app/siska.com/id1143444473?mt=8">
+                                <img class="zoom img-responsive" src="{{asset('images/AppStore.png')}}">
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <hr style="margin: 0">
                 <p style="margin-top: 0;" class="copy-right">
                     <a href="{{route('info.siska')}}#privacy-policy" target="_blank">
                         Privacy Policy</a><span> &middot; </span>

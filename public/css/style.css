@@ -6,12 +6,6 @@
     font-style: normal;
 }
 
-/* =======================================================
-*
-* 	Template Style 
-*	Edit this section
-*
-* ======================================================= */
 body {
     font-family: "PT Sans", Arial, serif;
     font-weight: 300;
@@ -768,7 +762,6 @@ h1, h2, h3, h4, h5, h6 {
 @media screen and (max-width: 768px) {
     .getting-started .getting-grid, .getting-started .getting-grid2 {
         width: 100% !important;
-        text-align: center;
     }
 }
 
@@ -1546,7 +1539,7 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: none !important;
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
     .fh5co-nav-toggle {
         display: block;
     }
