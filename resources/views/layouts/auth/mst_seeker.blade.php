@@ -50,6 +50,10 @@
                 $query->orWhere('tingkatpend_id', '<=', $degree);
             }
         })->count();
+
+        $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
+                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->count();
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
@@ -75,7 +79,7 @@
                                                 </a>
                                             </li>
                                             <li><a href="{{route('seeker.invitation.quiz')}}">Quiz Invitation
-                                                    <span class="badge">0</span></a>
+                                                    <span class="badge">{{$quizInv > 999 ? '999+' : $quizInv}}</span></a>
                                             </li>
                                             <li><a href="{{route('seeker.invitation.psychoTest')}}">Psycho Test
                                                     Invitation

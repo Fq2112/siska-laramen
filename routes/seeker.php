@@ -270,7 +270,7 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
 
     Route::group(['prefix' => 'quiz'], function () {
 
-        Route::get('/', [
+        Route::post('/', [
             'uses' => 'QuizController@showQuiz',
             'as' => 'show.quiz'
         ]);

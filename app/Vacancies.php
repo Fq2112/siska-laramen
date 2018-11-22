@@ -14,4 +14,9 @@ class Vacancies extends Model
     {
         return $this->belongsTo(Agencies::class);
     }
+
+    public function getAccepting()
+    {
+        return $this->hasMany(Accepting::class,'vacancy_id');
+    }
 }

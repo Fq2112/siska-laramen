@@ -29,44 +29,75 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $credentials = $request->only('name', 'email', 'password','repassword');
 
-        $rules = [
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|max:255',
-            'repassword' => 'required|same:password'
-        ];
-        $validator = Validator::make($credentials, $rules);
-        if($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()]);
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json,true);
+
+        $name = $obj['name'];
+        $email =  $obj['email'];
+        $password = $obj['password'];
+        $repassword = $obj['repassword'];
+//
+//        if($validator->fails()) {
+//            return response()->json([
+//                'status' => 'warning',
+//                'success'=> false,
+//                'error'=> $validator->messages()]);
+//        }
+
+        if($name == null || $email == null || $password == null || $repassword ==null){ //check All input not null
+            return response()->json([
+                'status' => 'warning',
+                'success' => false,
+                'error' => 'Some input is not filled yet!!'
+            ]);
+        }else {
+            $check = User::where('email',$email)->count();
+            if ($check < 1) {// check email is available
+
+                if($password != $repassword){//check Password Match or not wit repassword
+                    return response()->json([
+                        'status' => 'warning',
+                        'success' => false,
+                        'error' => 'Password doesn\'t match!!'
+                    ]);
+                }
+                else {
+                    $user = User::create([
+                        'ava' => 'seeker.png',
+                        'name' => $name,
+                        'email' => $email,
+                        'password' => bcrypt($password),
+                        'role' => 'seeker',
+                        'status' => false,
+                        'verifyToken' => Str::random(255),
+                    ]);
+
+                    //$verification_code = str_random(30); //Generate verification code
+
+                    //DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
+
+                    $subject = "Please verify your email address.";
+                    Mail::send('emails.auth.verify', ['name' => $name, 'email' => $user->email, 'verification_code' => $user->verifyToken],
+                        function ($mail) use ($email, $name, $subject) {
+                            $mail->from(getenv('Ilham Saputra'), "ilham.puji100@gmail.com");
+                            $mail->to($email, $name);
+                            $mail->subject($subject);
+                        });
+                    return response()->json([
+                        'status' => 'success',
+                        'success' => true,
+                        'message' => 'Thanks for signing up! Please check your email to complete your registration.']);
+                }
+
+            }else {
+                return response()->json([
+                    'status' => 'warning',
+                    'success' => false,
+                    'error' => 'Email already taken!!!'
+                ]);
+            }
         }
-        $name = $request->name;
-        $email = $request->email;
-        $password = $request->password;
-
-        $user = User::create([
-            'ava' => 'seeker.png',
-            'name' => $name,
-            'email' => $email,
-            'password' => bcrypt($password),
-            'role' => 'seeker',
-            'status' => false,
-            'verifyToken' => Str::random(255),
-        ]);
-
-        $verification_code = str_random(30); //Generate verification code
-
-        //DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
-
-        $subject = "Please verify your email address.";
-        Mail::send('email.verify', ['name' => $name, 'email' => $user->email, 'verification_code' => $user->verifyToken],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('Ilham Saputra'), "ilham.puji100@gmail.com");
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
-        return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email to complete your registration.']);
     }
 
     /**

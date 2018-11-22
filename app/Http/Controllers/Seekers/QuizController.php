@@ -20,9 +20,9 @@ class QuizController extends Controller
         $this->middleware(['auth', 'seeker']);
     }
 
-    public function showQuiz()
+    public function showQuiz(Request $request)
     {
-        $quiz = QuizInfo::where('unique_code', '3wvEnU')->first();
+        $quiz = QuizInfo::where('unique_code', $request->quiz_code)->first();
         $vacancy = Vacancies::find($quiz->vacancy_id);
         $agency = User::find(Agencies::find($vacancy->agency_id)->id);
 
