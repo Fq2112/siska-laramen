@@ -7200,7 +7200,7 @@
 }
 
 .quiz label:after {
-    content: "\f582";
+    content: "\f118";
 }
 
 .heart input:checked + label, .download input:checked + label, .apply input:checked + label,

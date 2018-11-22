@@ -239,40 +239,40 @@ class SeekerController extends Controller
         $time = $request->time;
         if ($request->has('time')) {
             if ($time == 2) {
-                $invitations = Accepting::wherehas('getVacancy', function ($q) {
+                $quizInv = Accepting::wherehas('getVacancy', function ($q) {
                     $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', Carbon::today())
                     ->orderByDesc('id')->paginate(5);
 
             } elseif ($time == 3) {
-                $invitations = Accepting::wherehas('getVacancy', function ($q) {
+                $quizInv = Accepting::wherehas('getVacancy', function ($q) {
                     $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
                     ->orderByDesc('id')->paginate(5);
 
             } elseif ($time == 4) {
-                $invitations = Accepting::wherehas('getVacancy', function ($q) {
+                $quizInv = Accepting::wherehas('getVacancy', function ($q) {
                     $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
                     ->orderByDesc('id')->paginate(5);
 
             } else {
-                $invitations = Accepting::wherehas('getVacancy', function ($q) {
+                $quizInv = Accepting::wherehas('getVacancy', function ($q) {
                     $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->paginate(5);
             }
 
         } else {
-            $invitations = Accepting::wherehas('getVacancy', function ($q) {
+            $quizInv = Accepting::wherehas('getVacancy', function ($q) {
                 $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
             })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->paginate(5);
         }
 
         return view('auth.seekers.dashboard-quiz', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time', 'invitations'));
+            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time', 'quizInv'));
     }
 
     public function showPsychoTestInv(Request $request)

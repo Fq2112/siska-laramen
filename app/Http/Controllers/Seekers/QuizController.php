@@ -17,7 +17,7 @@ class QuizController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth', 'seeker']);
+        $this->middleware(['auth', 'seeker', 'quiz']);
     }
 
     public function showQuiz(Request $request)

@@ -25,9 +25,9 @@
                         </div>
                         <div class="col-lg-9 to-animate">
                             <small class="pull-right">
-                                @if(count($invitations) > 1)
-                                    Showing all <strong>{{count($invitations)}}</strong> quiz invitations
-                                @elseif(count($invitations) == 1)
+                                @if(count($quizInv) > 1)
+                                    Showing all <strong>{{count($quizInv)}}</strong> quiz invitations
+                                @elseif(count($quizInv) == 1)
                                     Showing a quiz invitation
                                 @else
                                     <em>There seems to be none of the quiz invitation was found&hellip;</em>
@@ -37,12 +37,17 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            @foreach($invitations as $row)
+                            @foreach($quizInv as $row)
                                 @php
                                     $vacancy = \App\Vacancies::find($row->vacancy_id);
+                                    $quizDate = $vacancy->quizDate_start && $vacancy->quizDate_end != "" ?
+                                    \Carbon\Carbon::parse($vacancy->quizDate_start)->format('j F Y')." - ".
+                                    \Carbon\Carbon::parse($vacancy->quizDate_end)->format('j F Y') : '-';
                                     $quiz = \App\QuizInfo::where('vacancy_id',$vacancy->id)->first();
                                     $agency = \App\Agencies::find($vacancy->agency_id);
                                     $userAgency = \App\User::find($agency->user_id);
+                                    $ava = $userAgency->ava == ""||$userAgency->ava == "agency.png" ?
+                                    asset('images/agency.png') : asset('storage/users/'.$userAgency->ava);
                                     $city = \App\Cities::find($vacancy->cities_id)->name;
                                     $salary = \App\Salaries::find($vacancy->salary_id);
                                     $jobfunc = \App\FungsiKerja::find($vacancy->fungsikerja_id);
@@ -80,7 +85,11 @@
                                         <blockquote style="font-size: 12px;color: #7f7f7f">
                                             <div class="pull-right to-animate-2">
                                                 <div class="anim-icon anim-icon-md quiz ld ld-breath"
-                                                     onclick="showQuiz('{{$row->id}}','{{$quiz->unique_code}}')"
+                                                     onclick="showQuiz('{{$row->id}}','{{$quiz->unique_code}}',
+                                                             '{{$vacancy->judul}}','{{$vacancy->quizDate_start}}',
+                                                             '{{$vacancy->quizDate_end}}','{{$ava}}',
+                                                             '{{$userAgency->name}}','{{$vacancy->id}}','{{$quizDate}}',
+                                                             '{{$quiz->total_question}}','{{$quiz->time_limit}}')"
                                                      data-toggle="tooltip"
                                                      title="Start Quiz" data-placement="bottom" style="font-size: 25px">
                                                     <input id="quiz{{$row->id}}" type="checkbox" checked>
@@ -236,51 +245,19 @@
                                 <div class="col-lg-12">
                                     <div class="media">
                                         <div class="media-left media-middle">
-                                            @if($userAgency->ava == ""||$userAgency->ava == "agency.png")
-                                                <img width="100" class="media-object"
-                                                     src="{{asset('images/agency.png')}}">
-                                            @else
-                                                <img width="100" class="media-object"
-                                                     src="{{asset('storage/users/'.$userAgency->ava)}}">
-                                            @endif
+                                            <img width="100" class="media-object" id="agencyAva">
                                         </div>
                                         <div class="media-body">
                                             <small class="media-heading" style="font-size: 17px;">
-                                                <a href="{{route('detail.vacancy',['id'=>$vacancy->id])}}"
-                                                   style="color: #00ADB5">
-                                                    {{$vacancy->judul}}</a>
-                                                <sub style="color: #fa5555;text-transform: none">&ndash; {{$userAgency->name}}</sub>
+                                                <a style="color: #00ADB5" id="vacJudul"></a>
+                                                <sub style="color: #fa5555;text-transform: none" id="agencyName"></sub>
                                             </small>
                                             <blockquote style="font-size: 16px;color: #7f7f7f">
                                                 <ul class="list-inline">
-                                                    <li>
-                                                        <a class="tag">
-                                                            <i class="fa fa-grin-beam"></i>&ensp;
-                                                            Quiz Date: {{$vacancy->quizDate_start &&
-                                                            $vacancy->quizDate_end != "" ? \Carbon\Carbon::parse
-                                                            ($vacancy->quizDate_start)->format('j F Y')." - ".
-                                                            \Carbon\Carbon::parse($vacancy->quizDate_end)
-                                                            ->format('j F Y') : '-'}}
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="tag">
-                                                            <i class="fa fa-shield-alt"></i>&ensp;
-                                                            Quiz Code: #{{$quiz->unique_code}}
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="tag">
-                                                            <i class="fa fa-question-circle"></i>&ensp;
-                                                            Total Question: {{$quiz->total_question}} items
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="tag">
-                                                            <i class="fa fa-stopwatch"></i>&ensp;
-                                                            Time Limit: {{$quiz->time_limit}} minutes
-                                                        </a>
-                                                    </li>
+                                                    <li><a class="tag" id="quizDate"></a></li>
+                                                    <li><a class="tag" id="quizCode"></a></li>
+                                                    <li><a class="tag" id="quizQuestion"></a></li>
+                                                    <li><a class="tag" id="quizTime"></a></li>
                                                 </ul>
                                             </blockquote>
                                         </div>
@@ -295,7 +272,7 @@
                         <form method="post" action="{{route('show.quiz')}}" id="form-access-quiz">
                             {{csrf_field()}}
                             <input type="hidden" name="quiz_code" id="quiz_code">
-                            <button class="btn btn-link btn-block" type="submit">
+                            <button class="btn btn-link btn-block" type="button">
                                 <i class="fa fa-grin-beam"></i>&ensp;Start Quiz
                             </button>
                         </form>
@@ -311,12 +288,42 @@
             $("#form-time")[0].submit();
         });
 
-        function showQuiz(id, code) {
+        function showQuiz(id, code, judul, start, end, ava, name, vacID, date, question, time) {
+            $("#agencyAva").attr('src', ava);
+            $("#agencyName").html('&ndash; ' + name);
+            $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
+            $("#quizDate").html('<i class="fa fa-grin-beam"></i>&ensp;Quiz Date: <strong>' + date + '</strong>');
+            $("#quizCode").html('<i class="fa fa-shield-alt"></i>&ensp;Quiz Code: <strong>' + code + '</strong>');
+            $("#quizQuestion").html('<i class="fa fa-question-circle"></i>&ensp;Total Question: ' +
+                '<strong>' + question + '</strong> items');
+            $("#quizTime").html('<i class="fa fa-stopwatch"></i>&ensp;Time Limit: ' +
+                '<strong>' + time + '</strong> minutes');
+
             $("#quiz_code").val(code);
             $("#quizModal").modal('show');
 
             $(document).on('hide.bs.modal', '#quizModal', function (event) {
                 $("#quiz" + id).prop('checked', true);
+            });
+
+            $("#form-access-quiz button").on("click", function () {
+                if (start == null || '{{today()}}' < start) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: 'The quiz date of ' + judul + ' hasn\'t started yet.',
+                        type: 'warning',
+                        timer: '5500'
+                    });
+                } else if (end == null || '{{today()}}' > end) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: 'The quiz date of ' + judul + ' has been ended.',
+                        type: 'warning',
+                        timer: '5500'
+                    });
+                } else if ('{{today()}}' >= start && '{{today()}}' <= end) {
+                    $('#form-access-quiz')[0].submit();
+                }
             });
         }
     </script>

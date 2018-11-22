@@ -396,27 +396,41 @@
         </g>
     </svg>
     @auth
-        <a href="{{Auth::user()->isSeeker() ? route('home-seeker') : route('home-agency')}}" id="home">
-            <button class="denied__link">Go Home</button>
-        </a>
-        <script>
-            @if(\Illuminate\Support\Facades\Request::is('admin*'))
-            swal({
-                title: 'ATTENTION!',
-                text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
-                type: 'warning',
-                timer: '3500'
-            });
-            @else
-            swal({
-                title: 'ATTENTION!',
-                text: 'You\'re redirected here because you didn\'t signed in as a Job {{Auth::user()->isSeeker() ?
+        @if(\Illuminate\Support\Facades\Request::is('quiz'))
+            <a href="{{route('seeker.invitation.quiz')}}" id="home">
+                <button class="denied__link">Go Back</button>
+            </a>
+            <script>
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because you already have a score for this quiz.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+            </script>
+        @else
+            <a href="{{Auth::user()->isSeeker() ? route('home-seeker') : route('home-agency')}}" id="home">
+                <button class="denied__link">Go Home</button>
+            </a>
+            <script>
+                @if(\Illuminate\Support\Facades\Request::is('admin*'))
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+                @else
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because you didn\'t signed in as a Job {{Auth::user()->isSeeker() ?
                 'Agency' : 'Seeker'}}.',
-                type: 'warning',
-                timer: '3500'
-            });
-            @endif
-        </script>
+                    type: 'warning',
+                    timer: '3500'
+                });
+                @endif
+            </script>
+        @endif
     @else
         <a href="{{route('home-seeker')}}" id="home">
             <button class="denied__link">Go Home</button>

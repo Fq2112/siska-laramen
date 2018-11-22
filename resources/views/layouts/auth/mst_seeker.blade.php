@@ -53,7 +53,7 @@
 
         $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
                 $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
-            })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->count();
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">

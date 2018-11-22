@@ -1540,7 +1540,7 @@
         ekUpload();
 
         $(window).on('beforeunload', function () {
-            return false;
+            return "You have attempted to leave this page. Are you sure?";
         });
         @endif
     </script>

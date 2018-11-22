@@ -20,6 +20,40 @@
                 <div class="alert-banner-close"></div>
             </div>
         @endif
+    @elseif(Auth::user()->isSeeker())
+        <style>
+            .alert-banner {
+                background: #fa5555;
+            }
+
+            .alert-banner-button {
+                color: #fa5555;
+                border-bottom: 4px solid #692e2e;
+            }
+
+            .alert-banner-button:hover {
+                background: #9b3c3c;
+            }
+        </style>
+        @php
+            $seeker = \App\Seekers::where('user_id', Auth::user()->id)->firstOrFail();
+            $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
+                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        @endphp
+        @if($quizInv && !Illuminate\Support\Facades\Request::is(['quiz','account/dashboard/quiz_invitation']))
+            <div class="alert-banner">
+                <div class="alert-banner-content">
+                    <div class="alert-banner-text">
+                        There seems to be <strong>{{$quizInv}}</strong> of the quiz invitation was found!
+                    </div>
+                    <a class="alert-banner-button" href="{{route('seeker.invitation.quiz')}}"
+                       style="text-decoration: none">
+                        Redirect me to the Quiz Invitation page</a>
+                </div>
+                <div class="alert-banner-close"></div>
+            </div>
+        @endif
     @endif
 @endauth
 @auth('admin')

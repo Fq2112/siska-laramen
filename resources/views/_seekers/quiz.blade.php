@@ -542,5 +542,9 @@
                 }, 500);
             });
         }
+
+        $(window).on('beforeunload', function () {
+            return "You have attempted to leave this page. Are you sure?";
+        });
     </script>
 @endpush
