@@ -93,13 +93,10 @@
                                         <i class="fa fa-stopwatch"></i><span class="time-remaining"
                                                                              style="margin-left: 5px"></span>
                                     </div>
-                                    @php
-                                        $x = 1;
-                                        $questions = \App\QuizQuestions::whereIn('id',$quiz->question_ids)->get();
-                                    @endphp
                                     @foreach($questions as $question)
-                                        @php $options = \App\QuizOptions::where('question_id',$question->id)->get(); @endphp
-                                        <div class="mm-survey-page" data-page="{{$x++}}">
+                                        @php $options = \App\QuizOptions::where('question_id',$question->id)->get()
+                                        ->shuffle()->all(); @endphp
+                                        <div class="mm-survey-page" data-page="{{$no++}}">
                                             <div class="mm-survery-content">
                                                 <div class="mm-survey-question">
                                                     {!!$question->question_text!!}
@@ -170,9 +167,9 @@
                 item.addClass('mm-page-' + page);
             });
 
-            @php $y = 1; $z = 1; @endphp
+            @php $x = 1; $y = 1; @endphp
             @foreach($questions as $question)
-            $('.op{{$question->id}}').attr('name', 'op{{$y++}}').attr('data-item', '{{$z++}}');
+            $('.op{{$question->id}}').attr('name', 'op{{$x++}}').attr('data-item', '{{$y++}}');
             @endforeach
 
             $('.mm-page-1').addClass('active');

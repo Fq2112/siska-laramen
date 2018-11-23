@@ -16,7 +16,7 @@
                             <div class="carousel-inner">
                                 @if(\App\Gallery::where('agency_id',$agency->id)->count())
                                     @foreach(\App\Gallery::where('agency_id',$agency->id)->get() as $row)
-                                        @if($row->image == 'c1.jpg'||$row->image == 'c3.jpg'||
+                                        @if($row->image == 'c1.jpg' || $row->image == 'c2.jpg'||
                                         $row->image == 'c3.jpg')
                                             <div class="item"
                                                  style="background-image: url({{

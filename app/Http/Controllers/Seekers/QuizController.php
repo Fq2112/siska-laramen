@@ -22,11 +22,14 @@ class QuizController extends Controller
 
     public function showQuiz(Request $request)
     {
+        $no = 1;
         $quiz = QuizInfo::where('unique_code', $request->quiz_code)->first();
+        $questions = QuizQuestions::whereIn('id', $quiz->question_ids)->get()->shuffle()->all();
+
         $vacancy = Vacancies::find($quiz->vacancy_id);
         $agency = User::find(Agencies::find($vacancy->agency_id)->id);
 
-        return view('_seekers.quiz', compact('quiz', 'vacancy', 'agency'));
+        return view('_seekers.quiz', compact('quiz', 'no', 'questions', 'vacancy', 'agency'));
     }
 
     public function loadQuizAnswers($id)
