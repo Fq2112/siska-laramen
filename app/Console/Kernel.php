@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Agencies\abortingPayment::class,
+        Commands\Seekers\inactiveVacancy::class,
         Commands\deleteInactiveUser::class,
     ];
 
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('abortPayment:send')->daily();
+        $schedule->command('inactiveVacancy:update')->hourly();
         $schedule->command('inactiveUser:delete')->weekly();
     }
 
