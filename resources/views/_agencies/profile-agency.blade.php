@@ -458,6 +458,7 @@
                 iwBackground.children(':nth-child(2)').css({'display': 'none'});
                 iwBackground.children(':nth-child(4)').css({'display': 'none'});
 
+                iwOuter.css('left', '-30px');
                 iwOuter.parent().parent().css({left: '0'});
 
                 iwBackground.children(':nth-child(1)').attr('style', function (i, s) {
@@ -475,13 +476,14 @@
 
                 var iwCloseBtn = iwOuter.next();
                 iwCloseBtn.css({
+                    background: '#fff',
                     opacity: '1',
-                    width: '25px',
-                    height: '25px',
-                    right: '20px',
-                    top: '3px',
+                    width: '30px',
+                    height: '30px',
+                    right: '-39px',
+                    top: '6px',
                     border: '6px solid #48b5e9',
-                    'border-radius': '13px',
+                    'border-radius': '50%',
                     'box-shadow': '0 0 5px #3990B9'
                 });
 
