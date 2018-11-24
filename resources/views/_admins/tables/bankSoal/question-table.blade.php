@@ -38,7 +38,7 @@
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
                                         <strong>{{\App\QuizType::find($question->quiztype_id)->name}}</strong></td>
-                                    <td style="vertical-align: middle">{{$question->question_text}}</td>
+                                    <td style="vertical-align: middle">{!! $question->question_text !!}</td>
                                     <td style="vertical-align: middle">{{\Carbon\Carbon::parse($question->created_at)->format('j F Y')}}</td>
                                     <td style="vertical-align: middle">{{$question->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
@@ -91,11 +91,7 @@
                         <div class="row form-group">
                             <div class="col-lg-12">
                                 <label for="question_text">Question <span class="required">*</span></label>
-                                <div class="input-group">
-                                    <textarea id="question_text" name="question_text" class="form-control"
-                                              placeholder="Question" style="resize: vertical" required></textarea>
-                                    <span class="input-group-addon"><i class="fa fa-question-circle"></i></span>
-                                </div>
+                                <textarea id="question_text" name="question_text" class="use-tinymce"></textarea>
                             </div>
                         </div>
                         <div id="input_quiz_options"></div>
@@ -115,7 +111,7 @@
             var $result = '', i;
 
             $('#quiztype_id').val('default').selectpicker('refresh');
-            $('#question_text').val('');
+            tinyMCE.get('question_text').setContent('');
 
             for (i = 1; i <= 5; i++) {
                 $result +=
@@ -158,7 +154,7 @@
 
         function editQuestion(id, topic, question) {
             $('#quiztype_id').val(topic).selectpicker('refresh');
-            $('#question_text').val(question);
+            tinyMCE.get('question_text').setContent(question);
             $('#input_quiz_options').html('');
 
             $("#form-quiz-question").prop('action', '{{url('admin/tables/bank_soal/questions')}}/' + id + '/update');
@@ -168,5 +164,20 @@
 
             $("#createModal").modal('show');
         }
+
+        $("#form-quiz-question").on('submit', function (e) {
+            e.preventDefault();
+            if (tinyMCE.get('question_text').getContent() == "") {
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'Question field can\'t be null!',
+                    type: 'warning',
+                    timer: '3500'
+                });
+
+            } else {
+                $(this)[0].submit();
+            }
+        });
     </script>
 @endpush

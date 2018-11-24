@@ -23,7 +23,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>Details</th>
-                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -46,7 +45,7 @@
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
-                                        <table style="margin: 0">
+                                        <table>
                                             <tr>
                                                 <td>
                                                     <a href="{{route('seeker.profile',['id' => $seeker->id])}}"
@@ -98,7 +97,7 @@
                                                                           title="Work Experience">
                                                                         <i class="fa fa-briefcase"></i>&ensp;0 year
                                                                     </span>
-                                                                @endif&nbsp;|
+                                                                @endif|
                                                                 <span data-toggle="tooltip"
                                                                       title="Latest Education Degree"
                                                                       class="label label-primary">
@@ -123,7 +122,7 @@
                                             </tr>
                                         </table>
                                         <hr style="margin: .5em auto">
-                                        <table style="margin: 0">
+                                        <table>
                                             <tr>
                                                 <td>
                                                     <a href="{{route('agency.profile',['id' => $agency->id])}}"
@@ -138,7 +137,7 @@
                                                                  src="{{asset('storage/users/'.$userAgency->ava)}}">
                                                         @endif
                                                     </a>
-                                                    <table style="margin: 0">
+                                                    <table>
                                                         <tr>
                                                             <td>
                                                                 <a href="{{route('detail.vacancy',['id' =>
@@ -253,18 +252,21 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                    </td>
-                                    <td style="vertical-align: middle;" align="center">
-                                        @if($application->isApply == true)
-                                            <span class="label label-default" style="background: #00adb5">APPLIED</span>
-                                            &ndash;&nbsp;on&nbsp;&ndash;
-                                            <span class="label label-info">
-                                                {{\Carbon\Carbon::parse($application->created_at)->format('j F Y')}}
-                                            </span>
-                                        @else
-                                            <span class="label label-default"
-                                                  style="background: #fa5555">NOT APPLY</span>
-                                        @endif
+                                        <p>
+                                            @if($application->isApply == true)
+                                                <span class="label label-success" style="background: #00ADB5"
+                                                      data-toggle="tooltip"
+                                                      data-placement="right" title="Status">
+                                                    <strong><i class="fa fa-paper-plane"></i>&ensp;APPLIED</strong> on
+                                                    {{\Carbon\Carbon::parse($application->created_at)->format('j F Y')}}
+                                                </span>
+                                            @else
+                                                <span class="label label-default" data-toggle="tooltip"
+                                                      data-placement="right" title="Status">
+                                                    <strong><i class="fa fa-paper-plane"></i>&ensp;NOT APPLY</strong>
+                                                </span>
+                                            @endif
+                                        </p>
                                     </td>
                                     <td style="vertical-align: middle" align="center">
                                         <div class="btn-group">

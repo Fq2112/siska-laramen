@@ -42,11 +42,16 @@
                                         <hr style="margin: .5em auto">
                                         <ol>
                                             @foreach($questions as $question)
-                                                @php $options = \App\QuizOptions::where('question_id',$question->id)->get() @endphp
+                                                @php
+                                                    $options = \App\QuizOptions::where('question_id',$question->id)->get();
+                                                    $topic = \App\QuizType::find($question->quiztype_id)->name;
+                                                @endphp
                                                 <li style="margin-bottom: 1em">
-                                                    {{$question->question_text}}
-                                                    (<strong>{{\App\QuizType::find($question->quiztype_id)->name}}</strong>)
-                                                    <ul style="margin-left: -1em;">
+                                                    {!! $question->question_text !!}
+                                                    <span class="pull-right label label-default"
+                                                          style="background: {{$topic == "TPA" ? '#00adb5' : '#fa5555'}};margin-right: 1.5em;padding: 5px 25px;font-size: 15px;">
+                                                        <strong>{{$topic}}</strong></span>
+                                                    <ul style="margin: -.5em 0 0 -1em;">
                                                         @foreach($options as $option)
                                                             <li style="font-weight: {{$option->correct == true ? 'bold' : 'normal'}}">{{$option->correct == true ?
                                                             $option->option.' (correct answer)' : $option->option}}</li>
