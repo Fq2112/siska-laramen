@@ -40,16 +40,24 @@
             $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
                 $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
             })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+            $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
+                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay())
+                ->whereHas('getQuizInfo', function ($q) use ($seeker){
+                    $q->whereHas('getQuizResult', function ($q) use ($seeker){
+                        $q->where('seeker_id', $seeker->id);
+                    });
+                });
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+            $totalQuizInv = $quizInv - $submittedQuizInv;
         @endphp
-        @if($quizInv && !Illuminate\Support\Facades\Request::is(['quiz','account/dashboard/quiz_invitation']))
+        @if($totalQuizInv > 0 && !Illuminate\Support\Facades\Request::is(['quiz','account/dashboard/quiz_invitation']))
             <div class="alert-banner">
                 <div class="alert-banner-content">
                     <div class="alert-banner-text">
-                        There seems to be <strong>{{$quizInv}}</strong> of the quiz invitation was found!
+                        There seems to be <strong>{{$totalQuizInv}}</strong> of the quiz invitation was found!
                     </div>
                     <a class="alert-banner-button" href="{{route('seeker.invitation.quiz')}}"
-                       style="text-decoration: none">
-                        Redirect me to the Quiz Invitation page</a>
+                       style="text-decoration: none">Redirect me to the Quiz Invitation page</a>
                 </div>
                 <div class="alert-banner-close"></div>
             </div>

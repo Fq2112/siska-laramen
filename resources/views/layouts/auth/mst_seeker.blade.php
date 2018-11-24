@@ -52,8 +52,17 @@
         })->count();
 
         $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
-                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
-            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+            $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
+            $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay())
+             ->whereHas('getQuizInfo', function ($q) use ($seeker){
+                 $q->whereHas('getQuizResult', function ($q) use ($seeker){
+                    $q->where('seeker_id', $seeker->id);
+                 });
+            });
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        $totalQuizInv = $quizInv - $submittedQuizInv;
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
@@ -79,7 +88,8 @@
                                                 </a>
                                             </li>
                                             <li><a href="{{route('seeker.invitation.quiz')}}">Quiz Invitation
-                                                    <span class="badge">{{$quizInv > 999 ? '999+' : $quizInv}}</span></a>
+                                                    <span class="badge">{{$totalQuizInv > 999 ? '999+' : $totalQuizInv}}
+                                                    </span></a>
                                             </li>
                                             <li><a href="{{route('seeker.invitation.psychoTest')}}">Psycho Test
                                                     Invitation

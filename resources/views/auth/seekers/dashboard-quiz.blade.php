@@ -57,6 +57,9 @@
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
                                     $applicants = \App\Accepting::where('vacancy_id', $vacancy->id)
                                     ->where('isApply', true)->count();
+                                    $quizResult = \App\QuizResult::where('quiz_id', $quiz->id)
+                                    ->where('seeker_id', $seeker->id)->first();
+                                    $score = $quizResult != null ? $quizResult->score : '';
                                 @endphp
                                 <div class="media to-animate">
                                     <div class="media-left media-middle">
@@ -84,14 +87,15 @@
                                         </small>
                                         <blockquote style="font-size: 12px;color: #7f7f7f">
                                             <div class="pull-right to-animate-2">
-                                                <div class="anim-icon anim-icon-md quiz ld ld-breath"
+                                                <div class="anim-icon anim-icon-md quiz {{$score != "" ? '' : 'ld ld-breath'}}"
                                                      onclick="showQuiz('{{$row->id}}','{{$quiz->unique_code}}',
                                                              '{{$vacancy->judul}}','{{$vacancy->quizDate_start}}',
-                                                             '{{$vacancy->quizDate_end}}','{{$ava}}',
+                                                             '{{$vacancy->quizDate_end}}','{{$ava}}','{{$score}}',
                                                              '{{$userAgency->name}}','{{$vacancy->id}}','{{$quizDate}}',
                                                              '{{$quiz->total_question}}','{{$quiz->time_limit}}')"
-                                                     data-toggle="tooltip"
-                                                     title="Start Quiz" data-placement="bottom" style="font-size: 25px">
+                                                     data-toggle="tooltip" data-placement="bottom"
+                                                     style="font-size: 25px"
+                                                     title="{{$score != "" ? 'Quiz Details' : 'Start Quiz'}}">
                                                     <input id="quiz{{$row->id}}" type="checkbox" checked>
                                                     <label for="quiz{{$row->id}}"></label>
                                                 </div>
@@ -237,9 +241,7 @@
                 <div class="modal-body">
                     <div class="box">
                         <div class="content">
-                            <p style="font-size: 17px" align="justify">
-                                Before proceeding to the quiz with this following details, you have to click the "Start
-                                Quiz" button below.</p>
+                            <p style="font-size: 17px" align="justify" id="quizDesc"></p>
                             <hr class="hr-divider">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -258,6 +260,7 @@
                                                     <li><a class="tag" id="quizCode"></a></li>
                                                     <li><a class="tag" id="quizQuestion"></a></li>
                                                     <li><a class="tag" id="quizTime"></a></li>
+                                                    <li id="quizScore"></li>
                                                 </ul>
                                             </blockquote>
                                         </div>
@@ -267,8 +270,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <div class="card-read-more" id="btn-apply">
+                <div class="modal-footer" id="quizBtn">
+                    <div class="card-read-more">
                         <form method="post" action="{{route('show.quiz')}}" id="form-access-quiz">
                             {{csrf_field()}}
                             <input type="hidden" name="quiz_code" id="quiz_code">
@@ -288,7 +291,7 @@
             $("#form-time")[0].submit();
         });
 
-        function showQuiz(id, code, judul, start, end, ava, name, vacID, date, question, time) {
+        function showQuiz(id, code, judul, start, end, ava, score, name, vacID, date, question, time) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
@@ -298,6 +301,12 @@
                 '<strong>' + question + '</strong> items');
             $("#quizTime").html('<i class="fa fa-stopwatch"></i>&ensp;Time Limit: ' +
                 '<strong>' + time + '</strong> minutes');
+
+            $("#quizScore").html(score != "" ? '<a class="tag tag-plans"><i class="fa fa-award"></i>&ensp;' +
+                'Your Score: <strong>' + score + '</strong></a>' : '');
+            $("#quizDesc").text(score != "" ? 'Here is your quiz score with its following details.' : 'Before ' +
+                'proceeding to the quiz with this following details, you have to click the "Start Quiz" button below.');
+            $("#quizBtn").css('display', score != "" ? 'none' : 'block');
 
             $("#quiz_code").val(code);
             $("#quizModal").modal('show');

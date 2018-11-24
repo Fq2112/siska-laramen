@@ -19,4 +19,9 @@ class Vacancies extends Model
     {
         return $this->hasMany(Accepting::class,'vacancy_id');
     }
+
+    public function getQuizInfo()
+    {
+        return $this->hasMany(QuizInfo::class, 'vacancy_id');
+    }
 }
