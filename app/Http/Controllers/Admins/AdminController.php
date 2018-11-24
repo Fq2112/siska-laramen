@@ -10,8 +10,10 @@ use App\ConfirmAgency;
 use App\Feedback;
 use App\Http\Controllers\Controller;
 use App\QuizInfo;
+use App\QuizType;
 use App\Seekers;
 use App\User;
+use App\Vacancies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -119,16 +121,21 @@ class AdminController extends Controller
         }
     }
 
-    public function showQuizInfo()
+    public function showQuizInfo(Request $request)
     {
-        $infos = QuizInfo::all();
+        $infos = QuizInfo::orderByDesc('id')->get();
+        $types = QuizType::all();
+        $vacancies = Vacancies::where('isPost', true)->wherenotnull('quizDate_start')->get();
 
-        return view('_admins.quiz-setup', compact('infos'));
+        $findVac = Vacancies::where('id', $request->vac_id)->where('isPost', true)->wherenotnull('quizDate_start')->firstOrFail();
+
+        return view('_admins.quiz-setup', compact('infos', 'types', 'vacancies', 'findVac'));
     }
 
     public function createQuizInfo(Request $request)
     {
         $info = QuizInfo::create([
+            'vacancy_id' => $request->vacancy_id,
             'total_question' => $request->total_question,
             'question_ids' => $request->question_ids,
             'unique_code' => $request->unique_code,
@@ -142,6 +149,7 @@ class AdminController extends Controller
     {
         $info = QuizInfo::find($request->id);
         $info->update([
+            'vacancy_id' => $request->vacancy_id,
             'total_question' => $request->total_question,
             'question_ids' => $request->question_ids,
             'unique_code' => $request->unique_code,

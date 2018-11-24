@@ -30,15 +30,26 @@
                             <tbody>
                             @php $no = 1; @endphp
                             @foreach($infos as $info)
-                                @php $questions = \App\QuizQuestions::whereIn('id',$info->question_ids)->get(); @endphp
+                                @php
+                                    $questions = \App\QuizQuestions::whereIn('id',$info->question_ids)->get();
+                                    $vacancy = \App\Vacancies::find($info->vacancy_id);
+                                    $agency = \App\Agencies::find($vacancy->agency_id);
+                                    $userAgency = \App\User::find($agency->user_id);
+                                @endphp
                                 <tr>
                                     <td align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
+                                        <i class="fa fa-briefcase"></i>
+                                        <a href="{{route('detail.vacancy',['id'=>$vacancy->id])}}">
+                                            <strong>{{$vacancy->judul}}</strong></a> &ndash;
+                                        <a href="{{route('agency.profile',['id'=>$agency->id])}}">{{$userAgency->name}}
+                                        </a><br>
                                         <i class="fa fa-shield-alt"></i> Quiz Code:
                                         <strong>{{$info->unique_code}}</strong>&ensp;|&ensp;<i
-                                                class="fa fa-stopwatch"></i>
-                                        Time Limit:
-                                        <strong>{{$info->time_limit}}</strong> minutes
+                                                class="fa fa-question-circle"></i>
+                                        Total Question: <strong>{{$info->total_question}}</strong> items&ensp;|&nbsp;
+                                        <i class="fa fa-stopwatch"></i> Time Limit: <strong>{{$info->time_limit}}
+                                        </strong> minutes
                                         <hr style="margin: .5em auto">
                                         <ol>
                                             @foreach($questions as $question)
@@ -64,7 +75,7 @@
                                     <td align="center">
                                         <a onclick="editQuiz('{{$info->id}}','{{$info->unique_code}}',
                                                 '{{$info->time_limit}}','{{$info->total_question}}',
-                                                '{{implode(",",$info->question_ids)}}')"
+                                                '{{implode(",",$info->question_ids)}}','{{$vacancy->id}}')"
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
@@ -83,6 +94,21 @@
                             {{csrf_field()}}
                             <input type="hidden" name="_method">
                             <div class="row form-group">
+                                <div class="col-lg-12">
+                                    <label for="vacancy_id">Vacancy <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
+                                        <select id="vacancy_id" class="form-control selectpicker"
+                                                title="-- Select Questions --" data-live-search="true"
+                                                name="vacancy_id" required>
+                                            @foreach($vacancies as $vacancy)
+                                                <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
                                 <div class="col-lg-4">
                                     <label for="unique_code">Quiz Code <span class="required">*</span></label>
                                     <div class="input-group">
@@ -98,21 +124,21 @@
                                 <div class="col-lg-4">
                                     <label for="time_limit">Time Limit <span class="required">*</span></label>
                                     <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-stopwatch"></i></span>
                                         <input id="time_limit" name="time_limit" class="form-control" type="text"
                                                placeholder="in minutes" maxlength="3"
                                                onkeypress="return numberOnly(event, false)"
                                                required>
-                                        <span class="input-group-addon"><i class="fa fa-stopwatch"></i></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
                                     <label for="total_question">Total Question <span class="required">*</span></label>
                                     <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-list-ol"></i></span>
                                         <input id="total_question" name="total_question" class="form-control"
                                                type="text" placeholder="10" maxlength="3"
                                                onkeypress="return numberOnly(event, false)"
                                                value="1" required>
-                                        <span class="input-group-addon"><i class="fa fa-list-ol"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -120,20 +146,20 @@
                                 <div class="col-lg-12">
                                     <label for="question_ids">Questions <span class="required">*</span></label>
                                     <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-question-circle"></i></span>
                                         <select id="question_ids" class="form-control selectpicker" data-max-options="1"
                                                 title="-- Select Questions --" data-live-search="true"
                                                 name="question_ids[]"
                                                 data-selected-text-format="count" multiple required>
-                                            @foreach(\App\QuizType::all() as $type)
+                                            @foreach($types as $type)
                                                 <optgroup label="{{$type->name}}">
-                                                    @foreach(\App\QuizQuestions::orderByDesc('id')->get() as $question)
-                                                        <option value="{{$question->id}}">{{$question->question_text}}
+                                                    @foreach($type->getQuizQuestions as $question)
+                                                        <option value="{{$question->id}}">{!!$question->question_text!!}
                                                         </option>
                                                     @endforeach
                                                 </optgroup>
                                             @endforeach
                                         </select>
-                                        <span class="input-group-addon"><i class="fa fa-question-circle"></i></span>
                                     </div>
                                 </div>
                             </div>
@@ -152,6 +178,13 @@
 @endsection
 @push("scripts")
     <script>
+        @if($findVac != null)
+        $(function () {
+            $(".btn_quiz").click();
+            $("#vacancy_id").val('{{$findVac->id}}').selectpicker('refresh');
+        });
+        @endif
+
         $(".btn_quiz").on("click", function () {
             $(".btn_quiz i").toggleClass('fa-plus fa-th-list');
             $(".btn_quiz[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
@@ -165,6 +198,7 @@
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
             $("#form-quiz")[0].reset();
             $("#unique_code").val(generateCode());
+            $("#vacancy_id").val('default').selectpicker('refresh');
             $("#question_ids").val('default').selectpicker({maxOptions: 1}).selectpicker('refresh');
 
             $("#content1").toggle(300);
@@ -194,7 +228,7 @@
             $("#question_ids").val('default').selectpicker({maxOptions: total_question}).selectpicker('refresh');
         });
 
-        function editQuiz(id, code, time, total, questions) {
+        function editQuiz(id, code, time, total, questions, vacancy) {
             $(".btn_quiz i").toggleClass('fa-plus fa-th-list');
             $(".btn_quiz[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
                 return v === "Create" ? "View" : "Create";
@@ -213,12 +247,8 @@
             $("#unique_code").val(code);
             $("#time_limit").val(time);
             $("#total_question").val(total);
-
-            $.each(questions.split(","), function (i, e) {
-                $("#question_ids option[value='" + e + "']").attr('selected', 'selected');
-            });
-
-            $("#question_ids").selectpicker({maxOptions: total}).selectpicker('refresh');
+            $("#vacancy_id").val(vacancy).selectpicker('refresh');
+            $("#question_ids").val(questions.split(",")).selectpicker({maxOptions: total}).selectpicker('refresh');
 
             $("#btn_quiz_submit").html("<strong>SAVE CHANGES</strong>");
         }
