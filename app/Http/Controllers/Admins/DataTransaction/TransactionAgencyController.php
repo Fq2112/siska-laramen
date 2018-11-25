@@ -127,7 +127,8 @@ class TransactionAgencyController extends Controller
             $this->paymentDetailsMail($posting);
         }
 
-        return back()->with('success', '' . $request->invoice . ' is successfully updated!');
+        return back()->with('success', '' . $request->invoice . ' is successfully updated!')
+            ->withInput($request->all())->with('vac_ids', implode(',', $posting->vacancy_ids));
     }
 
     private function paymentDetailsMail($posting)

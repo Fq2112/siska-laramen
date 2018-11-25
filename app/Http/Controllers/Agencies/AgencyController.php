@@ -107,6 +107,34 @@ class AgencyController extends Controller
             'plan', 'totalAds', 'price'));
     }
 
+    public function getVacancyCheck($id)
+    {
+        $user = Auth::user();
+        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+        $vacancies = Vacancies::where('agency_id', $agency->id);
+
+        $plan = Plan::find($id);
+        $number = filter_var($plan->job_ads, FILTER_SANITIZE_NUMBER_INT);
+        $totalAds = array_sum(str_split($number));
+
+        if ($vacancies->count() > 0) {
+            if ($vacancies->where('isPost', false)->count() > 0) {
+                if ($vacancies->where('isPost', false)->count() >= $totalAds) {
+                    return 3;
+
+                } else {
+                    return 2;
+                }
+
+            } else {
+                return 1;
+            }
+
+        } else {
+            return 0;
+        }
+    }
+
     public function getVacancyReviewData($vacancy)
     {
         $vac_ids = '';

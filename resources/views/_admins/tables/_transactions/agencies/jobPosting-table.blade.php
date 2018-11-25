@@ -98,14 +98,27 @@
                                             <tr>
                                                 <td>
                                                     <strong>{{count($vacancies) > 1 ? 'Vacancies' : 'Vacancy'}}</strong>
-                                                    <ul>
+                                                    <ol style="margin: 0 auto">
                                                         @foreach($vacancies as $vacancy)
-                                                            <li>
+                                                            <li style="margin-bottom: .5em">
                                                                 <a href="{{route('detail.vacancy',['id' => $vacancy->id])}}"
                                                                    target="_blank">{{$vacancy->judul}}</a>
+                                                                <ul>
+                                                                    <li>Quiz with <strong>{{$vacancy->passing_grade !=
+                                                                    null ? $vacancy->passing_grade : 0}}
+                                                                        </strong> passing grade&nbsp;&ndash;&nbsp;for&nbsp;&ndash;
+                                                                        <strong>{{$vacancy ->quiz_applicant != null ?
+                                                                        $vacancy->quiz_applicant : 0}}
+                                                                        </strong> applicants
+                                                                    </li>
+                                                                    <li>Psycho Test for <strong>{{$vacancy
+                                                                    ->psychoTest_applicant != null ? $vacancy
+                                                                    ->psychoTest_applicant : 0}}</strong> applicants
+                                                                    </li>
+                                                                </ul>
                                                             </li>
                                                         @endforeach
-                                                    </ul>
+                                                    </ol>
                                                 </td>
                                             </tr>
                                         </table>
@@ -164,12 +177,13 @@
                                             <input type="hidden" name="invoice" value="{{$invoice}}">
                                             <input type="hidden" name="isPaid" id="input_isPaid{{$posting->id}}">
                                             <input type="hidden" name="isAbort" id="input_isAbort{{$posting->id}}">
+                                            <input type="hidden" name="isQuiz" id="input_isQuiz{{$posting->id}}">
                                         </form>
                                         <div class="btn-group">
                                             @if(now() <= $posting->created_at->addDay())
                                                 <button type="button" class="btn btn-success btn-sm"
                                                         style="font-weight: 600"
-                                                        onclick="approving('{{$posting->id}}','{{$invoice}}')"
+                                                        onclick="approving('{{$posting->id}}','{{$invoice}}','{{$plan->isQuiz}}')"
                                                         {{$posting->isPaid == false ? '' : 'disabled'}}>
                                                     {{$posting->isPaid == false ? 'APPROVE' : 'APPROVED'}}
                                                 </button>
@@ -218,12 +232,35 @@
 @endsection
 @push("scripts")
     <script>
+        @if(old('isQuiz') == 1)
+        $(function () {
+            swal({
+                title: 'Quiz Setup {{old('invoice')}}',
+                text: 'For each vacancy in this invoice requires a quiz!',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00adb5',
+                confirmButtonText: 'Yes, setup now!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        window.location.href = '{{route('quiz.info')}}?vac_ids={{session('vac_ids')}}';
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
+        });
+
+        @endif
+
         function paymentProofModal(asset) {
             $("#paymentProof").attr('src', asset);
             $("#paymentProofModal").modal('show');
         }
 
-        function approving(id, invoice) {
+        function approving(id, invoice, isQuiz) {
             swal({
                 title: 'Vacancy Approval ' + invoice,
                 text: 'The status of the vacancy in this invoice will be change into "ACTIVE". Are you sure to approve it?',
@@ -237,6 +274,7 @@
                     return new Promise(function (resolve) {
                         $("#input_isPaid" + id).val(1);
                         $("#input_isAbort" + id).val(0);
+                        $("#input_isQuiz" + id).val(isQuiz);
                         $("#form-approval" + id)[0].submit();
                     });
                 },

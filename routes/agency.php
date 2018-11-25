@@ -28,45 +28,54 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
         'as' => 'invite.seeker'
     ]);
 
-    Route::get('job_posting/{id}', [
-        'uses' => 'AgencyController@showJobPosting',
-        'as' => 'show.job.posting'
-    ]);
+    Route::group(['prefix' => 'job_posting'], function () {
 
-    Route::get('job_posting/reviewData/vacancy/{vacancy}', [
-        'uses' => 'AgencyController@getVacancyReviewData',
-        'as' => 'get.vacancyReviewData'
-    ]);
+        Route::get('{id}', [
+            'uses' => 'AgencyController@showJobPosting',
+            'as' => 'show.job.posting'
+        ]);
 
-    Route::get('job_posting/reviewData/plans/{plan}', [
-        'uses' => 'AgencyController@getPlansReviewData',
-        'as' => 'get.plansReviewData'
-    ]);
+        Route::get('vacancy_check/{id}', [
+            'uses' => 'AgencyController@getVacancyCheck',
+            'as' => 'get.vacancyCheck'
+        ]);
 
-    Route::get('job_posting/paymentMethod/{id}', [
-        'uses' => 'AgencyController@getPaymentMethod',
-        'as' => 'get.paymentMethod'
-    ]);
+        Route::get('reviewData/vacancy/{vacancy}', [
+            'uses' => 'AgencyController@getVacancyReviewData',
+            'as' => 'get.vacancyReviewData'
+        ]);
 
-    Route::post('job_posting/submit', [
-        'uses' => 'AgencyController@submitJobPosting',
-        'as' => 'submit.job.posting'
-    ]);
+        Route::get('reviewData/plans/{plan}', [
+            'uses' => 'AgencyController@getPlansReviewData',
+            'as' => 'get.plansReviewData'
+        ]);
 
-    Route::put('job_posting/payment_proof/submit', [
-        'uses' => 'AgencyController@uploadPaymentProof',
-        'as' => 'upload.paymentProof'
-    ]);
+        Route::get('paymentMethod/{id}', [
+            'uses' => 'AgencyController@getPaymentMethod',
+            'as' => 'get.paymentMethod'
+        ]);
 
-    Route::get('job_posting/invoice/{id}', [
-        'uses' => 'AgencyController@invoiceJobPosting',
-        'as' => 'invoice.job.posting'
-    ]);
+        Route::post('submit', [
+            'uses' => 'AgencyController@submitJobPosting',
+            'as' => 'submit.job.posting'
+        ]);
 
-    Route::get('job_posting/{id}/delete', [
-        'uses' => 'AgencyController@deleteJobPosting',
-        'as' => 'delete.job.posting'
-    ]);
+        Route::put('payment_proof/submit', [
+            'uses' => 'AgencyController@uploadPaymentProof',
+            'as' => 'upload.paymentProof'
+        ]);
+
+        Route::get('invoice/{id}', [
+            'uses' => 'AgencyController@invoiceJobPosting',
+            'as' => 'invoice.job.posting'
+        ]);
+
+        Route::get('{id}/delete', [
+            'uses' => 'AgencyController@deleteJobPosting',
+            'as' => 'delete.job.posting'
+        ]);
+
+    });
 
 });
 

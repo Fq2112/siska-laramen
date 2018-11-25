@@ -948,7 +948,7 @@
                             "Please fill it correctly for each vacancy that you've selected.");
 
                     } else {
-                        if (parseInt($(".input_quiz_applicant").val()) > 0 && total_quiz_applicant > old_total_quiz) {
+                        if (parseInt($(".input_quiz_applicant").val()) > 0 && total_quiz_applicant >= old_total_quiz) {
                             $(".quiz_setup").removeClass('has-error');
                             $("#quiz_error small").text('');
 
@@ -966,7 +966,7 @@
                 }
 
                 if (isPsychoTest == 1) {
-                    if (parseInt($(".input_psychoTest_applicant").val()) > 0 && total_psychoTest_applicant > old_total_psychoTest) {
+                    if (parseInt($(".input_psychoTest_applicant").val()) > 0 && total_psychoTest_applicant >= old_total_psychoTest) {
                         $(".psychoTest_setup").removeClass('has-error');
                         $("#psychoTest_error small").text('');
 

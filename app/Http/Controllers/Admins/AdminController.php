@@ -125,24 +125,46 @@ class AdminController extends Controller
     {
         $infos = QuizInfo::orderByDesc('id')->get();
         $types = QuizType::all();
-        $vacancies = Vacancies::where('isPost', true)->wherenotnull('quizDate_start')->get();
+        $vacancies = Vacancies::where('isPost', true)->whereHas('getPlan', function ($query) {
+            $query->where('isQuiz', true);
+        })->get();
 
-        $findVac = Vacancies::where('id', $request->vac_id)->where('isPost', true)->wherenotnull('quizDate_start')->firstOrFail();
+        if ($request->has("vac_ids")) {
+            $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
+        } else {
+            $findVac = null;
+        }
 
         return view('_admins.quiz-setup', compact('infos', 'types', 'vacancies', 'findVac'));
     }
 
+    public function getQuizVacancyInfo($id)
+    {
+        return Vacancies::whereIn('id', explode(',', $id))->get();
+    }
+
     public function createQuizInfo(Request $request)
     {
-        $info = QuizInfo::create([
-            'vacancy_id' => $request->vacancy_id,
-            'total_question' => $request->total_question,
-            'question_ids' => $request->question_ids,
-            'unique_code' => $request->unique_code,
-            'time_limit' => $request->time_limit
-        ]);
+        /*$it = new \MultipleIterator();
+        $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
+        $it->attachIterator(new \ArrayIterator($request->unique_code));
+        $it->attachIterator(new \ArrayIterator($request->total_question));
+        $it->attachIterator(new \ArrayIterator($request->time_limit));
+        $it->attachIterator(new \ArrayIterator($request->question_ids));
+        foreach ($it as $value) {
+            QuizInfo::create([
+                'vacancy_id' => $value[0],
+                'unique_code' => $value[1],
+                'total_question' => $value[2],
+                'time_limit' => $value[3],
+                'question_ids' => $value[4]
+            ]);
+        }*/
+        dd($request->question_ids);
+        $total = count((array)$request->vacancy_ids);
 
-        return back()->with('success', 'Quiz #' . $info->unique_code . ' is successfully created!');
+        return redirect()->route('quiz.info')
+            ->with('success', '' . $total . ' quiz ' . $total > 1 ? 'are' : 'is' . ' successfully created!');
     }
 
     public function updateQuizInfo(Request $request)
@@ -156,7 +178,8 @@ class AdminController extends Controller
             'time_limit' => $request->time_limit
         ]);
 
-        return back()->with('success', 'Quiz #' . $info->unique_code . ' is successfully updated!');
+        return redirect()->route('quiz.info')
+            ->with('success', 'Quiz #' . $info->unique_code . ' is successfully updated!');
     }
 
     public function deleteQuizInfo(Request $request)
@@ -164,6 +187,6 @@ class AdminController extends Controller
         $info = QuizInfo::find(decrypt($request->id));
         $info->delete();
 
-        return back()->with('success', 'Quiz #' . $info->unique_code . ' is successfully deleted!');
+        return redirect()->route('quiz.info')->with('success', 'Quiz #' . $info->unique_code . ' is successfully deleted!');
     }
 }

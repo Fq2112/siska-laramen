@@ -103,6 +103,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
             'as' => 'quiz.info'
         ]);
 
+        Route::get('vacancy/{id}', [
+            'uses' => 'AdminController@getQuizVacancyInfo',
+            'as' => 'quiz.vacancy.info'
+        ]);
+
         Route::post('create', [
             'uses' => 'AdminController@createQuizInfo',
             'as' => 'quiz.create.info'

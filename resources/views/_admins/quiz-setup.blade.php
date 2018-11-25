@@ -18,7 +18,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content" id="content1">
-                        <table id="datatable-fixed-header" class="table table-striped table-bordered">
+                        <table id="datatable-buttons" class="table table-striped table-bordered">
                             <thead>
                             <tr>
                                 <th>No</th>
@@ -100,7 +100,8 @@
                                         <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
                                         <select id="vacancy_id" class="form-control selectpicker"
                                                 title="-- Select Questions --" data-live-search="true"
-                                                name="vacancy_id" required>
+                                                data-selected-text-format="count > 3" name="vacancy_ids[]"
+                                                multiple required>
                                             @foreach($vacancies as $vacancy)
                                                 <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
                                             @endforeach
@@ -108,61 +109,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row form-group">
-                                <div class="col-lg-4">
-                                    <label for="unique_code">Quiz Code <span class="required">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                          <button type="button" class="btn btn-dark" id="btn_code">
-                                              <i class="fa fa-sync"></i></button>
-                                        </span>
-                                        <input id="unique_code" name="unique_code" type="text" class="form-control"
-                                               maxlength="6" readonly required>
-                                        <span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <label for="time_limit">Time Limit <span class="required">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-stopwatch"></i></span>
-                                        <input id="time_limit" name="time_limit" class="form-control" type="text"
-                                               placeholder="in minutes" maxlength="3"
-                                               onkeypress="return numberOnly(event, false)"
-                                               required>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <label for="total_question">Total Question <span class="required">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-list-ol"></i></span>
-                                        <input id="total_question" name="total_question" class="form-control"
-                                               type="text" placeholder="10" maxlength="3"
-                                               onkeypress="return numberOnly(event, false)"
-                                               value="1" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-lg-12">
-                                    <label for="question_ids">Questions <span class="required">*</span></label>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-question-circle"></i></span>
-                                        <select id="question_ids" class="form-control selectpicker" data-max-options="1"
-                                                title="-- Select Questions --" data-live-search="true"
-                                                name="question_ids[]"
-                                                data-selected-text-format="count" multiple required>
-                                            @foreach($types as $type)
-                                                <optgroup label="{{$type->name}}">
-                                                    @foreach($type->getQuizQuestions as $question)
-                                                        <option value="{{$question->id}}">{!!$question->question_text!!}
-                                                        </option>
-                                                    @endforeach
-                                                </optgroup>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
+                            <img src="{{asset('images/loading2.gif')}}" id="image"
+                                 class="img-responsive ld ld-fade" style="display:none">
+                            <div id="input_quiz_setup"></div>
                             <div class="row form-group">
                                 <div class="col-lg-12">
                                     <button type="submit" class="btn btn-primary btn-block" id="btn_quiz_submit">
@@ -181,7 +131,14 @@
         @if($findVac != null)
         $(function () {
             $(".btn_quiz").click();
-            $("#vacancy_id").val('{{$findVac->id}}').selectpicker('refresh');
+            @foreach($findVac as $row)
+            $("#vacancy_id option[value='{{$row}}']").attr('selected', 'selected');
+            @endforeach
+            $('#vacancy_id option:selected').each(function (i, selected) {
+                setTimeout(loadVacancyData('{{implode(',',$findVac->toArray())}}'), 1000);
+            });
+            $("#vacancy_id").selectpicker('refresh');
+            $("#vacancySetupDivider").css('display', 'block');
         });
         @endif
 
@@ -190,24 +147,199 @@
             $(".btn_quiz[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
                 return v === "Create" ? "View" : "Create";
             }).tooltip('show');
-
             $("#panel_title").html(function (i, v) {
                 return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
             });
-
+            $("#vacancySetupDivider").css('display', 'none');
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
+
             $("#form-quiz")[0].reset();
-            $("#unique_code").val(generateCode());
-            $("#vacancy_id").val('default').selectpicker('refresh');
-            $("#question_ids").val('default').selectpicker({maxOptions: 1}).selectpicker('refresh');
+            $("#vacancy_id").val('default').attr('name', 'vacancy_id')
+                .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
+            $("#input_quiz_setup").html('');
 
             $("#content1").toggle(300);
             $("#content2").toggle(300);
         });
 
-        $("#btn_code").on("click", function () {
-            $("#unique_code").val(generateCode());
+        $("#vacancy_id").on("change", function () {
+            var $id = $(this).val();
+            $('#vacancy_id option:selected').each(function (i, selected) {
+                setTimeout(loadVacancyData($id), 1000);
+                $("#vacancySetupDivider").css('display', 'block');
+            });
         });
+
+        function loadVacancyData($id) {
+            $.ajax({
+                url: '{{route('quiz.vacancy.info',['id' => ''])}}/' + $id,
+                type: "GET",
+                data: $("#vacancy_id"),
+                beforeSend: function () {
+                    $('#image').show();
+                    $('#input_quiz_setup').hide();
+                },
+                complete: function () {
+                    $('#image').hide();
+                    $('#input_quiz_setup').show();
+                },
+                success: function (data) {
+                    var input_quiz_setup = '';
+                    $.each(data, function (i, val) {
+                        input_quiz_setup +=
+                            '<div class="row form-group" style="margin-bottom: 0;margin-top: 1.5em">' +
+                            '<div class="col-lg-12">' +
+                            '<label style="font-size: 18px">' + val.judul + '</label>' +
+                            '</div></div>' +
+                            '<div class="row form-group">' +
+                            '<div class="col-lg-4">' +
+                            '<label for="unique_code">Quiz Code <span class="required">*</span></label>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-btn">' +
+                            '<button type="button" class="btn btn-dark quizCodes" id="btn_code' + val.id + '" ' +
+                            'onclick="generateCodeBtn(' + val.id + ')"><i class="fa fa-sync"></i></button></span>' +
+                            '<input id="unique_code' + val.id + '" name="unique_code[]" type="text" ' +
+                            'class="form-control" maxlength="6" readonly required>' +
+                            '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
+                            '</div></div>' +
+                            '<div class="col-lg-4">' +
+                            '<label for="time_limit">Time Limit <span class="required">*</span></label>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-addon"><i class="fa fa-stopwatch"></i></span>' +
+                            '<input id="time_limit' + val.id + '" name="time_limit[]" class="form-control" ' +
+                            'type="text" placeholder="in minutes" maxlength="3" ' +
+                            'onkeypress="return numberOnly(event, false)" required>' +
+                            '</div></div>' +
+                            '<div class="col-lg-4">' +
+                            '<label for="total_question">Total Question <span class="required">*</span></label>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-addon"><i class="fa fa-list-ol"></i></span>' +
+                            '<input id="total_question' + val.id + '" name="total_question[]" class="form-control" ' +
+                            'type="text" placeholder="10" maxlength="3" onkeypress="return numberOnly(event, false)" ' +
+                            'value="1" onchange="totalQuestion(' + val.id + ')" required>' +
+                            '</div></div></div>' +
+                            '<div class="row form-group">' +
+                            '<div class="col-lg-12">' +
+                            '<label for="question_ids">Questions <span class="required">*</span></label>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-addon"><i class="fa fa-question-circle"></i></span>' +
+                            '<select id="question_ids' + val.id + '" class="form-control selectpicker" ' +
+                            'data-max-options="1" title="-- Select Questions --" data-live-search="true" ' +
+                            'name="question_ids[]" data-selected-text-format="count" multiple required>' +
+                                @foreach($types as $type)
+                                    '<optgroup label="{{$type->name}}">' +
+                                @foreach($type->getQuizQuestions as $question)
+                                    '<option value="{{$question->id}}">{!!$question->question_text!!}</option>' +
+                                @endforeach
+                                    '</optgroup>' +
+                                @endforeach
+                                    '</select></div></div></div>';
+                    });
+                    $("#input_quiz_setup").html(input_quiz_setup);
+                    $(".quizCodes").click();
+                    $(".selectpicker").selectpicker('render');
+                },
+                error: function () {
+                    swal({
+                        title: 'Oops...',
+                        text: 'Something went wrong! Please refresh the page.',
+                        type: 'error',
+                        timer: '1500'
+                    })
+                }
+            });
+            return false;
+        }
+
+        function generateCodeBtn(id) {
+            $("#unique_code" + id).val(generateCode());
+        }
+
+        var total_question = "";
+
+        function totalQuestion(id) {
+            if (parseInt($("#total_question" + id).val()) <= 0 || $("#total_question" + id).val() == "") {
+                $("#total_question" + id).val(1);
+            }
+            total_question = $("#total_question" + id).val();
+            $("#question_ids" + id).val('default').selectpicker({maxOptions: total_question}).selectpicker('refresh');
+        }
+
+        function editQuiz(id, code, time, total, questions, vacancy) {
+            $(".btn_quiz i").toggleClass('fa-plus fa-th-list');
+            $(".btn_quiz[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
+                return v === "Create" ? "View" : "Create";
+            });
+            $("#panel_title").html(function (i, v) {
+                return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
+            });
+            $("#vacancySetupDivider").css('display', 'none');
+            $("#content1").toggle(300);
+            $("#content2").toggle(300);
+
+            $("#form-quiz").attr("action", "{{ url('admin/quiz') }}/" + id + "/update");
+            $("#form-quiz input[name='_method']").val('PUT');
+
+            $("#input_quiz_setup").html(
+                '<div class="row form-group">' +
+                '<div class="col-lg-4">' +
+                '<label for="unique_code">Quiz Code <span class="required">*</span></label>' +
+                '<div class="input-group">' +
+                '<span class="input-group-btn">' +
+                '<button type="button" class="btn btn-dark" id="btn_code"><i class="fa fa-sync"></i></button>' +
+                '</span><input id="unique_code" name="unique_code" type="text" class="form-control" ' +
+                'maxlength="6" readonly required>' +
+                '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
+                '</div></div>' +
+                '<div class="col-lg-4">' +
+                '<label for="time_limit">Time Limit <span class="required">*</span></label>' +
+                '<div class="input-group">' +
+                '<span class="input-group-addon"><i class="fa fa-stopwatch"></i></span>' +
+                '<input id="time_limit" name="time_limit" class="form-control" type="text" ' +
+                'placeholder="in minutes" maxlength="3" onkeypress="return numberOnly(event, false)" required>' +
+                '</div></div>' +
+                '<div class="col-lg-4">' +
+                '<label for="total_question">Total Question <span class="required">*</span></label>' +
+                '<div class="input-group">' +
+                '<span class="input-group-addon"><i class="fa fa-list-ol"></i></span>' +
+                '<input id="total_question" name="total_question" class="form-control" type="text" ' +
+                'placeholder="10" maxlength="3" onkeypress="return numberOnly(event, false)" value="1" required>' +
+                '</div></div></div>' +
+                '<div class="row form-group">' +
+                '<div class="col-lg-12"><label for="question_ids">Questions <span class="required">*</span></label>' +
+                '<div class="input-group">' +
+                '<span class="input-group-addon"><i class="fa fa-question-circle"></i></span>' +
+                '<select id="question_ids" class="form-control selectpicker" data-max-options="1" ' +
+                'title="-- Select Questions --" data-live-search="true" name="question_ids[]" ' +
+                'data-selected-text-format="count" multiple required>' +
+                '@foreach($types as $type)' +
+                '<optgroup label="{{$type->name}}">' +
+                '@foreach($type->getQuizQuestions as $question)' +
+                '<option value="{{$question->id}}">{!!$question->question_text!!}</option>@endforeach' +
+                '</optgroup>' +
+                '@endforeach' +
+                '</select></div></div></div>'
+            );
+            $("#unique_code").val(code);
+            $("#time_limit").val(time);
+            $("#vacancy_id").val(vacancy).attr('name', 'vacancy_id').selectpicker({maxOptions: 1}).selectpicker('refresh');
+            $("#question_ids").val(questions.split(",")).selectpicker({maxOptions: total}).selectpicker('refresh');
+
+            $("#btn_code").on("click", function () {
+                $("#unique_code").val(generateCode());
+            });
+
+            var total_question = "";
+            $("#total_question").val(total).on("change", function () {
+                if (parseInt($(this).val()) <= 0 || $(this).val() == "") {
+                    $(this).val(1);
+                }
+                total_question = $(this).val();
+                $("#question_ids").val('default').selectpicker({maxOptions: total_question}).selectpicker('refresh');
+            });
+
+            $("#btn_quiz_submit").html("<strong>SAVE CHANGES</strong>");
+        }
 
         function generateCode() {
             var text = "";
@@ -217,40 +349,6 @@
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
 
             return text;
-        }
-
-        var total_question = "";
-        $("#total_question").on("change", function () {
-            if (parseInt($(this).val()) <= 0 || $(this).val() == "") {
-                $(this).val(1);
-            }
-            total_question = $(this).val();
-            $("#question_ids").val('default').selectpicker({maxOptions: total_question}).selectpicker('refresh');
-        });
-
-        function editQuiz(id, code, time, total, questions, vacancy) {
-            $(".btn_quiz i").toggleClass('fa-plus fa-th-list');
-            $(".btn_quiz[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
-                return v === "Create" ? "View" : "Create";
-            });
-
-            $("#panel_title").html(function (i, v) {
-                return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
-            });
-
-            $("#content1").toggle(300);
-            $("#content2").toggle(300);
-
-            $("#form-quiz").attr("action", "{{ url('admin/quiz') }}/" + id + "/update");
-            $("#form-quiz input[name='_method']").val('PUT');
-
-            $("#unique_code").val(code);
-            $("#time_limit").val(time);
-            $("#total_question").val(total);
-            $("#vacancy_id").val(vacancy).selectpicker('refresh');
-            $("#question_ids").val(questions.split(",")).selectpicker({maxOptions: total}).selectpicker('refresh');
-
-            $("#btn_quiz_submit").html("<strong>SAVE CHANGES</strong>");
         }
     </script>
 @endpush

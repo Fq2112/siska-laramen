@@ -15,4 +15,8 @@ class Plan extends Model
 
     protected $dates = ['deleted_at'];
 
+    public function getVacancy()
+    {
+        return $this->hasMany(Vacancies::class, 'plan_id');
+    }
 }

@@ -468,37 +468,28 @@
                 timer: '3500'
             });
             @else
-            if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-                    ->count()}}' > 0) {
+            $.get("{{route('get.vacancyCheck',['id' => ''])}}/" + id, function (data) {
+                if (data == 0) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: "There seems to be none of the vacancy was found. If you want to post some vacancy, " +
+                            "please go to the Vacancy Setup to make it.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00ADB5',
+                        confirmButtonText: 'Yes, redirect me to the Vacancy Setup page.',
+                        showLoaderOnConfirm: true,
 
-                if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-                        ->where('isPost',false)->count()}}' > 0) {
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                window.location.href = '{{route('agency.vacancy.show')}}';
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                    return false;
 
-                    if ('{{\App\Vacancies::where('agency_id',\App\Agencies::where('user_id',Auth::user()->id)->first()->id)
-                            ->where('isPost', false)->count()}}' >= job_ads) {
-                        $("#form-plans-" + id)[0].submit();
-                    }
-                    else {
-                        swal({
-                            title: 'ATTENTION!',
-                            text: "This package requires at least " + job_ads + " Vacancy that have not been posted yet. It seems that the amount of your vacancy doesn't meet the minimal amount of this package.",
-                            type: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#00ADB5',
-                            confirmButtonText: 'Yes, redirect me to the Vacancy Setup page.',
-                            showLoaderOnConfirm: true,
-
-                            preConfirm: function () {
-                                return new Promise(function (resolve) {
-                                    window.location.href = '{{route('agency.vacancy.show')}}';
-                                });
-                            },
-                            allowOutsideClick: false
-                        });
-                        return false;
-                    }
-
-                } else {
+                } else if (data == 1) {
                     swal({
                         title: 'ATTENTION!',
                         text: "All of your vacancies have been posted. If you want to post another vacancy, " +
@@ -517,28 +508,30 @@
                         allowOutsideClick: false
                     });
                     return false;
+
+                } else if (data == 2) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: "This package requires at least " + job_ads + " Vacancy that have not been posted yet. It seems that the amount of your vacancy doesn't meet the minimal amount of this package.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00ADB5',
+                        confirmButtonText: 'Yes, redirect me to the Vacancy Setup page.',
+                        showLoaderOnConfirm: true,
+
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                window.location.href = '{{route('agency.vacancy.show')}}';
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                    return false;
+
+                } else if (data == 3) {
+                    $("#form-plans-" + id)[0].submit();
                 }
-
-            } else {
-                swal({
-                    title: 'ATTENTION!',
-                    text: "There seems to be none of the vacancy was found. If you want to post some vacancy, " +
-                        "please go to the Vacancy Setup to make it.",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#00ADB5',
-                    confirmButtonText: 'Yes, redirect me to the Vacancy Setup page.',
-                    showLoaderOnConfirm: true,
-
-                    preConfirm: function () {
-                        return new Promise(function (resolve) {
-                            window.location.href = '{{route('agency.vacancy.show')}}';
-                        });
-                    },
-                    allowOutsideClick: false
-                });
-                return false;
-            }
+            });
             @endif
             @endguest
         }
