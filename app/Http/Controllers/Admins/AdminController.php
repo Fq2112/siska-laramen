@@ -145,7 +145,7 @@ class AdminController extends Controller
 
     public function createQuizInfo(Request $request)
     {
-        /*$it = new \MultipleIterator();
+        $it = new \MultipleIterator();
         $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
         $it->attachIterator(new \ArrayIterator($request->unique_code));
         $it->attachIterator(new \ArrayIterator($request->total_question));
@@ -159,12 +159,11 @@ class AdminController extends Controller
                 'time_limit' => $value[3],
                 'question_ids' => $value[4]
             ]);
-        }*/
-        dd($request->question_ids);
-        $total = count((array)$request->vacancy_ids);
+        }
+        $total = count($request->vacancy_ids);
+        $str = $total > 1 ? 'quiz are' : 'quiz is';
 
-        return redirect()->route('quiz.info')
-            ->with('success', '' . $total . ' quiz ' . $total > 1 ? 'are' : 'is' . ' successfully created!');
+        return redirect()->route('quiz.info')->with('success', '' . $total . ' ' . $str . ' successfully created!');
     }
 
     public function updateQuizInfo(Request $request)
