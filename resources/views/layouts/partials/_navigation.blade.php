@@ -115,10 +115,9 @@
                         <i class="fa fa-cogs" style="margin-right: 5px"></i>Account Settings</a></li>
                 <li class="divider"></li>
                 <li>
-                    <a onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'"
-                       href="{{ route('logout') }}"
-                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
-                       onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                    <a class="btn_signOut" onmouseover="this.style.color='#fff'"
+                       onmouseout="this.style.color='#979797'"
+                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;">
                         <i class="fa fa-sign-out-alt" style="margin-right: 8px"></i>Sign Out</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                           style="display: none;">
@@ -213,10 +212,9 @@
                         <i class="fa fa-grin-beam" style="margin-right: 6px"></i>Quiz</a></li>
                 <li class="divider"></li>
                 <li>
-                    <a onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'"
-                       href="{{ route('logout') }}"
-                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
-                       onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                    <a class="btn_signOut" onmouseover="this.style.color='#fff'"
+                       onmouseout="this.style.color='#979797'"
+                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;">
                         <i class="fa fa-sign-out-alt" style="margin-right: 6px"></i>Sign Out</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
                           style="display: none;">

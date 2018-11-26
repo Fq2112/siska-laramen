@@ -176,8 +176,7 @@
                     <a data-toggle="tooltip" title="Account Settings" class="btn_settings">
                         <span class="fa fa-user-cog" aria-hidden="true"></span>
                     </a>
-                    <a data-toggle="tooltip" title="Logout"
-                       onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                    <a data-toggle="tooltip" title="Sign Out" class="btn_signOut">
                         <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST"
@@ -225,7 +224,7 @@
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a onclick="event.preventDefault();document.getElementById('logout-form2').submit();">
+                                    <a class="btn_signOut2">
                                         <i class="fa fa-sign-out-alt pull-right"></i> Log Out</a>
                                     <form id="logout-form2" action="{{ route('logout') }}" method="POST"
                                           style="display: none;">

@@ -19,4 +19,44 @@
         });
         return false;
     });
+
+    $(".btn_signOut").on("click", function () {
+        swal({
+            title: 'Sign Out',
+            text: "Are you sure to end your session?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#fa5555',
+            confirmButtonText: 'Yes, sign out now!',
+            showLoaderOnConfirm: true,
+
+            preConfirm: function () {
+                return new Promise(function (resolve) {
+                    $("#logout-form").submit();
+                });
+            },
+            allowOutsideClick: false
+        });
+        return false;
+    });
+
+    $(".btn_signOut2").on("click", function () {
+        swal({
+            title: 'Sign Out',
+            text: "Are you sure to end your session?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#fa5555',
+            confirmButtonText: 'Yes, sign out now!',
+            showLoaderOnConfirm: true,
+
+            preConfirm: function () {
+                return new Promise(function (resolve) {
+                    $("#logout-form2").submit();
+                });
+            },
+            allowOutsideClick: false
+        });
+        return false;
+    });
 </script>
