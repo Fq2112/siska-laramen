@@ -225,7 +225,7 @@
                                 <li class="divider"></li>
                                 <li>
                                     <a class="btn_signOut2">
-                                        <i class="fa fa-sign-out-alt pull-right"></i> Log Out</a>
+                                        <i class="fa fa-sign-out-alt pull-right"></i> Sign Out</a>
                                     <form id="logout-form2" action="{{ route('logout') }}" method="POST"
                                           style="display: none;">
                                         {{ csrf_field() }}
@@ -248,7 +248,8 @@
                                             <a style="cursor: text">
                                                 <span class="image">
                                                     @if($user->count())
-                                                        @if($user->first()->ava == "" || $user->first()->ava == "seeker.png")
+                                                        @if($user->first()->ava == "" ||
+                                                        $user->first()->ava == "seeker.png")
                                                             <img src="{{asset('images/seeker.png')}}">
                                                         @elseif($user->first()->ava == "agency.png")
                                                             <img src="{{asset('images/agency.png')}}">
