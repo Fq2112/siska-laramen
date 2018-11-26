@@ -135,7 +135,7 @@
 }
 
 /*FAQ custom*/
-#faq-a a, #faq-s a {
+#faq-a a, #faq-s a, #vac-nav-tabs a {
     color: #555555;
 }
 
@@ -144,8 +144,8 @@ a:hover, #faq-nav-tabs > #faq-s.active > a:focus {
     color: #FA5555;
 }
 
-#faq-nav-tabs > #faq-a.active > a, #faq-nav-tabs > #faq-a.active >
-a:hover, #faq-nav-tabs > #faq-a.active > a:focus {
+#faq-nav-tabs > #faq-a.active > a, #faq-nav-tabs > #faq-a.active > a:hover, #faq-nav-tabs > #faq-a.active > a:focus,
+#vac-nav-tabs > li.active > a, #vac-nav-tabs > li.active > a:hover, #vac-nav-tabs > li.active > a:focus {
     color: #00ADB5;
 }
 

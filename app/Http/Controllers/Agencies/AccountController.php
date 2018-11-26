@@ -34,38 +34,14 @@ class AccountController extends Controller
         $this->middleware(['auth', 'agency']);
     }
 
-    public function showDashboard(Request $request)
+    public function showDashboard()
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-        $vac_ids = $agency->vacancies->pluck('id')->toArray();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)
+            ->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end')->get();
 
-        $time = $request->time;
-        if ($request->has('time')) {
-            if ($time == 2) {
-                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
-                    ->where('isApply', true)->whereDate('created_at', Carbon::today())
-                    ->orderByDesc('id')->paginate(5);
-            } elseif ($time == 3) {
-                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
-                    ->where('isApply', true)
-                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
-                    ->orderByDesc('id')->paginate(5);
-            } elseif ($time == 4) {
-                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
-                    ->where('isApply', true)
-                    ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
-                    ->orderByDesc('id')->paginate(5);
-            } else {
-                $acc = Accepting::whereIn('vacancy_id', $vac_ids)
-                    ->where('isApply', true)->orderByDesc('id')->paginate(5);
-            }
-        } else {
-            $acc = Accepting::whereIn('vacancy_id', $vac_ids)
-                ->where('isApply', true)->orderByDesc('id')->paginate(5);
-        }
-
-        return view('auth.agencies.dashboard', compact('user', 'agency', 'acc', 'time'));
+        return view('auth.agencies.dashboard', compact('user', 'agency', 'vacancies'));
     }
 
     public function recommendedSeeker(Request $request)
