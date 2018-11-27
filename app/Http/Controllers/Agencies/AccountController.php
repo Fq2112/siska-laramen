@@ -38,8 +38,7 @@ class AccountController extends Controller
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
-        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)
-            ->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end')->get();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)->get();
 
         return view('auth.agencies.dashboard', compact('user', 'agency', 'vacancies'));
     }
@@ -150,35 +149,13 @@ class AccountController extends Controller
         return $result;
     }
 
-    public function invitedSeeker(Request $request)
+    public function invitedSeeker()
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+        $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)->get();
 
-        $time = $request->time;
-        if ($request->has('time')) {
-            if ($time == 2) {
-                $invited = Invitation::where('agency_id', $agency->id)->where('isInvite', true)
-                    ->whereDate('created_at', Carbon::today())
-                    ->orderByDesc('id')->paginate(5);
-            } elseif ($time == 3) {
-                $invited = Invitation::where('agency_id', $agency->id)->where('isInvite', true)
-                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
-                    ->orderByDesc('id')->paginate(5);
-            } elseif ($time == 4) {
-                $invited = Invitation::where('agency_id', $agency->id)->where('isInvite', true)
-                    ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
-                    ->orderByDesc('id')->paginate(5);
-            } else {
-                $invited = Invitation::where('agency_id', $agency->id)->where('isInvite', true)
-                    ->orderByDesc('id')->paginate(5);
-            }
-        } else {
-            $invited = Invitation::where('agency_id', $agency->id)->where('isInvite', true)
-                ->orderByDesc('id')->paginate(5);
-        }
-
-        return view('auth.agencies.dashboard-invitedSeeker', compact('user', 'agency', 'invited', 'time'));
+        return view('auth.agencies.dashboard-invitedSeeker', compact('user', 'agency', 'vacancies'));
     }
 
     public function editProfile()

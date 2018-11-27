@@ -336,7 +336,7 @@
 @push("scripts")
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
     <script>
-        $(document).ready(function () {
+        $(function () {
             $('.dc-view-switcher button[data-trigger="grid-view"]').click();
         });
     </script>

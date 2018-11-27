@@ -20,6 +20,11 @@ class Vacancies extends Model
         return $this->hasMany(Accepting::class,'vacancy_id');
     }
 
+    public function getInvitation()
+    {
+        return $this->hasMany(Invitation::class, 'vacancy_id');
+    }
+
     public function getQuizInfo()
     {
         return $this->hasMany(QuizInfo::class, 'vacancy_id');

@@ -36,7 +36,7 @@
         });
 
         $('.alert-banner-close').on('click', function () {
-            $('.alert-banner').fadeOut("slow", function () {
+            $('.alert-banner').slideUp(300, function () {
                 $(this).remove();
             });
         });

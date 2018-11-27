@@ -71,21 +71,6 @@
                                                             </span>
                                                         </small>
                                                         <blockquote style="font-size: 16px;color: #7f7f7f">
-                                                            <form class="pull-right to-animate-2"
-                                                                  id="form-acc-{{$row->id}}"
-                                                                  method="post" action="#">
-                                                                {{csrf_field()}}
-                                                                <div class="anim-icon anim-icon-md accept ld ld-breath"
-                                                                     onclick="acceptApplication('{{$row->id}}',
-                                                                             '{{$userSeeker->name}}','{{$vacancy->judul}}')"
-                                                                     data-toggle="tooltip" data-placement="bottom"
-                                                                     title="Accept"
-                                                                     style="font-size: 25px">
-                                                                    <input id="accept{{$row->id}}" type="checkbox"
-                                                                           checked>
-                                                                    <label for="accept{{$row->id}}"></label>
-                                                                </div>
-                                                            </form>
                                                             <ul class="list-inline">
                                                                 <li>
                                                                     <a class="tag">
@@ -181,29 +166,5 @@
             $("#vac-nav-tabs li").first().addClass('active');
             $("#vac-tab-content .tab-pane").first().addClass('active');
         });
-
-        function acceptApplication(id, name, title) {
-            swal({
-                title: 'Are you sure to accept ' + name + ' for ' + title + '?',
-                text: "You won't be able to revert this action!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#fa5555',
-                confirmButtonText: 'Yes, accept this seeker!',
-                showLoaderOnConfirm: true,
-                allowOutsideClick: false,
-            }).then(function () {
-                $("#accept" + id).prop('checked', false);
-                $("#form-acc-" + id)[0].submit();
-            }, function (dismiss) {
-                if (dismiss == 'cancel') {
-                    $("#accept" + id).prop('checked', true);
-                }
-            });
-        }
-
-        function formTime(id) {
-            $("#form-time" + id)[0].submit();
-        }
     </script>
 @endpush

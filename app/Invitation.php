@@ -27,6 +27,6 @@ class Invitation extends Model
 
     public function GetVacancy()
     {
-        return $this->belongsTo('App\Vacancy','vacancy_id');
+        return $this->belongsTo(Vacancies::class, 'vacancy_id');
     }
 }

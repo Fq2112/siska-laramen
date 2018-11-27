@@ -64,7 +64,8 @@
                         There seems to be <strong>{{$totalQuizInv}}</strong> of the quiz invitation was found!
                     </div>
                     <a class="alert-banner-button" href="{{route('seeker.invitation.quiz')}}"
-                       style="text-decoration: none">Redirect me to the Quiz Invitation page</a>
+                       style="text-decoration: none">
+                        Redirect me to the Quiz Invitation page</a>
                 </div>
                 <div class="alert-banner-close"></div>
             </div>

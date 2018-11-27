@@ -119,8 +119,14 @@
 @endpush
 @section('content')
     @php
-        $acc = \App\Accepting::whereIn('vacancy_id',$agency->vacancies->pluck('id')->toArray())->where('isApply',true)->count();
-        $inv = \App\Invitation::where('agency_id',$agency->id)->count();
+        $acc = \App\Accepting::wherehas('getVacancy', function ($q) use ($agency) {
+            $q->where('agency_id', $agency->id)->where('isPost', true);
+        })->where('isApply', true)->count();
+
+        $inv = \App\Invitation::wherehas('GetVacancy', function ($q) use ($agency) {
+            $q->where('agency_id', $agency->id)->where('isPost', true);
+        })->where('isInvite', true)->count();
+
         $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)
         ->whereDate('created_at','>=',now()->subDay())->count();
         $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)

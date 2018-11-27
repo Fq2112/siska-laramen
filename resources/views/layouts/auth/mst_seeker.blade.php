@@ -37,7 +37,7 @@
     @php
         $totalApp = \App\Accepting::wherehas('getVacancy', function ($q) {
             $q->where('isPost', true);
-        })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->count();
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
 
         $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
             $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')

@@ -252,24 +252,41 @@
 
             if (plan_id == 1) {
                 $("#quiz_psychoTest_date" + id).html('');
-                $("#recruitmentDate_start").datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                    startDate: '{{today()}}',
-                    endDate: $active_period
-                }).on('changeDate', function (selected) {
-                    var minDate = new Date(selected.date.valueOf());
-                    $('#recruitmentDate_end').datepicker({
+                if ($start == "") {
+                    $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: minDate,
+                        startDate: '{{today()}}',
                         endDate: $active_period
                     }).on('changeDate', function (selected) {
                         var minDate = new Date(selected.date.valueOf());
-                        $('#interview_date').datepicker({
+                        $('#recruitmentDate_end').datepicker({
                             format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                            startDate: minDate
+                            startDate: minDate,
+                            endDate: $active_period
+                        }).on('changeDate', function (selected) {
+                            var minDate = new Date(selected.date.valueOf());
+                            $('#interview_date').datepicker({
+                                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                startDate: minDate
+                            });
                         });
                     });
-                });
+
+                } else {
+                    $("#recruitmentDate_start").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: '{{today()}}',
+                        endDate: $active_period
+                    });
+                    $("#recruitmentDate_end").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $start,
+                    });
+                    $('#interview_date').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $end
+                    });
+                }
 
             } else if (plan_id == 2) {
                 $("#quiz_psychoTest_date" + id).html(
@@ -287,36 +304,61 @@
                     '<span class="input-group-addon"><i class="fa fa-grin-beam"></i></span>' +
                     '</div></div></div>'
                 );
-                $("#recruitmentDate_start").datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                    startDate: '{{today()}}',
-                    endDate: $active_period
-                }).on('changeDate', function (selected) {
-                    var minDate = new Date(selected.date.valueOf());
-                    $('#recruitmentDate_end').datepicker({
+                if ($start == "") {
+                    $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: minDate,
+                        startDate: '{{today()}}',
                         endDate: $active_period
                     }).on('changeDate', function (selected) {
                         var minDate = new Date(selected.date.valueOf());
-                        $('#quizDate_start').datepicker({
+                        $('#recruitmentDate_end').datepicker({
                             format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                            startDate: minDate
+                            startDate: minDate,
+                            endDate: $active_period
                         }).on('changeDate', function (selected) {
                             var minDate = new Date(selected.date.valueOf());
-                            $('#quizDate_end').datepicker({
+                            $('#quizDate_start').datepicker({
                                 format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
                                 startDate: minDate
                             }).on('changeDate', function (selected) {
                                 var minDate = new Date(selected.date.valueOf());
-                                $('#interview_date').datepicker({
+                                $('#quizDate_end').datepicker({
                                     format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
                                     startDate: minDate
+                                }).on('changeDate', function (selected) {
+                                    var minDate = new Date(selected.date.valueOf());
+                                    $('#interview_date').datepicker({
+                                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                                        startDate: minDate
+                                    });
                                 });
                             });
                         });
                     });
-                });
+
+                } else {
+                    $("#recruitmentDate_start").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: '{{today()}}',
+                        endDate: $active_period
+                    });
+                    $("#recruitmentDate_end").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $start,
+                    });
+                    $("#quizDate_start").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $end,
+                    });
+                    $("#quizDate_end").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $quiz_start,
+                    });
+                    $('#interview_date').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $quiz_end
+                    });
+                }
 
             } else if (plan_id == 3) {
                 $("#quiz_psychoTest_date" + id).html(
@@ -347,48 +389,84 @@
                     '<span class="input-group-addon"><i class="fa fa-comments"></i></span>' +
                     '</div></div></div>'
                 );
-                $("#recruitmentDate_start").datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                    startDate: '{{today()}}',
-                    endDate: $active_period
-                }).on('changeDate', function (selected) {
-                    var minDate = new Date(selected.date.valueOf());
-                    $('#recruitmentDate_end').datepicker({
+                if ($start == "") {
+                    $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: minDate,
+                        startDate: '{{today()}}',
                         endDate: $active_period
                     }).on('changeDate', function (selected) {
                         var minDate = new Date(selected.date.valueOf());
-                        $('#quizDate_start').datepicker({
+                        $('#recruitmentDate_end').datepicker({
                             format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                            startDate: minDate
+                            startDate: minDate,
+                            endDate: $active_period
                         }).on('changeDate', function (selected) {
                             var minDate = new Date(selected.date.valueOf());
-                            $('#quizDate_end').datepicker({
+                            $('#quizDate_start').datepicker({
                                 format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
                                 startDate: minDate
                             }).on('changeDate', function (selected) {
                                 var minDate = new Date(selected.date.valueOf());
-                                $('#psychoTestDate_start').datepicker({
+                                $('#quizDate_end').datepicker({
                                     format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
                                     startDate: minDate
                                 }).on('changeDate', function (selected) {
                                     var minDate = new Date(selected.date.valueOf());
-                                    $('#psychoTestDate_end').datepicker({
+                                    $('#psychoTestDate_start').datepicker({
                                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
                                         startDate: minDate
                                     }).on('changeDate', function (selected) {
                                         var minDate = new Date(selected.date.valueOf());
-                                        $('#interview_date').datepicker({
+                                        $('#psychoTestDate_end').datepicker({
                                             format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
                                             startDate: minDate
+                                        }).on('changeDate', function (selected) {
+                                            var minDate = new Date(selected.date.valueOf());
+                                            $('#interview_date').datepicker({
+                                                format: "yyyy-mm-dd",
+                                                autoclose: true,
+                                                todayHighlight: true,
+                                                todayBtn: true,
+                                                startDate: minDate
+                                            });
                                         });
                                     });
                                 });
                             });
                         });
                     });
-                });
+
+                } else {
+                    $("#recruitmentDate_start").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: '{{today()}}',
+                        endDate: $active_period
+                    });
+                    $("#recruitmentDate_end").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $start,
+                    });
+                    $("#quizDate_start").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $end,
+                    });
+                    $("#quizDate_end").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $quiz_start,
+                    });
+                    $("#psychoTestDate_start").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $quiz_end,
+                    });
+                    $("#psychoTestDate_end").datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $psychoTest_start,
+                    });
+                    $('#interview_date').datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+                        startDate: $psychoTest_end
+                    });
+                }
             }
 
             $("#formModal").modal('show');
