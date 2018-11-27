@@ -47,6 +47,10 @@
         width: 200px;
     }
 
+    .alert-banner-text {
+        font-size: 16px;
+    }
+
     .download-phone-ico {
         width: 50%;
         float: left;
@@ -85,6 +89,10 @@
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
     #custom-search-input input {
         width: 79px;
+    }
+
+    .alert-banner-text {
+        font-size: 16px;
     }
 
     .download-phone-ico {

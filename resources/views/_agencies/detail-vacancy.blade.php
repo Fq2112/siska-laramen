@@ -74,6 +74,11 @@
                                     $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
                                     </a>
                                 </li>
+                                <li data-placement="bottom" data-toggle="tooltip" title="Education Degree">
+                                    <a><i class="fa fa-graduation-cap"></i>
+                                        &nbsp;{{$degrees->name}}
+                                    </a>
+                                </li>
                                 @if($vacancy->isPost == true || Auth::check() && Auth::user()->isAgency() ||
                                 Auth::guard('admin')->check())
                                     <li data-placement="right" data-toggle="tooltip" title="Total Applicant">
@@ -101,7 +106,8 @@
                                         }
                                     }
                                 @endphp
-                                <li data-placement="left" data-toggle="tooltip" id="bm">
+                                <li data-placement="left" data-toggle="tooltip" id="bm"
+                                    title="{{$vacancy->isPost == true ? 'Bookmark this vacancy' : ''}}">
                                     <form method="post" action="{{route('bookmark.vacancy')}}" id="form-bookmark">
                                         {{csrf_field()}}
                                         <div class="anim-icon anim-icon-md bookmark ld ld-breath">
@@ -123,7 +129,11 @@
                                 Auth::guard('admin')->check() ? '' : 'ld ld-heartbeat'}}" id="apply"
                                     data-placement="top" data-toggle="tooltip">
                                     <button type="button" class="btn btn-danger btn-block"
-                                            {{$vacancy->isPost == false || Auth::check() && Auth::user()->isAgency() ||
+                                            {{$vacancy->isPost == false || now() < $vacancy->recruitmentDate_start ||
+                                            now() > $vacancy->recruitmentDate_end ||
+                                            is_null($vacancy->recruitmentDate_start) ||
+                                            is_null($vacancy->recruitmentDate_end) ||
+                                            Auth::check() && Auth::user()->isAgency() ||
                                             Auth::guard('admin')->check() ? 'disabled' : ''}}>
                                         <i class="fa fa-paper-plane"></i>&ensp;<strong>Apply</strong>
                                     </button>
@@ -910,30 +920,17 @@
 
         // apply validation
         var $btnApply = $("#apply button"), $btnBookmark = $("#bm");
-        $btnBookmark.attr('title', '{{$vacancy->isPost == true ? 'Bookmark this vacancy' : ''}}');
-        @if(now() < $vacancy->recruitmentDate_start || now() > $vacancy->recruitmentDate_end ||
-        is_null($vacancy->recruitmentDate_start) || is_null($vacancy->recruitmentDate_end))
-        $btnApply.prop('disabled', true);
-        @endif
         @auth
         @if(Auth::user()->isSeeker())
         @php
             $seeker = \App\Seekers::where('user_id',Auth::user()->id)->first();
-            $edu = \App\Education::where('seeker_id',$seeker->id)->get();
-            $exp = \App\Experience::where('seeker_id',$seeker->id)->get();
             $acc = App\Accepting::where('seeker_id',$seeker->id)->where('vacancy_id',$vacancy->id);
-
-            $reqExp = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
-            $reqEdu = $vacancy->tingkatpend_id;
-            $checkEdu = \App\Seekers::wherehas('educations', function ($query) use($reqEdu) {
-                $query->where('tingkatpend_id','>=',$reqEdu);
-            })->where('user_id',Auth::user()->id)->count();
         @endphp
         @if(count($acc->get()))
         @if($acc->first()->isBookmark == true)
         $("#bookmark").prop('checked', true);
         $("#bm .bookmark").removeClass('ld ld-breath');
-        $btnBookmark.attr('title', 'Unmark this vacancy');
+        $btnBookmark.attr('title', 'Unmark this vacancy').tooltip('show');
         @endif
         @if($acc->first()->isApply == true)
         $("#apply").removeClass('ld ld-heartbeat').attr('title', 'Please, check Application Status ' +
@@ -944,7 +941,7 @@
         @endif
         @endif
         @endauth
-        $("#bookmark").click(function () {
+        $("#bookmark").on("click", function () {
             $("#bm .bookmark").toggleClass('ld ld-breath');
             @auth
             @if(Auth::user()->isSeeker())
@@ -972,37 +969,36 @@
             @endif
             @endauth
         });
-        $btnApply.click(function () {
+        $btnApply.on("click", function () {
             @auth
             @if(Auth::user()->isSeeker())
             $("#applyModal").modal('show');
-            $("#btn-apply button").click(function () {
-                @if(count($edu) == 0 || count($exp) == 0 || $seeker->phone == "" || $seeker->address == "" ||
-                $seeker->birthday == "" || $seeker->gender == "")
-                $("#resumeModal").modal('show');
-                @else
-                @if($seeker->total_exp < $reqExp)
-                swal({
-                    title: 'Work Experience Unqualified',
-                    text: 'It seems that your work experience for {{$seeker->total_exp}} year(s) isn\'t sufficient for this vacancy.',
-                    type: 'warning',
-                    timer: '7000'
+            $("#btn-apply button").on("click", function () {
+                $.get("{{route('get.vacancy.requirement',['id' => $vacancy->id])}}", function (data) {
+                    if (data == 0) {
+                        $("#resumeModal").modal('show');
+                    } else if (data == 1) {
+                        swal({
+                            title: 'Work Experience Unqualified',
+                            text: 'It seems that your work experience for {{$seeker->total_exp}} year(s) isn\'t sufficient for this vacancy.',
+                            type: 'warning',
+                            timer: '7000'
+                        });
+                    } else if (data == 2) {
+                        swal({
+                            title: 'Education Degree Unqualified',
+                            text: 'There seems to be none of your education history that has qualified for this vacancy.',
+                            type: 'warning',
+                            timer: '7000'
+                        });
+                    } else if (data == 3) {
+                        $("#applyModal").modal('hide');
+                        $("#apply").toggleClass('ld ld-heartbeat');
+                        $btnApply.css('background', '#393e46').attr('disabled', true)
+                            .html('<i class="fa fa-paper-plane"></i>&ensp;Applied');
+                        $('#form-apply')[0].submit();
+                    }
                 });
-                @elseif($checkEdu < 1)
-                swal({
-                    title: 'Education Degree Unqualified',
-                    text: 'There seems to be none of your education history that has qualified for this vacancy.',
-                    type: 'warning',
-                    timer: '7000'
-                });
-                @else
-                $("#applyModal").modal('hide');
-                $("#apply").toggleClass('ld ld-heartbeat');
-                $btnApply.css('background', '#393e46').attr('disabled', true)
-                    .html('<i class="fa fa-paper-plane"></i>&ensp;Applied');
-                $('#form-apply')[0].submit();
-                @endif
-                @endif
             });
             @endif
             @else

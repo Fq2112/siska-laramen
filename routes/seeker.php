@@ -266,6 +266,11 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
             'as' => 'apply.vacancy'
         ]);
 
+        Route::get('{id}/requirement', [
+            'uses' => 'VacancyController@getVacancyRequirement',
+            'as' => 'get.vacancy.requirement'
+        ]);
+
     });
 
     Route::group(['prefix' => 'quiz'], function () {

@@ -46,14 +46,14 @@
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-briefcase"></i></span>
                                                         <input id="total_ads" name="total_ads" type="number"
-                                                               class="form-control" placeholder="0" style="width: 15%"
+                                                               class="form-control" placeholder="0" style="width: 25%"
                                                                value="{{$totalAds}}" min="{{$totalAds}}" required>
                                                         <select id="vacancy_id" class="form-control selectpicker"
                                                                 title="-- Select Vacancy --" data-live-search="true"
                                                                 multiple data-max-options="{{$totalAds}}"
                                                                 data-selected-text-format="count > 2"
                                                                 name="vacancy_ids[]" data-container="body"
-                                                                data-width="85%" required>
+                                                                data-width="75%" required>
                                                             @foreach($vacancies as $vacancy)
                                                                 <option value="{{$vacancy->id}}">
                                                                     {{$vacancy->judul}}</option>
@@ -90,7 +90,7 @@
                                                 Make sure your order details and the vacancy that you want
                                                 to post is correct</h3>
                                             <div class="row">
-                                                <div class="col-lg-7">
+                                                <div class="col-lg-7 col-md-6 col-sm-6">
                                                     <small>Plan Details
                                                         <span id="show_plans_settings" class="pull-right"
                                                               style="color: #00ADB5;cursor: pointer; font-size: 15px">
@@ -153,7 +153,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-lg-5">
+                                                <div class="col-lg-5 col-md-6 col-sm-6">
                                                     <small>Billing Details</small>
                                                     <hr class="hr-divider">
                                                     <table id="stats-billing" style="font-size: 16px">

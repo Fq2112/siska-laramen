@@ -6,6 +6,8 @@ use App\Accepting;
 use App\Agencies;
 use App\Carousel;
 use App\Cities;
+use App\Education;
+use App\Experience;
 use App\FungsiKerja;
 use App\Industri;
 use App\JobLevel;
@@ -133,5 +135,33 @@ class VacancyController extends Controller
                 return back()->with('vacancy', '' . $vacancy->judul . ' is successfully applied! Please check Application Status in your Dashboard.');
             }
         }
+    }
+
+    public function getVacancyRequirement($id)
+    {
+        $vacancy = Vacancies::find($id);
+        $seeker = Seekers::where('user_id', Auth::user()->id)->first();
+        $edu = Education::where('seeker_id', $seeker->id)->get();
+        $exp = Experience::where('seeker_id', $seeker->id)->get();
+
+        $reqExp = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
+        $reqEdu = $vacancy->tingkatpend_id;
+        $checkEdu = Seekers::wherehas('educations', function ($query) use ($reqEdu) {
+            $query->where('tingkatpend_id', '>=', $reqEdu);
+        })->where('user_id', Auth::user()->id)->count();
+
+        if (count($edu) == 0 || count($exp) == 0 || $seeker->phone == "" || $seeker->address == "" ||
+            $seeker->birthday == "" || $seeker->gender == "") {
+            return 0;
+        } else {
+            if ($seeker->total_exp < $reqExp) {
+                return 1;
+            } elseif ($checkEdu < 1) {
+                return 2;
+            } else {
+                return 3;
+            }
+        }
+
     }
 }
