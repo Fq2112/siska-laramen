@@ -37,17 +37,24 @@
         </style>
         @php
             $seeker = \App\Seekers::where('user_id', Auth::user()->id)->firstOrFail();
+
             $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
-                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+                $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                ->where('quizDate_start', '<=', today()->addDay())
+                ->where('quizDate_end', '>=', today());
             })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
             $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
-                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay())
+                $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                ->where('quizDate_start', '<=', today()->addDay())
+                ->where('quizDate_end', '>=', today())
                 ->whereHas('getQuizInfo', function ($q) use ($seeker){
                     $q->whereHas('getQuizResult', function ($q) use ($seeker){
                         $q->where('seeker_id', $seeker->id);
                     });
                 });
             })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
             $totalQuizInv = $quizInv - $submittedQuizInv;
         @endphp
         @if($totalQuizInv > 0 && !Illuminate\Support\Facades\Request::is(['quiz','account/dashboard/quiz_invitation']))
@@ -65,7 +72,8 @@
     @endif
 @endauth
 @auth('admin')
-    @php $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')->count(); @endphp
+    @php $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
+    ->whereDate('created_at', '>=', now()->subDay())->count(); @endphp
     @if($posting > 0)
         <div class="alert-banner">
             <div class="alert-banner-content">

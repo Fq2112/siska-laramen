@@ -122,35 +122,46 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $time = $request->time;
         if ($request->has('time')) {
             if ($time == 2) {
-                $apply = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)
+                $apply = Accepting::wherehas('getVacancy', function ($q) {
+                    $q->where('isPost', true);
+                })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', Carbon::today())
                     ->orderByDesc('id')->paginate(5);
+
             } elseif ($time == 3) {
-                $apply = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)
+                $apply = Accepting::wherehas('getVacancy', function ($q) {
+                    $q->where('isPost', true);
+                })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
                     ->orderByDesc('id')->paginate(5);
+
             } elseif ($time == 4) {
-                $apply = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)
+                $apply = Accepting::wherehas('getVacancy', function ($q) {
+                    $q->where('isPost', true);
+                })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
                     ->orderByDesc('id')->paginate(5);
+
             } else {
-                $apply = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)
-                    ->orderByDesc('id')->paginate(5);
+                $apply = Accepting::wherehas('getVacancy', function ($q) {
+                    $q->where('isPost', true);
+                })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->paginate(5);
             }
+
         } else {
-            $apply = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)
-                ->orderByDesc('id')->paginate(5);
+            $apply = Accepting::wherehas('getVacancy', function ($q) {
+                $q->where('isPost', true);
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->paginate(5);
         }
 
         return view('auth.seekers.dashboard', compact('user', 'provinces', 'seeker', 'job_title',
-            'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time', 'apply'));
+            'last_edu', 'totalBook', 'totalInvToApply', 'time', 'apply'));
     }
 
     public function showCompare($id)
@@ -232,7 +243,6 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
@@ -240,39 +250,49 @@ class SeekerController extends Controller
         if ($request->has('time')) {
             if ($time == 2) {
                 $quizInv = Accepting::wherehas('getVacancy', function ($q) {
-                    $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+                    $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                        ->where('quizDate_start', '<=', today()->addDay())
+                        ->where('quizDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', Carbon::today())
                     ->orderByDesc('id')->paginate(5);
 
             } elseif ($time == 3) {
                 $quizInv = Accepting::wherehas('getVacancy', function ($q) {
-                    $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+                    $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                        ->where('quizDate_start', '<=', today()->addDay())
+                        ->where('quizDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
                     ->orderByDesc('id')->paginate(5);
 
             } elseif ($time == 4) {
                 $quizInv = Accepting::wherehas('getVacancy', function ($q) {
-                    $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+                    $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                        ->where('quizDate_start', '<=', today()->addDay())
+                        ->where('quizDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
                     ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
                     ->orderByDesc('id')->paginate(5);
 
             } else {
                 $quizInv = Accepting::wherehas('getVacancy', function ($q) {
-                    $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+                    $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                        ->where('quizDate_start', '<=', today()->addDay())
+                        ->where('quizDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->paginate(5);
             }
 
         } else {
             $quizInv = Accepting::wherehas('getVacancy', function ($q) {
-                $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
+                $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                    ->where('quizDate_start', '<=', today()->addDay())
+                    ->where('quizDate_end', '>=', today());
             })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->paginate(5);
         }
 
         return view('auth.seekers.dashboard-quiz', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time', 'quizInv'));
+            'job_title', 'last_edu', 'totalBook', 'totalInvToApply', 'time', 'quizInv'));
     }
 
     public function showPsychoTestInv(Request $request)
@@ -287,14 +307,13 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $time = $request->time;
 
         return view('auth.seekers.dashboard-psychoTest', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time'));
+            'job_title', 'last_edu', 'totalBook', 'totalInvToApply', 'time'));
     }
 
     public function showInterviewInv(Request $request)
@@ -309,14 +328,13 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $time = $request->time;
 
         return view('auth.seekers.dashboard-interview', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'time'));
+            'job_title', 'last_edu', 'totalBook', 'totalInvToApply', 'time'));
     }
 
     public function showJobInvitation()
@@ -331,14 +349,13 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $invToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->paginate(5);
 
         return view('auth.seekers.dashboard-toApply', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'invToApply'));
+            'job_title', 'last_edu', 'totalBook', 'totalInvToApply', 'invToApply'));
     }
 
     public function applyJobInvitation(Request $request)
@@ -365,7 +382,6 @@ class SeekerController extends Controller
         $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
         $vacancies = Vacancies::where('isPost', true)->get();
         $provinces = Provinces::all();
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)
             ->where('isApply', false)->count();
@@ -374,7 +390,7 @@ class SeekerController extends Controller
         $page = $request->page;
 
         return view('auth.seekers.dashboard-recommendedVacancy', compact('user', 'seeker', 'vacancies',
-            'provinces', 'totalApp', 'totalBook', 'totalInvToApply', 'keyword', 'page'));
+            'provinces', 'totalBook', 'totalInvToApply', 'keyword', 'page'));
     }
 
     public function getRecommendedVacancy(Request $request)
@@ -520,13 +536,12 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalApp = Accepting::where('seeker_id', $seeker->id)->where('isApply', true)->count();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->where('isApply', false)->count();
 
         $bookmark = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->paginate(5);
 
         return view('auth.seekers.dashboard-bookmarked', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'totalApp', 'totalBook', 'totalInvToApply', 'bookmark'));
+            'job_title', 'last_edu', 'totalBook', 'totalInvToApply', 'bookmark'));
     }
 }

@@ -87,11 +87,12 @@
                                         </small>
                                         <blockquote style="font-size: 12px;color: #7f7f7f">
                                             <div class="pull-right to-animate-2">
-                                                <div class="anim-icon anim-icon-md quiz {{$score != "" ? '' : 'ld ld-breath'}}"
+                                                <div class="anim-icon anim-icon-md quiz {{$score != "" ||
+                                                today() < $vacancy->quizDate_start ? '' : 'ld ld-breath'}}"
                                                      onclick="showQuiz('{{$row->id}}','{{$quiz->unique_code}}',
                                                              '{{$vacancy->judul}}','{{$vacancy->quizDate_start}}',
-                                                             '{{$vacancy->quizDate_end}}','{{$ava}}','{{$score}}',
-                                                             '{{$userAgency->name}}','{{$vacancy->id}}','{{$quizDate}}',
+                                                             '{{$ava}}','{{$score}}','{{$userAgency->name}}',
+                                                             '{{$vacancy->id}}','{{$quizDate}}',
                                                              '{{$quiz->total_question}}','{{$quiz->time_limit}}')"
                                                      data-toggle="tooltip" data-placement="bottom"
                                                      style="font-size: 25px"
@@ -291,7 +292,7 @@
             $("#form-time")[0].submit();
         });
 
-        function showQuiz(id, code, judul, start, end, ava, score, name, vacID, date, question, time) {
+        function showQuiz(id, code, judul, start, ava, score, name, vacID, date, question, time) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
@@ -323,14 +324,7 @@
                         type: 'warning',
                         timer: '5500'
                     });
-                } else if (end == null || '{{today()}}' > end) {
-                    swal({
-                        title: 'ATTENTION!',
-                        text: 'The quiz date of ' + judul + ' has been ended.',
-                        type: 'warning',
-                        timer: '5500'
-                    });
-                } else if ('{{today()}}' >= start && '{{today()}}' <= end) {
+                } else {
                     $('#form-access-quiz')[0].submit();
                 }
             });

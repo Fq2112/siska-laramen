@@ -49,7 +49,7 @@ class inactiveVacancy extends Command
 
                 $applicants = Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->count();
 
-                if ($vacancy->quiz_applicant == $applicants || today() >= $vacancy->recruitmentDate_end) {
+                if ($vacancy->quiz_applicant >= $applicants || today() >= $vacancy->recruitmentDate_end) {
                     $vacancy->update([
                         'isPost' => false,
                     ]);

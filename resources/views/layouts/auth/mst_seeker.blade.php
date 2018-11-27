@@ -35,6 +35,29 @@
 @endpush
 @section('content')
     @php
+        $totalApp = \App\Accepting::wherehas('getVacancy', function ($q) {
+            $q->where('isPost', true);
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->orderByDesc('id')->count();
+
+        $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
+            $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+            ->where('quizDate_start', '<=', today()->addDay())
+            ->where('quizDate_end', '>=', today());
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
+        $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
+            $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+            ->where('quizDate_start', '<=', today()->addDay())
+            ->where('quizDate_end', '>=', today())
+            ->whereHas('getQuizInfo', function ($q) use ($seeker){
+                 $q->whereHas('getQuizResult', function ($q) use ($seeker){
+                    $q->where('seeker_id', $seeker->id);
+                 });
+            });
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
+        $totalQuizInv = $quizInv - $submittedQuizInv;
+
         $degrees = array();
         foreach ($seeker->educations as $education) {
             $degrees[] = $education->tingkatpend_id;
@@ -50,19 +73,6 @@
                 $query->orWhere('tingkatpend_id', '<=', $degree);
             }
         })->count();
-
-        $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
-            $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay());
-        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
-        $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
-            $q->wherenotnull('quizDate_start')->where('quizDate_start', '<=', today()->addDay())
-             ->whereHas('getQuizInfo', function ($q) use ($seeker){
-                 $q->whereHas('getQuizResult', function ($q) use ($seeker){
-                    $q->where('seeker_id', $seeker->id);
-                 });
-            });
-        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
-        $totalQuizInv = $quizInv - $submittedQuizInv;
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
