@@ -451,7 +451,7 @@
         });
 
         $("#list-lokasi li a").on("click", function () {
-            loadVacancy()
+            loadVacancy();
         });
 
         $(".search-form").on('submit', function (event) {
@@ -466,7 +466,7 @@
             $(this).addClass("active");
             $("#filter-bar").removeClass().addClass($(this).attr("data-target"));
             sort.val(data);
-            loadVacancy()
+            loadVacancy();
         });
 
         // reset filter
@@ -474,7 +474,7 @@
             $("#lokasi").html('Filter&nbsp;<span class="fa fa-caret-down">' + '</span>');
             $("#txt_keyword").removeAttr('value');
             $(".search-form input:not(#txt_sort)").val('');
-            loadVacancy()
+            loadVacancy();
         });
 
         $("#clear-filter button").on("click", function () {
@@ -483,7 +483,7 @@
             $selectpicker.prop('selected', false).trigger('change');
             $selectpicker.removeAttr('selected');
             $("#search-filter .selectpicker").selectpicker("refresh");
-            loadVacancy()
+            loadVacancy();
         });
 
         // filters + tags
@@ -496,7 +496,7 @@
                         "<i class='tag-close'></i><i class='fa fa-money-bill-wave tag-icon'></i>" +
                         "&ensp;IDR " + $(this).text() + "</a></li>");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
             $('#tag-salary').on('click', ".tag", function () {
@@ -506,7 +506,7 @@
                     $('#salary option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#salary").selectpicker("refresh");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
 
@@ -518,7 +518,7 @@
                         "<i class='tag-close'></i><i class='fa fa-warehouse tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
             $('#tag-jobfunc').on('click', ".tag", function () {
@@ -528,7 +528,7 @@
                     $('#job_funct option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#job_funct").selectpicker("refresh");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
 
@@ -540,7 +540,7 @@
                         "<i class='tag-close'></i><i class='fa fa-industry tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
             $('#tag-industry').on('click', ".tag", function () {
@@ -550,7 +550,7 @@
                     $('#industry option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#industry").selectpicker("refresh");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
 
@@ -562,7 +562,7 @@
                         "<i class='tag-close'></i><i class='fa fa-graduation-cap tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
             $('#tag-degrees').on('click', ".tag", function () {
@@ -572,7 +572,7 @@
                     $('#tingkatpend option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#tingkatpend").selectpicker("refresh");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
 
@@ -584,7 +584,7 @@
                         "<i class='tag-close'></i><i class='fa fa-user-graduate tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
             $('#tag-majors').on('click', ".tag", function () {
@@ -594,7 +594,7 @@
                     $('#jurusanpend option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#jurusanpend").selectpicker("refresh");
 
-                    loadVacancy()
+                    loadVacancy();
                 });
             });
         });

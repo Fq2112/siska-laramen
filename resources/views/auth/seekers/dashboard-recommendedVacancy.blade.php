@@ -25,7 +25,7 @@
                                                 <i class="fa fa-ellipsis-h"></i>
                                             </button>
                                         </div>
-                                        <input id="txt_keyword" type="text" name="q"
+                                        <input id="txt_keyword" type="text" name="q" style="width: auto;"
                                                class="form-control myInput input-lg"
                                                onkeyup="showResetBtn(this.value)"
                                                placeholder="Job Title or Agency's Name&hellip;"
@@ -126,15 +126,8 @@
             });
         });
 
-        $('#txt_keyword').on('input', function () {
-            clearTimeout(this.delay);
-            this.delay = setTimeout(function () {
-                $(this).trigger('search');
-            }.bind(this), 800);
-        }).on('search', function () {
-            if (this.value) {
-                loadVacancy();
-            }
+        $('#txt_keyword').on('keyup', function () {
+            loadVacancy();
         });
 
         $("#form-src-vacancies").on('submit', function (event) {
@@ -144,41 +137,46 @@
 
         function resetFilter() {
             $("#txt_keyword").removeAttr('value');
-            setTimeout(loadVacancy, 100);
+            loadVacancy();
         }
 
         function loadVacancy() {
             var keyword = $("#txt_keyword").val();
-            $.ajax({
-                url: "{{route('get.recommended.vacancy')}}",
-                type: "GET",
-                data: $("#form-src-vacancies").serialize(),
-                beforeSend: function () {
-                    $('#image').show();
-                    $('#search-result').hide();
-                    $('.myPagination').hide();
-                },
-                complete: function () {
-                    $('#image').hide();
-                    $('#search-result').show();
-                    $('.myPagination').show();
-                },
-                success: function (data) {
-                    successLoad(data, keyword);
-                },
-                error: function () {
-                    swal({
-                        title: 'Recommended Vacancy',
-                        text: 'Data not found!',
-                        type: 'error',
-                        timer: '1500'
-                    })
-                }
-            });
+
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: "{{route('get.recommended.vacancy')}}",
+                    type: "GET",
+                    data: $("#form-src-vacancies").serialize(),
+                    beforeSend: function () {
+                        $('#image').show();
+                        $('#search-result').hide();
+                        $('.myPagination').hide();
+                    },
+                    complete: function () {
+                        $('#image').hide();
+                        $('#search-result').show();
+                        $('.myPagination').show();
+                    },
+                    success: function (data) {
+                        successLoad(data, keyword);
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Recommended Vacancy',
+                            text: 'Data not found!',
+                            type: 'error',
+                            timer: '1500'
+                        })
+                    }
+                });
+            }.bind(this), 800);
+
             return false;
         }
 
-        $('.myPagination ul').on('click', 'li', function (event) {
+        $('.myPagination ul').on('click', 'li', function () {
             var keyword = $("#txt_keyword").val();
             $(window).scrollTop(0);
 
@@ -211,33 +209,36 @@
                 $url = "{{url('/account/job_vacancy/recommended_vacancy/vacancies')}}" + '?page=' + last_page;
             }
 
-            $.ajax({
-                url: $url,
-                type: "GET",
-                data: $("#form-src-vacancies").serialize(),
-                beforeSend: function () {
-                    $('#image').show();
-                    $('#search-result').hide();
-                    $('.myPagination').hide();
-                },
-                complete: function () {
-                    $('#image').hide();
-                    $('#search-result').show();
-                    $('.myPagination').show();
-                },
-                success: function (data) {
-                    successLoad(data, keyword, page);
-                },
-                error: function () {
-                    swal({
-                        title: 'Recommended Vacancy',
-                        text: 'Data not found!',
-                        type: 'error',
-                        timer: '1500'
-                    })
-                }
-            });
-            event.preventDefault();
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: $url,
+                    type: "GET",
+                    data: $("#form-src-vacancies").serialize(),
+                    beforeSend: function () {
+                        $('#image').show();
+                        $('#search-result').hide();
+                        $('.myPagination').hide();
+                    },
+                    complete: function () {
+                        $('#image').hide();
+                        $('#search-result').show();
+                        $('.myPagination').show();
+                    },
+                    success: function (data) {
+                        successLoad(data, keyword, page);
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Recommended Vacancy',
+                            text: 'Data not found!',
+                            type: 'error',
+                            timer: '1500'
+                        })
+                    }
+                });
+            }.bind(this), 800);
+
             return false;
         });
 
