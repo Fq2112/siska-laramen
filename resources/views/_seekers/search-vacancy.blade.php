@@ -3,175 +3,327 @@
 @push('styles')
     <link href="{{ asset('css/myPagination.css') }}" rel="stylesheet">
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
+    <style>
+        @media (min-width: 1440px) {
+            #custom-search-input input {
+                width: 800px;
+            }
+
+            #wrapper-filter {
+                width: 670px;
+            }
+
+            .pill {
+                width: 240px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 195px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 410px;
+            }
+        }
+
+        @media (min-width: 1281px) and (max-width: 1439px) {
+            #custom-search-input input {
+                width: 660px;
+            }
+
+            #wrapper-filter {
+                width: 610px;
+            }
+
+            .pill {
+                width: 225px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 175px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 370px;
+            }
+        }
+
+        @media (min-width: 1025px) and (max-width: 1280px) {
+            #custom-search-input input {
+                width: 450px;
+            }
+
+            .pill {
+                width: 355px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 300px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 630px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            #custom-search-input input {
+                width: 200px;
+            }
+
+            .pill {
+                width: 265px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 220px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 455px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+            #custom-search-input input {
+                width: 450px;
+            }
+
+            .pill {
+                width: 355px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 310px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 630px;
+            }
+        }
+
+        @media (min-width: 481px) and (max-width: 767px) {
+            .pill {
+                width: 170px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 125px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 265px;
+            }
+        }
+
+        @media (min-width: 320px) and (max-width: 480px) {
+            .pill {
+                width: 150px;
+            }
+
+            #filter-bar.option-1 .pill {
+                margin-left: -15px;
+            }
+
+            #filter-bar.option-2 .pill {
+                margin-left: 100px;
+            }
+
+            #filter-bar.option-3 .pill {
+                margin-left: 220px;
+            }
+        }
+    </style>
 @endpush
 @section('content')
     <section id="fh5co-services" data-section="services" style="padding-top: 7em">
         <div class="fh5co-services">
             <div class="container" style="width: 100%">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="col-lg-12 section-heading text-center" style="padding-bottom: 0">
-                            <h2 class="to-animate" style="text-transform: none;font-size: 18px;letter-spacing: 1px">
-                                <span id="show-result"></span>
-                            </h2>
-                        </div>
-
-                        <div class="col-lg-3">
-                            <div class="row">
-                                <div class="col-lg-12 to-animate-2" id="search-filter">
-                                    <div class="sidebar-offcanvas" id="sidebar" role="navigation">
-                                        <!-- FILTER -->
-                                        <div class="panel panel-danger">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title">Filter</h3>
-                                            </div>
-                                            <form id="form-filter">
-                                                <ul class="panel-body">
-                                                    <li class="search-filter-option">
-                                                        <h3 class="filter-heading tree-toggle">
-                                                            <i class="fa fa-money-bill-wave"></i>&ensp;Salary (IDR)
-                                                            <i class="fa fa-chevron-down pull-right"></i>
-                                                        </h3>
-                                                        <ul class="tree">
-                                                            <select class="form-control selectpicker"
-                                                                    data-actions-box="true" name="salary_ids[]"
-                                                                    title="-- Nothing Selected --" id="salary"
-                                                                    data-live-search="true" multiple>
-                                                                @foreach($salaries as $row)
-                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="search-filter-option">
-                                                        <h3 class="filter-heading tree-toggle">
-                                                            <i class="fa fa-warehouse"></i>&ensp;Job Functions
-                                                            <i class="fa fa-chevron-down pull-right"></i>
-                                                        </h3>
-                                                        <ul class="tree">
-                                                            <select class="form-control selectpicker"
-                                                                    data-actions-box="true" name="jobfunc_ids[]"
-                                                                    title="-- Nothing Selected --" id="job_funct"
-                                                                    data-live-search="true" multiple>
-                                                                @foreach($job_functions as $row)
-                                                                    <option value="{{$row->id}}">{{$row->nama}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="search-filter-option">
-                                                        <h3 class="filter-heading tree-toggle">
-                                                            <i class="fa fa-industry"></i>&ensp;Industries
-                                                            <i class="fa fa-chevron-down pull-right"></i>
-                                                        </h3>
-                                                        <ul class="tree">
-                                                            <select class="form-control selectpicker"
-                                                                    data-actions-box="true" name="industry_ids[]"
-                                                                    title="-- Nothing Selected --" id="industry"
-                                                                    data-live-search="true" multiple>
-                                                                @foreach($industries as $row)
-                                                                    <option value="{{$row->id}}">{{$row->nama}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="search-filter-option">
-                                                        <h3 class="filter-heading tree-toggle">
-                                                            <i class="fa fa-graduation-cap"></i>&ensp;Education
-                                                            Degrees
-                                                            <i class="fa fa-chevron-down pull-right"></i>
-                                                        </h3>
-                                                        <ul class="tree">
-                                                            <select class="form-control selectpicker"
-                                                                    data-actions-box="true" name="degrees_ids[]"
-                                                                    title="-- Nothing Selected --" id="tingkatpend"
-                                                                    data-live-search="true"
-                                                                    multiple>
-                                                                @foreach($degrees as $row)
-                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </ul>
-                                                    </li>
-                                                    <li class="search-filter-option">
-                                                        <h3 class="filter-heading tree-toggle">
-                                                            <i class="fa fa-user-graduate"></i>&ensp;Education
-                                                            Majors
-                                                            <i class="fa fa-chevron-down pull-right"></i>
-                                                        </h3>
-                                                        <ul class="tree">
-                                                            <select class="form-control selectpicker"
-                                                                    data-actions-box="true" name="majors_ids[]"
-                                                                    title="-- Nothing Selected --" id="jurusanpend"
-                                                                    data-live-search="true"
-                                                                    multiple>
-                                                                @foreach($majors as $row)
-                                                                    <option value="{{$row->id}}">{{$row->name}}</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </ul>
-                                                    </li>
-                                                    <div class="card-read-more" id="clear-filter">
-                                                        <button class="btn btn-link btn-block" type="reset">
-                                                            <i class="fa fa-eraser"></i>&nbsp;Clear Filters
-                                                        </button>
-                                                    </div>
-                                                </ul>
-                                            </form>
+                    <div class="col-lg-12 section-heading text-center" style="padding-bottom: 0">
+                        <h2 class="to-animate" style="text-transform: none;font-size: 18px;letter-spacing: 1px">
+                            <span id="show-result"></span>
+                        </h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="row">
+                            <div class="col-lg-12 to-animate-2" id="search-filter">
+                                <div class="sidebar-offcanvas" id="sidebar" role="navigation">
+                                    <!-- FILTER -->
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Filter</h3>
                                         </div>
-                                        <!-- /filter results panel -->
+                                        <form id="form-filter">
+                                            <ul class="panel-body">
+                                                <li class="search-filter-option">
+                                                    <h3 class="filter-heading tree-toggle">
+                                                        <i class="fa fa-money-bill-wave"></i>&ensp;Salary (IDR)
+                                                        <i class="fa fa-chevron-down pull-right"></i>
+                                                    </h3>
+                                                    <ul class="tree">
+                                                        <select class="form-control selectpicker"
+                                                                data-actions-box="true" name="salary_ids[]"
+                                                                title="-- Nothing Selected --" id="salary"
+                                                                data-live-search="true" multiple>
+                                                            @foreach($salaries as $row)
+                                                                <option value="{{$row->id}}">{{$row->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </ul>
+                                                </li>
+                                                <li class="search-filter-option">
+                                                    <h3 class="filter-heading tree-toggle">
+                                                        <i class="fa fa-warehouse"></i>&ensp;Job Functions
+                                                        <i class="fa fa-chevron-down pull-right"></i>
+                                                    </h3>
+                                                    <ul class="tree">
+                                                        <select class="form-control selectpicker"
+                                                                data-actions-box="true" name="jobfunc_ids[]"
+                                                                title="-- Nothing Selected --" id="job_funct"
+                                                                data-live-search="true" multiple>
+                                                            @foreach($job_functions as $row)
+                                                                <option value="{{$row->id}}">{{$row->nama}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </ul>
+                                                </li>
+                                                <li class="search-filter-option">
+                                                    <h3 class="filter-heading tree-toggle">
+                                                        <i class="fa fa-industry"></i>&ensp;Industries
+                                                        <i class="fa fa-chevron-down pull-right"></i>
+                                                    </h3>
+                                                    <ul class="tree">
+                                                        <select class="form-control selectpicker"
+                                                                data-actions-box="true" name="industry_ids[]"
+                                                                title="-- Nothing Selected --" id="industry"
+                                                                data-live-search="true" multiple>
+                                                            @foreach($industries as $row)
+                                                                <option value="{{$row->id}}">{{$row->nama}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </ul>
+                                                </li>
+                                                <li class="search-filter-option">
+                                                    <h3 class="filter-heading tree-toggle">
+                                                        <i class="fa fa-graduation-cap"></i>&ensp;Education
+                                                        Degrees
+                                                        <i class="fa fa-chevron-down pull-right"></i>
+                                                    </h3>
+                                                    <ul class="tree">
+                                                        <select class="form-control selectpicker"
+                                                                data-actions-box="true" name="degrees_ids[]"
+                                                                title="-- Nothing Selected --" id="tingkatpend"
+                                                                data-live-search="true"
+                                                                multiple>
+                                                            @foreach($degrees as $row)
+                                                                <option value="{{$row->id}}">{{$row->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </ul>
+                                                </li>
+                                                <li class="search-filter-option">
+                                                    <h3 class="filter-heading tree-toggle">
+                                                        <i class="fa fa-user-graduate"></i>&ensp;Education Majors
+                                                        <i class="fa fa-chevron-down pull-right"></i>
+                                                    </h3>
+                                                    <ul class="tree">
+                                                        <select class="form-control selectpicker"
+                                                                data-actions-box="true" name="majors_ids[]"
+                                                                title="-- Nothing Selected --" id="jurusanpend"
+                                                                data-live-search="true" multiple>
+                                                            @foreach($majors as $row)
+                                                                <option value="{{$row->id}}">{{$row->name}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </ul>
+                                                </li>
+                                                <div class="card-read-more" id="clear-filter">
+                                                    <button class="btn btn-link btn-block" type="reset">
+                                                        <i class="fa fa-eraser"></i>&nbsp;Clear Filters
+                                                    </button>
+                                                </div>
+                                            </ul>
+                                        </form>
                                     </div>
+                                    <!-- /filter results panel -->
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-9" id="vacancy-list">
-                            <div class="row">
-                                <div id="wrapper-filter" class="col-lg-8 to-animate-2">
-                                    <ul id="filter-bar">
-                                        <span class="pill"></span>
-                                        <li class="filter-option option-1 active"
-                                            data-target="option-1" data-value="all">All
-                                        </li>
-                                        <li class="filter-option option-2"
-                                            data-target="option-2" data-value="latest">Latest
-                                        </li>
-                                        <li class="filter-option option-3"
-                                            data-target="option-3" data-value="highest_salary">Highest Salary
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-lg-4 pull-right to-animate-2">
-                                    <div class="dc-view-switcher" style="margin: 0 1em">
-                                        <label>Filter: </label>
-                                        <button data-trigger="filter" id="btn_filter" class="active"
-                                                type="button"></button>
-                                        <label>&ensp;View: </label>
-                                        <button data-trigger="grid-view" type="button"></button>
-                                        <button data-trigger="list-view" class="active" type="button"></button>
-                                    </div>
+                    </div>
+                    <div class="col-lg-9" id="vacancy-list">
+                        <div class="row">
+                            <div id="wrapper-filter" class="col-lg-8 to-animate-2">
+                                <ul id="filter-bar">
+                                    <span class="pill"></span>
+                                    <li class="filter-option option-1 active"
+                                        data-target="option-1" data-value="all">All
+                                    </li>
+                                    <li class="filter-option option-2"
+                                        data-target="option-2" data-value="latest">Latest
+                                    </li>
+                                    <li class="filter-option option-3"
+                                        data-target="option-3" data-value="highest_salary">Highest Salary
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 pull-right to-animate-2">
+                                <div class="dc-view-switcher" style="margin: 0 1em">
+                                    <label>Filter: </label>
+                                    <button data-trigger="filter" id="btn_filter" class="active"
+                                            type="button"></button>
+                                    <label>&ensp;View: </label>
+                                    <button data-trigger="grid-view" type="button"></button>
+                                    <button data-trigger="list-view" class="active" type="button"></button>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 to-animate-2">
-                                    <ul class="tags" id="vacancy-tags">
-                                        <div id="tag-salary"></div>
-                                        <div id="tag-jobfunc"></div>
-                                        <div id="tag-industry"></div>
-                                        <div id="tag-degrees"></div>
-                                        <div id="tag-majors"></div>
-                                    </ul>
-                                </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 to-animate-2">
+                                <ul class="tags" id="vacancy-tags">
+                                    <div id="tag-salary"></div>
+                                    <div id="tag-jobfunc"></div>
+                                    <div id="tag-industry"></div>
+                                    <div id="tag-degrees"></div>
+                                    <div id="tag-majors"></div>
+                                </ul>
                             </div>
-                            <div class="row">
-                                <div class="col-lg-12 to-animate">
-                                    <img src="{{asset('images/loading.gif')}}" id="image"
-                                         class="img-responsive ld ld-fade">
-                                    <div data-view="list-view" class="download-cards" style="margin-left: -.5em"
-                                         id="search-result">
-                                    </div>
-                                    <div class="col-lg-12 to-animate-2 myPagination">
-                                        <ul class="pagination"></ul>
-                                    </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 to-animate">
+                                <img src="{{asset('images/loading.gif')}}" id="image"
+                                     class="img-responsive ld ld-fade">
+                                <div data-view="list-view" class="download-cards" style="margin-left: -.5em"
+                                     id="search-result">
+                                </div>
+                                <div class="col-lg-12 to-animate-2 myPagination">
+                                    <ul class="pagination"></ul>
                                 </div>
                             </div>
                         </div>
@@ -193,7 +345,7 @@
     <script>
         var last_page;
 
-        $(document).ready(function () {
+        $(function () {
             $('#image').hide();
             $('#search-result').show();
             $('.myPagination').show();
@@ -294,47 +446,44 @@
         });
 
         // search form navbar
-        $('#txt_keyword').on('input', function () {
-            clearTimeout(this.delay);
-            this.delay = setTimeout(function () {
-                $(this).trigger('search');
-            }.bind(this), 800);
-        }).on('search', function () {
-            if (this.value) {
-                loadVacancy();
-            }
+        $('#txt_keyword').on('keyup', function () {
+            loadVacancy();
         });
 
-        $("#list-lokasi li a").click(function () {
-            setTimeout(loadVacancy, 100);
+        $("#list-lokasi li a").on("click", function () {
+            loadVacancy()
         });
+
         $(".search-form").on('submit', function (event) {
             event.preventDefault();
             return false;
         });
+
         // sort
-        $("#filter-bar li").click(function () {
+        $("#filter-bar li").on("click", function () {
             var data = $(this).attr('data-value'), sort = $("#txt_sort");
             $("#filter-bar li").removeClass("active");
             $(this).addClass("active");
             $("#filter-bar").removeClass().addClass($(this).attr("data-target"));
             sort.val(data);
-            setTimeout(loadVacancy, 100);
+            loadVacancy()
         });
+
         // reset filter
-        $("#btn_reset").click(function () {
+        $("#btn_reset").on("click", function () {
             $("#lokasi").html('Filter&nbsp;<span class="fa fa-caret-down">' + '</span>');
             $("#txt_keyword").removeAttr('value');
             $(".search-form input:not(#txt_sort)").val('');
-            setTimeout(loadVacancy, 100);
+            loadVacancy()
         });
-        $("#clear-filter button").click(function () {
+
+        $("#clear-filter button").on("click", function () {
             var $selectpicker = $("#search-filter .selectpicker option");
             $("#txt_sort").removeAttr('value');
             $selectpicker.prop('selected', false).trigger('change');
             $selectpicker.removeAttr('selected');
             $("#search-filter .selectpicker").selectpicker("refresh");
-            setTimeout(loadVacancy, 100);
+            loadVacancy()
         });
 
         // filters + tags
@@ -347,7 +496,7 @@
                         "<i class='tag-close'></i><i class='fa fa-money-bill-wave tag-icon'></i>" +
                         "&ensp;IDR " + $(this).text() + "</a></li>");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
             $('#tag-salary').on('click', ".tag", function () {
@@ -357,7 +506,7 @@
                     $('#salary option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#salary").selectpicker("refresh");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
 
@@ -369,7 +518,7 @@
                         "<i class='tag-close'></i><i class='fa fa-warehouse tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
             $('#tag-jobfunc').on('click', ".tag", function () {
@@ -379,7 +528,7 @@
                     $('#job_funct option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#job_funct").selectpicker("refresh");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
 
@@ -391,7 +540,7 @@
                         "<i class='tag-close'></i><i class='fa fa-industry tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
             $('#tag-industry').on('click', ".tag", function () {
@@ -401,7 +550,7 @@
                     $('#industry option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#industry").selectpicker("refresh");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
 
@@ -413,7 +562,7 @@
                         "<i class='tag-close'></i><i class='fa fa-graduation-cap tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
             $('#tag-degrees').on('click', ".tag", function () {
@@ -423,7 +572,7 @@
                     $('#tingkatpend option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#tingkatpend").selectpicker("refresh");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
 
@@ -435,7 +584,7 @@
                         "<i class='tag-close'></i><i class='fa fa-user-graduate tag-icon'></i>" +
                         "&ensp;" + $(this).text() + "</a></li>");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
             $('#tag-majors').on('click', ".tag", function () {
@@ -445,7 +594,7 @@
                     $('#jurusanpend option[value="' + id + '"]').prop('selected', false).trigger('change');
                     $("#jurusanpend").selectpicker("refresh");
 
-                    setTimeout(loadVacancy, 100);
+                    loadVacancy()
                 });
             });
         });
@@ -455,36 +604,40 @@
                 salary = $("#salary").val(), jobfunc = $("#job_funct").val(), industry = $("#industry").val(),
                 degrees = $("#tingkatpend").val(), majors = $("#jurusanpend").val();
 
-            $.ajax({
-                url: "{{route('get.search.vacancy')}}",
-                type: "GET",
-                data: $(".search-form, #form-filter").serialize(),
-                beforeSend: function () {
-                    $('#image').show();
-                    $('#search-result').hide();
-                    $('.myPagination').hide();
-                },
-                complete: function () {
-                    $('#image').hide();
-                    $('#search-result').show();
-                    $('.myPagination').show();
-                },
-                success: function (data) {
-                    successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors);
-                },
-                error: function () {
-                    swal({
-                        title: 'Search Vacancy',
-                        text: 'Data not found!',
-                        type: 'error',
-                        timer: '1500'
-                    })
-                }
-            });
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: "{{route('get.search.vacancy')}}",
+                    type: "GET",
+                    data: $(".search-form, #form-filter").serialize(),
+                    beforeSend: function () {
+                        $('#image').show();
+                        $('#search-result').hide();
+                        $('.myPagination').hide();
+                    },
+                    complete: function () {
+                        $('#image').hide();
+                        $('#search-result').show();
+                        $('.myPagination').show();
+                    },
+                    success: function (data) {
+                        successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors);
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Search Vacancy',
+                            text: 'Data not found!',
+                            type: 'error',
+                            timer: '1500'
+                        })
+                    }
+                });
+            }.bind(this), 800);
+
             return false;
         }
 
-        $('.myPagination ul').on('click', 'li', function (event) {
+        $('.myPagination ul').on('click', 'li', function () {
             $(window).scrollTop(0);
 
             var keyword = $("#txt_keyword").val(), location = $("#txt_location").val(), sort = $("#txt_sort").val(),
@@ -520,33 +673,36 @@
                 $url = "{{url('/api')}}" + '/vacancies/search?page=' + last_page;
             }
 
-            $.ajax({
-                url: $url,
-                type: "GET",
-                data: $(".search-form, #form-filter").serialize(),
-                beforeSend: function () {
-                    $('#image').show();
-                    $('#search-result').hide();
-                    $('.myPagination').hide();
-                },
-                complete: function () {
-                    $('#image').hide();
-                    $('#search-result').show();
-                    $('.myPagination').show();
-                },
-                success: function (data) {
-                    successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors, page);
-                },
-                error: function () {
-                    swal({
-                        title: 'Search Vacancy',
-                        text: 'Data not found!',
-                        type: 'error',
-                        timer: '1500'
-                    })
-                }
-            });
-            event.preventDefault();
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: $url,
+                    type: "GET",
+                    data: $(".search-form, #form-filter").serialize(),
+                    beforeSend: function () {
+                        $('#image').show();
+                        $('#search-result').hide();
+                        $('.myPagination').hide();
+                    },
+                    complete: function () {
+                        $('#image').hide();
+                        $('#search-result').show();
+                        $('.myPagination').show();
+                    },
+                    success: function (data) {
+                        successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors, page);
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Search Vacancy',
+                            text: 'Data not found!',
+                            type: 'error',
+                            timer: '1500'
+                        })
+                    }
+                });
+            }.bind(this), 800);
+
             return false;
         });
 
@@ -673,7 +829,11 @@
             }
             $('.myPagination ul').html(pagination);
 
-            // url generator
+            generateUrl(keyword, location, sort, salary, jobfunc, industry, degrees, majors, page);
+            return false;
+        }
+
+        function generateUrl(keyword, location, sort, salary, jobfunc, industry, degrees, majors, page) {
             var $sort = '', $salary = '', $jobfunc = '', $industry = '', $degrees = '', $majors = '', $page = '';
             if (sort != "") {
                 $sort = '&sort=' + sort;
@@ -703,8 +863,6 @@
             }
             window.history.replaceState("", "", '{{url('/')}}' + '/search?q=' + keyword + '&loc=' + location +
                 $sort + $salary + $jobfunc + $industry + $degrees + $majors + $page);
-
-            return false;
         }
     </script>
 @endpush

@@ -1,8 +1,7 @@
 #wrapper-filter {
     background-color: #eee;
-    width: 570px;
     height: auto;
-    margin: 0 1em;
+    margin: 0 15px;
     border-radius: 30px;
     box-sizing: border-box;
 }
@@ -29,7 +28,6 @@
 
 .pill {
     position: absolute;
-    width: 190px;
     height: 38px;
     background-color: #fa5555;
     border-radius: 30px;
@@ -44,18 +42,7 @@
     margin: 0 auto;
 }
 
-#filter-bar.option-1 .pill {
-    margin-left: -16px;
-    transition: margin-left 200ms ease;
-}
-
-#filter-bar.option-2 .pill {
-    margin-left: 175px;
-    transition: margin-left 200ms ease;
-}
-
-#filter-bar.option-3 .pill {
-    margin-left: 366px;
+#filter-bar.option-1 .pill, #filter-bar.option-2 .pill, #filter-bar.option-3 .pill {
     transition: margin-left 200ms ease;
 }
 
@@ -64,31 +51,6 @@
 .option-3.active {
     color: #fff;
     transition: color 200ms;
-}
-
-@media screen and (max-width: 768px) {
-    #wrapper-filter {
-        width: auto;
-    }
-
-    .pill {
-        width: 140px;
-    }
-
-    #filter-bar.option-1 .pill {
-        margin-left: -5px;
-        transition: margin-left 200ms ease;
-    }
-
-    #filter-bar.option-2 .pill {
-        margin-left: 121px;
-        transition: margin-left 200ms ease;
-    }
-
-    #filter-bar.option-3 .pill {
-        margin-left: 249px;
-        transition: margin-left 200ms ease;
-    }
 }
 
 h3.filter-heading {
