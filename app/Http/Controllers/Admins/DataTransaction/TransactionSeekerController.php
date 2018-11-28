@@ -6,6 +6,7 @@ use App\Accepting;
 use App\Invitation;
 use App\Seekers;
 use App\User;
+use App\Vacancies;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -13,9 +14,13 @@ class TransactionSeekerController extends Controller
 {
     public function showApplicationsTable()
     {
-        $applications = Accepting::all();
+        $vacancies = Vacancies::where('isPost', true)->get();
 
-        return view('_admins.tables._transactions.seekers.application-table', compact('applications'));
+        $applications = Accepting::whereHas('getVacancy', function ($q) {
+            $q->where('isPost', true);
+        })->get();
+
+        return view('_admins.tables._transactions.seekers.application-table', compact('vacancies', 'applications'));
     }
 
     public function deleteApplications(Request $request)
@@ -30,7 +35,9 @@ class TransactionSeekerController extends Controller
 
     public function showInvitationsTable()
     {
-        $invitations = Invitation::where('isApply', true)->get();
+        $invitations = Invitation::whereHas('GetVacancy', function ($q) {
+            $q->where('isPost', true);
+        })->get();
 
         return view('_admins.tables._transactions.seekers.invitation-table', compact('invitations'));
     }

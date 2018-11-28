@@ -46,6 +46,7 @@
 
     <!-- Custom Theme Style -->
     <link href="{{asset('_admins/css/custom.css')}}" rel="stylesheet">
+    @stack('styles')
     <style>
         .dropdown-menu li:first-child a:before {
             border: none;

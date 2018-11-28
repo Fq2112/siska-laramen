@@ -99,7 +99,7 @@
                                     <div class="input-group">
                                         <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
                                         <select id="vacancy_id" class="form-control selectpicker"
-                                                title="-- Select Questions --" data-live-search="true"
+                                                title="-- Select Vacancy --" data-live-search="true"
                                                 data-selected-text-format="count > 3" name="vacancy_ids[]"
                                                 multiple required>
                                             @foreach($vacancies as $vacancy)

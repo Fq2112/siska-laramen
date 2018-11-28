@@ -1,5 +1,13 @@
 @extends('layouts.mst_admin')
 @section('title', 'Job Applications Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@push('styles')
+    <style>
+        .dataTables_filter {
+            width: 70%;
+            float: left;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
@@ -18,17 +26,28 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="vacancy_id">Vacancy Filter</label>
+                                <select id="vacancy_id" class="form-control selectpicker" title="-- Select Vacancy --"
+                                        data-live-search="true" data-max-options="1" multiple>
+                                    @foreach($vacancies as $vacancy)
+                                        <option value="{{$vacancy->judul}}">{{$vacancy->judul}}</option>
+                                    @endforeach
+                                </select>
+                                <span class="fa fa-briefcase form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <table id="application-table" class="table table-striped table-bordered bulk_action">
                             <thead>
                             <tr>
-                                <th>No</th>
+                                <th><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>Details</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
 
                             <tbody>
-                            @php $no = 1; @endphp
                             @foreach($applications as $application)
                                 @php
                                     $seeker = \App\Seekers::find($application->seeker_id);
@@ -43,7 +62,10 @@
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
                                 @endphp
                                 <tr>
-                                    <td style="vertical-align: middle" align="center">{{$no++}}</td>
+                                    <td class="a-center" style="vertical-align: middle" align="center">
+                                        <input type="checkbox" class="flat" name="table_records[]"
+                                               value="{{$application->id}}">
+                                    </td>
                                     <td style="vertical-align: middle">
                                         <table>
                                             <tr>
@@ -272,7 +294,7 @@
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-success btn-sm"
                                                     style="font-weight: 600">
-                                                INVITE
+                                                <i class="fa fa-envelope"></i>&ensp;SEND
                                             </button>
                                             <button type="button" class="btn btn-success btn-sm dropdown-toggle"
                                                     data-toggle="dropdown" aria-expanded="false">
@@ -283,7 +305,7 @@
                                                 <li>
                                                     <a href="{{route('table.applications.delete',['id'=> encrypt
                                                     ($application->id)])}}" class="delete-application">
-                                                        <i class="fa fa-trash-alt"></i>&ensp;Delete
+                                                        <i class="fa fa-trash-alt"></i>&ensp;Remove
                                                     </a>
                                                 </li>
                                             </ul>
@@ -293,6 +315,28 @@
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="row form-group">
+                            <div class="col-sm-4" id="action-btn">
+                                <div class="btn-group" style="float: right">
+                                    <button id="btn_invite_app" type="button" class="btn btn-success btn-sm"
+                                            style="font-weight: 600" disabled>
+                                        <i class="fa fa-envelope"></i>&ensp;SEND ALL SELECTED RECORDS
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-sm dropdown-toggle"
+                                            data-toggle="dropdown" aria-expanded="false" disabled>
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a id="btn_delete_app" href="#" class="delete-application">
+                                                <i class="fa fa-trash-alt"></i>&ensp;REMOVE ALL SELECTED RECORDS
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -301,6 +345,65 @@
 @endsection
 @push("scripts")
     <script>
+        $(function () {
+            var table = $("#application-table").DataTable({
+                order: [[1, "asc"]],
+                columnDefs: [{orderable: !1, targets: [0]}]
+            }), toolbar = $("#application-table_wrapper").children().eq(0);
+
+            toolbar.children().toggleClass("col-sm-6 col-sm-4");
+            $('#action-btn').appendTo(toolbar);
+
+            $("#check-all").on("ifToggled", function () {
+                if ($(this).is(":checked")) {
+                    $("#application-table tbody tr").find('input[type=checkbox]').iCheck("check");
+                    $("#btn_invite_app, #action-btn .dropdown-toggle").removeAttr("disabled");
+                } else {
+                    $("#application-table tbody tr").find('input[type=checkbox]').iCheck("uncheck");
+                    $("#btn_invite_app, #action-btn .dropdown-toggle").attr("disabled", "disabled");
+                }
+            });
+
+            $("#application-table tbody").on("click", "tr", function () {
+                $(this).toggleClass("selected");
+                $(this).find('input[type=checkbox]').iCheck("toggle");
+            });
+
+            $("#application-table tbody tr").find('input[type=checkbox]').on("ifToggled", function () {
+                var selected = table.rows('.selected').data().length;
+
+                if ($(this).is(":checked") || selected > 0) {
+                    $("#btn_invite_app, #action-btn .dropdown-toggle").removeAttr("disabled");
+                } else {
+                    $("#btn_invite_app, #action-btn .dropdown-toggle").attr("disabled", "disabled");
+                }
+            });
+
+            $('#btn_invite_app').on("click", function () {
+                var selected = table.rows('.selected').data().length;
+
+                swal({
+                    title: "Send " + selected + " selected row(s) to the Agency",
+                    type: 'warning',
+                    timer: '3500'
+                });
+            });
+
+            $('#btn_delete_app').on("click", function () {
+                var selected = table.rows('.selected').data().length;
+
+                swal({
+                    title: "Remove " + selected + " selected row(s)",
+                    type: 'warning',
+                    timer: '3500'
+                });
+            });
+        });
+
+        $("#vacancy_id").on('change', function () {
+            $(".dataTables_filter input[type=search]").val($(this).val()).trigger('keyup');
+        });
+
         $(".delete-application").on("click", function () {
             var linkURL = $(this).attr("href");
             swal({
