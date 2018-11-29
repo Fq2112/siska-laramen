@@ -26,4 +26,9 @@ class PostController extends Controller
 
         echo  json_encode('Thanks for the feed');
     }
+
+    public function test()
+    {
+        
+    }
 }
