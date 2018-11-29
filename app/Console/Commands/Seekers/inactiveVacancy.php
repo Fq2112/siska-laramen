@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Seekers;
 
 use App\Accepting;
-use App\Plan;
 use App\Vacancies;
 use Illuminate\Console\Command;
 
@@ -43,20 +42,17 @@ class inactiveVacancy extends Command
         $vacancies = Vacancies::where('isPost', true)->get();
 
         foreach ($vacancies as $vacancy) {
-            $plan = Plan::find($vacancy->plan_id);
+            $applicants = Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->count();
 
-            if ($plan->isQuiz == true) {
-
-                $applicants = Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->count();
-
-                if ($vacancy->quiz_applicant >= $applicants || today() >= $vacancy->recruitmentDate_end) {
+            if ($vacancy->getPlan->isQuiz == true) {
+                if ($applicants >= $vacancy->quiz_applicant || today() > $vacancy->active_period) {
                     $vacancy->update([
                         'isPost' => false,
                     ]);
                 }
 
             } else {
-                if (today() >= $vacancy->recruitmentDate_end) {
+                if (today() > $vacancy->active_period) {
                     $vacancy->update([
                         'isPost' => false,
                     ]);

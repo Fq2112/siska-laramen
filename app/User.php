@@ -104,12 +104,12 @@ class User extends Authenticatable implements JWTSubject
 
     public function seekers()
     {
-        return $this->hasOne(Seekers::class);
+        return $this->hasOne(Seekers::class, 'user_id');
     }
 
     public function agencies()
     {
-        return $this->hasOne(Agencies::class);
+        return $this->hasOne(Agencies::class, 'user_id');
     }
 
     public function experiences()

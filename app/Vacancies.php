@@ -12,7 +12,7 @@ class Vacancies extends Model
 
     public function agencies()
     {
-        return $this->belongsTo(Agencies::class);
+        return $this->belongsTo(Agencies::class, 'agency_id');
     }
 
     public function getAccepting()

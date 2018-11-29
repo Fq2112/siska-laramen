@@ -26,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('abortPayment:send')->daily();
-        $schedule->command('inactiveVacancy:update')->hourly();
+        $schedule->command('abortPayment:send')->hourly();
+        $schedule->command('inactiveVacancy:update')->daily();
         $schedule->command('inactiveUser:delete')->weekly();
     }
 

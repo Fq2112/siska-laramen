@@ -42,8 +42,9 @@
                             <thead>
                             <tr>
                                 <th><input type="checkbox" id="check-all" class="flat"></th>
+                                <th>ID</th>
                                 <th>Details</th>
-                                <th>Action</th>
+                                <th>Status</th>
                             </tr>
                             </thead>
 
@@ -63,9 +64,9 @@
                                 @endphp
                                 <tr>
                                     <td class="a-center" style="vertical-align: middle" align="center">
-                                        <input type="checkbox" class="flat" name="table_records[]"
-                                               value="{{$application->id}}">
+                                        <input type="checkbox" class="flat">
                                     </td>
+                                    <td style="vertical-align: middle">{{$application->id}}</td>
                                     <td style="vertical-align: middle">
                                         <table>
                                             <tr>
@@ -164,7 +165,7 @@
                                                             <td>
                                                                 <a href="{{route('detail.vacancy',['id' =>
                                                                 $vacancy->id])}}" target="_blank">
-                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;&nbsp;
+                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;
                                                                 @if($vacancy->isPost == true)
                                                                     <span data-toggle="tooltip" data-placement="bottom"
                                                                           title="Plan" class="label label-info">
@@ -192,8 +193,9 @@
                                                         <tr>
                                                             <td>
                                                                 <a href="{{route('agency.profile',['id' => $agency->id])}}"
-                                                                   target="_blank">
-                                                                    {{$userAgency->name}}</a>&nbsp;&ndash;
+                                                                   target="_blank">{{$userAgency->name}}</a>&nbsp;&ndash;
+                                                                <a href="mailto:{{$userAgency->email}}">
+                                                                    {{$userAgency->email}}</a>&nbsp;&ndash;
                                                                 {{substr($city, 0, 2) == "Ko" ? substr($city,5) :
                                                                 substr($city,10)}}
                                                             </td>
@@ -274,42 +276,18 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        <p>
-                                            @if($application->isApply == true)
-                                                <span class="label label-success" style="background: #00ADB5"
-                                                      data-toggle="tooltip"
-                                                      data-placement="right" title="Status">
-                                                    <strong><i class="fa fa-paper-plane"></i>&ensp;APPLIED</strong> on
-                                                    {{\Carbon\Carbon::parse($application->created_at)->format('j F Y')}}
-                                                </span>
-                                            @else
-                                                <span class="label label-default" data-toggle="tooltip"
-                                                      data-placement="right" title="Status">
-                                                    <strong><i class="fa fa-paper-plane"></i>&ensp;NOT APPLY</strong>
-                                                </span>
-                                            @endif
-                                        </p>
                                     </td>
                                     <td style="vertical-align: middle" align="center">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-success btn-sm"
-                                                    style="font-weight: 600">
-                                                <i class="fa fa-envelope"></i>&ensp;SEND
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle"
-                                                    data-toggle="dropdown" aria-expanded="false">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li>
-                                                    <a href="{{route('table.applications.delete',['id'=> encrypt
-                                                    ($application->id)])}}" class="delete-application">
-                                                        <i class="fa fa-trash-alt"></i>&ensp;Remove
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
+                                        @if($application->isApply == true)
+                                            <span class="label label-default" style="background: #00adb5">APPLIED</span>
+                                            &ndash;&nbsp;on&nbsp;&ndash;
+                                            <span class="label label-info">
+                                                {{\Carbon\Carbon::parse($application->created_at)->format('j F Y')}}
+                                            </span>
+                                        @else
+                                            <span class="label label-default"
+                                                  style="background: #fa5555">NOT APPLY</span>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -318,24 +296,20 @@
                         <div class="row form-group">
                             <div class="col-sm-4" id="action-btn">
                                 <div class="btn-group" style="float: right">
-                                    <button id="btn_invite_app" type="button" class="btn btn-success btn-sm"
+                                    <button id="btn_send_app" type="button" class="btn btn-success btn-sm"
                                             style="font-weight: 600" disabled>
-                                        <i class="fa fa-envelope"></i>&ensp;SEND ALL SELECTED RECORDS
+                                        <i class="fa fa-envelope"></i>&ensp;SEND
                                     </button>
-                                    <button type="button" class="btn btn-success btn-sm dropdown-toggle"
-                                            data-toggle="dropdown" aria-expanded="false" disabled>
-                                        <span class="caret"></span>
-                                        <span class="sr-only">Toggle Dropdown</span>
+                                    <button id="btn_remove_app" type="button" class="btn btn-danger btn-sm"
+                                            style="font-weight: 600" disabled>
+                                        <i class="fa fa-trash"></i>&ensp;REMOVE
                                     </button>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <a id="btn_delete_app" href="#" class="delete-application">
-                                                <i class="fa fa-trash-alt"></i>&ensp;REMOVE ALL SELECTED RECORDS
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </div>
                             </div>
+                            <form method="post" id="form-application">
+                                {{csrf_field()}}
+                                <input id="applicant_ids" type="hidden" name="applicant_ids">
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -348,7 +322,17 @@
         $(function () {
             var table = $("#application-table").DataTable({
                 order: [[1, "asc"]],
-                columnDefs: [{orderable: !1, targets: [0]}]
+                columnDefs: [
+                    {
+                        targets: [0],
+                        orderable: false
+                    },
+                    {
+                        targets: [1],
+                        visible: false,
+                        searchable: false
+                    }
+                ]
             }), toolbar = $("#application-table_wrapper").children().eq(0);
 
             toolbar.children().toggleClass("col-sm-6 col-sm-4");
@@ -357,10 +341,10 @@
             $("#check-all").on("ifToggled", function () {
                 if ($(this).is(":checked")) {
                     $("#application-table tbody tr").find('input[type=checkbox]').iCheck("check");
-                    $("#btn_invite_app, #action-btn .dropdown-toggle").removeAttr("disabled");
+                    $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
                 } else {
                     $("#application-table tbody tr").find('input[type=checkbox]').iCheck("uncheck");
-                    $("#btn_invite_app, #action-btn .dropdown-toggle").attr("disabled", "disabled");
+                    $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
                 }
             });
 
@@ -373,30 +357,64 @@
                 var selected = table.rows('.selected').data().length;
 
                 if ($(this).is(":checked") || selected > 0) {
-                    $("#btn_invite_app, #action-btn .dropdown-toggle").removeAttr("disabled");
+                    $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
                 } else {
-                    $("#btn_invite_app, #action-btn .dropdown-toggle").attr("disabled", "disabled");
+                    $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
                 }
             });
 
-            $('#btn_invite_app').on("click", function () {
-                var selected = table.rows('.selected').data().length;
+            $('#btn_send_app').on("click", function () {
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    return item[1]
+                });
+                $("#applicant_ids").val(ids);
+                $("#form-application").attr("action", "{{route('table.applications.massSend')}}");
 
                 swal({
-                    title: "Send " + selected + " selected row(s) to the Agency",
+                    title: 'Send Applications',
+                    text: 'Are you sure to send this ' + ids.length + ' selected records to the Agency\'s email? ' +
+                        'You won\'t be able to revert this!',
                     type: 'warning',
-                    timer: '3500'
+                    showCancelButton: true,
+                    confirmButtonColor: '#00adb5',
+                    confirmButtonText: 'Yes, send it!',
+                    showLoaderOnConfirm: true,
+
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            $("#form-application")[0].submit();
+                        });
+                    },
+                    allowOutsideClick: false
                 });
+                return false;
             });
 
-            $('#btn_delete_app').on("click", function () {
-                var selected = table.rows('.selected').data().length;
+            $('#btn_remove_app').on("click", function () {
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    return item[1]
+                });
+                $("#applicant_ids").val(ids);
+                $("#form-application").attr("action", "{{route('table.applications.massDelete')}}");
 
                 swal({
-                    title: "Remove " + selected + " selected row(s)",
+                    title: 'Remove Applications',
+                    text: 'Are you sure to remove this ' + ids.length + ' selected records? ' +
+                        'You won\'t be able to revert this!',
                     type: 'warning',
-                    timer: '3500'
+                    showCancelButton: true,
+                    confirmButtonColor: '#fa5555',
+                    confirmButtonText: 'Yes, delete it!',
+                    showLoaderOnConfirm: true,
+
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            $("#form-application")[0].submit();
+                        });
+                    },
+                    allowOutsideClick: false
                 });
+                return false;
             });
         });
 

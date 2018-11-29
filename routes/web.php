@@ -722,9 +722,14 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'table.applications'
                     ]);
 
-                    Route::get('{id}/delete', [
-                        'uses' => 'TransactionSeekerController@deleteApplications',
-                        'as' => 'table.applications.delete'
+                    Route::post('send', [
+                        'uses' => 'TransactionSeekerController@massSendApplications',
+                        'as' => 'table.applications.massSend'
+                    ]);
+
+                    Route::post('delete', [
+                        'uses' => 'TransactionSeekerController@massDeleteApplications',
+                        'as' => 'table.applications.massDelete'
                     ]);
 
                 });
