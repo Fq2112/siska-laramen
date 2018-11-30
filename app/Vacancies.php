@@ -27,7 +27,7 @@ class Vacancies extends Model
 
     public function getQuizInfo()
     {
-        return $this->hasMany(QuizInfo::class, 'vacancy_id');
+        return $this->hasOne(QuizInfo::class, 'vacancy_id');
     }
 
     public function getPlan()

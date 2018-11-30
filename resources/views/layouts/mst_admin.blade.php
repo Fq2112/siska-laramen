@@ -63,14 +63,21 @@
 @php
     $auth = Auth::guard('admin')->user();
     $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString());
+
     $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
     ->whereDate('created_at', '>=', now()->subDay())->get();
-    $agencies = \App\Agencies::whereHas('vacancies', function ($vac){
-        $vac->whereHas('getAccepting', function ($acc){
-            $acc->where('isApply', true);
-        })->whereDate('recruitmentDate_end', '<=', today());
-    })->get();
-    $notifications = count($postings) + count($agencies);
+
+    $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
+        $acc->where('isApply', true);
+    })->whereDate('recruitmentDate_end', '<=', today())->get();
+
+    $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
+        $acc->where('isApply', true);
+    })->whereHas('getQuizInfo', function ($info){
+        $info->whereHas('getQuizResult');
+    })->whereDate('quizDate_end', '<=', today())->get();
+
+    $notifications = count($postings) + count($acceptings) + count($quiz_results);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -166,6 +173,7 @@
                                             <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
                                                     <li><a href="{{route('table.applications')}}">Applications</a></li>
+                                                    <li><a href="{{route('table.quizResults')}}">Quiz Results</a></li>
                                                     <li><a href="{{route('table.invitations')}}">Invitations</a></li>
                                                 </ul>
                                             </li>
@@ -326,51 +334,78 @@
                                                         @endif
                                                     </span>
                                                     <span>
-                                                        <span style="text-transform: uppercase">{{"Plan ".$posting->getPlan->name}}</span>
-                                                        <span class="time">{{$posting->GetAgency->user->name}}</span>
+                                                        <span>{{$posting->GetAgency->user->name}}</span>
                                                     </span>
                                                     <span class="message">
-                                                        The job posting request from this agency hasn't been approve yet!
+                                                        The job posting request with <strong
+                                                                style="text-transform: uppercase">{{$posting
+                                                        ->getPlan->name}}</strong> from this agency hasn't been approve yet!
                                                     </span>
                                                 </a>
                                             </li>
                                         @endforeach
                                     @endif
+
                                     <li class="divider"
                                         style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @if(count($agencies) > 0)
+
+                                    @if(count($acceptings) > 0)
                                         <li style="padding: 0">
                                             <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-paper-plane"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Job Applications</strong></span>
                                             </a>
                                         </li>
-                                        @foreach($agencies as $agency)
-                                            @php
-                                                $vacancies = \App\Vacancies::where('agency_id', $agency->id)
-                                                ->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end')
-                                                ->whereHas('getAccepting', function ($q){
-                                                    $q->where('isApply', true);
-                                                })->count();
-                                            @endphp
+                                        @foreach($acceptings as $vacancy)
                                             <li>
-                                                <a href="{{route('table.applications').'?q='.$agency->user->name}}">
+                                                <a href="{{route('table.applications').'?q='.$vacancy->judul}}">
                                                     <span class="image">
-                                                        @if($agency->user->ava == "" || $agency->user->ava == "agency.png")
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
                                                             <img src="{{asset('images/agency.png')}}">
                                                         @else
-                                                            <img src="{{asset('storage/users/'.$agency->user->ava)}}">
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
                                                     <span>
-                                                        <span>{{$vacancies > 1 ? $vacancies.' Vacancies' :
-                                                        $vacancies.' Vacancy'}}</span>
-                                                        <span class="time">{{$agency->user->name}}</span>
+                                                        <span>{{$vacancy->judul}}</span>
                                                     </span>
                                                     <span class="message">
-                                                        The application list for {{$vacancies > 1 ?
-                                                        'those ' .$vacancies.' vacancies' : 'that vacancy'}} hasn't
-                                                        been send to <strong>{{$agency->user->email}}</strong> yet!
+                                                        Make sure the application list for this vacancy are sent to
+                                                        <strong>{{$vacancy->agencies->user->name}}</strong>!
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
+
+                                    <li class="divider"
+                                        style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+
+                                    @if(count($quiz_results) > 0)
+                                        <li style="padding: 0">
+                                            <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-grin-beam"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Quiz Results</strong></span>
+                                            </a>
+                                        </li>
+                                        @foreach($quiz_results as $vacancy)
+                                            <li>
+                                                <a href="{{route('table.quizResults').'?q='.$vacancy->judul}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                    <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                    <span class="message">
+                                                        Make sure the quiz result list for this vacancy are sent to
+                                                        <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                     </span>
                                                 </a>
                                             </li>

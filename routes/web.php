@@ -734,6 +734,25 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
                 });
 
+                Route::group(['prefix' => 'quiz_results'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'TransactionSeekerController@showQuizResultsTable',
+                        'as' => 'table.quizResults'
+                    ]);
+
+                    Route::post('send', [
+                        'uses' => 'TransactionSeekerController@massSendQuizResults',
+                        'as' => 'table.quizResults.massSend'
+                    ]);
+
+                    Route::post('delete', [
+                        'uses' => 'TransactionSeekerController@massDeleteQuizResults',
+                        'as' => 'table.quizResults.massDelete'
+                    ]);
+
+                });
+
                 Route::group(['prefix' => 'invitations'], function () {
 
                     Route::get('/', [

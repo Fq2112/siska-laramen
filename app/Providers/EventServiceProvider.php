@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Agencies\ApplicantList' => [
             'App\Listeners\Agencies\SendApplicantList',
         ],
+        'App\Events\Agencies\QuizResultList' => [
+            'App\Listeners\Agencies\SendQuizResultList',
+        ],
     ];
 
     /**

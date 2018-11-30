@@ -1,12 +1,12 @@
 @extends('layouts.mst_admin')
-@section('title', 'Job Applications Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Quiz Results Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Job Applications
+                        <h2>Quiz Results
                             <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -35,19 +35,22 @@
                             <tr>
                                 <th><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>ID</th>
+                                <th>Code</th>
                                 <th>Details</th>
-                                <th>Status</th>
+                                <th>Passing Grade</th>
+                                <th>Score</th>
                             </tr>
                             </thead>
 
                             <tbody>
-                            @foreach($applications as $application)
+                            @foreach($quizResults as $result)
                                 @php
-                                    $seeker = \App\Seekers::find($application->seeker_id);
+                                    $info = $result->getQuizInfo;
+                                    $seeker = \App\Seekers::find($result->seeker_id);
                                     $userSeeker = \App\User::find($seeker->user_id);
                                     $last_edu = \App\Education::where('seeker_id', $seeker->id)
                                     ->wherenotnull('end_period')->orderby('tingkatpend_id', 'desc')->take(1)->get();
-                                    $vacancy = \App\Vacancies::find($application->vacancy_id);
+                                    $vacancy = \App\Vacancies::find($info->getVacancy->id);
                                     $agency = \App\Agencies::find($vacancy->agency_id);
                                     $userAgency = \App\User::find($agency->user_id);
                                     $city = \App\Cities::find($vacancy->cities_id)->name;
@@ -58,8 +61,16 @@
                                     <td class="a-center" style="vertical-align: middle" align="center">
                                         <input type="checkbox" class="flat">
                                     </td>
-                                    <td style="vertical-align: middle">{{$application->id}}</td>
+                                    <td style="vertical-align: middle">{{$result->id}}</td>
+                                    <td style="vertical-align: middle">{{$info->unique_code}}</td>
                                     <td style="vertical-align: middle">
+                                        <i class="fa fa-shield-alt"></i> Quiz Code:
+                                        <strong>{{$info->unique_code}}</strong>&ensp;|&ensp;<i
+                                                class="fa fa-question-circle"></i>
+                                        Total Question: <strong>{{$info->total_question}}</strong> items&ensp;|&nbsp;
+                                        <i class="fa fa-stopwatch"></i> Time Limit: <strong>{{$info->time_limit}}
+                                        </strong> minutes
+                                        <hr style="margin: .5em auto">
                                         <table>
                                             <tr>
                                                 <td>
@@ -194,8 +205,8 @@
                                                         </tr>
                                                         <tr>
                                                             <td>
-                                                                <strong data-toggle="tooltip" data-placement="left"
-                                                                        title="Recruitment Date">
+                                                                <span data-toggle="tooltip" data-placement="left"
+                                                                      title="Recruitment Date" style="line-height: 0">
                                                                     {{$vacancy->recruitmentDate_start != "" &&
                                                                     $vacancy->recruitmentDate_end != "" ?
                                                                     \Carbon\Carbon::parse
@@ -203,29 +214,27 @@
                                                                     ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                     ($vacancy->recruitmentDate_end)
                                                                     ->format('j F Y') : 'Unknown'}}
-                                                                </strong> |
+                                                                </span> |
                                                                 @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
-                                                                    <span data-toggle="tooltip" data-placement="right"
-                                                                          title="Quiz (Online TPA & TKD) Date"
-                                                                          style="line-height: 0">
+                                                                    <strong data-toggle="tooltip" data-placement="right"
+                                                                            title="Quiz (Online TPA & TKD) Date">
                                                                         {{$vacancy->quizDate_start != "" &&
                                                                         $vacancy->quizDate_end != "" ?
                                                                         \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->quizDate_end)->format('j F Y') :
                                                                         'Unknown'}}
-                                                                    </span><br>
+                                                                    </strong><br>
                                                                 @elseif($vacancy->plan_id != "" && $vacancy->plan_id == 3)
-                                                                    <span data-toggle="tooltip" data-placement="right"
-                                                                          title="Quiz (Online TPA & TKD) Date"
-                                                                          style="line-height: 0">
+                                                                    <strong data-toggle="tooltip" data-placement="right"
+                                                                            title="Quiz (Online TPA & TKD) Date">
                                                                         {{$vacancy->quizDate_start != "" &&
                                                                         $vacancy->quizDate_end != "" ?
                                                                         \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->quizDate_end)->format('j F Y') :
                                                                         'Unknown'}}
-                                                                    </span><br>
+                                                                    </strong><br>
                                                                     <span data-toggle="tooltip" data-placement="left"
                                                                           title="Psycho Test (Online Interview) Date"
                                                                           style="line-height: 0">
@@ -272,17 +281,13 @@
                                             </tr>
                                         </table>
                                     </td>
+                                    <td style="vertical-align: middle;font-weight: 600;text-align: center">{{$info->getVacancy->passing_grade}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        @if($application->isApply == true)
-                                            <span class="label label-default" style="background: #00adb5">APPLIED</span>
-                                            &ndash;&nbsp;on&nbsp;&ndash;
-                                            <span class="label label-info">
-                                                {{\Carbon\Carbon::parse($application->created_at)->format('j F Y')}}
-                                            </span>
-                                        @else
-                                            <span class="label label-default"
-                                                  style="background: #fa5555">NOT APPLY</span>
-                                        @endif
+                                        <span class="label label-default" style="background: {{$result->score >= $info
+                                        ->getVacancy->passing_grade ? '#00adb5' : '#fa5555'}};font-size: 14px;">
+                                            <i class="fa fa-{{$result->score >= $info->getVacancy->passing_grade ?
+                                            'grin-beam' : 'sad-cry'}}"></i>&ensp;{{$result->score}}
+                                        </span>
                                     </td>
                                 </tr>
                             @endforeach
@@ -301,9 +306,10 @@
                                     </button>
                                 </div>
                             </div>
-                            <form method="post" id="form-application">
+                            <form method="post" id="form-quiz-result">
                                 {{csrf_field()}}
-                                <input id="applicant_ids" type="hidden" name="applicant_ids">
+                                <input id="quizResult_ids" type="hidden" name="quizResult_ids">
+                                <input id="quizCodes" type="hidden" name="codes">
                             </form>
                         </div>
                     </div>
@@ -326,6 +332,11 @@
                         targets: [1],
                         visible: false,
                         searchable: false
+                    },
+                    {
+                        targets: [2],
+                        visible: false,
+                        searchable: false
                     }
                 ]
             }), toolbar = $("#myDataTable_wrapper").children().eq(0);
@@ -333,9 +344,9 @@
             toolbar.children().toggleClass("col-sm-6 col-sm-4");
             $('#action-btn').appendTo(toolbar);
 
-            @if($findVac != "")
-            $("#vacancy_id").val('{{$findVac}}').selectpicker('refresh');
-            $(".dataTables_filter input[type=search]").val('{{$findVac}}').trigger('keyup');
+            @if($findAgency != "")
+            $("#vacancy_id").val('{{$findAgency}}').selectpicker('refresh');
+            $(".dataTables_filter input[type=search]").val('{{$findAgency}}').trigger('keyup');
             @endif
 
             $("#vacancy_id").on('change', function () {
@@ -370,12 +381,15 @@
             $('#btn_send_app').on("click", function () {
                 var ids = $.map(table.rows('.selected').data(), function (item) {
                     return item[1]
+                }), codes = $.map(table.rows('.selected').data(), function (item) {
+                    return item[2]
                 });
-                $("#applicant_ids").val(ids);
-                $("#form-application").attr("action", "{{route('table.applications.massSend')}}");
+                $("#quizResult_ids").val(ids);
+                $("#quizCodes").val(codes);
+                $("#form-quiz-result").attr("action", "{{route('table.quizResults.massSend')}}");
 
                 swal({
-                    title: 'Send Applications',
+                    title: 'Send Quiz Results',
                     text: 'Are you sure to send this ' + ids.length + ' selected records to the Agency\'s email? ' +
                         'You won\'t be able to revert this!',
                     type: 'warning',
@@ -386,7 +400,7 @@
 
                     preConfirm: function () {
                         return new Promise(function (resolve) {
-                            $("#form-application")[0].submit();
+                            $("#form-quiz-result")[0].submit();
                         });
                     },
                     allowOutsideClick: false
@@ -398,11 +412,11 @@
                 var ids = $.map(table.rows('.selected').data(), function (item) {
                     return item[1]
                 });
-                $("#applicant_ids").val(ids);
-                $("#form-application").attr("action", "{{route('table.applications.massDelete')}}");
+                $("#quizResult_ids").val(ids);
+                $("#form-quiz-result").attr("action", "{{route('table.quizResults.massDelete')}}");
 
                 swal({
-                    title: 'Remove Applications',
+                    title: 'Remove Quiz Results',
                     text: 'Are you sure to remove this ' + ids.length + ' selected records? ' +
                         'You won\'t be able to revert this!',
                     type: 'warning',
@@ -413,7 +427,7 @@
 
                     preConfirm: function () {
                         return new Promise(function (resolve) {
-                            $("#form-application")[0].submit();
+                            $("#form-quiz-result")[0].submit();
                         });
                     },
                     allowOutsideClick: false

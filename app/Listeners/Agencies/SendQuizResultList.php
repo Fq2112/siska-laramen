@@ -2,11 +2,11 @@
 
 namespace App\Listeners\Agencies;
 
-use App\Events\Agencies\ApplicantList;
-use App\Mail\Agencies\ApplicantListEmail;
+use App\Events\Agencies\QuizResultList;
+use App\Mail\Agencies\QuizResultListEmail;
 use Illuminate\Support\Facades\Mail;
 
-class SendApplicantList
+class SendQuizResultList
 {
     /**
      * Create the event listener.
@@ -21,11 +21,11 @@ class SendApplicantList
     /**
      * Handle the event.
      *
-     * @param  ApplicantList $event
+     * @param  QuizResultList $event
      * @return void
      */
-    public function handle(ApplicantList $event)
+    public function handle(QuizResultList $event)
     {
-        Mail::to($event->email)->send(new ApplicantListEmail($event->vacancy, $event->filename));
+        Mail::to($event->email)->send(new QuizResultListEmail($event->vacancy, $event->filename));
     }
 }
