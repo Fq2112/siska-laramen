@@ -29,6 +29,6 @@ class SendApplicantList
      */
     public function handle(ApplicantList $event)
     {
-        Mail::to($event->email)->send(new ApplicantListEmail($event->applicants, $event->vacancy));
+        Mail::to($event->email)->send(new ApplicantListEmail($event->vacancy, $event->filename));
     }
 }

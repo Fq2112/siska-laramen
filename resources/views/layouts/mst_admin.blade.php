@@ -51,6 +51,11 @@
         .dropdown-menu li:first-child a:before {
             border: none;
         }
+
+        #myDataTable_wrapper .dataTables_filter {
+            width: 70%;
+            float: left;
+        }
     </style>
 </head>
 
@@ -58,6 +63,14 @@
 @php
     $auth = Auth::guard('admin')->user();
     $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString());
+    $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
+    ->whereDate('created_at', '>=', now()->subDay())->get();
+    $agencies = \App\Agencies::whereHas('vacancies', function ($vac){
+        $vac->whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereDate('recruitmentDate_end', '<=', today());
+    })->get();
+    $notifications = count($postings) + count($agencies);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -236,7 +249,7 @@
                         </li>
 
                         <li role="presentation" class="dropdown">
-                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown"
+                            <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="fa fa-envelope"></i>
                                 <span class="badge bg-green">{{$feedback->count()}}</span>
@@ -282,6 +295,95 @@
                                         </a>
                                     </div>
                                 </li>
+                            </ul>
+                        </li>
+
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
+                               aria-expanded="false">
+                                <i class="fa fa-bell"></i>
+                                <span class="badge bg-orange">{{$notifications}}</span>
+                            </a>
+                            <ul id="menu2" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                @if($notifications > 0)
+                                    @if(count($postings) > 0)
+                                        <li style="padding: 0;">
+                                            <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-briefcase"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Job Postings</strong></span>
+                                            </a>
+                                        </li>
+                                        @foreach($postings as $posting)
+                                            <li>
+                                                <a href="{{route('table.jobPostings').'?q='.$posting->GetAgency->user->name}}">
+                                                    <span class="image">
+                                                        @if($posting->GetAgency->user->ava == "" ||
+                                                        $posting->GetAgency->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$posting->GetAgency->user
+                                                            ->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                    <span>
+                                                        <span style="text-transform: uppercase">{{"Plan ".$posting->getPlan->name}}</span>
+                                                        <span class="time">{{$posting->GetAgency->user->name}}</span>
+                                                    </span>
+                                                    <span class="message">
+                                                        The job posting request from this agency hasn't been approve yet!
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
+                                    <li class="divider"
+                                        style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @if(count($agencies) > 0)
+                                        <li style="padding: 0">
+                                            <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-paper-plane"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Job Applications</strong></span>
+                                            </a>
+                                        </li>
+                                        @foreach($agencies as $agency)
+                                            @php
+                                                $vacancies = \App\Vacancies::where('agency_id', $agency->id)
+                                                ->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end')
+                                                ->whereHas('getAccepting', function ($q){
+                                                    $q->where('isApply', true);
+                                                })->count();
+                                            @endphp
+                                            <li>
+                                                <a href="{{route('table.applications').'?q='.$agency->user->name}}">
+                                                    <span class="image">
+                                                        @if($agency->user->ava == "" || $agency->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$agency->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                    <span>
+                                                        <span>{{$vacancies > 1 ? $vacancies.' Vacancies' :
+                                                        $vacancies.' Vacancy'}}</span>
+                                                        <span class="time">{{$agency->user->name}}</span>
+                                                    </span>
+                                                    <span class="message">
+                                                        The application list for {{$vacancies > 1 ?
+                                                        'those ' .$vacancies.' vacancies' : 'that vacancy'}} hasn't
+                                                        been send to <strong>{{$agency->user->email}}</strong> yet!
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @endif
+                                @else
+                                    <li>
+                                        <a style="text-decoration: none;cursor: text">
+                                            <span class="message">There seems to be none of the notification was found&hellip;
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endif
                             </ul>
                         </li>
                     </ul>

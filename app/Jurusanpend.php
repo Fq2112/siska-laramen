@@ -8,7 +8,10 @@ class Jurusanpend extends Model
 {
     protected $table = 'jurusanpends';
 
-    protected $fillable = [
-        'id', 'name',
-    ];
+    protected $guarded = ['id'];
+
+    public function getEducation()
+    {
+        return $this->hasMany(Education::class, 'jurusanpend_id');
+    }
 }

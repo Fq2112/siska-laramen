@@ -18,6 +18,18 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="agency_id">Agency Filter</label>
+                                <select id="agency_id" class="form-control selectpicker" title="-- Select Agency --"
+                                        data-live-search="true" data-max-options="1" multiple>
+                                    @foreach(\App\Agencies::all() as $ag)
+                                        <option value="{{$ag->user->name}}">{{$ag->user->name}}</option>
+                                    @endforeach
+                                </select>
+                                <span class="fa fa-user-tie form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
                         <table id="datatable-buttons" class="table table-striped table-bordered">
                             <thead>
                             <tr>
@@ -30,7 +42,7 @@
                             </thead>
 
                             <tbody>
-                            @php $no = 1; @endphp
+                            @php $no = 1;  @endphp
                             @foreach($postings as $posting)
                                 @php
                                     $agency = \App\Agencies::find($posting->agency_id);
@@ -232,8 +244,13 @@
 @endsection
 @push("scripts")
     <script>
-        @if(old('isQuiz') == 1)
         $(function () {
+            @if($findAgency != "")
+            $("#agency_id").val('{{$findAgency}}').selectpicker('refresh');
+            $(".dataTables_filter input[type=search]").val('{{$findAgency}}').trigger('keyup');
+            @endif
+
+            @if(old('isQuiz') == 1)
             swal({
                 title: 'Quiz Setup {{old('invoice')}}',
                 text: 'For each vacancy in this invoice requires a quiz!',
@@ -251,9 +268,12 @@
                 allowOutsideClick: false
             });
             return false;
+            @endif
         });
 
-        @endif
+        $("#agency_id").on("change", function () {
+            $(".dataTables_filter input[type=search]").val($(this).val()).trigger('keyup');
+        });
 
         function paymentProofModal(asset) {
             $("#paymentProof").attr('src', asset);

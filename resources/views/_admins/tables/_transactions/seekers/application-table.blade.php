@@ -1,13 +1,5 @@
 @extends('layouts.mst_admin')
 @section('title', 'Job Applications Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
-@push('styles')
-    <style>
-        .dataTables_filter {
-            width: 70%;
-            float: left;
-        }
-    </style>
-@endpush
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
@@ -28,17 +20,17 @@
                     <div class="x_content">
                         <div class="row form-group">
                             <div class="col-lg-12 has-feedback">
-                                <label for="vacancy_id">Vacancy Filter</label>
-                                <select id="vacancy_id" class="form-control selectpicker" title="-- Select Vacancy --"
+                                <label for="agency_id">Agency Filter</label>
+                                <select id="agency_id" class="form-control selectpicker" title="-- Select Agency --"
                                         data-live-search="true" data-max-options="1" multiple>
-                                    @foreach($vacancies as $vacancy)
-                                        <option value="{{$vacancy->judul}}">{{$vacancy->judul}}</option>
+                                    @foreach(\App\Agencies::all() as $ag)
+                                        <option value="{{$ag->user->name}}">{{$ag->user->name}}</option>
                                     @endforeach
                                 </select>
                                 <span class="fa fa-briefcase form-control-feedback right" aria-hidden="true"></span>
                             </div>
                         </div>
-                        <table id="application-table" class="table table-striped table-bordered bulk_action">
+                        <table id="myDataTable" class="table table-striped table-bordered bulk_action">
                             <thead>
                             <tr>
                                 <th><input type="checkbox" id="check-all" class="flat"></th>
@@ -320,7 +312,7 @@
 @push("scripts")
     <script>
         $(function () {
-            var table = $("#application-table").DataTable({
+            var table = $("#myDataTable").DataTable({
                 order: [[1, "asc"]],
                 columnDefs: [
                     {
@@ -333,27 +325,31 @@
                         searchable: false
                     }
                 ]
-            }), toolbar = $("#application-table_wrapper").children().eq(0);
+            }), toolbar = $("#myDataTable_wrapper").children().eq(0);
 
             toolbar.children().toggleClass("col-sm-6 col-sm-4");
             $('#action-btn').appendTo(toolbar);
+            @if($findAgency != "")
+            $("#agency_id").val('{{$findAgency}}').selectpicker('refresh');
+            $(".dataTables_filter input[type=search]").val('{{$findAgency}}').trigger('keyup');
+            @endif
 
             $("#check-all").on("ifToggled", function () {
                 if ($(this).is(":checked")) {
-                    $("#application-table tbody tr").find('input[type=checkbox]').iCheck("check");
+                    $("#myDataTable tbody tr").find('input[type=checkbox]').iCheck("check");
                     $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
                 } else {
-                    $("#application-table tbody tr").find('input[type=checkbox]').iCheck("uncheck");
+                    $("#myDataTable tbody tr").find('input[type=checkbox]').iCheck("uncheck");
                     $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
                 }
             });
 
-            $("#application-table tbody").on("click", "tr", function () {
+            $("#myDataTable tbody").on("click", "tr", function () {
                 $(this).toggleClass("selected");
                 $(this).find('input[type=checkbox]').iCheck("toggle");
             });
 
-            $("#application-table tbody tr").find('input[type=checkbox]').on("ifToggled", function () {
+            $("#myDataTable tbody tr").find('input[type=checkbox]').on("ifToggled", function () {
                 var selected = table.rows('.selected').data().length;
 
                 if ($(this).is(":checked") || selected > 0) {
@@ -418,7 +414,7 @@
             });
         });
 
-        $("#vacancy_id").on('change', function () {
+        $("#agency_id").on('change', function () {
             $(".dataTables_filter input[type=search]").val($(this).val()).trigger('keyup');
         });
 

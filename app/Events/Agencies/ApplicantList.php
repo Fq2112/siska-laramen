@@ -9,17 +9,17 @@ class ApplicantList
 {
     use Dispatchable, SerializesModels;
 
-    public $applicants, $vacancy, $email;
+    public $vacancy, $email, $filename;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($applicants, $vacancy, $email)
+    public function __construct($vacancy, $email, $filename)
     {
-        $this->applicants = $applicants;
         $this->vacancy = $vacancy;
         $this->email = $email;
+        $this->filename = $filename;
     }
 }

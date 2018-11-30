@@ -72,7 +72,7 @@
                                                                           title="Plan" class="label label-info">
                                                                         <strong style="text-transform: uppercase">
                                                                             <i class="fa fa-thumbtack"></i>&ensp;
-                                                                            {{\App\Plan::find($vacancy->plan_id)->name}}
+                                                                            {{$plan->name}}
                                                                         </strong> Package</span>&nbsp;|
                                                                 @endif
                                                                 <span data-toggle="tooltip" data-placement="bottom"

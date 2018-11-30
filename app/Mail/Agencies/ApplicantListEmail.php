@@ -11,17 +11,17 @@ use Illuminate\Queue\SerializesModels;
 class ApplicantListEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $applicants, $vacancy;
+    public $vacancy, $filename;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($applicants, $vacancy)
+    public function __construct($vacancy, $filename)
     {
-        $this->applicants = $applicants;
         $this->vacancy = $vacancy;
+        $this->filename = $filename;
     }
 
     /**
@@ -31,13 +31,14 @@ class ApplicantListEmail extends Mailable
      */
     public function build()
     {
-        $applicants = $this->applicants;
         $vacancy = $this->vacancy;
+        $filename = $this->filename;
         $recruitmentDate = Carbon::parse($vacancy->recruitmentDate_start)->format('j F Y') . " - " .
             Carbon::parse($vacancy->recruitmentDate_end)->format('j F Y');
 
         return $this->subject("" . $vacancy->judul . ": Application List for " . $recruitmentDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
-            ->view('emails.agencies.applicantList')->with($applicants);
+            ->view('emails.agencies.applicantList')
+            ->attach(public_path('_admins\reports') . '/' . $filename);
     }
 }

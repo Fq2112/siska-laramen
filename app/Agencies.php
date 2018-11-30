@@ -24,4 +24,9 @@ class Agencies extends Model
     {
         return $this->hasMany(Vacancies::class, 'agency_id');
     }
+
+    public function getConfirmAgency()
+    {
+        return $this->hasMany(ConfirmAgency::class, 'agency_id');
+    }
 }

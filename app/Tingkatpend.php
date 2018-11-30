@@ -8,7 +8,10 @@ class Tingkatpend extends Model
 {
     protected $table = 'tingkatpends';
 
-    protected $fillable = [
-        'id', 'name',
-    ];
+    protected $guarded = ['id'];
+
+    public function getEducation()
+    {
+        return $this->hasMany(Education::class, 'tingkatpend_id');
+    }
 }

@@ -8,20 +8,22 @@ use App\Invitation;
 use App\Seekers;
 use App\User;
 use App\Vacancies;
+use Barryvdh\DomPDF\Facade as PDF;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class TransactionSeekerController extends Controller
 {
-    public function showApplicationsTable()
+    public function showApplicationsTable(Request $request)
     {
-        $vacancies = Vacancies::where('isPost', true)->get();
-
         $applications = Accepting::whereHas('getVacancy', function ($q) {
-            $q->where('isPost', true);
-        })->get();
+            $q->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end');
+        })->where('isApply', true)->get();
 
-        return view('_admins.tables._transactions.seekers.application-table', compact('vacancies', 'applications'));
+        $findAgency = $request->q;
+
+        return view('_admins.tables._transactions.seekers.application-table', compact('applications', 'findAgency'));
     }
 
     public function massSendApplications(Request $request)
@@ -33,7 +35,14 @@ class TransactionSeekerController extends Controller
 
         foreach ($vacancies as $vacancy) {
             $applicants = $vacancy->getAccepting->toArray();
-            event(new ApplicantList($applicants, $vacancy, $vacancy->agencies->user->email));
+            $date = Carbon::parse($vacancy->recruitmentDate_start)->format('dmy') . '-' .
+                Carbon::parse($vacancy->recruitmentDate_end)->format('dmy');
+
+            $filename = str_replace(' ', '_', $vacancy->judul) . '_applicationList_' . $date . '.pdf';
+            $path = public_path('_admins\reports') . '/' . $filename;
+            PDF::loadView('reports.applicantList-pdf', compact('applicants', 'vacancy'))->save($path);
+
+            event(new ApplicantList($vacancy, $vacancy->agencies->user->email, $filename));
         }
 
         return back()->with('success', '' . count($ids) . ' application(s) is successfully sent!');

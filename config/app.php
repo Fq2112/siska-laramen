@@ -168,7 +168,7 @@ return [
          * Package Service Providers...
          */
         Laravel\Socialite\SocialiteServiceProvider::class,
-
+        Barryvdh\DomPDF\ServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
         /*
@@ -230,6 +230,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
         'GlobalAuth' => App\Support\Facades\GlobalAuth::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
     ],

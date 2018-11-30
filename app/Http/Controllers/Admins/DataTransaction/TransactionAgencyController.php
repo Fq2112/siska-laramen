@@ -34,11 +34,12 @@ class TransactionAgencyController extends Controller
         return back()->with('success', '' . $vacancy->judul . ' is successfully deleted!');
     }
 
-    public function showJobPostingsTable()
+    public function showJobPostingsTable(Request $request)
     {
         $postings = ConfirmAgency::all();
+        $findAgency = $request->q;
 
-        return view('_admins.tables._transactions.agencies.jobPosting-table', compact('postings'));
+        return view('_admins.tables._transactions.agencies.jobPosting-table', compact('postings', 'findAgency'));
     }
 
     public function showJobPostingsInvoice($id)

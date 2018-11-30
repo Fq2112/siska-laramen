@@ -338,21 +338,6 @@
             text-decoration: none;
         }
 
-        #data-table {
-            border-collapse: collapse;
-            margin: .5em 1em;
-        }
-
-        #data-table td, th {
-            border: 1px solid #ddd;
-            text-align: left;
-            padding: 8px;
-        }
-
-        #data-table tr:nth-child(even) {
-            background-color: #bbb;
-        }
-
         @media screen and (max-width: 480px) {
             /* Width Control */
             table[class=full-width], img[class=full-width], a[class=full-width], div[class=full-width] {
@@ -489,7 +474,7 @@
                                                         <td>
                                                             <small style="line-height: 2em">
                                                                 <strong style="font-size: 22px">
-                                                                    Here is the applicant list for your vacancy
+                                                                    Here is the application list for your vacancy
                                                                 </strong><br>
                                                                 Thank you for giving us the opportunity to manage your
                                                                 vacancy recruitment.
@@ -499,38 +484,18 @@
                                                 </table>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <div style="font-size:20px;line-height:20px;">&nbsp;</div>
-                                            </td>
-                                        </tr>
                                         </tbody>
-                                    </table>
-                                    <table border="0" cellpadding="0" cellspacing="0" width="660" align="center"
-                                           id="data-table">
-                                        <tr>
-                                            <th>No</th>
-                                            <th>Contact</th>
-                                        </tr>
-                                        @php $no = 1;@endphp
-                                        @foreach($applicants as $applicant)
-                                            @php $seeker = \App\Seekers::find($applicant['seeker_id']); @endphp
-                                            <tr>
-                                                <td style="vertical-align: middle;text-align: center">{{$no++}}</td>
-                                                <td style="vertical-align: middle">
-                                                    <strong>{{$seeker->user->name}}</strong><br>
-                                                    <a href="mailto:{{$seeker->user->email}}">{{$seeker->user->email}}</a><br>
-                                                    <hr style="margin: 5px auto">
-                                                    <a href="{{$seeker->website}}"
-                                                       target="_blank">{{$seeker->website}}</a><br>
-                                                    <a href="tel:{{$seeker->phone}}">{{$seeker->phone}}</a><br>
-                                                    {{$seeker->address}} &ndash; {{$seeker->zip_code}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
                                     </table>
                                     <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
                                            align="center">
+                                        <tr>
+                                            <td>
+                                                <div class="alert alert-info text-center">
+                                                    Download <strong>the attached pdf file</strong> to check the
+                                                    application list of your vacancy.
+                                                </div>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td>
                                                 <div style="font-size:20px;line-height:20px;">&nbsp;</div>
@@ -557,10 +522,10 @@
                                                         <td>
                                                             <small style="line-height: 2em">
                                                                 <strong style="font-size: 20px">
-                                                                    Keep an eye for the applicant of your
-                                                                    vacancy</strong><br>To redirect you to the
-                                                                Application Received page, click the Application
-                                                                Received button below
+                                                                    Keep an eye on the applications of your
+                                                                    other active vacancies</strong><br>To redirect you
+                                                                to the Application Received page, click the Application
+                                                                Received button below.
                                                             </small>
                                                         </td>
                                                     </tr>

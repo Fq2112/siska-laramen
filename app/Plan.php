@@ -19,4 +19,9 @@ class Plan extends Model
     {
         return $this->hasMany(Vacancies::class, 'plan_id');
     }
+
+    public function getConfirmAgency()
+    {
+        return $this->hasMany(ConfirmAgency::class, 'plans_id');
+    }
 }

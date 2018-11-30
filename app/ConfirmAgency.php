@@ -32,4 +32,9 @@ class ConfirmAgency extends Model
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
     }
 
+    public function getPlan()
+    {
+        return $this->belongsTo(Plan::class, 'plans_id');
+    }
+
 }

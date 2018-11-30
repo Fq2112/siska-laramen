@@ -14,4 +14,14 @@ class Education extends Model
     {
         return $this->belongsTo(Seekers::class);
     }
+
+    public function getDegree()
+    {
+        return $this->belongsTo(Tingkatpend::class, 'tingkatpend_id');
+    }
+
+    public function getMajor()
+    {
+        return $this->belongsTo(Jurusanpend::class, 'jurusanpend_id');
+    }
 }
