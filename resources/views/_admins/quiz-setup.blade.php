@@ -22,7 +22,7 @@
                             <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Quiz Details</th>
+                                <th>Details</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -93,6 +93,8 @@
                         <form method="post" action="{{route('quiz.create.info')}}" id="form-quiz-setup">
                             {{csrf_field()}}
                             <input type="hidden" name="_method">
+                            <input type="hidden" name="invoice" id="invoice">
+                            <input type="hidden" name="isPsychoTest" id="isPsychoTest">
                             <div class="row form-group">
                                 <div class="col-lg-12">
                                     <label for="vacancy_id">Vacancy <span class="required">*</span></label>
@@ -128,8 +130,8 @@
 @endsection
 @push("scripts")
     <script>
-        @if($findVac != null)
         $(function () {
+            @if($findVac != null)
             $(".btn_quiz").click();
             @foreach($findVac as $row)
             $("#vacancy_id option[value='{{$row}}']").attr('selected', 'selected');
@@ -138,9 +140,31 @@
                 setTimeout(loadVacancyData('{{implode(',',$findVac->toArray())}}'), 1000);
             });
             $("#vacancy_id").selectpicker('refresh');
+            $("#invoice").val('{{$invoice}}');
+            $("#isPsychoTest").val('{{$isPsychoTest}}');
             $("#vacancySetupDivider").css('display', 'block');
+            @endif
+
+            @if(old('isPsychoTest') == 1)
+            swal({
+                title: 'Psycho Test Setup #{{old('invoice')}}',
+                text: 'For each vacancy in this invoice requires a psycho test!',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#00adb5',
+                confirmButtonText: 'Yes, setup now!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        window.location.href = '{{route('psychoTest.info')}}?vac_ids={{session('vac_ids')}}';
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
+            @endif
         });
-        @endif
 
         $(".btn_quiz").on("click", function () {
             $("#content1").toggle(300);
@@ -159,6 +183,7 @@
             $("#input_quiz_setup").html('');
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
 
+            $("#invoice, #isPsychoTest").val('');
             $("#vacancy_id").val('default').attr('name', 'vacancy_ids[]')
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
 
@@ -167,6 +192,7 @@
 
         $("#vacancy_id").on("change", function () {
             var $id = $(this).val();
+            $("#invoice, #isPsychoTest").val('');
             $('#vacancy_id option:selected').each(function (i, selected) {
                 setTimeout(loadVacancyData($id), 1000);
                 $("#vacancySetupDivider").css('display', 'block');
@@ -292,6 +318,7 @@
             $("#panel_title").html(function (i, v) {
                 return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
             });
+            $("#invoice, #isPsychoTest").val('');
             $("#vacancySetupDivider").css('display', 'none');
             $("#content1").toggle(300);
             $("#content2").toggle(300);

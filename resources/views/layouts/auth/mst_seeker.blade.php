@@ -105,9 +105,6 @@
                                                     Invitation
                                                     <span class="badge" style="background: #FA5555;">0</span></a>
                                             </li>
-                                            <li><a href="{{route('seeker.invitation.interview')}}">Interview Invitation
-                                                    <span class="badge" style="background: #FA5555;">0</span></a>
-                                            </li>
                                             <li><a href="{{route('seeker.jobInvitation')}}">Job Invitation
                                                     <span class="badge" style="background: #FA5555;">
                                                         {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}</span>

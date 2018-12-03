@@ -93,7 +93,7 @@
                     SISKA</a>
                 @if(Auth::guest() || Auth::user()->isAgency() && \Illuminate\Support\Facades\Request::is('search*') ||
                 Auth::user()->isSeeker() && !\Illuminate\Support\Facades\Request::is
-                (['account/job_vacancy/recommended_vacancy','quiz']))
+                (['account/job_vacancy/recommended_vacancy','quiz','psychoTest*']))
                     <form class="navbar-form search-form form-horizontal" role="search"
                           action="{{route('search.vacancy')}}">
                         <div id="custom-search-input">

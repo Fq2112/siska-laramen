@@ -210,6 +210,11 @@
                        href="{{route('quiz.info')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-grin-beam" style="margin-right: 6px"></i>Quiz</a></li>
+                <li><a id="external"
+                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       href="{{route('psychoTest.info')}}"
+                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                        <i class="fa fa-comments" style="margin-right: 6px"></i>Psycho Test</a></li>
                 <li class="divider"></li>
                 <li>
                     <a class="btn_signOut" onmouseover="this.style.color='#fff'"

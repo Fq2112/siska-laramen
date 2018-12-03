@@ -349,23 +349,25 @@
 }
 
 #compareModal .modal-dialog, #applyInvModal .modal-dialog, #uploadModal .modal-dialog, #formModal .modal-dialog,
-#inviteModal .modal-dialog, #applyModal .modal-dialog, #quizModal .modal-dialog {
+#inviteModal .modal-dialog, #applyModal .modal-dialog, #quizModal .modal-dialog, #psychoTestModal .modal-dialog {
     width: 60%;
 }
 
-#applyInvModal a, #inviteModal a, #applyModal a, #resumeModal a, #quizModal a {
+#applyInvModal a, #inviteModal a, #applyModal a, #resumeModal a, #quizModal a, #psychoTestModal a {
     text-decoration: none;
 }
 
 #applyInvModal .modal-footer .card-read-more, #formModal .modal-footer .card-read-more,
 #inviteModal .modal-footer .card-read-more, #applyModal .modal-footer .card-read-more,
-#resumeModal .modal-footer .card-read-more, #quizModal .modal-footer .card-read-more {
+#resumeModal .modal-footer .card-read-more, #quizModal .modal-footer .card-read-more,
+#psychoTestModal .modal-footer .card-read-more {
     margin: -1em;
 }
 
 #applyInvModal .modal-footer .card-read-more button:hover, #formModal .modal-footer .card-read-more button:hover,
 #inviteModal .modal-footer .card-read-more button:hover, #applyModal .modal-footer .card-read-more button:hover,
-#resumeModal .modal-footer .card-read-more button:hover, #quizModal .modal-footer .card-read-more button:hover {
+#resumeModal .modal-footer .card-read-more button:hover, #quizModal .modal-footer .card-read-more button:hover,
+#psychoTestModal .modal-footer .card-read-more button:hover {
     color: #fff;
     border-radius: 0 0 4px 4px;
 }

@@ -122,6 +122,31 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
             'uses' => 'AdminController@deleteQuizInfo',
             'as' => 'quiz.delete.info'
         ]);
+
+    });
+
+    Route::group(['prefix' => 'psychoTest'], function () {
+
+        Route::get('/', [
+            'uses' => 'AdminController@showPsychoTestInfo',
+            'as' => 'psychoTest.info'
+        ]);
+
+        Route::post('room/create', [
+            'uses' => 'AdminController@createPsychoTestInfo',
+            'as' => 'psychoTest.create.info'
+        ]);
+
+        Route::put('{id}/update', [
+            'uses' => 'AdminController@updatePsychoTestInfo',
+            'as' => 'psychoTest.update.info'
+        ]);
+
+        Route::get('{id}/delete', [
+            'uses' => 'AdminController@deletePsychoTestInfo',
+            'as' => 'psychoTest.delete.info'
+        ]);
+
     });
 
     Route::group(['prefix' => 'tables'], function () {

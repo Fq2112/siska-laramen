@@ -207,11 +207,6 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.invitation.psychoTest'
             ]);
 
-            Route::get('interview_invitation', [
-                'uses' => 'SeekerController@showInterviewInv',
-                'as' => 'seeker.invitation.interview'
-            ]);
-
             Route::get('job_invitation', [
                 'uses' => 'SeekerController@showJobInvitation',
                 'as' => 'seeker.jobInvitation'
@@ -291,4 +286,10 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
         ]);
 
     });
+
+    Route::post('psychoTest/{roomName}', [
+        'uses' => 'PsychoTestController@joinPsychoTestRoom',
+        'as' => 'join.psychoTest.room'
+    ]);
+
 });

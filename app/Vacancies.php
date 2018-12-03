@@ -30,6 +30,11 @@ class Vacancies extends Model
         return $this->hasOne(QuizInfo::class, 'vacancy_id');
     }
 
+    public function getPsychoTestInfo()
+    {
+        return $this->hasOne(PsychoTestInfo::class, 'vacancy_id');
+    }
+
     public function getPlan()
     {
         return $this->belongsTo(Plan::class, 'plan_id');

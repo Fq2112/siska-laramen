@@ -9,12 +9,14 @@ use App\Blog;
 use App\ConfirmAgency;
 use App\Feedback;
 use App\Http\Controllers\Controller;
+use App\PsychoTestInfo;
 use App\QuizInfo;
 use App\QuizType;
 use App\Seekers;
 use App\User;
 use App\Vacancies;
 use Illuminate\Http\Request;
+use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -22,6 +24,19 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
+    protected $sid;
+    protected $token;
+    protected $key;
+    protected $secret;
+
+    public function __construct()
+    {
+        $this->sid = config('services.twilio.sid');
+        $this->token = config('services.twilio.token');
+        $this->key = config('services.twilio.key');
+        $this->secret = config('services.twilio.secret');
+    }
+
     public function index()
     {
         $newSeeker = Seekers::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
@@ -125,17 +140,22 @@ class AdminController extends Controller
     {
         $infos = QuizInfo::orderByDesc('id')->get();
         $types = QuizType::all();
-        $vacancies = Vacancies::where('isPost', true)->whereHas('getPlan', function ($query) {
+        $vacancies = Vacancies::whereHas('getPlan', function ($query) {
             $query->where('isQuiz', true);
-        })->get();
+        })->where('isPost', true)->get();
 
         if ($request->has("vac_ids")) {
             $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
+            $isPsychoTest = $request->psychoTest;
+            $invoice = $request->invoice;
         } else {
             $findVac = null;
+            $isPsychoTest = null;
+            $invoice = null;
         }
 
-        return view('_admins.quiz-setup', compact('infos', 'types', 'vacancies', 'findVac'));
+        return view('_admins.quiz-setup', compact('infos', 'types', 'vacancies',
+            'findVac', 'isPsychoTest', 'invoice'));
     }
 
     public function getQuizVacancyInfo($id)
@@ -163,7 +183,9 @@ class AdminController extends Controller
         $total = count($request->vacancy_ids);
         $str = $total > 1 ? 'quiz are' : 'quiz is';
 
-        return redirect()->route('quiz.info')->with('success', '' . $total . ' ' . $str . ' successfully created!');
+        return redirect()->route('quiz.info')
+            ->with('success', '' . $total . ' ' . $str . ' successfully created!')
+            ->withInput($request->all())->with('vac_ids', implode(',', $request->vacancy_ids));
     }
 
     public function updateQuizInfo(Request $request)
@@ -187,5 +209,71 @@ class AdminController extends Controller
         $info->delete();
 
         return redirect()->route('quiz.info')->with('success', 'Quiz #' . $info->unique_code . ' is successfully deleted!');
+    }
+
+    public function showPsychoTestInfo(Request $request)
+    {
+        $rooms = [];
+        try {
+            $client = new Client($this->sid, $this->token);
+            $allRooms = $client->video->rooms->read([]);
+
+            $rooms = array_map(function ($room) {
+                return $room->uniqueName;
+            }, $allRooms);
+
+        } catch (\Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $infos = PsychoTestInfo::orderByDesc('id')->get();
+        $vacancies = Vacancies::whereHas('getPlan', function ($query) {
+            $query->where('isPsychoTest', true);
+        })->where('isPost', true)->get();
+
+        if ($request->has("vac_ids")) {
+            $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
+        } else {
+            $findVac = null;
+        }
+
+        return view('_admins.psychoTest-setup', compact('infos', 'vacancies', 'findVac', 'rooms'));
+//        return view('_admins.psychoTest-setup', ['rooms' => $rooms]);
+    }
+
+    public function createPsychoTestInfo(Request $request)
+    {
+        $client = new Client($this->sid, $this->token);
+
+        $it = new \MultipleIterator();
+        $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
+        $it->attachIterator(new \ArrayIterator($request->room_code));
+        foreach ($it as $value) {
+            $exists = $client->video->rooms->read(['uniqueName' => $request->room_code]);
+            if (empty($exists)) {
+                $client->video->rooms->create([
+                    'uniqueName' => $request->room_code,
+                    'type' => 'group',
+                    'recordParticipantsOnConnect' => false
+                ]);
+            }
+
+            PsychoTestInfo::create([
+                'vacancy_id' => $value[0],
+                'room_code' => $value[1],
+            ]);
+        }
+        $total = count($request->vacancy_ids);
+        $str = $total > 1 ? 'psycho test are' : 'psycho test is';
+
+        return redirect()->route('psychoTest.info')->with('success', '' . $total . ' ' . $str . ' successfully created!');
+    }
+
+    public function deletePsychoTestInfo(Request $request)
+    {
+        $info = PsychoTestInfo::find(decrypt($request->id));
+        $info->delete();
+
+        return redirect()->route('psychoTest.info')->with('success', 'Psycho Test #' . $info->room_code . ' is successfully deleted!');
     }
 }

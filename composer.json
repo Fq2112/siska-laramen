@@ -13,6 +13,7 @@
         "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
         "true/punycode": "~2.0",
+      "twilio/sdk": "^5.26",
         "tymon/jwt-auth": "1.0.0-rc.1",
         "vlucas/phpdotenv": "~2.2"
     },

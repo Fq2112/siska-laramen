@@ -54,7 +54,7 @@
                                     $date = $posting->created_at;
                                     $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')).'/'.
                                     \App\Support\RomanConverter::numberToRoman($date->format('m'));
-                                    $invoice = '#INV/'.$date->format('Ymd').'/'.$romanDate.'/'.$posting->id;
+                                    $invoice = 'INV/'.$date->format('Ymd').'/'.$romanDate.'/'.$posting->id;
                                 @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
@@ -65,7 +65,7 @@
                                                     <span style="font-size: 15px">INVOICE
                                                         <a target="_blank" href="{{route('table.jobPostings.invoice',
                                                         ['id'=> encrypt($posting->id)])}}">
-                                                            <strong>{{$invoice}}</strong>
+                                                            <strong>#{{$invoice}}</strong>
                                                         </a>
                                                     </span>
                                                     <hr style="margin-top: 0">
@@ -190,12 +190,15 @@
                                             <input type="hidden" name="isPaid" id="input_isPaid{{$posting->id}}">
                                             <input type="hidden" name="isAbort" id="input_isAbort{{$posting->id}}">
                                             <input type="hidden" name="isQuiz" id="input_isQuiz{{$posting->id}}">
+                                            <input type="hidden" name="isPsychoTest"
+                                                   id="input_isPsychoTest{{$posting->id}}">
                                         </form>
                                         <div class="btn-group">
                                             @if(now() <= $posting->created_at->addDay())
                                                 <button type="button" class="btn btn-success btn-sm"
                                                         style="font-weight: 600"
-                                                        onclick="approving('{{$posting->id}}','{{$invoice}}','{{$plan->isQuiz}}')"
+                                                        onclick="approving('{{$posting->id}}','{{$invoice}}',
+                                                                '{{$plan->isQuiz}}','{{$plan->isPsychoTest}}')"
                                                         {{$posting->isPaid == false ? '' : 'disabled'}}>
                                                     {{$posting->isPaid == false ? 'APPROVE' : 'APPROVED'}}
                                                 </button>
@@ -252,7 +255,7 @@
 
             @if(old('isQuiz') == 1)
             swal({
-                title: 'Quiz Setup {{old('invoice')}}',
+                title: 'Quiz Setup #{{old('invoice')}}',
                 text: 'For each vacancy in this invoice requires a quiz!',
                 type: 'warning',
                 showCancelButton: true,
@@ -262,7 +265,7 @@
 
                 preConfirm: function () {
                     return new Promise(function (resolve) {
-                        window.location.href = '{{route('quiz.info')}}?vac_ids={{session('vac_ids')}}';
+                        window.location.href = '{{route('quiz.info')}}?vac_ids={{session('vac_ids')}}&psychoTest={{old('isPsychoTest')}}&invoice={{old('invoice')}}';
                     });
                 },
                 allowOutsideClick: false
@@ -280,9 +283,9 @@
             $("#paymentProofModal").modal('show');
         }
 
-        function approving(id, invoice, isQuiz) {
+        function approving(id, invoice, isQuiz, isPsychoTest) {
             swal({
-                title: 'Vacancy Approval ' + invoice,
+                title: 'Vacancy Approval #' + invoice,
                 text: 'The status of the vacancy in this invoice will be change into "ACTIVE". Are you sure to approve it?',
                 type: 'warning',
                 showCancelButton: true,
@@ -295,6 +298,7 @@
                         $("#input_isPaid" + id).val(1);
                         $("#input_isAbort" + id).val(0);
                         $("#input_isQuiz" + id).val(isQuiz);
+                        $("#input_isPsychoTest" + id).val(isPsychoTest);
                         $("#form-approval" + id)[0].submit();
                     });
                 },
@@ -305,7 +309,7 @@
 
         function revertApproval(id, invoice) {
             swal({
-                title: 'Revert Approval ' + invoice,
+                title: 'Revert Approval #' + invoice,
                 text: 'The status of the vacancy in this invoice will be change into "INACTIVE". Are you sure to revert it?',
                 type: 'warning',
                 showCancelButton: true,
@@ -327,7 +331,7 @@
 
         function aborting(id, invoice) {
             swal({
-                title: 'Aborting ' + invoice,
+                title: 'Aborting #' + invoice,
                 text: 'Are you sure to abort it? You won\'t be able to revert this!',
                 type: 'warning',
                 showCancelButton: true,

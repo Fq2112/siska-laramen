@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRubikPenilaiansTable extends Migration
+class CreatePsychoTestResultsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,20 @@ class CreateRubikPenilaiansTable extends Migration
      */
     public function up()
     {
-        Schema::create('rubik_penilaians', function (Blueprint $table) {
+        Schema::create('psycho_test_results', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->integer('admin_id')->unsigned();
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->integer('psychoTest_id')->unsigned();
+            $table->foreign('psychoTest_id')->references('id')->on('psycho_test_infos');
+            $table->integer('seeker_id')->unsigned();
+            $table->foreign('seeker_id')->references('id')->on('seekers');
             $table->integer('kompetensi');
             $table->integer('karakter');
             $table->integer('attitude');
             $table->integer('grooming');
             $table->integer('komunikasi');
             $table->integer('anthusiasme');
+            $table->integer('admin_id')->unsigned();
+            $table->foreign('admin_id')->references('id')->on('admins');
             $table->timestamps();
         });
     }
@@ -36,6 +38,6 @@ class CreateRubikPenilaiansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rubik_penilaians');
+        Schema::dropIfExists('psycho_test_results');
     }
 }

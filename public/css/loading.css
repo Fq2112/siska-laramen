@@ -7183,7 +7183,7 @@
     color: #00ADB5;
 }
 
-.heart label, .download label, .apply label, .quiz label {
+.heart label, .download label, .apply label, .quiz label, .psychoTest label {
     box-shadow: 0 0 0 0 rgba(250, 85, 85, 0.5);
 }
 
@@ -7203,15 +7203,19 @@
     content: "\f118";
 }
 
+.psychoTest label:after {
+    content: "\f086";
+}
+
 .heart input:checked + label, .download input:checked + label, .apply input:checked + label,
-.quiz input:checked + label {
+.quiz input:checked + label, .psychoTest input:checked + label {
     background-color: #fa5555;
     border-color: #fa5555;
     box-shadow: 0 0 0 0.5em rgba(13, 165, 142, 0);
 }
 
 .heart input:checked + label:after, .download input:checked + label:after, .apply input:checked + label:after,
-.quiz input:checked + label:after {
+.quiz input:checked + label:after, .psychoTest input:checked + label:after {
     color: #fa5555;
 }
 
