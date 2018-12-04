@@ -22,8 +22,8 @@
                             <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Room Code</th>
                                 <th>Vacancy</th>
+                                <th>Rooms</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -33,32 +33,182 @@
                             @foreach($infos as $info)
                                 @php
                                     $vacancy = $info->getVacancy;
+                                    $psychoTestDate = $vacancy->psychoTestDate_start && $vacancy->psychoTestDate_end != "" ?
+                                    \Carbon\Carbon::parse($vacancy->psychoTestDate_start)->format('j F Y')." - ".
+                                    \Carbon\Carbon::parse($vacancy->psychoTestDate_end)->format('j F Y') : '-';
                                     $agency = $vacancy->agencies;
                                     $userAgency = $agency->user;
+                                    $ava = $userAgency->ava == ""||$userAgency->ava == "agency.png" ?
+                                    asset('images/agency.png') : asset('storage/users/'.$userAgency->ava);
+                                    $city = \App\Cities::find($vacancy->cities_id)->name;
+                                    $salary = \App\Salaries::find($vacancy->salary_id);
+                                    $jobfunc = \App\FungsiKerja::find($vacancy->fungsikerja_id);
+                                    $joblevel = \App\JobLevel::find($vacancy->joblevel_id);
+                                    $industry = \App\Industri::find($vacancy->industry_id);
+                                    $degrees = \App\Tingkatpend::find($vacancy->tingkatpend_id);
+                                    $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
                                 @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
-                                        @if($rooms)
-                                            <ul>
-                                                @foreach ($rooms as $room)
-                                                    <li>
-                                                        <a href="{{route('join.psychoTest.room',['roomName' => $room])}}"
-                                                           target="_blank">{{$room}}</a>
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        @endif
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <a href="{{route('agency.profile',['id' => $agency->id])}}"
+                                                       target="_blank"
+                                                       style="float: left;margin-right: .5em;margin-bottom: 0">
+                                                        <img class="img-responsive" width="100" src="{{$ava}}">
+                                                    </a>
+                                                    <table style="margin: 0">
+                                                        <tr>
+                                                            <td>
+                                                                <a href="{{route('detail.vacancy',['id' =>
+                                                                $vacancy->id])}}" target="_blank">
+                                                                    <strong>{{$vacancy->judul}}</strong>
+                                                                </a> &ndash;
+                                                                <a href="{{route('agency.profile',['id' => $agency->id])}}"
+                                                                   target="_blank">
+                                                                    {{$userAgency->name}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span data-toggle="tooltip" data-placement="left"
+                                                                      title="Recruitment Date"
+                                                                      class="label label-default">
+                                                                    <strong><i class="fa fa-users"></i>&ensp;
+                                                                        {{$vacancy->recruitmentDate_start != "" &&
+                                                                        $vacancy->recruitmentDate_end != "" ?
+                                                                        \Carbon\Carbon::parse
+                                                                        ($vacancy->recruitmentDate_start)
+                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                        ($vacancy->recruitmentDate_end)
+                                                                        ->format('j F Y') : 'Unknown'}}
+                                                                    </strong>
+                                                                </span>&nbsp;|
+                                                                <span data-toggle="tooltip" data-placement="right"
+                                                                      title="Online Quiz (TPA & TKD) Date"
+                                                                      class="label label-default">
+                                                                        <strong><i class="fa fa-grin-beam"></i>&ensp;
+                                                                            {{$vacancy->quizDate_start != "" &&
+                                                                            $vacancy->quizDate_end != "" ?
+                                                                            \Carbon\Carbon::parse
+                                                                            ($vacancy->quizDate_start)->format('j F Y')
+                                                                            .' - '.\Carbon\Carbon::parse
+                                                                            ($vacancy->quizDate_end)->format('j F Y') :
+                                                                            'Unknown'}}
+                                                                        </strong>
+                                                                    </span>&nbsp;
+                                                                <hr style="margin: .5em auto">
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Psycho Test (Online Interview) Date"
+                                                                      class="label label-danger">
+                                                                        <strong><i class="fa fa-comments"></i>&ensp;
+                                                                            {{$psychoTestDate}}
+                                                                        </strong>
+                                                                    </span>&nbsp;|
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Job Interview Date"
+                                                                      class="label label-default">
+                                                                    <strong><i class="fa fa-user-tie"></i>&ensp;
+                                                                        {{$vacancy->interview_date != "" ?
+                                                                        \Carbon\Carbon::parse($vacancy->interview_date)
+                                                                        ->format('l, j F Y') : 'Unknown'}}
+                                                                    </strong>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        <hr style="margin: .5em auto">
+                                        <table>
+                                            <tr>
+                                                <td><i class="fa fa-warehouse"></i>&nbsp;</td>
+                                                <td>Job Function</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$jobfunc->nama}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-industry"></i>&nbsp;</td>
+                                                <td>Industry</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$industry->nama}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-level-up-alt"></i>&nbsp;</td>
+                                                <td>Job Level</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$joblevel->name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-money-bill-wave"></i>&nbsp;</td>
+                                                <td>Salary</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>IDR {{$salary->name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-graduation-cap"></i>&nbsp;</td>
+                                                <td>Education Degree</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$degrees->name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-user-graduate"></i>&nbsp;</td>
+                                                <td>Education Major</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$majors->name}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-briefcase"></i>&nbsp;</td>
+                                                <td>Work Experience</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>
+                                                    At least {{$vacancy->pengalaman > 1 ?
+                                                    $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-paper-plane"></i></td>
+                                                <td>Total Applicant</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td><strong>{{\App\Accepting::where('vacancy_id',$vacancy->id)
+                                                ->where('isApply',true)->count()}}</strong> applicants
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-grin-beam"></i></td>
+                                                <td>Quiz with {{$vacancy->passing_grade}} passing grade</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$vacancy->quiz_applicant}} applicants
+                                                </td>
+                                            </tr>
+                                            <tr style="font-weight: 600">
+                                                <td><i class="fa fa-comments"></i></td>
+                                                <td>Total Applicant for Psycho Test</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td><strong>{{$vacancy->psychoTest_applicant}}</strong> applicants</td>
+                                            </tr>
+                                        </table>
                                     </td>
                                     <td style="vertical-align: middle">
-                                        <i class="fa fa-briefcase"></i>
-                                        <a href="{{route('detail.vacancy',['id'=>$vacancy->id])}}">
-                                            <strong>{{$vacancy->judul}}</strong></a> &ndash;
-                                        <a href="{{route('agency.profile',['id'=>$agency->id])}}">{{$userAgency->name}}
-                                        </a>
+                                        <ol style="margin-left: -1em">
+                                            @foreach($info->room_codes as $room)
+                                                <li>
+                                                    <a href="javascript:void(0)"
+                                                       onclick="accessPsychoTest('{{encrypt($info->id)}}','{{$room}}',
+                                                               '{{$vacancy->judul}}','{{$vacancy->id}}','{{$ava}}',
+                                                               '{{$userAgency->name}}','{{$psychoTestDate}}')">{{$room}}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ol>
                                     </td>
                                     <td align="center">
-                                        <a onclick="editPsychoTest('{{$info->id}}','{{$info->room_code}}','{{$vacancy->id}}')"
+                                        <a onclick="editPsychoTest('{{$info->id}}','{{implode(",",$info->room_codes)}}',
+                                                '{{$vacancy->id}}','{{$vacancy->psychoTest_applicant}}')"
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
@@ -108,6 +258,54 @@
             </div>
         </div>
     </div>
+    <div id="psychoTestModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title">Hi {{Auth::guard('admin')->user()->name}},</h4>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 17px" align="justify">
+                        Before proceeding to the psycho test room with this following details, you have to click
+                        the "Enter Room" button below.
+                    </p>
+                    <hr class="hr-divider">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="media">
+                                <div class="media-left media-middle">
+                                    <img width="100" class="media-object" id="agencyAva">
+                                </div>
+                                <div class="media-body">
+                                    <small class="media-heading" style="font-size: 17px;">
+                                        <a style="color: #00ADB5" id="vacJudul"></a>
+                                        <sub style="color: #fa5555;text-transform: none" id="agencyName"></sub>
+                                    </small>
+                                    <blockquote style="font-size: 16px;color: #7f7f7f">
+                                        <ul class="list-inline">
+                                            <li><a class="myTag" id="psychoTestDate"></a></li>
+                                            <li><a class="myTag" id="psychoTestCode"></a></li>
+                                        </ul>
+                                    </blockquote>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form id="form-access-psychoTest" method="post" action="{{route('join.psychoTest.room')}}">
+                        {{csrf_field()}}
+                        <input id="psychoTest_id" type="hidden" name="psychoTest_id">
+                        <input id="accessCode" type="hidden" name="accessCode">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Enter Room</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push("scripts")
     <script>
@@ -124,6 +322,18 @@
             $("#vacancySetupDivider").css('display', 'block');
         });
         @endif
+
+        function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date) {
+            $("#agencyAva").attr('src', ava);
+            $("#agencyName").html('&ndash; ' + name);
+            $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
+            $("#psychoTestDate").html('<i class="fa fa-comments"></i>&ensp;Psycho Test Date: <strong>' + date + '</strong>');
+            $("#psychoTestCode").html('<i class="fa fa-shield-alt"></i>&ensp;Room Code: <strong>' + room + '</strong>');
+
+            $("#psychoTest_id").val(encryptID);
+            $("#accessCode").val(room);
+            $("#psychoTestModal").modal('show');
+        }
 
         $(".btn_psychoTest").on("click", function () {
             $("#content1").toggle(300);
@@ -171,27 +381,24 @@
                     $('#input-psychoTest-setup').show();
                 },
                 success: function (data) {
-                    var input_psychoTest_setup = '';
+                    var input_psychoTest_setup = '', input_roomCode = '';
                     $.each(data, function (i, val) {
                         input_psychoTest_setup +=
                             '<div class="row form-group" style="margin-bottom: 0;margin-top: 1.5em">' +
-                            '<div class="col-lg-12">' +
-                            '<label style="font-size: 18px">' + val.judul + '</label>' +
+                            '<div class="col-lg-12"><label style="font-size: 18px">' + val.judul + '</label>' +
                             '</div></div>' +
                             '<div class="row form-group">' +
                             '<div class="col-lg-12">' +
-                            '<label for="room_code">Room Code <span class="required">*</span></label>' +
+                            '<label for="candidates">Total Candidate <span class="required">*</span></label>' +
                             '<div class="input-group">' +
-                            '<span class="input-group-btn">' +
-                            '<button type="button" class="btn btn-dark psychoTestCodes" id="btn_code' + val.id + '" ' +
-                            'onclick="generateCodeBtn(' + val.id + ')"><i class="fa fa-sync"></i></button></span>' +
-                            '<input id="room_code' + val.id + '" name="room_code[]" type="text" ' +
-                            'class="form-control" maxlength="6" readonly required>' +
-                            '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span></div>' +
-                            '</div></div>'
+                            '<span class="input-group-addon"><i class="fa fa-users"></i></span>' +
+                            '<input id="candidates' + val.id + '" type="text" class="form-control" ' +
+                            'placeholder="' + val.psychoTest_applicant + '" ' +
+                            'onblur="totalRoom(' + val.id + ',' + val.psychoTest_applicant + ')" required></div>' +
+                            '</div></div>' +
+                            '<div class="row form-group" id="input_roomCode' + val.id + '"></div>';
                     });
                     $("#input-psychoTest-setup").html(input_psychoTest_setup);
-                    $(".psychoTestCodes").click();
                     $(".selectpicker").selectpicker('render');
                 },
                 error: function () {
@@ -206,11 +413,33 @@
             return false;
         }
 
-        function generateCodeBtn(id) {
-            $("#room_code" + id).val(id + '_' + generateCode());
+        function totalRoom(id, candidates) {
+            if ($("#candidates" + id).val() != candidates) {
+                $("#candidates" + id).val(candidates);
+                var i = 1, input_roomCode = '';
+                for (i; i <= candidates; i++) {
+                    input_roomCode +=
+                        '<div class="col-lg-4">' +
+                        '<label for="room_code">Room Code #' + i + '<span class="required">*</span></label>' +
+                        '<div class="input-group">' +
+                        '<span class="input-group-btn">' +
+                        '<button type="button" class="btn btn-dark psychoTestCodes" ' +
+                        'onclick="generateCodeBtn(' + id + ', ' + i + ')">' +
+                        '<i class="fa fa-sync"></i></button></span>' +
+                        '<input id="room_code' + id + '-' + i + '" name="room_codes[' + id + '][]" type="text" ' +
+                        'class="form-control" readonly required>' +
+                        '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
+                        '</div></div>';
+                }
+                $("#input_roomCode" + id).html(input_roomCode);
+                $(".psychoTestCodes").click();
+
+            } else {
+                $("#input_roomCode" + id).html('');
+            }
         }
 
-        function editPsychoTest(id, code, time, total, questions, vacancy) {
+        function editPsychoTest(id, room_codes, vacID, candidates) {
             $(".btn_psychoTest i").toggleClass('fa-plus fa-th-list');
             $(".btn_psychoTest[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
                 return v === "Create" ? "View" : "Create";
@@ -222,30 +451,46 @@
             $("#vacancySetupDivider").css('display', 'none');
             $("#content1").toggle(300);
             $("#content2").toggle(300);
+            $("#vacancy_id").val(vacID).attr('name', 'vacancy_id').selectpicker({maxOptions: 1}).selectpicker('refresh');
 
             $("#input-psychoTest-setup").html(
                 '<div class="row form-group">' +
                 '<div class="col-lg-12">' +
-                '<label for="room_code">Room Code <span class="required">*</span></label>' +
+                '<label for="candidates">Total Candidate <span class="required">*</span></label>' +
                 '<div class="input-group">' +
-                '<span class="input-group-btn">' +
-                '<button type="button" class="btn btn-dark" id="btn_code"><i class="fa fa-sync"></i></button>' +
-                '</span><input id="room_code" name="room_code" type="text" class="form-control" ' +
-                'maxlength="6" readonly required>' +
-                '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
-                '</div></div></div>'
+                '<span class="input-group-addon"><i class="fa fa-users"></i></span>' +
+                '<input id="candidates' + id + '" type="text" class="form-control" placeholder="' + candidates + '" ' +
+                'value="' + candidates + '" disabled required></div>' +
+                '</div></div>' +
+                '<div class="row form-group" id="input_roomCode' + id + '"></div>'
             );
-            $("#room_code").val(code);
-            $("#vacancy_id").val(vacancy).attr('name', 'vacancy_id').selectpicker({maxOptions: 1}).selectpicker('refresh');
 
-            $("#btn_code").on("click", function () {
-                $("#room_code").val(generateCode());
+            var input_roomCode = '';
+            $.each(room_codes.split(","), function (i, val) {
+                i = i + 1;
+                input_roomCode +=
+                    '<div class="col-lg-4">' +
+                    '<label for="room_code">Room Code #' + i + '<span class="required">*</span></label>' +
+                    '<div class="input-group">' +
+                    '<span class="input-group-btn">' +
+                    '<button type="button" class="btn btn-dark psychoTestCodes" ' +
+                    'onclick="generateCodeBtn(' + vacID + ', ' + i + ')">' +
+                    '<i class="fa fa-sync"></i></button></span>' +
+                    '<input id="room_code' + vacID + '-' + i + '" name="room_codes[]" type="text" ' +
+                    'class="form-control" value="' + val + '" readonly required>' +
+                    '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
+                    '</div></div>';
             });
+            $("#input_roomCode" + id).html(input_roomCode);
 
             $("#form-psychoTest-setup input[name='_method']").val('PUT');
             $("#btn_psychoTest_submit").html("<strong>SAVE CHANGES</strong>");
 
             $("#form-psychoTest-setup").attr("action", "{{ url('admin/psychoTest') }}/" + id + "/update");
+        }
+
+        function generateCodeBtn(vacID, candidateID) {
+            $("#room_code" + vacID + "-" + candidateID).val(vacID + generateCode() + candidateID);
         }
 
         $("#form-psychoTest-setup").on("submit", function (e) {
@@ -257,9 +502,9 @@
 
         function generateCode() {
             var text = "";
-            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-            for (var i = 0; i < 6; i++)
+            for (var i = 0; i < 3; i++)
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
 
             return text;

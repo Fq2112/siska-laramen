@@ -56,6 +56,88 @@
             width: 70%;
             float: left;
         }
+
+        .myTags {
+            list-style: none;
+            margin: 0;
+            overflow: hidden;
+            padding: 0 0 0 .2em;
+        }
+
+        .myTags li {
+            float: left;
+        }
+
+        .myTags li a {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .myTag {
+            font-size: 14px;
+            background: #eee;
+            border-radius: 3px 0 0 3px;
+            color: #999;
+            display: inline-block;
+            height: 26px;
+            line-height: 26px;
+            padding: 0 20px 0 23px;
+            position: relative;
+            margin: 0 10px 10px 0;
+            -webkit-transition: color 0.2s;
+            text-transform: none;
+        }
+
+        .myTag::before {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+            content: '';
+            height: 6px;
+            left: 10px;
+            position: absolute;
+            width: 6px;
+            top: 10px;
+        }
+
+        .myTag::after {
+            background: #fff;
+            border-bottom: 13px solid transparent;
+            border-left: 10px solid #eee;
+            border-top: 13px solid transparent;
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+
+        .myTag:hover {
+            background-color: #fa5555;
+            color: white;
+        }
+
+        .myTag:hover::after {
+            border-left-color: #fa5555;
+        }
+
+        .myTag-plans:hover {
+            background-color: #00ADB5;
+            color: white;
+        }
+
+        .myTag-plans:hover::after {
+            border-left-color: #00ADB5;
+        }
+
+        .myTag:hover .myTag-icon {
+            display: none;
+        }
+
+        .myTag:hover .myTag-close::before {
+            font-family: "Font Awesome 5 Free";
+            content: '\f057';
+            font-style: normal;
+        }
     </style>
 </head>
 

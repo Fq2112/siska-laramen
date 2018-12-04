@@ -287,7 +287,7 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
 
     });
 
-    Route::post('psychoTest/{roomName}', [
+    Route::post('psychoTest', [
         'uses' => 'PsychoTestController@joinPsychoTestRoom',
         'as' => 'join.psychoTest.room'
     ]);

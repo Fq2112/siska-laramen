@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Psycho Test (Online Interview): '.$vacancy->judul.' - '.$userAgency->name.' | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Psycho Test (Online Interview): Room Code #'.$roomCode.' &mdash; '.$vacancy->judul.' - '.$userAgency->name.' | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <style>
         #psychoTest_content {
@@ -33,15 +33,15 @@
                         </h2>
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
-                                <h3 class="to-animate">{{$vacancy->judul.' - '.$userAgency->name}}</h3>
+                                <h3 class="to-animate">
+                                    Room Code #<strong>{{$roomCode}}</strong>: {{$vacancy->judul.' - '.
+                                    $userAgency->name}}</h3>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-lg-12" id="psychoTest_content"></div>
-                </div>
+                <div class="row" id="psychoTest_content"></div>
             </div>
         </div>
     </section>
@@ -54,7 +54,7 @@
             video: {width: 300}
         }).then(function (localTracks) {
             return Twilio.Video.connect('{{ $accessToken }}', {
-                name: '{{ $roomName }}',
+                name: '{{ $roomCode }}',
                 tracks: localTracks,
                 video: {width: 300}
             });
@@ -85,7 +85,7 @@
             const div = document.createElement('div');
             div.id = participant.sid;
             div.classList.add('col-lg-6');
-            div.innerHTML = "<div class='participant-identity'>User: <strong>" + participant.identity + "</strong></div>";
+            div.innerHTML = "<div class='participant-identity'><strong>" + participant.identity + "</strong></div>";
 
             participant.tracks.forEach(function (track) {
                 trackAdded(div, track)
@@ -119,5 +119,9 @@
                 element.remove()
             });
         }
+
+        $(window).on('beforeunload', function () {
+            return "You have attempted to leave this page. Are you sure?";
+        });
     </script>
 @endpush

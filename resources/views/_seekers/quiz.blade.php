@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Online Quiz (TPA and TKD): '.$vacancy->judul.' - '.$agency->name.' | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Online Quiz (TPA and TKD): Quiz Code #'.$quiz->unique_code.' &mdash; '.$vacancy->judul.' - '.$agency->name.' | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/quiz.css')}}">
     <link rel="stylesheet" href="{{asset('css/bubble-button.css')}}">
@@ -13,7 +13,9 @@
                         <h2 class="to-animate" style="text-transform: none;"><span>Online Quiz (TPA & TKD)</span></h2>
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
-                                <h3 class="to-animate">{{$vacancy->judul.' - '.$agency->name}}</h3>
+                                <h3 class="to-animate">
+                                    Quiz Code #<strong>{{$quiz->unique_code}}</strong>: {{$vacancy->judul.' - '.
+                                    $userAgency->name}}</h3>
                             </div>
                         </div>
                     </div>

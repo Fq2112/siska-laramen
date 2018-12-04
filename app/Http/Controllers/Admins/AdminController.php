@@ -213,19 +213,6 @@ class AdminController extends Controller
 
     public function showPsychoTestInfo(Request $request)
     {
-        $rooms = [];
-        try {
-            $client = new Client($this->sid, $this->token);
-            $allRooms = $client->video->rooms->read([]);
-
-            $rooms = array_map(function ($room) {
-                return $room->uniqueName;
-            }, $allRooms);
-
-        } catch (\Exception $e) {
-            echo "Error: " . $e->getMessage();
-        }
-
         $infos = PsychoTestInfo::orderByDesc('id')->get();
         $vacancies = Vacancies::whereHas('getPlan', function ($query) {
             $query->where('isPsychoTest', true);
@@ -237,30 +224,18 @@ class AdminController extends Controller
             $findVac = null;
         }
 
-        return view('_admins.psychoTest-setup', compact('infos', 'vacancies', 'findVac', 'rooms'));
-//        return view('_admins.psychoTest-setup', ['rooms' => $rooms]);
+        return view('_admins.psychoTest-setup', compact('infos', 'vacancies', 'findVac'));
     }
 
     public function createPsychoTestInfo(Request $request)
     {
-        $client = new Client($this->sid, $this->token);
-
         $it = new \MultipleIterator();
         $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
-        $it->attachIterator(new \ArrayIterator($request->room_code));
+        $it->attachIterator(new \ArrayIterator($request->room_codes));
         foreach ($it as $value) {
-            $exists = $client->video->rooms->read(['uniqueName' => $request->room_code]);
-            if (empty($exists)) {
-                $client->video->rooms->create([
-                    'uniqueName' => $request->room_code,
-                    'type' => 'group',
-                    'recordParticipantsOnConnect' => false
-                ]);
-            }
-
             PsychoTestInfo::create([
                 'vacancy_id' => $value[0],
-                'room_code' => $value[1],
+                'room_codes' => $value[1],
             ]);
         }
         $total = count($request->vacancy_ids);
@@ -269,11 +244,24 @@ class AdminController extends Controller
         return redirect()->route('psychoTest.info')->with('success', '' . $total . ' ' . $str . ' successfully created!');
     }
 
+    public function updatePsychoTestInfo(Request $request)
+    {
+        $info = PsychoTestInfo::find($request->id);
+        $info->update([
+            'vacancy_id' => $request->vacancy_id,
+            'room_codes' => $request->room_codes,
+        ]);
+
+        return redirect()->route('psychoTest.info')
+            ->with('success', 'Psycho Test for ' . $info->getVacancy->judul . ' is successfully updated!');
+    }
+
     public function deletePsychoTestInfo(Request $request)
     {
         $info = PsychoTestInfo::find(decrypt($request->id));
         $info->delete();
 
-        return redirect()->route('psychoTest.info')->with('success', 'Psycho Test #' . $info->room_code . ' is successfully deleted!');
+        return redirect()->route('psychoTest.info')
+            ->with('success', 'Psycho Test for ' . $info->getVacancy->judul . ' is successfully deleted!');
     }
 }

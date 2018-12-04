@@ -59,6 +59,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'seeker' => \App\Http\Middleware\Auth\SeekerMiddleware::class,
         'quiz' => \App\Http\Middleware\Seekers\QuizMiddleware::class,
+        'psychoTest' => \App\Http\Middleware\Seekers\PsychoTestMiddleware::class,
         'agency' => \App\Http\Middleware\Auth\AgencyMiddleware::class,
         'admin' => \App\Http\Middleware\Auth\AdminMiddleware::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',

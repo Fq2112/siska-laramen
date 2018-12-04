@@ -15,7 +15,7 @@ class CreatePsychoTestInfosTable extends Migration
     {
         Schema::create('psycho_test_infos', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('room_code')->unique();
+            $table->text('room_codes');
             $table->integer('vacancy_id')->unsigned();
             $table->foreign('vacancy_id')->references('id')->on('vacancy');
             $table->timestamps();

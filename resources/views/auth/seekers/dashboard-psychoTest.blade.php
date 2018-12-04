@@ -267,8 +267,9 @@
                 </div>
                 <div class="modal-footer">
                     <div class="card-read-more">
-                        <form method="post" id="form-access-psychoTest">
+                        <form method="post" id="form-access-psychoTest" action="{{route('join.psychoTest.room')}}">
                             {{csrf_field()}}
+                            <input id="room_code" type="hidden" name="room_code">
                             <button class="btn btn-link btn-block" type="button">
                                 <i class="fa fa-comments"></i>&ensp;Enter Room
                             </button>
@@ -292,7 +293,7 @@
             $("#psychoTestDate").html('<i class="fa fa-comments"></i>&ensp;Psycho Test Date: <strong>' + date + '</strong>');
             $("#psychoTestCode").html('<i class="fa fa-shield-alt"></i>&ensp;Room Code: <strong>' + code + '</strong>');
 
-            $("#form-access-psychoTest").attr('action', '{{route('join.psychoTest.room', ['code' => ''])}}/' + code);
+            $("#room_code").val(code);
             $("#psychoTestModal").modal('show');
 
             $(document).on('hide.bs.modal', '#psychoTestModal', function (event) {

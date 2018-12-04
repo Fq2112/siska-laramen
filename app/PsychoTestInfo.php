@@ -10,6 +10,8 @@ class PsychoTestInfo extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = ['room_codes' => 'array'];
+
     public function getVacancy()
     {
         return $this->belongsTo(Vacancies::class, 'vacancy_id');
