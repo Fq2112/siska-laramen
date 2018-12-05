@@ -543,7 +543,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr data-placement="left" data-toggle="tooltip"
-                                                                    title="Total Applicant for">
+                                                                    title="Total Participant for">
                                                                     <td>Quiz</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="center">
@@ -556,7 +556,7 @@
                                                                     </td>
                                                                 </tr>
                                                                 <tr data-placement="left" data-toggle="tooltip"
-                                                                    title="Total Applicant for">
+                                                                    title="Total Participant for">
                                                                     <td>Psycho Test</td>
                                                                     <td>&emsp;</td>
                                                                     <td align="center">

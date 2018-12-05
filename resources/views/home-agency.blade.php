@@ -139,20 +139,20 @@
                                 <ul style="margin-bottom: 0">
                                     <li><strong>{{$plan->job_ads}}</strong></li>
                                     @if($plan->id == 2)
-                                        <li>Quiz untuk <strong>{{$plan->quiz_applicant}}</strong> applicants</li>
+                                        <li>Quiz untuk <strong>{{$plan->quiz_applicant}}</strong> partisipan</li>
                                         <li style="list-style: none">(<strong>Rp{{number_format
-                                        ($plan->price_quiz_applicant,0,',','.')}}/applicant</strong>)
+                                        ($plan->price_quiz_applicant,0,',','.')}}/participant</strong>)
                                         </li>
                                     @elseif($plan->id == 3)
-                                        <li>Quiz untuk <strong>{{$plan->quiz_applicant}}</strong> applicants</li>
+                                        <li>Quiz untuk <strong>{{$plan->quiz_applicant}}</strong> partisipan</li>
                                         <li style="list-style: none">(<strong>Rp{{number_format
-                                        ($plan->price_quiz_applicant,0,',','.')}}/applicant</strong>)
+                                        ($plan->price_quiz_applicant,0,',','.')}}/participant</strong>)
                                         </li>
                                         <li>Psycho Test untuk <strong>{{$plan->psychoTest_applicant}}</strong>
-                                            applicants
+                                            partisipan
                                         </li>
                                         <li style="list-style: none">(<strong>Rp{{number_format
-                                        ($plan->price_psychoTest_applicant,0,',','.')}}/applicant</strong>)
+                                        ($plan->price_psychoTest_applicant,0,',','.')}}/participant</strong>)
                                         </li>
                                     @endif
                                 </ul>

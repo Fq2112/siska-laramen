@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware\Seekers;
 
-use App\PsychoTestInfo;
 use App\PsychoTestResult;
 use App\Seekers;
 use Closure;
@@ -21,10 +20,9 @@ class PsychoTestMiddleware
     {
         if (Auth::check() && Auth::user()->isSeeker()) {
             $seeker = Seekers::where('user_id', Auth::user()->id)->first();
-            $psychoTest = PsychoTestInfo::where('room_code', $request->room_code)->first();
-            $checkSeekerPsychoTest = PsychoTestResult::where('psychoTest_id', $psychoTest->id)
+            $check = PsychoTestResult::where('psychoTest_id', decrypt($request->psychoTest_id))
                 ->where('seeker_id', $seeker->id)->count();
-            if (!$checkSeekerPsychoTest) {
+            if (!$check) {
                 return $next($request);
             }
         } elseif (Auth::guard('admin')->check()) {

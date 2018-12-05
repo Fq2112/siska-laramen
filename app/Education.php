@@ -12,7 +12,7 @@ class Education extends Model
 
     public function seekers()
     {
-        return $this->belongsTo(Seekers::class);
+        return $this->belongsTo(Seekers::class, 'seeker_id');
     }
 
     public function getDegree()

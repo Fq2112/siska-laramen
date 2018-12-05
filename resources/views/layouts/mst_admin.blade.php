@@ -149,17 +149,28 @@
     $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
     ->whereDate('created_at', '>=', now()->subDay())->get();
 
+    $quizSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
+        $plan->where('isQuiz', true);
+    })->where('isPost', true)->whereDoesntHave('getQuizInfo')->get();
+
+    $psychoTestSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
+        $plan->where('isPsychoTest', true);
+    })->whereHas('getQuizInfo', function ($quiz){
+        $quiz->whereHas('getQuizResult');
+    })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+    ->whereDate('quizDate_end','<=',today())->whereDoesntHave('getPsychoTestInfo')->get();
+
     $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
-    })->whereDate('recruitmentDate_end', '<=', today())->get();
+    })->whereDate('recruitmentDate_end', today())->get();
 
     $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
     })->whereHas('getQuizInfo', function ($info){
         $info->whereHas('getQuizResult');
-    })->whereDate('quizDate_end', '<=', today())->get();
+    })->whereDate('quizDate_end', today())->get();
 
-    $notifications = count($postings) + count($acceptings) + count($quiz_results);
+    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($acceptings) + count($quiz_results);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -428,10 +439,71 @@
                                                 </a>
                                             </li>
                                         @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
 
-                                    <li class="divider"
-                                        style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @if(count($quizSetup) > 0)
+                                        <li style="padding: 0">
+                                            <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-grin-beam"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Quiz Setup</strong></span>
+                                            </a>
+                                        </li>
+                                        @foreach($quizSetup as $vacancy)
+                                            <li>
+                                                <a href="{{route('quiz.info',['vac_ids' => $vacancy->id])}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                    <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                    <span class="message">
+                                                        Quiz for this vacancy hasn't been set yet!
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @endif
+
+                                    @if(count($psychoTestSetup) > 0)
+                                        <li style="padding: 0">
+                                            <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-comments"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Psycho Test Setup</strong></span>
+                                            </a>
+                                        </li>
+                                        @foreach($psychoTestSetup as $vacancy)
+                                            <li>
+                                                <a href="{{route('psychoTest.info',['vac_ids' => $vacancy->id])}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                    <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                    <span class="message">
+                                                        Psycho test for this vacancy hasn't been set yet!
+                                                    </span>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @endif
 
                                     @if(count($acceptings) > 0)
                                         <li style="padding: 0">
@@ -455,16 +527,16 @@
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
                                                     <span class="message">
-                                                        Make sure the application list for this vacancy are sent to
-                                                        <strong>{{$vacancy->agencies->user->name}}</strong>!
+                                                        You must send the application list for this vacancy to
+                                                        <strong>{{$vacancy->agencies->user->name}}</strong> now!
+                                                        <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
                                                 </a>
                                             </li>
                                         @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
-
-                                    <li class="divider"
-                                        style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
 
                                     @if(count($quiz_results) > 0)
                                         <li style="padding: 0">
@@ -488,12 +560,15 @@
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
                                                     <span class="message">
-                                                        Make sure the quiz result list for this vacancy are sent to
-                                                        <strong>{{$vacancy->agencies->user->name}}</strong>!
+                                                        You must send the quiz result list list for this vacancy to
+                                                        <strong>{{$vacancy->agencies->user->name}}</strong> now!
+                                                        <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
                                                 </a>
                                             </li>
                                         @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
                                 @else
                                     <li>

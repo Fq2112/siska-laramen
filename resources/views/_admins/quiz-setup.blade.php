@@ -22,7 +22,8 @@
                             <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Details</th>
+                                <th>Vacancy</th>
+                                <th>Quiz Details</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -31,48 +32,147 @@
                             @php $no = 1; @endphp
                             @foreach($infos as $info)
                                 @php
-                                    $questions = \App\QuizQuestions::whereIn('id',$info->question_ids)->get();
-                                    $vacancy = \App\Vacancies::find($info->vacancy_id);
-                                    $agency = \App\Agencies::find($vacancy->agency_id);
-                                    $userAgency = \App\User::find($agency->user_id);
+                                    $vacancy = $info->getVacancy;
+                                    $quizDate = $vacancy->quizDate_start && $vacancy->quizDate_end != "" ?
+                                    \Carbon\Carbon::parse($vacancy->quizDate_start)->format('j F Y')." - ".
+                                    \Carbon\Carbon::parse($vacancy->quizDate_end)->format('j F Y') : '-';
+                                    $agency = $vacancy->agencies;
+                                    $userAgency = $agency->user;
+                                    $ava = $userAgency->ava == ""||$userAgency->ava == "agency.png" ?
+                                    asset('images/agency.png') : asset('storage/users/'.$userAgency->ava);
                                 @endphp
                                 <tr>
-                                    <td align="center">{{$no++}}</td>
+                                    <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
-                                        <i class="fa fa-briefcase"></i>
-                                        <a href="{{route('detail.vacancy',['id'=>$vacancy->id])}}">
-                                            <strong>{{$vacancy->judul}}</strong></a> &ndash;
-                                        <a href="{{route('agency.profile',['id'=>$agency->id])}}">{{$userAgency->name}}
-                                        </a><br>
-                                        <i class="fa fa-shield-alt"></i> Quiz Code:
-                                        <strong>{{$info->unique_code}}</strong>&ensp;|&ensp;<i
-                                                class="fa fa-question-circle"></i>
-                                        Total Question: <strong>{{$info->total_question}}</strong> items&ensp;|&nbsp;
-                                        <i class="fa fa-stopwatch"></i> Time Limit: <strong>{{$info->time_limit}}
-                                        </strong> minutes
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <a href="{{route('agency.profile',['id' => $agency->id])}}"
+                                                       target="_blank"
+                                                       style="float: left;margin-right: .5em;margin-bottom: 0">
+                                                        <img class="img-responsive" width="100" src="{{$ava}}">
+                                                    </a>
+                                                    <table style="margin: 0">
+                                                        <tr>
+                                                            <td>
+                                                                <a href="{{route('detail.vacancy',['id' =>
+                                                                $vacancy->id])}}" target="_blank">
+                                                                    <strong>{{$vacancy->judul}}</strong>
+                                                                </a> &ndash;
+                                                                <a href="{{route('agency.profile',['id' => $agency->id])}}"
+                                                                   target="_blank">
+                                                                    {{$userAgency->name}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <span data-toggle="tooltip" data-placement="left"
+                                                                      title="Recruitment Date"
+                                                                      class="label label-default">
+                                                                    <strong><i class="fa fa-users"></i>&ensp;
+                                                                        {{$vacancy->recruitmentDate_start != "" &&
+                                                                        $vacancy->recruitmentDate_end != "" ?
+                                                                        \Carbon\Carbon::parse
+                                                                        ($vacancy->recruitmentDate_start)
+                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                        ($vacancy->recruitmentDate_end)
+                                                                        ->format('j F Y') : 'Unknown'}}
+                                                                    </strong>
+                                                                </span>&nbsp;|
+                                                                <span data-toggle="tooltip" data-placement="right"
+                                                                      title="Online Quiz (TPA & TKD) Date"
+                                                                      class="label label-danger">
+                                                                        <strong><i class="fa fa-grin-beam"></i>&ensp;
+                                                                            {{$quizDate}}
+                                                                        </strong>
+                                                                    </span>&nbsp;
+                                                                <hr style="margin: .5em auto">
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Psycho Test (Online Interview) Date"
+                                                                      class="label label-default">
+                                                                        <strong><i class="fa fa-comments"></i>&ensp;
+                                                                            {{$vacancy->psychoTestDate_start &&
+                                                                            $vacancy->psychoTestDate_end != "" ?
+                                                                            \Carbon\Carbon::parse($vacancy
+                                                                            ->psychoTestDate_start)->format('j F Y').
+                                                                            " - ".\Carbon\Carbon::parse($vacancy
+                                                                            ->psychoTestDate_end)->format('j F Y') :
+                                                                            'Unknown'}}
+                                                                        </strong>
+                                                                    </span>&nbsp;|
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Job Interview Date"
+                                                                      class="label label-default">
+                                                                    <strong><i class="fa fa-user-tie"></i>&ensp;
+                                                                        {{$vacancy->interview_date != "" ?
+                                                                        \Carbon\Carbon::parse($vacancy->interview_date)
+                                                                        ->format('l, j F Y') : 'Unknown'}}
+                                                                    </strong>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
                                         <hr style="margin: .5em auto">
-                                        <ol>
-                                            @foreach($questions as $question)
-                                                @php
-                                                    $options = \App\QuizOptions::where('question_id',$question->id)->get();
-                                                    $topic = \App\QuizType::find($question->quiztype_id)->name;
-                                                @endphp
-                                                <li style="margin-bottom: 1em">
-                                                    {!! $question->question_text !!}
-                                                    <span class="pull-right label label-default"
-                                                          style="background: {{$topic == "TPA" ? '#00adb5' : '#fa5555'}};margin-right: 1.5em;padding: 5px 25px;font-size: 15px;">
-                                                        <strong>{{$topic}}</strong></span>
-                                                    <ul style="margin: -.5em 0 0 -1em;">
-                                                        @foreach($options as $option)
-                                                            <li style="font-weight: {{$option->correct == true ? 'bold' : 'normal'}}">{{$option->correct == true ?
-                                                            $option->option.' (correct answer)' : $option->option}}</li>
+                                        <table>
+                                            <tr>
+                                                <td><i class="fa fa-paper-plane"></i>&nbsp;</td>
+                                                <td>Total Applicant</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{\App\Accepting::where('vacancy_id',$vacancy->id)
+                                                ->where('isApply',true)->count()}} applicants
+                                                </td>
+                                            </tr>
+                                            <tr style="font-weight: 600">
+                                                <td><i class="fa fa-grin-beam"></i>&nbsp;</td>
+                                                <td>Total Participant for Quiz with {{$vacancy->passing_grade}} passing
+                                                    grade
+                                                </td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$vacancy->quiz_applicant}} persons</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-comments"></i>&nbsp;</td>
+                                                <td>Total Participant for Psycho Test</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$vacancy->psychoTest_applicant}} persons</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="vertical-align: middle">
+                                        <table>
+                                            <tr>
+                                                <td><i class="fa fa-shield-alt"></i>&nbsp;</td>
+                                                <td>Quiz Code</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td><strong>{{$info->unique_code}}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-question-circle"></i>&nbsp;</td>
+                                                <td><strong>{{$info->total_question}}</strong> Questions</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>
+                                                    <ul style="margin-left: -1.5em;margin-top: .5em;">
+                                                        @foreach($types as $type)
+                                                            @php $q = \App\QuizQuestions::whereIn('id',$info->question_ids)
+                                                            ->where('quiztype_id',$type->id)->count(); @endphp
+                                                            <li><strong>{{$q}}</strong> {{$type->name}}</li>
                                                         @endforeach
                                                     </ul>
-                                                </li>
-                                            @endforeach
-                                        </ol>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-stopwatch"></i>&nbsp;</td>
+                                                <td>Time Limit</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td><strong>{{$info->time_limit}}</strong> minutes</td>
+                                            </tr>
+                                        </table>
                                     </td>
-                                    <td align="center">
+                                    <td style="vertical-align: middle" align="center">
                                         <a onclick="editQuiz('{{$info->id}}','{{$info->unique_code}}',
                                                 '{{$info->time_limit}}','{{$info->total_question}}',
                                                 '{{implode(",",$info->question_ids)}}','{{$vacancy->id}}')"
@@ -93,8 +193,6 @@
                         <form method="post" action="{{route('quiz.create.info')}}" id="form-quiz-setup">
                             {{csrf_field()}}
                             <input type="hidden" name="_method">
-                            <input type="hidden" name="invoice" id="invoice">
-                            <input type="hidden" name="isPsychoTest" id="isPsychoTest">
                             <div class="row form-group">
                                 <div class="col-lg-12">
                                     <label for="vacancy_id">Vacancy <span class="required">*</span></label>
@@ -105,10 +203,12 @@
                                                 data-selected-text-format="count > 3" name="vacancy_ids[]"
                                                 multiple required>
                                             @foreach($vacancies as $vacancy)
-                                                <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
+                                                <option value="{{$vacancy->id}}" {{$vacancy->getQuizInfo != null ?
+                                                "disabled" : ""}}>{{$vacancy->judul}}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                    <span style="color: #fa5555">P.S.: You can only select vacancy that its quiz hasn't been set yet.</span>
                                 </div>
                             </div>
                             <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
@@ -140,29 +240,7 @@
                 setTimeout(loadVacancyData('{{implode(',',$findVac->toArray())}}'), 1000);
             });
             $("#vacancy_id").selectpicker('refresh');
-            $("#invoice").val('{{$invoice}}');
-            $("#isPsychoTest").val('{{$isPsychoTest}}');
             $("#vacancySetupDivider").css('display', 'block');
-            @endif
-
-            @if(old('isPsychoTest') == 1)
-            swal({
-                title: 'Psycho Test Setup #{{old('invoice')}}',
-                text: 'For each vacancy in this invoice requires a psycho test!',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#00adb5',
-                confirmButtonText: 'Yes, setup now!',
-                showLoaderOnConfirm: true,
-
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        window.location.href = '{{route('psychoTest.info')}}?vac_ids={{session('vac_ids')}}';
-                    });
-                },
-                allowOutsideClick: false
-            });
-            return false;
             @endif
         });
 
@@ -183,7 +261,6 @@
             $("#input_quiz_setup").html('');
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
 
-            $("#invoice, #isPsychoTest").val('');
             $("#vacancy_id").val('default').attr('name', 'vacancy_ids[]')
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
 
@@ -192,7 +269,6 @@
 
         $("#vacancy_id").on("change", function () {
             var $id = $(this).val();
-            $("#invoice, #isPsychoTest").val('');
             $('#vacancy_id option:selected').each(function (i, selected) {
                 setTimeout(loadVacancyData($id), 1000);
                 $("#vacancySetupDivider").css('display', 'block');
@@ -318,7 +394,6 @@
             $("#panel_title").html(function (i, v) {
                 return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
             });
-            $("#invoice, #isPsychoTest").val('');
             $("#vacancySetupDivider").css('display', 'none');
             $("#content1").toggle(300);
             $("#content2").toggle(300);

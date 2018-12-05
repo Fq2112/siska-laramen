@@ -50,7 +50,7 @@ class TransactionSeekerController extends Controller
             event(new ApplicantList($vacancy, $vacancy->agencies->user->email, $filename));
         }
 
-        return back()->with('success', '' . count($ids) . ' application(s) is successfully sent!');
+        return back()->with('success', '' . count($ids) . ' application(s) is successfully sent to their email!');
     }
 
     public function massDeleteApplications(Request $request)
@@ -92,7 +92,13 @@ class TransactionSeekerController extends Controller
         })->get();
 
         foreach ($vacancies as $vacancy) {
-            $applicants = $vacancy->getQuizInfo->getQuizResult->toArray();
+            $q = QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)->where('isPassed', true)->orderByDesc('score');
+            if ($vacancy->getPlan->isPsychoTest == true) {
+                $applicants = $q->take($vacancy->psychoTest_applicant)->get()->toArray();
+            } else {
+                $applicants = $q->take($vacancy->quiz_applicant)->get()->toArray();
+            }
+
             $date = Carbon::parse($vacancy->quizDate_start)->format('dmy') . '-' .
                 Carbon::parse($vacancy->quizDate_end)->format('dmy');
 
@@ -103,7 +109,7 @@ class TransactionSeekerController extends Controller
             event(new QuizResultList($vacancy, $vacancy->agencies->user->email, $filename));
         }
 
-        return back()->with('success', '' . count($ids) . ' quiz result(s) is successfully sent!');
+        return back()->with('success', '' . count($ids) . ' quiz result(s) is successfully sent to their email!');
     }
 
     public function massDeleteQuizResults(Request $request)

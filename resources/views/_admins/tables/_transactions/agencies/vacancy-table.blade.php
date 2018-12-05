@@ -219,19 +219,19 @@
                                             @if($vacancy->plan_id != null && $plan->isQuiz == true)
                                                 <tr>
                                                     <td><i class="fa fa-grin-beam"></i></td>
-                                                    <td>Quiz with <strong>{{$vacancy->passing_grade}}</strong>
-                                                        passing grade
+                                                    <td>Total Participant for Quiz with
+                                                        <strong>{{$vacancy->passing_grade}}</strong> passing grade
                                                     </td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td><strong>{{$vacancy->quiz_applicant}}</strong> applicants</td>
+                                                    <td><strong>{{$vacancy->quiz_applicant}}</strong> persons</td>
                                                 </tr>
                                             @endif
                                             @if($vacancy->plan_id != null && $plan->isPsychoTest == true)
                                                 <tr>
                                                     <td><i class="fa fa-comments"></i></td>
-                                                    <td>Total Applicant for Psycho Test</td>
+                                                    <td>Total Participant for Psycho Test</td>
                                                     <td>&nbsp;:&nbsp;</td>
-                                                    <td><strong>{{$vacancy->psychoTest_applicant}}</strong> applicants
+                                                    <td><strong>{{$vacancy->psychoTest_applicant}}</strong> persons
                                                     </td>
                                                 </tr>
                                             @endif

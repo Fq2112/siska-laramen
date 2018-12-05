@@ -19,6 +19,7 @@ use App\JobType;
 use App\Jurusanpend;
 use App\Languages;
 use App\Organization;
+use App\Plan;
 use App\Salaries;
 use App\Seekers;
 use App\Skills;
@@ -313,8 +314,12 @@ class SeekerController extends Controller
         $time = $request->time;
         if ($request->has('time')) {
             if ($time == 2) {
-                $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) {
-                    $vac->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+                $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+                    $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                        $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                            $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                        });
+                    })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
                         ->where('psychoTestDate_start', '<=', today()->addDay())
                         ->where('psychoTestDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
@@ -322,8 +327,12 @@ class SeekerController extends Controller
                     ->orderByDesc('id')->paginate(5);
 
             } elseif ($time == 3) {
-                $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) {
-                    $vac->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+                $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+                    $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                        $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                            $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                        });
+                    })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
                         ->where('psychoTestDate_start', '<=', today()->addDay())
                         ->where('psychoTestDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
@@ -331,8 +340,12 @@ class SeekerController extends Controller
                     ->orderByDesc('id')->paginate(5);
 
             } elseif ($time == 4) {
-                $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) {
-                    $vac->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+                $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+                    $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                        $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                            $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                        });
+                    })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
                         ->where('psychoTestDate_start', '<=', today()->addDay())
                         ->where('psychoTestDate_end', '>=', today());
                 })->where('seeker_id', $seeker->id)->where('isApply', true)
@@ -343,7 +356,7 @@ class SeekerController extends Controller
                 $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
                     $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
                         $info->whereHas('getQuizResult', function ($res) use ($seeker) {
-                            $res->where('seeker_id', $seeker->id);
+                            $res->where('seeker_id', $seeker->id)->where('isPassed', true);
                         });
                     })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
                         ->where('psychoTestDate_start', '<=', today()->addDay())
@@ -355,7 +368,7 @@ class SeekerController extends Controller
             $psychoTestInv = Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
                 $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
                     $info->whereHas('getQuizResult', function ($res) use ($seeker) {
-                        $res->where('seeker_id', $seeker->id);
+                        $res->where('seeker_id', $seeker->id)->where('isPassed', true);
                     });
                 })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
                     ->where('psychoTestDate_start', '<=', today()->addDay())
@@ -410,7 +423,6 @@ class SeekerController extends Controller
     {
         $user = Auth::user();
         $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
-        $vacancies = Vacancies::where('isPost', true)->get();
         $provinces = Provinces::all();
         $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
         $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)
@@ -419,8 +431,8 @@ class SeekerController extends Controller
         $keyword = $request->q;
         $page = $request->page;
 
-        return view('auth.seekers.dashboard-recommendedVacancy', compact('user', 'seeker', 'vacancies',
-            'provinces', 'totalBook', 'totalInvToApply', 'keyword', 'page'));
+        return view('auth.seekers.dashboard-recommendedVacancy', compact('user', 'seeker', 'provinces',
+            'totalBook', 'totalInvToApply', 'keyword', 'page'));
     }
 
     public function getRecommendedVacancy(Request $request)
@@ -428,23 +440,22 @@ class SeekerController extends Controller
         $user = Auth::user();
         $seeker = Seekers::where('user_id', $user->id)->firstOrFail();
 
-        if ($seeker->educations->count()) {
-            foreach ($seeker->educations as $education) {
+        $totalExp = $seeker->total_exp != "" ? $seeker->total_exp : 0;
+        $degrees = array();
+        $educations = Education::whereHas('seekers', function ($q) {
+            $q->where('user_id', Auth::user()->id);
+        })->wherenotnull('end_period')->get();
+        if (count($educations) > 0) {
+            foreach ($educations as $education) {
                 $degrees[] = $education->tingkatpend_id;
             }
-        } else {
-            $degrees = array();
         }
 
         $keyword = $request->q;
         $agency = Agencies::whereHas('user', function ($query) use ($keyword) {
             $query->where('name', 'like', '%' . $keyword . '%');
         })->get()->pluck('id')->toArray();
-        if ($seeker->total_exp == "") {
-            $totalExp = 0;
-        } else {
-            $totalExp = $seeker->total_exp;
-        }
+
         $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->where('isPost', true)
             ->where('pengalaman', '<=', $totalExp)->where(function ($query) use ($degrees) {
                 foreach ($degrees as $degree) {
@@ -465,6 +476,8 @@ class SeekerController extends Controller
     {
         $i = 0;
         foreach ($result['data'] as $vacancy) {
+            $plan = Plan::find($vacancy['plan_id']);
+
             if (substr(Cities::find($vacancy['cities_id'])->name, 0, 2) == "Ko") {
                 $cities = substr(Cities::find($vacancy['cities_id'])->name, 5);
             } else {
@@ -493,24 +506,23 @@ class SeekerController extends Controller
                 Carbon::parse($vacancy['recruitmentDate_start'])->format('j F Y'));
             $endDate = array('recruitmentDate_end' => is_null($vacancy['recruitmentDate_end']) ? '-' :
                 Carbon::parse($vacancy['recruitmentDate_end'])->format('j F Y'));
-
             $quizDate = array('quizDate' => is_null($vacancy['quizDate_start']) || is_null($vacancy['quizDate_end']) ?
                 '-' : Carbon::parse($vacancy['quizDate_start'])->format('j F Y') . ' - ' .
                 Carbon::parse($vacancy['quizDate_end'])->format('j F Y'));
-
             $psychoTestDate = array('psychoTestDate' => is_null($vacancy['psychoTestDate_start']) ||
             is_null($vacancy['psychoTestDate_end']) ? '-' : Carbon::parse($vacancy['psychoTestDate_start'])
                     ->format('j F Y') . ' - ' . Carbon::parse($vacancy['psychoTestDate_end'])
                     ->format('j F Y'));
-
             $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
                 $vacancy['updated_at'])->diffForHumans());
             $acc = array('acc' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->first());
             $totalApp = array('total_app' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->count());
+            $isQuiz = array('isQuiz' => $plan->isQuiz);
+            $isPsychoTest = array('isPsychoTest' => $plan->isPsychoTest);
 
             $result['data'][$i] = array_replace($ava, $result['data'][$i], $city, $degrees, $majors, $jobfunc,
                 $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc, $totalApp,
-                $quizDate, $psychoTestDate);
+                $quizDate, $psychoTestDate, $isQuiz, $isPsychoTest);
             $i = $i + 1;
         }
 
@@ -545,11 +557,21 @@ class SeekerController extends Controller
         $recruitment = array('recruitment_date' => is_null($vacancy->recruitmentDate_start) &&
         is_null($vacancy->recruitmentDate_end) ? '-' : Carbon::parse($vacancy->recruitmentDate_start)
                 ->format('j F Y') . ' - ' . Carbon::parse($vacancy->recruitmentDate_end)->format('j F Y'));
+        $quizDate = array('quizDate' => is_null($vacancy->quizDate_start) || is_null($vacancy->quizDate_end) ?
+            '-' : Carbon::parse($vacancy->quizDate_start)->format('j F Y') . ' - ' .
+            Carbon::parse($vacancy->quizDate_end)->format('j F Y'));
+        $psychoTestDate = array('psychoTestDate' => is_null($vacancy->psychoTestDate_start) ||
+        is_null($vacancy->psychoTestDate_end) ? '-' : Carbon::parse($vacancy->psychoTestDate_start)
+                ->format('j F Y') . ' - ' . Carbon::parse($vacancy->psychoTestDate_end)->format('j F Y'));
         $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
             $vacancy->updated_at)->diffForHumans());
+        $isQuiz = array('isQuiz' => $vacancy->getPlan->isQuiz);
+        $isPsychoTest = array('isPsychoTest' => $vacancy->getPlan->isPsychoTest);
+        $totalApp = array('total_app' => Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->count());
 
-        $result = array_replace($ava, $vacancy->toArray(), $city, $degrees, $majors, $jobfunc,
-            $industry, $jobtype, $joblevel, $salary, $interview, $recruitment, $update_at);
+        $result = array_replace($ava, $vacancy->toArray(), $city, $degrees, $majors, $jobfunc, $industry, $jobtype,
+            $joblevel, $salary, $interview, $recruitment, $update_at, $totalApp, $quizDate, $psychoTestDate,
+            $isQuiz, $isPsychoTest);
 
         return $result;
     }

@@ -31,21 +31,20 @@ class PsychoTestController extends Controller
     public function joinPsychoTestRoom(Request $request)
     {
         $provinces = Provinces::all();
-
         $psychoTest = PsychoTestInfo::find(decrypt($request->psychoTest_id));
+        $vacancy = $psychoTest->getVacancy;
+        $userAgency = $vacancy->agencies->user;
 
         $client = new Client($this->sid, $this->token);
         $exists = $client->video->rooms->read(['uniqueName' => $request->accessCode]);
         if (empty($exists)) {
             $client->video->rooms->create([
                 'uniqueName' => $request->accessCode,
-                'type' => 'group',
+                'type' => 'peer-to-peer',
+                'maxParticipants' => 2,
                 'recordParticipantsOnConnect' => false
             ]);
         }
-
-        $vacancy = $psychoTest->getVacancy;
-        $userAgency = $vacancy->agencies->user;
 
         $strC = strtoupper("(candidate)");
         $strI = strtoupper("(interviewer)");
@@ -53,10 +52,8 @@ class PsychoTestController extends Controller
             Auth::user()->name . " " . $strC;
 
         $token = new AccessToken($this->sid, $this->key, $this->secret, 3600, $identity);
-
         $videoGrant = new VideoGrant();
         $videoGrant->setRoom($request->accessCode);
-
         $token->addGrant($videoGrant);
 
         return view('_seekers.psychoTest', ['accessToken' => $token->toJWT(), 'roomCode' => $request->accessCode,

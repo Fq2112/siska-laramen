@@ -84,12 +84,18 @@ class QuizSeeder extends Seeder
             ]);
         }
 
-        QuizInfo::create([
-            'vacancy_id' => Vacancies::where('plan_id', 3)->first()->id,
-            'unique_code' => '3wvEnU',
-            'total_question' => 100,
-            'question_ids' => QuizQuestions::get()->pluck('id')->toArray(),
-            'time_limit' => 120
-        ]);
+        $vacancies = Vacancies::whereHas('getPlan', function ($q) {
+            $q->where('isQuiz', true);
+        })->where('isPost', true)->get();
+
+        foreach ($vacancies as $vacancy) {
+            QuizInfo::create([
+                'vacancy_id' => $vacancy->id,
+                'unique_code' => str_random(6),
+                'total_question' => 100,
+                'question_ids' => QuizQuestions::get()->pluck('id')->toArray(),
+                'time_limit' => 120
+            ]);
+        }
     }
 }

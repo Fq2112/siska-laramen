@@ -118,17 +118,17 @@
                                                         <li>
                                                             <a class="tag tag-plans">
                                                                 <i class="fa fa-grin-beam"></i>&ensp;
-                                                                Total Applicant for Quiz:
+                                                                Total Participant for Quiz:
                                                                 <strong class="quiz_applicant">
-                                                                    {{$plan->quiz_applicant}}</strong> applicants
+                                                                    {{$plan->quiz_applicant}}</strong> persons
                                                             </a>
                                                         </li>
                                                         <li>
                                                             <a class="tag tag-plans">
                                                                 <i class="fa fa-comments"></i>&ensp;
-                                                                Total Applicant for Psycho Test:
+                                                                Total Participant for Psycho Test:
                                                                 <strong class="psychoTest_applicant">
-                                                                    {{$plan->psychoTest_applicant}}</strong> applicants
+                                                                    {{$plan->psychoTest_applicant}}</strong> persons
                                                             </a>
                                                         </li>
                                                     </ul>
@@ -184,7 +184,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Applicant for">
+                                                            title="Total Participant for">
                                                             <td>Quiz</td>
                                                             <td>&emsp;</td>
                                                             <td align="center">
@@ -197,7 +197,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Applicant for"
+                                                            title="Total Participant for"
                                                             style="border-bottom: 1px solid #eee">
                                                             <td>Psycho Test</td>
                                                             <td>&emsp;</td>
@@ -542,7 +542,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Applicant for">
+                                                            title="Total Participant for">
                                                             <td>Quiz</td>
                                                             <td>&emsp;</td>
                                                             <td align="center">
@@ -553,7 +553,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Applicant for">
+                                                            title="Total Participant for">
                                                             <td>Psycho Test</td>
                                                             <td>&emsp;</td>
                                                             <td align="center">
@@ -801,10 +801,10 @@
                             '<li><a class="tag tag-plans"><i class="fa fa-grin-beam"></i>&ensp;' +
                             'Quiz with <strong id="detail_passing_grade' + val.id + '">0.00</strong> ' +
                             'passing grade &ndash; for &ndash; <strong id="detail_quiz_applicant' + val.id + '">' +
-                            '' + old_total_quiz + '</strong> applicants</a></li>' +
+                            '' + old_total_quiz + '</strong> participants</a></li>' +
                             '<li><a class="tag tag-plans"><i class="fa fa-comments"></i>&ensp;Psycho Test for ' +
                             '<strong id="detail_psychoTest_applicant' + val.id + '">' +
-                            '' + old_total_psychoTest + '</strong> applicants</a></li>' +
+                            '' + old_total_psychoTest + '</strong> participants</a></li>' +
                             '</ul>' +
                             '<small>Requirements</small>' + val.syarat +
                             '<small>Responsibilities</small>' + val.tanggungjawab + '</blockquote>' +
@@ -816,7 +816,7 @@
                             '<small><strong>' + val.judul + '</strong></small></div></div>' +
                             '<div class="row form-group" style="margin-bottom: 1.5em">' +
                             '<div class="col-lg-6 quiz_setup">' +
-                            '<small>Passing Grade & Applicant for Quiz</small>' +
+                            '<small>Passing Grade & Total Participant for Quiz</small>' +
                             '<div class="input-group">' +
                             '<span class="input-group-addon"><i class="fa fa-grin-beam"></i></span>' +
                             '<input id="passing_grade' + val.id + '" name="passing_grade[]" ' +
@@ -828,7 +828,7 @@
                             'min="0" ' + $attr_quiz + ' onchange="quizApplicant(' + val.id + ')" required>' +
                             '</div></div>' +
                             '<div class="col-lg-6 psychoTest_setup">' +
-                            '<small>Applicant for Psycho Test</small>' +
+                            '<small>Total Participant for Psycho Test</small>' +
                             '<div class="input-group">' +
                             '<span class="input-group-addon"><i class="fa fa-comments"></i></span>' +
                             '<input id="psychoTest_applicant' + val.id + '" ' +

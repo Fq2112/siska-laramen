@@ -132,6 +132,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
             'as' => 'psychoTest.info'
         ]);
 
+        Route::get('vacancy/{id}', [
+            'uses' => 'AdminController@getPsychoTestVacancyInfo',
+            'as' => 'psychoTest.vacancy.info'
+        ]);
+
         Route::post('room/create', [
             'uses' => 'AdminController@createPsychoTestInfo',
             'as' => 'psychoTest.create.info'

@@ -39,13 +39,13 @@
             $seeker = \App\Seekers::where('user_id', Auth::user()->id)->firstOrFail();
 
             $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
-                $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                $q->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
                 ->where('quizDate_start', '<=', today()->addDay())
                 ->where('quizDate_end', '>=', today());
             })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
 
             $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
-                $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+                $q->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
                 ->where('quizDate_start', '<=', today()->addDay())
                 ->where('quizDate_end', '>=', today())
                 ->whereHas('getQuizInfo', function ($q) use ($seeker){
@@ -56,6 +56,33 @@
             })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
 
             $totalQuizInv = $quizInv - $submittedQuizInv;
+
+            $psychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+                $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                    $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                        $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                    });
+                })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+                    ->where('psychoTestDate_start', '<=', today()->addDay())
+                    ->where('psychoTestDate_end', '>=', today());
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
+            $submittedPsychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+                $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                    $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                        $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                    });
+                })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+                    ->where('psychoTestDate_start', '<=', today()->addDay())
+                    ->where('psychoTestDate_end', '>=', today())
+                    ->whereHas('getPsychoTestInfo', function ($q) use ($seeker){
+                    $q->whereHas('getPsychoTestResult', function ($q) use ($seeker){
+                        $q->where('seeker_id', $seeker->id);
+                    });
+                });
+            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
+            $totalPsychoTestInv = $psychoTestInv - $submittedPsychoTestInv;
         @endphp
         @if($totalQuizInv > 0 && !Illuminate\Support\Facades\Request::is(['quiz','account/dashboard/quiz_invitation']))
             <div class="alert-banner">
@@ -66,6 +93,21 @@
                     <a class="alert-banner-button" href="{{route('seeker.invitation.quiz')}}"
                        style="text-decoration: none">
                         Redirect me to the Quiz Invitation page</a>
+                </div>
+                <div class="alert-banner-close"></div>
+            </div>
+        @endif
+        @if($totalPsychoTestInv > 0 && !Illuminate\Support\Facades\Request::is
+        (['psychoTest','account/dashboard/psychoTest_invitation']))
+            <div class="alert-banner">
+                <div class="alert-banner-content">
+                    <div class="alert-banner-text">
+                        There seems to be <strong>{{$totalPsychoTestInv}}</strong> of the psycho test invitation was
+                        found!
+                    </div>
+                    <a class="alert-banner-button" href="{{route('seeker.invitation.psychoTest')}}"
+                       style="text-decoration: none">
+                        Redirect me to the Psycho Test Invitation page</a>
                 </div>
                 <div class="alert-banner-close"></div>
             </div>

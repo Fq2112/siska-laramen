@@ -213,8 +213,8 @@
                             <span style="text-transform: uppercase">{{$pl->name}} Package</span>
                             <ul style="margin: 0 auto">
                                 <li><strong>{{$pl->job_ads}}</strong></li>
-                                <li>Quiz for <strong>{{$pl->quiz_applicant}}</strong> applicants</li>
-                                <li>Psycho Test for <strong>{{$pl->psychoTest_applicant}}</strong> applicants</li>
+                                <li>Quiz for <strong>{{$pl->quiz_applicant}}</strong> participants</li>
+                                <li>Psycho Test for <strong>{{$pl->psychoTest_applicant}}</strong> participants</li>
                             </ul>
                         </td>
                         <td colspan="2" style="width: 120px;padding: 8px 5px;text-transform: uppercase">
@@ -248,11 +248,11 @@
                                                 Quiz with <strong>{{$vacancy->passing_grade != null ?
                                                 $vacancy->passing_grade : 0}}</strong> passing grade&nbsp;&ndash;&nbsp;for&nbsp;&ndash;
                                                 <strong>{{$vacancy->quiz_applicant != null ?
-                                                $vacancy->quiz_applicant : 0}}</strong> applicants
+                                                $vacancy->quiz_applicant : 0}}</strong> participants
                                             </li>
                                             <li>
                                                 Psycho Test for <strong>{{$vacancy->psychoTest_applicant != null ?
-                                                $vacancy->psychoTest_applicant : 0}}</strong> applicants
+                                                $vacancy->psychoTest_applicant : 0}}</strong> participants
                                             </li>
                                         </ul>
                                     </li>

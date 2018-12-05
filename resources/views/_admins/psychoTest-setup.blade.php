@@ -40,13 +40,9 @@
                                     $userAgency = $agency->user;
                                     $ava = $userAgency->ava == ""||$userAgency->ava == "agency.png" ?
                                     asset('images/agency.png') : asset('storage/users/'.$userAgency->ava);
-                                    $city = \App\Cities::find($vacancy->cities_id)->name;
-                                    $salary = \App\Salaries::find($vacancy->salary_id);
-                                    $jobfunc = \App\FungsiKerja::find($vacancy->fungsikerja_id);
-                                    $joblevel = \App\JobLevel::find($vacancy->joblevel_id);
-                                    $industry = \App\Industri::find($vacancy->industry_id);
-                                    $degrees = \App\Tingkatpend::find($vacancy->tingkatpend_id);
-                                    $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
+                                    $participants = \App\QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)
+                                    ->where('isPassed', true)->orderByDesc('score')
+                                    ->take($vacancy->psychoTest_applicant)->count();
                                 @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
@@ -126,70 +122,27 @@
                                         <hr style="margin: .5em auto">
                                         <table>
                                             <tr>
-                                                <td><i class="fa fa-warehouse"></i>&nbsp;</td>
-                                                <td>Job Function</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$jobfunc->nama}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-industry"></i>&nbsp;</td>
-                                                <td>Industry</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$industry->nama}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-level-up-alt"></i>&nbsp;</td>
-                                                <td>Job Level</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$joblevel->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-money-bill-wave"></i>&nbsp;</td>
-                                                <td>Salary</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>IDR {{$salary->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-graduation-cap"></i>&nbsp;</td>
-                                                <td>Education Degree</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$degrees->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-user-graduate"></i>&nbsp;</td>
-                                                <td>Education Major</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$majors->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-briefcase"></i>&nbsp;</td>
-                                                <td>Work Experience</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>
-                                                    At least {{$vacancy->pengalaman > 1 ?
-                                                    $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-paper-plane"></i></td>
+                                                <td><i class="fa fa-paper-plane"></i>&nbsp;</td>
                                                 <td>Total Applicant</td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td><strong>{{\App\Accepting::where('vacancy_id',$vacancy->id)
-                                                ->where('isApply',true)->count()}}</strong> applicants
+                                                <td>{{\App\Accepting::where('vacancy_id',$vacancy->id)
+                                                ->where('isApply',true)->count()}} applicants
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td><i class="fa fa-grin-beam"></i></td>
-                                                <td>Quiz with {{$vacancy->passing_grade}} passing grade</td>
+                                                <td><i class="fa fa-grin-beam"></i>&nbsp;</td>
+                                                <td>Total Participant for Quiz with {{$vacancy->passing_grade}} passing
+                                                    grade
+                                                </td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$vacancy->quiz_applicant}} applicants
+                                                <td>{{$vacancy->quiz_applicant}} persons
                                                 </td>
                                             </tr>
                                             <tr style="font-weight: 600">
-                                                <td><i class="fa fa-comments"></i></td>
-                                                <td>Total Applicant for Psycho Test</td>
+                                                <td><i class="fa fa-comments"></i>&nbsp;</td>
+                                                <td>Total Participant for Psycho Test</td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td><strong>{{$vacancy->psychoTest_applicant}}</strong> applicants</td>
+                                                <td>{{$vacancy->psychoTest_applicant}} persons</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -206,9 +159,9 @@
                                             @endforeach
                                         </ol>
                                     </td>
-                                    <td align="center">
+                                    <td style="vertical-align: middle" align="center">
                                         <a onclick="editPsychoTest('{{$info->id}}','{{implode(",",$info->room_codes)}}',
-                                                '{{$vacancy->id}}','{{$vacancy->psychoTest_applicant}}')"
+                                                '{{$vacancy->id}}','{{$participants}}')"
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
@@ -236,10 +189,13 @@
                                                 data-selected-text-format="count > 3" name="vacancy_ids[]"
                                                 multiple required>
                                             @foreach($vacancies as $vacancy)
-                                                <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
+                                                <option value="{{$vacancy->id}}" {{$vacancy->getPsychoTestInfo != null ?
+                                                "disabled" : ""}}>{{$vacancy->judul}}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                    <span style="color: #fa5555">P.S.: You can only select vacancy that its psycho test hasn't
+                                        been set yet and its quiz date has been ended.</span>
                                 </div>
                             </div>
                             <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
@@ -321,6 +277,7 @@
             $("#vacancy_id").selectpicker('refresh');
             $("#vacancySetupDivider").css('display', 'block');
         });
+
         @endif
 
         function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date) {
@@ -369,7 +326,7 @@
 
         function loadVacancyData($id) {
             $.ajax({
-                url: '{{route('quiz.vacancy.info',['id' => ''])}}/' + $id,
+                url: '{{route('psychoTest.vacancy.info',['id' => ''])}}/' + $id,
                 type: "GET",
                 data: $("#vacancy_id"),
                 beforeSend: function () {
@@ -381,7 +338,7 @@
                     $('#input-psychoTest-setup').show();
                 },
                 success: function (data) {
-                    var input_psychoTest_setup = '', input_roomCode = '';
+                    var input_psychoTest_setup = '';
                     $.each(data, function (i, val) {
                         input_psychoTest_setup +=
                             '<div class="row form-group" style="margin-bottom: 0;margin-top: 1.5em">' +
@@ -389,12 +346,12 @@
                             '</div></div>' +
                             '<div class="row form-group">' +
                             '<div class="col-lg-12">' +
-                            '<label for="candidates">Total Candidate <span class="required">*</span></label>' +
+                            '<label for="participant">Total Participant <span class="required">*</span></label>' +
                             '<div class="input-group">' +
                             '<span class="input-group-addon"><i class="fa fa-users"></i></span>' +
-                            '<input id="candidates' + val.id + '" type="text" class="form-control" ' +
-                            'placeholder="' + val.psychoTest_applicant + '" ' +
-                            'onblur="totalRoom(' + val.id + ',' + val.psychoTest_applicant + ')" required></div>' +
+                            '<input id="participant' + val.id + '" type="text" class="form-control" ' +
+                            'placeholder="' + val.participant + '" ' +
+                            'onblur="totalRoom(' + val.id + ',' + val.participant + ')" required></div>' +
                             '</div></div>' +
                             '<div class="row form-group" id="input_roomCode' + val.id + '"></div>';
                     });
@@ -413,33 +370,32 @@
             return false;
         }
 
-        function totalRoom(id, candidates) {
-            if ($("#candidates" + id).val() != candidates) {
-                $("#candidates" + id).val(candidates);
-                var i = 1, input_roomCode = '';
-                for (i; i <= candidates; i++) {
-                    input_roomCode +=
-                        '<div class="col-lg-4">' +
-                        '<label for="room_code">Room Code #' + i + '<span class="required">*</span></label>' +
-                        '<div class="input-group">' +
-                        '<span class="input-group-btn">' +
-                        '<button type="button" class="btn btn-dark psychoTestCodes" ' +
-                        'onclick="generateCodeBtn(' + id + ', ' + i + ')">' +
-                        '<i class="fa fa-sync"></i></button></span>' +
-                        '<input id="room_code' + id + '-' + i + '" name="room_codes[' + id + '][]" type="text" ' +
-                        'class="form-control" readonly required>' +
-                        '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
-                        '</div></div>';
-                }
-                $("#input_roomCode" + id).html(input_roomCode);
-                $(".psychoTestCodes").click();
+        function totalRoom(id, participants) {
+            var i = 1, input_roomCode = '';
 
-            } else {
-                $("#input_roomCode" + id).html('');
+            if ($("#participant" + id).val() != participants) {
+                $("#participant" + id).val(participants);
             }
+            for (i; i <= participants; i++) {
+                input_roomCode +=
+                    '<div class="col-lg-4">' +
+                    '<label for="room_code">Room Code #' + i + '<span class="required">*</span></label>' +
+                    '<div class="input-group">' +
+                    '<span class="input-group-btn">' +
+                    '<button type="button" class="btn btn-dark psychoTestCodes" ' +
+                    'onclick="generateCodeBtn(' + id + ', ' + i + ')">' +
+                    '<i class="fa fa-sync"></i></button></span>' +
+                    '<input id="room_code' + id + '-' + i + '" name="room_codes[' + id + '][]" ' +
+                    'type="text" class="form-control" readonly required>' +
+                    '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
+                    '</div></div>';
+
+            }
+            $("#input_roomCode" + id).html(input_roomCode);
+            $(".psychoTestCodes").click();
         }
 
-        function editPsychoTest(id, room_codes, vacID, candidates) {
+        function editPsychoTest(id, room_codes, vacID, participant) {
             $(".btn_psychoTest i").toggleClass('fa-plus fa-th-list');
             $(".btn_psychoTest[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
                 return v === "Create" ? "View" : "Create";
@@ -456,11 +412,11 @@
             $("#input-psychoTest-setup").html(
                 '<div class="row form-group">' +
                 '<div class="col-lg-12">' +
-                '<label for="candidates">Total Candidate <span class="required">*</span></label>' +
+                '<label for="participant">Total Participant <span class="required">*</span></label>' +
                 '<div class="input-group">' +
                 '<span class="input-group-addon"><i class="fa fa-users"></i></span>' +
-                '<input id="candidates' + id + '" type="text" class="form-control" placeholder="' + candidates + '" ' +
-                'value="' + candidates + '" disabled required></div>' +
+                '<input id="participant' + id + '" type="text" class="form-control" placeholder="' + participant + '" ' +
+                'value="' + participant + '" disabled required></div>' +
                 '</div></div>' +
                 '<div class="row form-group" id="input_roomCode' + id + '"></div>'
             );
@@ -489,8 +445,8 @@
             $("#form-psychoTest-setup").attr("action", "{{ url('admin/psychoTest') }}/" + id + "/update");
         }
 
-        function generateCodeBtn(vacID, candidateID) {
-            $("#room_code" + vacID + "-" + candidateID).val(vacID + generateCode() + candidateID);
+        function generateCodeBtn(vacID, participantID) {
+            $("#room_code" + vacID + "-" + participantID).val(vacID + generateCode() + participantID);
         }
 
         $("#form-psychoTest-setup").on("submit", function (e) {

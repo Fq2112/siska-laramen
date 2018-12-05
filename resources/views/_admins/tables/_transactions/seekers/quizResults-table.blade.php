@@ -37,8 +37,8 @@
                                 <th>ID</th>
                                 <th>Code</th>
                                 <th>Details</th>
-                                <th>Passing Grade</th>
                                 <th>Score</th>
+                                <th>Status</th>
                             </tr>
                             </thead>
 
@@ -50,9 +50,9 @@
                                     $userSeeker = \App\User::find($seeker->user_id);
                                     $last_edu = \App\Education::where('seeker_id', $seeker->id)
                                     ->wherenotnull('end_period')->orderby('tingkatpend_id', 'desc')->take(1)->get();
-                                    $vacancy = \App\Vacancies::find($info->getVacancy->id);
-                                    $agency = \App\Agencies::find($vacancy->agency_id);
-                                    $userAgency = \App\User::find($agency->user_id);
+                                    $vacancy = $info->getVacancy;
+                                    $agency = $vacancy->agencies;
+                                    $userAgency = $agency->user;
                                     $city = \App\Cities::find($vacancy->cities_id)->name;
                                     $degrees = \App\Tingkatpend::find($vacancy->tingkatpend_id);
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
@@ -280,13 +280,37 @@
                                                 </td>
                                             </tr>
                                         </table>
+                                        @if($vacancy->getPlan->isQuiz == true)
+                                            <table>
+                                                <tr>
+                                                    <td>Total Participant for Quiz with <strong>{{$vacancy
+                                                    ->passing_grade}}</strong> passing grade
+                                                    </td>
+                                                    <td>&nbsp;:&nbsp;</td>
+                                                    <td>
+                                                        <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == false ? '800' : 'normal'}}">{{$vacancy->quiz_applicant}}</span>
+                                                        participants
+                                                    </td>
+                                                </tr>
+                                                @if($vacancy->getPlan->isPsychoTest == true)
+                                                    <tr>
+                                                        <td>Total Participant for Psycho Test</td>
+                                                        <td>&nbsp;:&nbsp;</td>
+                                                        <td>
+                                                            <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == true ? '800' : 'normal'}}">{{$vacancy->psychoTest_applicant}}</span>
+                                                            participants
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            </table>
+                                        @endif
                                     </td>
-                                    <td style="vertical-align: middle;font-weight: 600;text-align: center">{{$info->getVacancy->passing_grade}}</td>
+                                    <td style="vertical-align: middle;font-weight: 600;text-align: center">{{$result->score}}</td>
                                     <td style="vertical-align: middle" align="center">
                                         <span class="label label-default" style="background: {{$result->score >= $info
                                         ->getVacancy->passing_grade ? '#00adb5' : '#fa5555'}};font-size: 14px;">
-                                            <i class="fa fa-{{$result->score >= $info->getVacancy->passing_grade ?
-                                            'grin-beam' : 'sad-cry'}}"></i>&ensp;{{$result->score}}
+                                            <i class="fa fa-{{$result->isPassed == true ? 'grin-beam' : 'sad-cry'}}">
+                                            </i>&ensp;{{$result->isPassed == true ? 'PASSED' : 'NOT PASSED'}}
                                         </span>
                                     </td>
                                 </tr>

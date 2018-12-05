@@ -492,14 +492,26 @@
                                         <tr>
                                             <td>
                                                 <div class="alert alert-info text-center">
-                                                    Download <strong>the attached pdf file</strong> to check the
-                                                    quiz result list of your vacancy.
+                                                    @php $plan = \App\Plan::find($vacancy['plan_id']); @endphp
+                                                    @if($plan->isPsychoTest == true)
+                                                        We're only send the best quiz results based on the
+                                                        <strong>passing grade</strong> and the amount of
+                                                        <strong>psycho test participants</strong> of your vacancy that
+                                                        you've set in the job posting process.
+                                                    @else
+                                                        We're only send the best quiz results based on the
+                                                        <strong>passing grade</strong> and the amount of
+                                                        <strong>quiz participants</strong> of your vacancy that
+                                                        you've set in the job posting process.
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <div style="font-size:20px;line-height:20px;">&nbsp;</div>
+                                                <div class="alert alert-warning text-center">
+                                                    Download <strong>the attached pdf file</strong> to check it.
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>

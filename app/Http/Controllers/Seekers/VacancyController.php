@@ -145,10 +145,9 @@ class VacancyController extends Controller
         $exp = Experience::where('seeker_id', $seeker->id)->get();
 
         $reqExp = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
-        $reqEdu = $vacancy->tingkatpend_id;
-        $checkEdu = Seekers::wherehas('educations', function ($query) use ($reqEdu) {
-            $query->where('tingkatpend_id', '>=', $reqEdu);
-        })->where('user_id', Auth::user()->id)->count();
+        $checkEdu = Education::whereHas('seekers', function ($seeker) {
+            $seeker->where('user_id', Auth::user()->id);
+        })->where('tingkatpend_id', '>=', $vacancy->tingkatpend_id)->wherenotnull('end_period')->count();
 
         if (count($edu) == 0 || count($exp) == 0 || $seeker->phone == "" || $seeker->address == "" ||
             $seeker->birthday == "" || $seeker->gender == "") {

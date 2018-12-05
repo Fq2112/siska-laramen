@@ -119,13 +119,13 @@
                                                                     <li>Quiz with <strong>{{$vacancy->passing_grade !=
                                                                     null ? $vacancy->passing_grade : 0}}
                                                                         </strong> passing grade&nbsp;&ndash;&nbsp;for&nbsp;&ndash;
-                                                                        <strong>{{$vacancy ->quiz_applicant != null ?
+                                                                        <strong>{{$vacancy->quiz_applicant != null ?
                                                                         $vacancy->quiz_applicant : 0}}
-                                                                        </strong> applicants
+                                                                        </strong> participants
                                                                     </li>
                                                                     <li>Psycho Test for <strong>{{$vacancy
                                                                     ->psychoTest_applicant != null ? $vacancy
-                                                                    ->psychoTest_applicant : 0}}</strong> applicants
+                                                                    ->psychoTest_applicant : 0}}</strong> participants
                                                                     </li>
                                                                 </ul>
                                                             </li>
@@ -190,15 +190,13 @@
                                             <input type="hidden" name="isPaid" id="input_isPaid{{$posting->id}}">
                                             <input type="hidden" name="isAbort" id="input_isAbort{{$posting->id}}">
                                             <input type="hidden" name="isQuiz" id="input_isQuiz{{$posting->id}}">
-                                            <input type="hidden" name="isPsychoTest"
-                                                   id="input_isPsychoTest{{$posting->id}}">
                                         </form>
                                         <div class="btn-group">
                                             @if(now() <= $posting->created_at->addDay())
                                                 <button type="button" class="btn btn-success btn-sm"
                                                         style="font-weight: 600"
                                                         onclick="approving('{{$posting->id}}','{{$invoice}}',
-                                                                '{{$plan->isQuiz}}','{{$plan->isPsychoTest}}')"
+                                                                '{{$plan->isQuiz}}')"
                                                         {{$posting->isPaid == false ? '' : 'disabled'}}>
                                                     {{$posting->isPaid == false ? 'APPROVE' : 'APPROVED'}}
                                                 </button>
@@ -265,7 +263,7 @@
 
                 preConfirm: function () {
                     return new Promise(function (resolve) {
-                        window.location.href = '{{route('quiz.info')}}?vac_ids={{session('vac_ids')}}&psychoTest={{old('isPsychoTest')}}&invoice={{old('invoice')}}';
+                        window.location.href = '{{route('quiz.info')}}?vac_ids={{session('vac_ids')}}';
                     });
                 },
                 allowOutsideClick: false
@@ -283,7 +281,7 @@
             $("#paymentProofModal").modal('show');
         }
 
-        function approving(id, invoice, isQuiz, isPsychoTest) {
+        function approving(id, invoice, isQuiz) {
             swal({
                 title: 'Vacancy Approval #' + invoice,
                 text: 'The status of the vacancy in this invoice will be change into "ACTIVE". Are you sure to approve it?',
@@ -298,7 +296,6 @@
                         $("#input_isPaid" + id).val(1);
                         $("#input_isAbort" + id).val(0);
                         $("#input_isQuiz" + id).val(isQuiz);
-                        $("#input_isPsychoTest" + id).val(isPsychoTest);
                         $("#form-approval" + id)[0].submit();
                     });
                 },

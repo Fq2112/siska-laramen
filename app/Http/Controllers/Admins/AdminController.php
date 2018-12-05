@@ -11,12 +11,12 @@ use App\Feedback;
 use App\Http\Controllers\Controller;
 use App\PsychoTestInfo;
 use App\QuizInfo;
+use App\QuizResult;
 use App\QuizType;
 use App\Seekers;
 use App\User;
 use App\Vacancies;
 use Illuminate\Http\Request;
-use Twilio\Rest\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -146,16 +146,11 @@ class AdminController extends Controller
 
         if ($request->has("vac_ids")) {
             $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
-            $isPsychoTest = $request->psychoTest;
-            $invoice = $request->invoice;
         } else {
             $findVac = null;
-            $isPsychoTest = null;
-            $invoice = null;
         }
 
-        return view('_admins.quiz-setup', compact('infos', 'types', 'vacancies',
-            'findVac', 'isPsychoTest', 'invoice'));
+        return view('_admins.quiz-setup', compact('infos', 'types', 'vacancies', 'findVac'));
     }
 
     public function getQuizVacancyInfo($id)
@@ -216,7 +211,10 @@ class AdminController extends Controller
         $infos = PsychoTestInfo::orderByDesc('id')->get();
         $vacancies = Vacancies::whereHas('getPlan', function ($query) {
             $query->where('isPsychoTest', true);
-        })->where('isPost', true)->get();
+        })->whereHas('getQuizInfo', function ($quiz) {
+            $quiz->whereHas('getQuizResult');
+        })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+            ->whereDate('quizDate_end', '<=', today())->get();
 
         if ($request->has("vac_ids")) {
             $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
@@ -225,6 +223,22 @@ class AdminController extends Controller
         }
 
         return view('_admins.psychoTest-setup', compact('infos', 'vacancies', 'findVac'));
+    }
+
+    public function getPsychoTestVacancyInfo($id)
+    {
+        $vacancies = Vacancies::whereIn('id', explode(',', $id))->get()->toArray();
+        $i = 0;
+        $arr = [];
+        foreach ($vacancies as $vacancy) {
+            $info = QuizInfo::where('vacancy_id', $vacancy['id'])->first();
+            $participant = array("participant" => count(QuizResult::where('quiz_id', $info->id)->where('isPassed', true)
+                ->orderByDesc('score')->take($vacancy['psychoTest_applicant'])->get()));
+
+            $arr[$i] = array_replace($vacancies[$i], $participant);
+            $i = $i + 1;
+        }
+        return $arr;
     }
 
     public function createPsychoTestInfo(Request $request)

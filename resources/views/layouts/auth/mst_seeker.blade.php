@@ -36,17 +36,17 @@
 @section('content')
     @php
         $totalApp = \App\Accepting::wherehas('getVacancy', function ($q) {
-            $q->where('isPost', true);
+            $q->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end');
         })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
 
         $quizInv = \App\Accepting::wherehas('getVacancy', function ($q) {
-            $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+            $q->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
             ->where('quizDate_start', '<=', today()->addDay())
             ->where('quizDate_end', '>=', today());
         })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
 
         $submittedQuizInv = \App\Accepting::wherehas('getVacancy', function ($q) use ($seeker) {
-            $q->where('isPost', true)->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
+            $q->wherenotnull('quizDate_start')->wherenotnull('quizDate_end')
             ->where('quizDate_start', '<=', today()->addDay())
             ->where('quizDate_end', '>=', today())
             ->whereHas('getQuizInfo', function ($q) use ($seeker){
@@ -58,21 +58,49 @@
 
         $totalQuizInv = $quizInv - $submittedQuizInv;
 
+        $psychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+            $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                    $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                });
+            })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+            ->where('psychoTestDate_start', '<=', today()->addDay())
+            ->where('psychoTestDate_end', '>=', today());
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
+        $submittedPsychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
+            $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+                $info->whereHas('getQuizResult', function ($res) use ($seeker) {
+                    $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                });
+            })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+            ->where('psychoTestDate_start', '<=', today()->addDay())
+            ->where('psychoTestDate_end', '>=', today())
+            ->whereHas('getPsychoTestInfo', function ($q) use ($seeker){
+                $q->whereHas('getPsychoTestResult', function ($q) use ($seeker){
+                    $q->where('seeker_id', $seeker->id);
+                });
+            });
+        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+
+        $totalPsychoTestInv = $psychoTestInv - $submittedPsychoTestInv;
+
+        $totalExp = $seeker->total_exp != "" ? $seeker->total_exp : 0;
         $degrees = array();
-        foreach ($seeker->educations as $education) {
-            $degrees[] = $education->tingkatpend_id;
-        }
-        if ($seeker->total_exp == "") {
-            $totalExp = 0;
-        } else {
-            $totalExp = $seeker->total_exp;
-        }
-        $rec = \App\Vacancies::where('isPost', true)->where('pengalaman', '<=', $totalExp)
-        ->where(function ($query) use ($degrees) {
-            foreach ($degrees as $degree) {
-                $query->orWhere('tingkatpend_id', '<=', $degree);
+        $educations = \App\Education::whereHas('seekers', function ($q) {
+            $q->where('user_id', Auth::user()->id);
+        })->wherenotnull('end_period')->get();
+        if (count($educations) > 0) {
+            foreach ($educations as $education) {
+                $degrees[] = $education->tingkatpend_id;
             }
-        })->count();
+        }
+
+        $rec = \App\Vacancies::where(function ($query) use ($degrees) {
+                foreach ($degrees as $degree) {
+                    $query->orWhere('tingkatpend_id', '<=', $degree);
+                }
+        })->where('isPost', true)->where('pengalaman', '<=', $totalExp)->count();
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">
@@ -103,7 +131,8 @@
                                             </li>
                                             <li><a href="{{route('seeker.invitation.psychoTest')}}">Psycho Test
                                                     Invitation
-                                                    <span class="badge" style="background: #FA5555;">0</span></a>
+                                                    <span class="badge"
+                                                          style="background: #FA5555;">{{$totalPsychoTestInv > 999 ? '999+' : $totalPsychoTestInv}}</span></a>
                                             </li>
                                             <li><a href="{{route('seeker.jobInvitation')}}">Job Invitation
                                                     <span class="badge" style="background: #FA5555;">

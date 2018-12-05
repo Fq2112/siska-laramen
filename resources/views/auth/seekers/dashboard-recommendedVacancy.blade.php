@@ -288,16 +288,9 @@
                 $pengalaman = val.pengalaman > 1 ? 'At least ' + val.pengalaman + ' years' :
                     'At least ' + val.pengalaman + ' year';
 
-                if (val.plan_id == 1) {
-                    $style_quiz = 'none';
-                    $style_psychoTest = 'none';
-                } else if (val.plan_id == 2) {
-                    $style_quiz = '';
-                    $style_psychoTest = 'none';
-                } else if (val.plan_id == 3) {
-                    $style_quiz = '';
-                    $style_psychoTest = '';
-                }
+                $style_quiz = val.isQuiz == 1 ? '' : 'none';
+                $style_psychoTest = val.isPsychoTest == 1 ? '' : 'none';
+
                 $result +=
                     '<div class="media">' +
                     '<div class="media-left media-middle">' +
@@ -415,12 +408,12 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    var today = new Date().toJSON().slice(0, 10), $pengalaman;
-                    if (data.pengalaman > 1) {
-                        $pengalaman = 'At least ' + data.pengalaman + ' years';
-                    } else {
-                        $pengalaman = 'At least ' + data.pengalaman + ' year';
-                    }
+                    var today = new Date().toJSON().slice(0, 10),
+                        $pengalaman = data.pengalaman > 1 ? 'At least ' + data.pengalaman + ' years' :
+                            'At least ' + data.pengalaman + ' year',
+                        $style_quiz = data.isQuiz == 1 ? '' : 'none',
+                        $style_psychoTest = data.isPsychoTest == 1 ? '' : 'none';
+
                     $('#inviteSeeker').html(
                         '<form action = "{{route('apply.vacancy')}}" method = "post" id = "form-apply-' + id + '" > ' +
                         '{{csrf_field()}}' +
@@ -458,11 +451,19 @@
                         'class="tag"><i class="fa fa-graduation-cap"></i>&ensp;' + data.degrees + '</a></li>' +
                         '<li><a target="_blank" href="{{route('search.vacancy',['majors_ids'=>''])}}' + data.jurusanpend_id + '" ' +
                         'class="tag"><i class="fa fa-user-graduate"></i>&ensp;' + data.majors + '</a></li>' +
-                        '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li></ul>' +
+                        '<li><a class="tag"><i class="fa fa-briefcase"></i>&ensp;' + $pengalaman + '</a></li>' +
+                        '<li><a class="tag tag-plans"><i class="fa fa-paper-plane"></i>&ensp;' +
+                        '<strong>' + data.total_app + '</strong> applicants</a></li></ul>' +
                         '<table style="font-size: 14px;margin-top: -.5em">' +
                         '<tr><td><i class="fa fa-users"></i></td>' +
                         '<td>&nbsp;Recruitment Date</td>' +
                         '<td>: ' + data.recruitment_date + '</td></tr>' +
+                        '<tr style="display: ' + $style_quiz + '"><td><i class="fa fa-grin-beam"></i></td>' +
+                        '<td>&nbsp;Online Quiz (TPA & TKD) Date</td>' +
+                        '<td>: ' + data.quizDate + '</td></tr>' +
+                        '<tr style="display: ' + $style_psychoTest + '"><td><i class="fa fa-comments"></i></td>' +
+                        '<td>&nbsp;Psycho Test (Online Interview) Date</td>' +
+                        '<td>: ' + data.psychoTestDate + '</td></tr>' +
                         '<tr><td><i class="fa fa-comments"></i></td>' +
                         '<td>&nbsp;Interview Date</td>' +
                         '<td>: ' + data.interview_date + '</td></tr>' +

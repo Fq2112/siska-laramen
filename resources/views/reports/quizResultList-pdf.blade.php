@@ -69,7 +69,7 @@
                 </ul>
             </td>
             <td style="vertical-align: middle;text-align: center;font-weight: 600">{{$info->getVacancy->passing_grade}}</td>
-            <td style="vertical-align: middle;text-align: center;font-weight: 600;color: {{$applicant['score'] >= $info->getVacancy->passing_grade ? '#00adb5' : '#fa5555'}}">{{$applicant['score']}}</td>
+            <td style="vertical-align: middle;text-align: center;font-weight: 600;">{{$applicant['score']}}</td>
         </tr>
     @endforeach
 </table>

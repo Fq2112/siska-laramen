@@ -57,6 +57,7 @@
                                     $applicants = \App\Accepting::where('vacancy_id', $vacancy->id)
                                     ->where('isApply', true)->count();
                                     $psychoTest = $vacancy->getPsychoTestInfo;
+                                    $room = array_random($psychoTest->room_codes);
                                 @endphp
                                 <div class="media to-animate">
                                     <div class="media-left media-middle">
@@ -86,11 +87,11 @@
                                             <div class="pull-right to-animate-2">
                                                 <div class="anim-icon anim-icon-md psychoTest {{today() < $vacancy
                                                 ->psychoTestDate_start ? '' : 'ld ld-breath'}}"
-                                                     onclick="showPsychoTest('{{$row->id}}',
-                                                             '{{$psychoTest->room_code}}','{{$vacancy->judul}}',
-                                                             '{{$vacancy->psychoTestDate_start}}','{{$ava}}',
-                                                             '{{$userAgency->name}}','{{$vacancy->id}}',
-                                                             '{{$psychoTestDate}}')"
+                                                     onclick="showPsychoTest('{{$row->id}}','{{$room}}',
+                                                             '{{$vacancy->judul}}','{{$vacancy->psychoTestDate_start}}',
+                                                             '{{$ava}}','{{$userAgency->name}}','{{$vacancy->id}}',
+                                                             '{{$psychoTestDate}}','{{encrypt($psychoTest->id)}}',
+                                                             '{{$vacancy->psychoTest_applicant}}')"
                                                      data-toggle="tooltip" data-placement="bottom"
                                                      style="font-size: 25px" title="Enter Room">
                                                     <input id="psychoTest{{$row->id}}" type="checkbox" checked>
@@ -269,7 +270,8 @@
                     <div class="card-read-more">
                         <form method="post" id="form-access-psychoTest" action="{{route('join.psychoTest.room')}}">
                             {{csrf_field()}}
-                            <input id="room_code" type="hidden" name="room_code">
+                            <input id="psychoTest_id" type="hidden" name="psychoTest_id">
+                            <input id="accessCode" type="hidden" name="accessCode">
                             <button class="btn btn-link btn-block" type="button">
                                 <i class="fa fa-comments"></i>&ensp;Enter Room
                             </button>
@@ -286,14 +288,15 @@
             $("#form-time")[0].submit();
         });
 
-        function showPsychoTest(id, code, judul, start, ava, name, vacID, date) {
+        function showPsychoTest(id, code, judul, start, ava, name, vacID, date, encryptID, candidates) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
             $("#psychoTestDate").html('<i class="fa fa-comments"></i>&ensp;Psycho Test Date: <strong>' + date + '</strong>');
-            $("#psychoTestCode").html('<i class="fa fa-shield-alt"></i>&ensp;Room Code: <strong>' + code + '</strong>');
+            $("#psychoTestCode").html('<i class="fa fa-users"></i>&ensp;Room Code: <strong>' + code + '</strong>');
 
-            $("#room_code").val(code);
+            $("#psychoTest_id").val(encryptID);
+            $("#accessCode").val(code);
             $("#psychoTestModal").modal('show');
 
             $(document).on('hide.bs.modal', '#psychoTestModal', function (event) {
