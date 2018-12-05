@@ -20,6 +20,7 @@ class CreateQuizResultsTable extends Migration
             $table->integer('seeker_id')->unsigned();
             $table->foreign('seeker_id')->references('id')->on('seekers');
             $table->decimal('score', 8, 2);
+            $table->boolean('isPassed')->default(false);
             $table->timestamps();
         });
     }

@@ -17,6 +17,8 @@ class CreatePsychoTestResultsTable extends Migration
             $table->increments('id');
             $table->integer('psychoTest_id')->unsigned();
             $table->foreign('psychoTest_id')->references('id')->on('psycho_test_infos');
+            $table->integer('admin_id')->unsigned();
+            $table->foreign('admin_id')->references('id')->on('admins');
             $table->integer('seeker_id')->unsigned();
             $table->foreign('seeker_id')->references('id')->on('seekers');
             $table->integer('kompetensi');
@@ -25,8 +27,7 @@ class CreatePsychoTestResultsTable extends Migration
             $table->integer('grooming');
             $table->integer('komunikasi');
             $table->integer('anthusiasme');
-            $table->integer('admin_id')->unsigned();
-            $table->foreign('admin_id')->references('id')->on('admins');
+            $table->boolean('isPassed')->default(false);
             $table->timestamps();
         });
     }

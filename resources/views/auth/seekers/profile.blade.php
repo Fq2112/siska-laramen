@@ -54,7 +54,7 @@
                                             <table style="font-size: 14px; margin-top: 0">
                                                 <tr>
                                                     <td><i class="fa fa-image"></i></td>
-                                                    <td>
+                                                    <td id="show_background_name">
                                                         &nbsp;{{$seeker->background != "" ? $seeker->background : '(empty)'}}
                                                     </td>
                                                 </tr>

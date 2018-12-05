@@ -239,7 +239,7 @@ class AccountController extends Controller
                 $request->background->storeAs('public/users/seekers/background', $name);
                 $seeker->update(['background' => $name]);
 
-                return asset('storage/users/seekers/background/' . $name);
+                return $name;
             }
         }
     }

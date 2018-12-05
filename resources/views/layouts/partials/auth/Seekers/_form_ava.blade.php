@@ -23,7 +23,7 @@
                 @endif
             </label>
             <input id="file-input" name="ava" type="file" accept="image/*">
-            <div id="progress-upload">
+            <div id="progress-upload-ava">
                 <div class="progress-bar progress-bar-danger progress-bar-striped active"
                      role="progressbar" aria-valuenow="0"
                      aria-valuemin="0" aria-valuemax="100">

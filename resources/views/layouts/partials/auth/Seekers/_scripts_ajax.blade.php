@@ -125,8 +125,9 @@
                                         return xhr;
                                     },
                                     success: function (data) {
-                                        var url = "url(" + data + ")";
+                                        var url = 'url("{{asset('storage/users/seekers/background')}}/' + data + '")';
                                         $(".show_background").css('background-image', url);
+                                        $("#show_background_name").html("&nbsp;" + data);
                                         swal({
                                             title: 'Background Settings',
                                             text: 'Successfully update background!',
@@ -163,7 +164,7 @@
             var files_size = this.files[0].size,
                 max_file_size = 2000000, allowed_file_types = ['image/png', 'image/gif', 'image/jpeg', 'image/pjpeg'],
                 file_name = $(this).val().replace(/C:\\fakepath\\/i, ''),
-                progress_bar_id = $("#progress-upload .progress-bar");
+                progress_bar_id = $("#progress-upload-ava .progress-bar");
 
             if (!window.File && window.FileReader && window.FileList && window.Blob) {
                 swal({
@@ -210,7 +211,7 @@
                                                     percent = Math.ceil(position / total * 100);
                                                 }
                                                 //update progressbar
-                                                $("#progress-upload").css("display", "block");
+                                                $("#progress-upload-ava").css("display", "block");
                                                 progress_bar_id.css("width", +percent + "%");
                                                 progress_bar_id.text(percent + "%");
                                                 if (percent == 100) {
@@ -232,7 +233,7 @@
                                             type: 'success',
                                             timer: '3500'
                                         });
-                                        $("#progress-upload").css("display", "none");
+                                        $("#progress-upload-ava").css("display", "none");
                                     },
                                     error: function () {
                                         swal({

@@ -1,5 +1,6 @@
 @extends('layouts.mst_user')
-@section('title', 'Online Quiz (TPA and TKD): Quiz Code #'.$quiz->unique_code.' &mdash; '.$vacancy->judul.' - '.$agency->name.' | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Online Quiz (TPA and TKD): Quiz Code #'.$quiz->unique_code.' &mdash; '.$vacancy->judul.' - '.
+$agency->user->name.' | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/quiz.css')}}">
     <link rel="stylesheet" href="{{asset('css/bubble-button.css')}}">
@@ -15,7 +16,7 @@
                             <div class="col-md-8 col-md-offset-2 subtext">
                                 <h3 class="to-animate">
                                     Quiz Code #<strong>{{$quiz->unique_code}}</strong>: {{$vacancy->judul.' - '.
-                                    $userAgency->name}}</h3>
+                                    $agency->user->name}}</h3>
                             </div>
                         </div>
                     </div>
@@ -96,18 +97,16 @@
                                                                              style="margin-left: 5px"></span>
                                     </div>
                                     @foreach($questions as $question)
-                                        @php $options = \App\QuizOptions::where('question_id',$question->id)->get()
-                                        ->shuffle()->all(); @endphp
                                         <div class="mm-survey-page" data-page="{{$no++}}">
                                             <div class="mm-survery-content">
                                                 <div class="mm-survey-question">
                                                     {!!$question->question_text!!}
                                                 </div>
-                                                @foreach($options as $option)
+                                                @foreach($question->getQuizOption->shuffle()->all() as $option)
                                                     <div class="mm-survey-item">
-                                                        <input type="radio" id="op{{$option->id}}"
-                                                               data-item="2112" name="options"
-                                                               class="op{{$question->id}}" value="{{$option->option}}">
+                                                        <input type="radio" id="op{{$option->id}}" name="options"
+                                                               data-item="2112" class="op{{$question->id}}"
+                                                               value="{{$option->option}}">
                                                         <label for="op{{$option->id}}"><span></span>
                                                             <p>{{$option->option}}</p></label>
                                                     </div>
@@ -234,20 +233,17 @@
                 if ($('.mm-page-' + count).hasClass('active')) {
                     if ($('.mm-page-' + count).hasClass('pass')) {
                         $('.mm-finish-btn').addClass('active');
-                    }
-                    else {
+                    } else {
                         $('.mm-page-' + count + ' .mm-survery-content .mm-survey-item').on('click', function () {
                             $('.mm-finish-btn').addClass('active');
                         });
                     }
-                }
-                else {
+                } else {
                     $('.mm-finish-btn').removeClass('active');
                     if ($('.mm-page-' + current).hasClass('pass')) {
                         $('.mm-survey-container').addClass('good');
                         $('.mm-survey').addClass('okay');
-                    }
-                    else {
+                    } else {
                         $('.mm-survey-container').removeClass('good');
                         $('.mm-survey').removeClass('okay');
                     }
@@ -276,8 +272,7 @@
                 if ($('.mm-page-' + current).hasClass('pass')) {
                     $('.mm-survey-container').addClass('good');
                     $('.mm-survey').addClass('okay');
-                }
-                else {
+                } else {
                     $('.mm-survey-container').removeClass('good');
                     $('.mm-survey').removeClass('okay');
                 }
@@ -292,8 +287,7 @@
         function buildProgress(g) {
             if (g > 1) {
                 g = g - 1;
-            }
-            else if (g === 0) {
+            } else if (g === 0) {
                 g = 1;
             }
             g = g * 100;
@@ -410,7 +404,7 @@
 
         function collectData() {
             $.ajax({
-                url: '{{route('load.quiz.answers',['id'=> $quiz->id])}}',
+                url: '{{route('load.quiz.answers', ['question_ids' => implode(',',$questions->pluck('id')->toArray())])}}',
                 type: "GET",
                 beforeSend: function () {
                     $('#image').show();
@@ -422,7 +416,8 @@
                 },
                 success: function (data) {
                     var map = {},
-                        o = JSON.parse(data), ax = Object.keys(o).map(function (k) {
+                        o = JSON.parse(data),
+                        ax = Object.keys(o).map(function (k) {
                             return o[k]
                         }),
                         answer = '', total = 0, ttl = 0, g, c = 0;
@@ -457,8 +452,7 @@
                                 g = map[i];
                                 p = 'correct';
                                 c = 1;
-                            }
-                            else {
+                            } else {
                                 answer_status = 'Your answer:';
                                 g = map[i];
                                 p = 'incorrect';
