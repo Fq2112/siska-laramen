@@ -187,8 +187,7 @@
                                                 data-selected-text-format="count > 3" name="vacancy_ids[]"
                                                 multiple required>
                                             @foreach($vacancies as $vacancy)
-                                                <option value="{{$vacancy->id}}" {{$vacancy->getPsychoTestInfo != null ?
-                                                "disabled" : ""}}>{{$vacancy->judul}}</option>
+                                                <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -310,8 +309,12 @@
             $("#btn_psychoTest_submit").html("<strong>SUBMIT</strong>");
 
             @foreach($vacancies as $vacancy)
-            $("#vacancy_id option[value='{{$vacancy->id}}']")
-                .attr('disabled', '{{$vacancy->getPsychoTestInfo != null ? "true" : "false"}}');
+            var options = $("#vacancy_id option[value='{{$vacancy->id}}']");
+            @if($vacancy->getPsychoTestInfo != null)
+            options.attr("disabled", "disabled");
+            @else
+            options.removeAttr("disabled");
+            @endif
             @endforeach
             $("#vacancy_id").val('default').attr('name', 'vacancy_ids[]')
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
@@ -442,7 +445,7 @@
             for (var i = 0; i < 3; i++)
                 text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-            return text;
+            return text + "_";
         }
     </script>
 @endpush

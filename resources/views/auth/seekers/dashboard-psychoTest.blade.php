@@ -8,22 +8,12 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <h4 style="margin-bottom: 10px">Psycho Test (Online Interview) Invitation</h4>
-                            <small>Here is the current and previous status of your psycho test invitations.</small>
+                            <small>Here is your psycho test invitation list.</small>
                             <hr>
                         </div>
                     </div>
                     <div class="row" style="margin-bottom: .5em">
-                        <div class="col-lg-3 to-animate-2">
-                            <form id="form-time" action="{{route('seeker.invitation.psychoTest')}}">
-                                <select class="form-control selectpicker" name="time" data-container="body">
-                                    <option value="1" {{$time == 1 ? 'selected' : ''}}>All Time</option>
-                                    <option value="2" {{$time == 2 ? 'selected' : ''}}>Today</option>
-                                    <option value="3" {{$time == 3 ? 'selected' : ''}}>Last 7 Days</option>
-                                    <option value="4" {{$time == 4 ? 'selected' : ''}}>Last 30 Days</option>
-                                </select>
-                            </form>
-                        </div>
-                        <div class="col-lg-9 to-animate">
+                        <div class="col-lg-12 to-animate">
                             <small class="pull-right">
                                 @if(count($psychoTestInv) > 1)
                                     Showing all <strong>{{count($psychoTestInv)}}</strong> psycho test invitations
@@ -40,7 +30,8 @@
                             @foreach($psychoTestInv as $row)
                                 @php
                                     $vacancy = \App\Vacancies::find($row->vacancy_id);
-                                    $psychoTestDate = $vacancy->psychoTestDate_start && $vacancy->psychoTestDate_end != "" ?
+                                    $psychoTestDate = $vacancy->psychoTestDate_start &&
+                                    $vacancy->psychoTestDate_end != "" ?
                                     \Carbon\Carbon::parse($vacancy->psychoTestDate_start)->format('j F Y')." - ".
                                     \Carbon\Carbon::parse($vacancy->psychoTestDate_end)->format('j F Y') : '-';
                                     $agency = $vacancy->agencies;
@@ -57,7 +48,14 @@
                                     $applicants = \App\Accepting::where('vacancy_id', $vacancy->id)
                                     ->where('isApply', true)->count();
                                     $psychoTest = $vacancy->getPsychoTestInfo;
-                                    $room = array_random($psychoTest->room_codes);
+                                    $room = '';
+                                    foreach($psychoTest->room_codes as $code){
+                                        strtok($code, '_');
+                                        $participantID = strtok('');
+                                        if($seeker->id == $participantID){
+                                            $room = $code;
+                                        }
+                                    }
                                 @endphp
                                 <div class="media to-animate">
                                     <div class="media-left media-middle">
@@ -284,11 +282,7 @@
 @endsection
 @push('scripts')
     <script>
-        $("#form-time select").on('change', function () {
-            $("#form-time")[0].submit();
-        });
-
-        function showPsychoTest(id, code, judul, start, ava, name, vacID, date, encryptID, candidates) {
+        function showPsychoTest(id, code, judul, start, ava, name, vacID, date, encryptID) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);

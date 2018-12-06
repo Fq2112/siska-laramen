@@ -203,8 +203,7 @@
                                                 data-selected-text-format="count > 3" name="vacancy_ids[]"
                                                 multiple required>
                                             @foreach($vacancies as $vacancy)
-                                                <option value="{{$vacancy->id}}" {{$vacancy->getQuizInfo != null ?
-                                                "disabled" : ""}}>{{$vacancy->judul}}</option>
+                                                <option value="{{$vacancy->id}}">{{$vacancy->judul}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -263,8 +262,12 @@
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
 
             @foreach($vacancies as $vacancy)
-            $("#vacancy_id option[value='{{$vacancy->id}}']")
-                .attr('disabled', '{{$vacancy->getQuizInfo != null ? "true" : "false"}}');
+            var options = $("#vacancy_id option[value='{{$vacancy->id}}']");
+            @if($vacancy->getQuizInfo != null)
+            options.attr("disabled", "disabled");
+            @else
+            options.removeAttr("disabled");
+            @endif
             @endforeach
             $("#vacancy_id").val('default').attr('name', 'vacancy_ids[]')
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
