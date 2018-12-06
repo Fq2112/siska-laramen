@@ -145,7 +145,8 @@ class AdminController extends Controller
         })->where('isPost', true)->get();
 
         if ($request->has("vac_ids")) {
-            $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
+            $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))
+                ->whereDoesntHave('getQuizInfo')->get()->pluck('id');
         } else {
             $findVac = null;
         }
@@ -209,6 +210,7 @@ class AdminController extends Controller
     public function showPsychoTestInfo(Request $request)
     {
         $infos = PsychoTestInfo::orderByDesc('id')->get();
+
         $vacancies = Vacancies::whereHas('getPlan', function ($query) {
             $query->where('isPsychoTest', true);
         })->whereHas('getQuizInfo', function ($quiz) {
@@ -217,7 +219,8 @@ class AdminController extends Controller
             ->whereDate('quizDate_end', '<=', today())->get();
 
         if ($request->has("vac_ids")) {
-            $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))->get()->pluck('id');
+            $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))
+                ->whereDoesntHave('getPsychoTestInfo')->get()->pluck('id');
         } else {
             $findVac = null;
         }
@@ -232,8 +235,10 @@ class AdminController extends Controller
         $arr = [];
         foreach ($vacancies as $vacancy) {
             $info = QuizInfo::where('vacancy_id', $vacancy['id'])->first();
-            $participant = array("participant" => count(QuizResult::where('quiz_id', $info->id)->where('isPassed', true)
-                ->orderByDesc('score')->take($vacancy['psychoTest_applicant'])->get()));
+            $candidate = QuizResult::where('quiz_id', $info->id)->where('isPassed', true)->orderByDesc('score')
+                ->take($vacancy['psychoTest_applicant'])->get();
+
+            $participant = array("participant" => $candidate);
 
             $arr[$i] = array_replace($vacancies[$i], $participant);
             $i = $i + 1;

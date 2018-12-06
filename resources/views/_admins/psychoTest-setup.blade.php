@@ -33,16 +33,14 @@
                             @foreach($infos as $info)
                                 @php
                                     $vacancy = $info->getVacancy;
-                                    $psychoTestDate = $vacancy->psychoTestDate_start && $vacancy->psychoTestDate_end != "" ?
+                                    $psychoTestDate = $vacancy->psychoTestDate_start &&
+                                    $vacancy->psychoTestDate_end != "" ?
                                     \Carbon\Carbon::parse($vacancy->psychoTestDate_start)->format('j F Y')." - ".
                                     \Carbon\Carbon::parse($vacancy->psychoTestDate_end)->format('j F Y') : '-';
                                     $agency = $vacancy->agencies;
                                     $userAgency = $agency->user;
                                     $ava = $userAgency->ava == ""||$userAgency->ava == "agency.png" ?
                                     asset('images/agency.png') : asset('storage/users/'.$userAgency->ava);
-                                    $participants = \App\QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)
-                                    ->where('isPassed', true)->orderByDesc('score')
-                                    ->take($vacancy->psychoTest_applicant)->count();
                                 @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
@@ -161,7 +159,7 @@
                                     </td>
                                     <td style="vertical-align: middle" align="center">
                                         <a onclick="editPsychoTest('{{$info->id}}','{{implode(",",$info->room_codes)}}',
-                                                '{{$vacancy->id}}','{{$participants}}')"
+                                                '{{$vacancy->id}}')"
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
@@ -195,7 +193,7 @@
                                         </select>
                                     </div>
                                     <span style="color: #fa5555">P.S.: You can only select vacancy that its psycho test hasn't
-                                        been set yet and its quiz date has been ended.</span>
+                                        been set yet and its quiz date has been ended (except when editing).</span>
                                 </div>
                             </div>
                             <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
@@ -277,15 +275,16 @@
             $("#vacancy_id").selectpicker('refresh');
             $("#vacancySetupDivider").css('display', 'block');
         });
-
         @endif
 
         function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
-            $("#psychoTestDate").html('<i class="fa fa-comments"></i>&ensp;Psycho Test Date: <strong>' + date + '</strong>');
-            $("#psychoTestCode").html('<i class="fa fa-shield-alt"></i>&ensp;Room Code: <strong>' + room + '</strong>');
+            $("#psychoTestDate").html('<i class="fa fa-comments"></i>&ensp;Psycho Test Date: ' +
+                '<strong>' + date + '</strong>');
+            $("#psychoTestCode").html('<i class="fa fa-shield-alt"></i>&ensp;Room Code: ' +
+                '<strong>' + room + '</strong>');
 
             $("#psychoTest_id").val(encryptID);
             $("#accessCode").val(room);
@@ -310,6 +309,10 @@
             $("#input-psychoTest-setup").html('');
             $("#btn_psychoTest_submit").html("<strong>SUBMIT</strong>");
 
+            @foreach($vacancies as $vacancy)
+            $("#vacancy_id option[value='{{$vacancy->id}}']")
+                .attr('disabled', '{{$vacancy->getPsychoTestInfo != null ? "true" : "false"}}');
+            @endforeach
             $("#vacancy_id").val('default').attr('name', 'vacancy_ids[]')
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
 
@@ -338,25 +341,35 @@
                     $('#input-psychoTest-setup').show();
                 },
                 success: function (data) {
-                    var input_psychoTest_setup = '';
+                    $("#input-psychoTest-setup").empty();
                     $.each(data, function (i, val) {
-                        input_psychoTest_setup +=
+                        $("#input-psychoTest-setup").append(
                             '<div class="row form-group" style="margin-bottom: 0;margin-top: 1.5em">' +
-                            '<div class="col-lg-12"><label style="font-size: 18px">' + val.judul + '</label>' +
-                            '</div></div>' +
-                            '<div class="row form-group">' +
                             '<div class="col-lg-12">' +
-                            '<label for="participant">Total Participant <span class="required">*</span></label>' +
-                            '<div class="input-group">' +
-                            '<span class="input-group-addon"><i class="fa fa-users"></i></span>' +
-                            '<input id="participant' + val.id + '" type="text" class="form-control" ' +
-                            'placeholder="' + val.participant + '" ' +
-                            'onblur="totalRoom(' + val.id + ',' + val.participant + ')" required></div>' +
-                            '</div></div>' +
-                            '<div class="row form-group" id="input_roomCode' + val.id + '"></div>';
+                            '<label style="font-size: 18px">' + val.judul + '</label></div></div>' +
+                            '<div class="row form-group" id="input_roomCode' + val.id + '"></div>'
+                        );
+
+                        var input_roomCode = '';
+                        $.each(val.participant, function (x, nilai) {
+                            x = x + 1;
+                            input_roomCode +=
+                                '<div class="col-lg-4">' +
+                                '<label for="room_code">Room Code #' + x + '<span class="required">*</span></label>' +
+                                '<div class="input-group">' +
+                                '<span class="input-group-btn">' +
+                                '<button type="button" class="btn btn-dark psychoTestCodes" ' +
+                                'onclick="generateCodeBtn(' + val.id + ', ' + nilai.seeker_id + ')">' +
+                                '<i class="fa fa-sync"></i></button></span>' +
+                                '<input id="room_code' + val.id + '-' + nilai.seeker_id + '" ' +
+                                'name="room_codes[' + val.id + '][]" type="text" class="form-control" readonly required>' +
+                                '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
+                                '</div></div>';
+                        });
+                        $("#input_roomCode" + val.id).html(input_roomCode);
                     });
-                    $("#input-psychoTest-setup").html(input_psychoTest_setup);
                     $(".selectpicker").selectpicker('render');
+                    $(".psychoTestCodes").click();
                 },
                 error: function () {
                     swal({
@@ -370,56 +383,22 @@
             return false;
         }
 
-        function totalRoom(id, participants) {
-            var i = 1, input_roomCode = '';
-
-            if ($("#participant" + id).val() != participants) {
-                $("#participant" + id).val(participants);
-            }
-            for (i; i <= participants; i++) {
-                input_roomCode +=
-                    '<div class="col-lg-4">' +
-                    '<label for="room_code">Room Code #' + i + '<span class="required">*</span></label>' +
-                    '<div class="input-group">' +
-                    '<span class="input-group-btn">' +
-                    '<button type="button" class="btn btn-dark psychoTestCodes" ' +
-                    'onclick="generateCodeBtn(' + id + ', ' + i + ')">' +
-                    '<i class="fa fa-sync"></i></button></span>' +
-                    '<input id="room_code' + id + '-' + i + '" name="room_codes[' + id + '][]" ' +
-                    'type="text" class="form-control" readonly required>' +
-                    '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
-                    '</div></div>';
-
-            }
-            $("#input_roomCode" + id).html(input_roomCode);
-            $(".psychoTestCodes").click();
-        }
-
-        function editPsychoTest(id, room_codes, vacID, participant) {
+        function editPsychoTest(id, room_codes, vacID) {
             $(".btn_psychoTest i").toggleClass('fa-plus fa-th-list');
             $(".btn_psychoTest[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
                 return v === "Create" ? "View" : "Create";
             });
             $("#panel_title").html(function (i, v) {
-                return v === "Psycho Test Setup<small>Form</small>" ? "Psycho Test <small>List</small>" :
-                    "Psycho Test Setup<small>Form</small>";
+                return v === "Psycho Test Edit<small>Form</small>" ? "Psycho Test <small>List</small>" :
+                    "Psycho Test Edit<small>Form</small>";
             });
             $("#vacancySetupDivider").css('display', 'none');
             $("#content1").toggle(300);
             $("#content2").toggle(300);
+            $("#vacancy_id option[value=" + vacID + "]").removeAttr('disabled');
             $("#vacancy_id").val(vacID).attr('name', 'vacancy_id').selectpicker({maxOptions: 1}).selectpicker('refresh');
 
-            $("#input-psychoTest-setup").html(
-                '<div class="row form-group">' +
-                '<div class="col-lg-12">' +
-                '<label for="participant">Total Participant <span class="required">*</span></label>' +
-                '<div class="input-group">' +
-                '<span class="input-group-addon"><i class="fa fa-users"></i></span>' +
-                '<input id="participant' + id + '" type="text" class="form-control" placeholder="' + participant + '" ' +
-                'value="' + participant + '" disabled required></div>' +
-                '</div></div>' +
-                '<div class="row form-group" id="input_roomCode' + id + '"></div>'
-            );
+            $("#input-psychoTest-setup").html('<div class="row form-group" id="input_roomCode' + id + '"></div>');
 
             var input_roomCode = '';
             $.each(room_codes.split(","), function (i, val) {

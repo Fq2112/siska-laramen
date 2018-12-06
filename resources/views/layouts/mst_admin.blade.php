@@ -57,6 +57,10 @@
             float: left;
         }
 
+        #datatable-buttons_wrapper .dataTables_length {
+            width: 35%;
+        }
+
         .myTags {
             list-style: none;
             margin: 0;

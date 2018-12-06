@@ -208,7 +208,8 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <span style="color: #fa5555">P.S.: You can only select vacancy that its quiz hasn't been set yet.</span>
+                                    <span style="color: #fa5555">P.S.: You can only select vacancy that its quiz
+                                        hasn't been set yet (except when editing).</span>
                                 </div>
                             </div>
                             <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
@@ -261,6 +262,10 @@
             $("#input_quiz_setup").html('');
             $("#btn_quiz_submit").html("<strong>SUBMIT</strong>");
 
+            @foreach($vacancies as $vacancy)
+            $("#vacancy_id option[value='{{$vacancy->id}}']")
+                .attr('disabled', '{{$vacancy->getQuizInfo != null ? "true" : "false"}}');
+            @endforeach
             $("#vacancy_id").val('default').attr('name', 'vacancy_ids[]')
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
 
@@ -392,7 +397,7 @@
                 return v === "Create" ? "View" : "Create";
             });
             $("#panel_title").html(function (i, v) {
-                return v === "Quiz Setup<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Setup<small>Form</small>";
+                return v === "Quiz Edit<small>Form</small>" ? "Quiz <small>List</small>" : "Quiz Edit<small>Form</small>";
             });
             $("#vacancySetupDivider").css('display', 'none');
             $("#content1").toggle(300);
@@ -441,6 +446,7 @@
             );
             $("#unique_code").val(code);
             $("#time_limit").val(time);
+            $("#vacancy_id option[value=" + vacancy + "]").removeAttr('disabled');
             $("#vacancy_id").val(vacancy).attr('name', 'vacancy_id').selectpicker({maxOptions: 1}).selectpicker('refresh');
 
             $("#btn_code").on("click", function () {
