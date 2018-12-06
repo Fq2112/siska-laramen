@@ -21,44 +21,52 @@
                                 <button id="compose" class="btn btn-sm btn-success btn-block" type="button">
                                     <strong><i class="fa fa-edit"></i>&ensp;COMPOSE</strong>
                                 </button>
-                                @foreach($contacts as $contact)
-                                    @php $user = \App\User::where('email',$contact->email); @endphp
-                                    <a style="cursor: pointer"
-                                       onclick="viewMail('{{$contact->id}}','{{$contact->name}}',
-                                               '{{$contact->email}}','{{$contact->subject}}','{{$contact->message}}',
-                                               '{{\Carbon\Carbon::parse($contact->created_at)->format('l, j F Y').' at '.
+                                @if(count($contacts) > 0)
+                                    @foreach($contacts as $contact)
+                                        @php $user = \App\User::where('email',$contact->email); @endphp
+                                        <a style="cursor: pointer"
+                                           onclick="viewMail('{{$contact->id}}','{{$contact->name}}',
+                                                   '{{$contact->email}}','{{$contact->subject}}','{{$contact->message}}',
+                                                   '{{\Carbon\Carbon::parse($contact->created_at)->format('l, j F Y').' at '.
                                             \Carbon\Carbon::parse($contact->created_at)->format('H:i')}}',
-                                               '{{encrypt($contact->id)}}')">
-                                        <div class="mail_list">
-                                            <div class="left">
-                                                @if($user->count())
-                                                    @if($user->first()->ava == "" || $user->first()->ava == "seeker.png")
-                                                        <img class="img-responsive"
-                                                             src="{{asset('images/seeker.png')}}">
-                                                    @elseif($user->first()->ava == "agency.png")
-                                                        <img class="img-responsive"
-                                                             src="{{asset('images/agency.png')}}">
+                                                   '{{encrypt($contact->id)}}')">
+                                            <div class="mail_list">
+                                                <div class="left">
+                                                    @if($user->count())
+                                                        @if($user->first()->ava == "" || $user->first()->ava == "seeker.png")
+                                                            <img class="img-responsive"
+                                                                 src="{{asset('images/seeker.png')}}">
+                                                        @elseif($user->first()->ava == "agency.png")
+                                                            <img class="img-responsive"
+                                                                 src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img class="img-responsive"
+                                                                 src="{{asset('storage/users/'.$user->first()->ava)}}">
+                                                        @endif
                                                     @else
                                                         <img class="img-responsive"
-                                                             src="{{asset('storage/users/'.$user->first()->ava)}}">
+                                                             src="{{asset('images/avatar.png')}}">
                                                     @endif
-                                                @else
-                                                    <img class="img-responsive"
-                                                         src="{{asset('images/avatar.png')}}">
-                                                @endif
-                                            </div>
-                                            <div class="right">
-                                                <h3>{{$contact->name}}
-                                                    <small>{{\Carbon\Carbon::parse($contact->created_at)
+                                                </div>
+                                                <div class="right">
+                                                    <h3>{{$contact->name}}
+                                                        <small>{{\Carbon\Carbon::parse($contact->created_at)
                                                     ->formatLocalized('%d %b %y')}}</small>
-                                                </h3>
-                                                <p>
-                                                    <strong>{{$contact->subject}}</strong>&nbsp;&ndash;&nbsp;{{$contact->message}}
-                                                </p>
+                                                    </h3>
+                                                    <p>
+                                                        <strong>{{$contact->subject}}</strong>&nbsp;&ndash;&nbsp;{{$contact->message}}
+                                                    </p>
+                                                </div>
                                             </div>
+                                        </a>
+                                    @endforeach
+                                @else
+                                    <a style="cursor: default">
+                                        <div class="mail_list">
+                                            <p><em>There seems to be none of the feedback was found&hellip;</em></p>
                                         </div>
                                     </a>
-                                @endforeach
+                                @endif
                             </div>
                             <!-- /MAIL LIST -->
 

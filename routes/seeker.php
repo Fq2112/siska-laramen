@@ -287,9 +287,18 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
 
     });
 
-    Route::post('psychoTest', [
-        'uses' => 'PsychoTestController@joinPsychoTestRoom',
-        'as' => 'join.psychoTest.room'
-    ]);
+    Route::group(['prefix' => 'psychoTest'], function () {
+
+        Route::post('/', [
+            'uses' => 'PsychoTestController@joinPsychoTestRoom',
+            'as' => 'join.psychoTest.room'
+        ]);
+
+        Route::post('submit', [
+            'uses' => 'PsychoTestController@submitPsychoTest',
+            'as' => 'submit.psychoTest'
+        ]);
+
+    });
 
 });

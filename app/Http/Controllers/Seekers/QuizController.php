@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Seekers;
 
-use App\Agencies;
 use App\QuizInfo;
 use App\QuizOptions;
 use App\QuizQuestions;
 use App\QuizResult;
 use App\Seekers;
-use App\User;
-use App\Vacancies;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 

@@ -1,0 +1,240 @@
+.stickyForm {
+    z-index: 16000160;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #fa5555;
+    cursor: pointer;
+    -webkit-transform-origin: right bottom;
+    -moz-transform-origin: right bottom;
+    -o-transform-origin: right bottom;
+    transform-origin: right bottom;
+    transition: all 0.35s cubic-bezier(0.91, -0.28, 0.06, 1.3), background-color 0.25s ease;
+    -webkit-box-shadow: 0 13px 40px 0 rgba(0, 0, 0, 0.21);
+    -moz-box-shadow: 0 13px 40px 0 rgba(0, 0, 0, 0.21);
+    box-shadow: 0 13px 40px 0 rgba(0, 0, 0, 0.21);
+}
+
+.stickyForm:hover {
+    background-color: #e14d4d;
+}
+
+.stickyForm.open {
+    width: 425px;
+    height: 462px;
+    border-radius: 5px;
+    background-color: #fff;
+    cursor: default;
+}
+
+.stickyForm.open .icon {
+    opacity: 0;
+    transition-delay: 0.01s;
+}
+
+.stickyForm.open form, .stickyForm.open .sticky-header, .stickyForm.open form, .stickyForm.open .sticky-footer {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.2s;
+}
+
+.stickyForm .icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    transition: opacity 0.1s ease;
+    transition-delay: 0.2s;
+    color: #fff;
+    font-size: 35px;
+    padding: 4px;
+}
+
+.sticky-header {
+    padding: 5px;
+    background: linear-gradient(#eb4b4b, #732f2f), #4b2222;
+    font-size: 15px;
+    color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0.01s;
+}
+
+.sticky-header .close {
+    text-shadow: 0 1px 0 #fff;
+    padding: 5px;
+}
+
+.stickyForm form {
+    margin: 1em;
+    font-size: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0.01s;
+}
+
+.stickyForm form input {
+    border: 2px solid #e3e3e3;
+    background-color: #f1f1f1;
+    transition: all 0.2s ease;
+}
+
+.stickyForm form input:hover, .stickyForm form input:focus {
+    border: 2px solid #d7d7d7;
+    outline: 0;
+}
+
+.stickyForm form textarea {
+    min-height: 80px;
+    border: 2px solid #e3e3e3;
+    background-color: #f1f1f1;
+    transition: all 0.2s ease;
+}
+
+.stickyForm form textarea:hover, .stickyForm form textarea:focus {
+    border: 2px solid #d7d7d7;
+    outline: 0;
+}
+
+.sticky-footer {
+    opacity: 0;
+    visibility: hidden;
+    transition-delay: 0.01s;
+}
+
+.sticky-footer button {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    color: #fa5555;
+    border-top: 1px solid rgba(250, 85, 85, 0.3);
+    background: #fff;
+    font-weight: 700;
+    margin-top: 1.5em;
+}
+
+.stickyTitle {
+    z-index: 16000159;
+    position: fixed;
+    bottom: 42px;
+    right: 110px;
+    box-shadow: 2px 2px 13px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+    background: white;
+    cursor: pointer;
+}
+
+.stickyTitle-content {
+    padding: 5px 10px 5px 10px;
+    line-height: 18px;
+    max-height: 34px;
+    max-width: 135px;
+    overflow: hidden;
+    word-wrap: break-word;
+    font-size: 14px;
+}
+
+.stickyTitle:before, .stickyTitle:after {
+    content: '';
+    position: absolute;
+    background: white;
+    border-top: 1px solid #e2e2e2;
+    border-left: 1px solid #e2e2e2;
+    left: 101px;
+    top: 50%;
+    margin-top: -4px;
+    width: 8px;
+    height: 8px;
+    z-index: 1;
+    -ms-transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    -moz-transform: rotate(135deg);
+    -o-transform: rotate(135deg);
+    transform: rotate(135deg);
+}
+
+.stickyTitle.sticky-animation-in {
+    -webkit-animation-name: stickyAnimate;
+    -moz-animation-name: stickyAnimate;
+    -o-animation-name: stickyAnimate;
+    animation-name: stickyAnimate;
+    -webkit-animation-duration: .35s;
+    -moz-animation-duration: .35s;
+    -o-animation-duration: .35s;
+    animation-duration: .35s;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-fill-mode: forwards;
+    -o-animation-fill-mode: forwards;
+    animation-fill-mode: forwards
+}
+
+.stickyTitle.sticky-animation-out {
+    -webkit-animation-name: stickyAnimate;
+    -moz-animation-name: stickyAnimate;
+    -o-animation-name: stickyAnimate;
+    animation-name: stickyAnimate;
+    -webkit-animation-duration: .35s;
+    -moz-animation-duration: .35s;
+    -o-animation-duration: .35s;
+    animation-duration: .35s;
+    -webkit-animation-fill-mode: forwards;
+    -moz-animation-fill-mode: forwards;
+    -o-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+    -webkit-animation-direction: reverse;
+    -moz-animation-direction: reverse;
+    -o-animation-direction: reverse;
+    animation-direction: reverse
+}
+
+@-webkit-keyframes stickyAnimate {
+    0% {
+        opacity: 0;
+        right: 0
+    }
+    to {
+        opacity: 1;
+        right: 110px
+    }
+}
+
+@-moz-keyframes stickyAnimate {
+    0% {
+        opacity: 0;
+        right: 0
+    }
+    to {
+        opacity: 1;
+        right: 110px
+    }
+}
+
+@-o-keyframes stickyAnimate {
+    0% {
+        opacity: 0;
+        right: 0
+    }
+    to {
+        opacity: 1;
+        right: 110px
+    }
+}
+
+@keyframes stickyAnimate {
+    0% {
+        opacity: 0;
+        right: 0
+    }
+    to {
+        opacity: 1;
+        right: 110px
+    }
+}

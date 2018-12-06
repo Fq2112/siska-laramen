@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Seekers;
 
 use App\Provinces;
 use App\PsychoTestInfo;
+use App\PsychoTestResult;
+use App\Seekers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client;
@@ -20,7 +22,7 @@ class PsychoTestController extends Controller
 
     public function __construct()
     {
-        $this->middleware('psychoTest')->only('joinPsychoTestRoom');
+        $this->middleware('psychoTest');
 
         $this->sid = config('services.twilio.sid');
         $this->token = config('services.twilio.token');
@@ -58,5 +60,24 @@ class PsychoTestController extends Controller
 
         return view('_seekers.psychoTest', ['accessToken' => $token->toJWT(), 'roomCode' => $request->accessCode,
             'vacancy' => $vacancy, 'userAgency' => $userAgency, 'provinces' => $provinces]);
+    }
+
+    public function submitPsychoTest(Request $request)
+    {
+        $result = PsychoTestResult::create([
+            'psychoTest_id' => $request->psychoTest_id,
+            'admin_id' => Auth::guard('admin')->user()->id,
+            'seeker_id' => Seekers::where('user_id', $request->user_id)->firstOrFail()->id,
+            'kompetensi' => $request->kompetensi,
+            'karakter' => $request->karakter,
+            'attitude' => $request->attitude,
+            'grooming' => $request->grooming,
+            'komunikasi' => $request->komunikasi,
+            'anthusiasme' => $request->anthusiasme,
+            'isPassed' => $request->isPassed != "" ? true : false,
+            'note' => $request->note,
+        ]);
+
+        return $result;
     }
 }
