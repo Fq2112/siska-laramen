@@ -39,6 +39,6 @@ class ApplicantListEmail extends Mailable
         return $this->subject("" . $vacancy->judul . ": Application List for " . $recruitmentDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->view('emails.agencies.applicantList')
-            ->attach(public_path('_admins\reports') . '/' . $filename);
+            ->attach(public_path('storage\users\agencies\reports\applications') . '/' . $filename);
     }
 }

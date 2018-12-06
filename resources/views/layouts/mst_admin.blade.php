@@ -166,15 +166,23 @@
 
     $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
-    })->whereDate('recruitmentDate_end', today())->get();
+    })->whereDate('recruitmentDate_end','>=', today())->get();
 
     $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
     })->whereHas('getQuizInfo', function ($info){
         $info->whereHas('getQuizResult');
-    })->whereDate('quizDate_end', today())->get();
+    })->whereDate('quizDate_end','>=', today())->get();
 
-    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($acceptings) + count($quiz_results);
+    $psychoTest_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
+        $acc->where('isApply', true);
+    })->whereHas('getQuizInfo', function ($info){
+        $info->whereHas('getQuizResult');
+    })->whereHas('getPsychoTestInfo', function ($psycho){
+        $psycho->whereHas('getPsychoTestResult');
+    })->whereDate('psychoTestDate_end','>=', today())->get();
+
+    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -273,6 +281,8 @@
                                                 <ul class="nav child_menu">
                                                     <li><a href="{{route('table.applications')}}">Applications</a></li>
                                                     <li><a href="{{route('table.quizResults')}}">Quiz Results</a></li>
+                                                    <li><a href="{{route('table.psychoTestResults')}}">
+                                                            Psycho Test Results</a></li>
                                                     <li><a href="{{route('table.invitations')}}">Invitations</a></li>
                                                 </ul>
                                             </li>
@@ -531,8 +541,8 @@
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
                                                     <span class="message">
-                                                        You must send the application list for this vacancy to
-                                                        <strong>{{$vacancy->agencies->user->name}}</strong> now!
+                                                        Make sure the application list for this vacancy are sent today
+                                                        to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
                                                 </a>
@@ -564,8 +574,41 @@
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
                                                     <span class="message">
-                                                        You must send the quiz result list list for this vacancy to
-                                                        <strong>{{$vacancy->agencies->user->name}}</strong> now!
+                                                        Make sure the quiz result list for this vacancy are sent today
+                                                        to <strong>{{$vacancy->agencies->user->name}}</strong>!
+                                                        <span style="color: #fa5555">#This message only appears today.</span>
+                                                    </span>
+                                                </a>
+                                            </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
+
+                                        @if(count($psychoTest_results) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-comments"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Psycho Test Results</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($psychoTest_results as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.psychoTestResults').'?q='.$vacancy->judul}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                        <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                        <span class="message">
+                                                        Make sure the psycho test result list for this vacancy are sent
+                                                        today to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
                                                 </a>

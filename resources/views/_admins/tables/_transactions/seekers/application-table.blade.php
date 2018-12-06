@@ -344,10 +344,10 @@
 
             $("#check-all").on("ifToggled", function () {
                 if ($(this).is(":checked")) {
-                    $("#myDataTable tbody tr").find('input[type=checkbox]').iCheck("check");
+                    $("#myDataTable tbody tr").addClass("selected").find('input[type=checkbox]').iCheck("check");
                     $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
                 } else {
-                    $("#myDataTable tbody tr").find('input[type=checkbox]').iCheck("uncheck");
+                    $("#myDataTable tbody tr").removeClass("selected").find('input[type=checkbox]').iCheck("uncheck");
                     $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
                 }
             });

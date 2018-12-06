@@ -489,24 +489,29 @@
                                     </table>
                                     <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
                                            align="center">
+                                        @php $plan = \App\Plan::find($vacancy['plan_id']); @endphp
                                         <tr>
                                             <td>
-                                                <div class="alert alert-info text-center">
-                                                    @php $plan = \App\Plan::find($vacancy['plan_id']); @endphp
-                                                    @if($plan->isPsychoTest == true)
-                                                        We're only send the best quiz results based on the
-                                                        <strong>passing grade</strong> and the amount of
-                                                        <strong>psycho test participants</strong> of your vacancy that
-                                                        you've set in the job posting process.
-                                                    @else
-                                                        We're only send the best quiz results based on the
-                                                        <strong>passing grade</strong> and the amount of
-                                                        <strong>quiz participants</strong> of your vacancy that
-                                                        you've set in the job posting process.
-                                                    @endif
+                                                <div class="alert alert-success text-center">
+                                                    We're only send the best quiz results based on the
+                                                    <strong>passing grade</strong> and the amount of
+                                                    <strong>quiz participants</strong> of your vacancy that
+                                                    you've set in the job posting process.
                                                 </div>
                                             </td>
                                         </tr>
+                                        @if($plan->isPsychoTest == true)
+                                            <tr>
+                                                <td>
+                                                    <div class="alert alert-info text-center">
+                                                        According to the amount of psycho test participants of your
+                                                        vacancy that you've set before, there's only
+                                                        <strong>{{$vacancy['psychoTest_applicant']}}</strong> candidates
+                                                        that will become participants.
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @endif
                                         <tr>
                                             <td>
                                                 <div class="alert alert-warning text-center">

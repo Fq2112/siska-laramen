@@ -14,7 +14,7 @@
                     </div>
                     <div class="row" style="margin-bottom: .5em">
                         <div class="col-lg-12 to-animate">
-                            <small class="pull-right">
+                            <small>
                                 @if(count($psychoTestInv) > 1)
                                     Showing all <strong>{{count($psychoTestInv)}}</strong> psycho test invitations
                                 @elseif(count($psychoTestInv) == 1)

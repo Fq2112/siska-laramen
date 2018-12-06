@@ -783,6 +783,25 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
                 });
 
+                Route::group(['prefix' => 'psychoTest_results'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'TransactionSeekerController@showPsychoTestResultsTable',
+                        'as' => 'table.psychoTestResults'
+                    ]);
+
+                    Route::post('send', [
+                        'uses' => 'TransactionSeekerController@massSendPsychoTestResults',
+                        'as' => 'table.psychoTestResults.massSend'
+                    ]);
+
+                    Route::post('delete', [
+                        'uses' => 'TransactionSeekerController@massDeletePsychoTestResults',
+                        'as' => 'table.psychoTestResults.massDelete'
+                    ]);
+
+                });
+
                 Route::group(['prefix' => 'invitations'], function () {
 
                     Route::get('/', [

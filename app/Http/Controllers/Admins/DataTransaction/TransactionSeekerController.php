@@ -14,6 +14,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class TransactionSeekerController extends Controller
 {
@@ -44,8 +45,8 @@ class TransactionSeekerController extends Controller
                 Carbon::parse($vacancy->recruitmentDate_end)->format('dmy');
 
             $filename = 'ApplicationList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
-            $path = public_path('_admins\reports') . '/' . $filename;
-            PDF::loadView('reports.applicantList-pdf', compact('applicants', 'vacancy'))->save($path);
+            $pdf = PDF::loadView('reports.applicantList-pdf', compact('applicants', 'vacancy'));
+            Storage::put('public/users/agencies/reports/applications/' . $filename, $pdf->output());
 
             event(new ApplicantList($vacancy, $vacancy->agencies->user->email, $filename));
         }
@@ -92,19 +93,15 @@ class TransactionSeekerController extends Controller
         })->get();
 
         foreach ($vacancies as $vacancy) {
-            $q = QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)->where('isPassed', true)->orderByDesc('score');
-            if ($vacancy->getPlan->isPsychoTest == true) {
-                $applicants = $q->take($vacancy->psychoTest_applicant)->get()->toArray();
-            } else {
-                $applicants = $q->take($vacancy->quiz_applicant)->get()->toArray();
-            }
+            $applicants = QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)->where('isPassed', true)
+                ->orderByDesc('score')->take($vacancy->quiz_applicant)->get()->toArray();
 
             $date = Carbon::parse($vacancy->quizDate_start)->format('dmy') . '-' .
                 Carbon::parse($vacancy->quizDate_end)->format('dmy');
 
             $filename = 'QuizResultList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
-            $path = public_path('_admins\reports') . '/' . $filename;
-            PDF::loadView('reports.quizResultList-pdf', compact('applicants', 'vacancy'))->save($path);
+            $pdf = PDF::loadView('reports.quizResultList-pdf', compact('applicants', 'vacancy'));
+            Storage::put('public/users/agencies/reports/quizResults/' . $filename, $pdf->output());
 
             event(new QuizResultList($vacancy, $vacancy->agencies->user->email, $filename));
         }
