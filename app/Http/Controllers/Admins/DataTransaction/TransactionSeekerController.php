@@ -6,6 +6,7 @@ use App\Accepting;
 use App\Events\Agencies\ApplicantList;
 use App\Events\Agencies\QuizResultList;
 use App\Invitation;
+use App\PsychoTestResult;
 use App\QuizResult;
 use App\Seekers;
 use App\User;
@@ -67,13 +68,15 @@ class TransactionSeekerController extends Controller
 
     public function showQuizResultsTable(Request $request)
     {
-        $vacancies = Vacancies::wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end')->get();
+        $vacancies = Vacancies::wherenotnull('quizDate_start')->wherenotnull('quizDate_end')->get();
 
         $quizResults = QuizResult::whereHas('getQuizInfo', function ($info) {
             $info->whereHas('getVacancy', function ($vac) {
                 $vac->whereHas('getAccepting', function ($acc) {
                     $acc->where('isApply', true);
-                })->wherenotnull('recruitmentDate_start')->wherenotnull('recruitmentDate_end');
+                })->whereHas('getQuizInfo', function ($info){
+                    $info->whereHas('getQuizResult');
+                })->wherenotnull('quizDate_start')->wherenotnull('quizDate_end');
             });
         })->get();
 
@@ -110,6 +113,65 @@ class TransactionSeekerController extends Controller
     }
 
     public function massDeleteQuizResults(Request $request)
+    {
+        $quizResults = QuizResult::whereIn('id', explode(",", $request->quizResult_ids))->get();
+
+        foreach ($quizResults as $quizResult) {
+            $quizResult->delete();
+        }
+
+        return back()->with('success', '' . count($quizResults) . ' quiz result(s) is successfully deleted!');
+    }
+
+    public function showPsychoTestResultsTable(Request $request)
+    {
+        $vacancies = Vacancies::wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')->get();
+
+        $psychoTestResults = PsychoTestResult::whereHas('getPsychoTestInfo', function ($info) {
+            $info->whereHas('getVacancy', function ($vac) {
+                $vac->whereHas('getAccepting', function ($acc) {
+                    $acc->where('isApply', true);
+                })->whereHas('getQuizInfo', function ($info){
+                    $info->whereHas('getQuizResult');
+                })->whereHas('getPsychoTestInfo', function ($psycho){
+                    $psycho->whereHas('getPsychoTestResult');
+                })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end');
+            });
+        })->get();
+
+        $findAgency = $request->q;
+
+        return view('_admins.tables._transactions.seekers.psychoTestResults-table', compact('vacancies',
+            'psychoTestResults', 'findAgency'));
+    }
+
+    public function massSendPsychoTestResults(Request $request)
+    {
+        $ids = explode(",", $request->quizResult_ids);
+        $vacancies = Vacancies::whereHas('getQuizInfo', function ($info) use ($ids) {
+            $info->whereHas('getQuizResult', function ($result) use ($ids) {
+                $result->whereIn('id', $ids);
+            });
+        })->get();
+
+        foreach ($vacancies as $vacancy) {
+            $applicants = QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)->where('isPassed', true)
+                ->orderByDesc('score')->take($vacancy->quiz_applicant)->get()->toArray();
+
+            $date = Carbon::parse($vacancy->quizDate_start)->format('dmy') . '-' .
+                Carbon::parse($vacancy->quizDate_end)->format('dmy');
+
+            $filename = 'QuizResultList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
+            $pdf = PDF::loadView('reports.quizResultList-pdf', compact('applicants', 'vacancy'));
+            Storage::put('public/users/agencies/reports/quizResults/' . $filename, $pdf->output());
+
+            event(new QuizResultList($vacancy, $vacancy->agencies->user->email, $filename));
+        }
+
+        return back()->with('success', '' . count($ids) . ' quiz result(s) is successfully sent to their email!');
+    }
+
+    public function massDeletePsychoTestResults(Request $request)
     {
         $quizResults = QuizResult::whereIn('id', explode(",", $request->quizResult_ids))->get();
 

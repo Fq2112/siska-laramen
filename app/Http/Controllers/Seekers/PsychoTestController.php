@@ -67,14 +67,13 @@ class PsychoTestController extends Controller
         $result = PsychoTestResult::create([
             'psychoTest_id' => $request->psychoTest_id,
             'admin_id' => Auth::guard('admin')->user()->id,
-            'seeker_id' => Seekers::where('user_id', $request->user_id)->firstOrFail()->id,
+            'seeker_id' => $request->seeker_id,
             'kompetensi' => $request->kompetensi,
             'karakter' => $request->karakter,
             'attitude' => $request->attitude,
             'grooming' => $request->grooming,
             'komunikasi' => $request->komunikasi,
             'anthusiasme' => $request->anthusiasme,
-            'isPassed' => $request->isPassed != "" ? true : false,
             'note' => $request->note,
         ]);
 

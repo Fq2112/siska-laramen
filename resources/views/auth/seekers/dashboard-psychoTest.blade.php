@@ -56,6 +56,9 @@
                                             $room = $code;
                                         }
                                     }
+
+                                    $psychoTestResult = \App\PsychoTestResult::where('psychoTest_id', $psychoTest->id)
+                                    ->where('seeker_id', $seeker->id)->count();
                                 @endphp
                                 <div class="media to-animate">
                                     <div class="media-left media-middle">
@@ -83,8 +86,8 @@
                                         </small>
                                         <blockquote style="font-size: 12px;color: #7f7f7f">
                                             <div class="pull-right to-animate-2">
-                                                <div class="anim-icon anim-icon-md psychoTest {{today() < $vacancy
-                                                ->psychoTestDate_start ? '' : 'ld ld-breath'}}"
+                                                <div class="anim-icon anim-icon-md psychoTest {{$psychoTestResult > 0 ||
+                                                today() < $vacancy->psychoTestDate_start ? '' : 'ld ld-breath'}}"
                                                      onclick="showPsychoTest('{{$row->id}}','{{$room}}',
                                                              '{{$vacancy->judul}}','{{$vacancy->psychoTestDate_start}}',
                                                              '{{$ava}}','{{$userAgency->name}}','{{$vacancy->id}}',

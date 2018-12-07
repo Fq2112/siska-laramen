@@ -21,13 +21,13 @@ class CreatePsychoTestResultsTable extends Migration
             $table->foreign('admin_id')->references('id')->on('admins');
             $table->integer('seeker_id')->unsigned();
             $table->foreign('seeker_id')->references('id')->on('seekers');
-            $table->integer('kompetensi');
-            $table->integer('karakter');
-            $table->integer('attitude');
-            $table->integer('grooming');
-            $table->integer('komunikasi');
-            $table->integer('anthusiasme');
-            $table->boolean('isPassed')->default(false);
+            $table->decimal('kompetensi', 8,2);
+            $table->decimal('karakter', 8,2);
+            $table->decimal('attitude', 8,2);
+            $table->decimal('grooming', 8,2);
+            $table->decimal('komunikasi', 8,2);
+            $table->decimal('anthusiasme', 8,2);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

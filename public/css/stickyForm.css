@@ -35,7 +35,7 @@
     transition-delay: 0.01s;
 }
 
-.stickyForm.open form, .stickyForm.open .sticky-header, .stickyForm.open form, .stickyForm.open .sticky-footer {
+.stickyForm.open .sticky-input, .stickyForm.open .sticky-header, .stickyForm.open .sticky-input, .stickyForm.open .sticky-footer {
     opacity: 1;
     visibility: visible;
     transition-delay: 0.2s;
@@ -73,7 +73,7 @@
     padding: 5px;
 }
 
-.stickyForm form {
+.stickyForm .sticky-input {
     margin: 1em;
     font-size: 15px;
     opacity: 0;
@@ -81,25 +81,25 @@
     transition-delay: 0.01s;
 }
 
-.stickyForm form input {
+.stickyForm .sticky-input input {
     border: 2px solid #e3e3e3;
     background-color: #f1f1f1;
     transition: all 0.2s ease;
 }
 
-.stickyForm form input:hover, .stickyForm form input:focus {
+.stickyForm .sticky-input input:hover, .stickyForm .sticky-input input:focus {
     border: 2px solid #d7d7d7;
     outline: 0;
 }
 
-.stickyForm form textarea {
+.stickyForm .sticky-input textarea {
     min-height: 80px;
     border: 2px solid #e3e3e3;
     background-color: #f1f1f1;
     transition: all 0.2s ease;
 }
 
-.stickyForm form textarea:hover, .stickyForm form textarea:focus {
+.stickyForm .sticky-input textarea:hover, .stickyForm .sticky-input textarea:focus {
     border: 2px solid #d7d7d7;
     outline: 0;
 }

@@ -147,11 +147,13 @@
                                     <td style="vertical-align: middle">
                                         <ol style="margin-left: -1em">
                                             @foreach($info->room_codes as $room)
+                                                @php strtok($room, "_"); $seeker_id = strtok(''); @endphp
                                                 <li>
                                                     <a href="javascript:void(0)"
                                                        onclick="accessPsychoTest('{{encrypt($info->id)}}','{{$room}}',
                                                                '{{$vacancy->judul}}','{{$vacancy->id}}','{{$ava}}',
-                                                               '{{$userAgency->name}}','{{$psychoTestDate}}')">{{$room}}
+                                                               '{{$userAgency->name}}','{{$psychoTestDate}}',
+                                                               '{{$seeker_id}}')">{{$room}}
                                                     </a>
                                                 </li>
                                             @endforeach
@@ -251,6 +253,7 @@
                     <form id="form-access-psychoTest" method="post" action="{{route('join.psychoTest.room')}}">
                         {{csrf_field()}}
                         <input id="psychoTest_id" type="hidden" name="psychoTest_id">
+                        <input id="seeker_id" type="hidden" name="seeker_id">
                         <input id="accessCode" type="hidden" name="accessCode">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Enter Room</button>
@@ -276,7 +279,7 @@
         });
         @endif
 
-        function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date) {
+        function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date, seeker_id) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
@@ -286,6 +289,7 @@
                 '<strong>' + room + '</strong>');
 
             $("#psychoTest_id").val(encryptID);
+            $("#seeker_id").val(seeker_id);
             $("#accessCode").val(room);
             $("#psychoTestModal").modal('show');
         }

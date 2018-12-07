@@ -396,7 +396,7 @@
         </g>
     </svg>
     @auth
-        @if(\Illuminate\Support\Facades\Request::is('quiz'))
+        @if(Auth::user()->isSeeker() && \Illuminate\Support\Facades\Request::is('quiz'))
             <a href="{{route('seeker.invitation.quiz')}}" id="home">
                 <button class="denied__link">Go Back</button>
             </a>
@@ -404,6 +404,18 @@
                 swal({
                     title: 'ATTENTION!',
                     text: 'You\'re redirected here because you already have a score for this quiz.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+            </script>
+        @elseif(Auth::user()->isSeeker() && \Illuminate\Support\Facades\Request::is('psychoTest'))
+            <a href="{{route('seeker.invitation.psychoTest')}}" id="home">
+                <button class="denied__link">Go Back</button>
+            </a>
+            <script>
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because you already have a result for this psycho test.',
                     type: 'warning',
                     timer: '3500'
                 });
@@ -432,19 +444,33 @@
             </script>
         @endif
     @else
-        <a href="{{route('home-seeker')}}" id="home">
-            <button class="denied__link">Go Home</button>
-        </a>
-        <script>
-            @if(\Illuminate\Support\Facades\Request::is('admin*'))
-            swal({
-                title: 'ATTENTION!',
-                text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
-                type: 'warning',
-                timer: '3500'
-            });
-            @endif
-        </script>
+        @if(Auth::guard('admin')->check() && \Illuminate\Support\Facades\Request::is('psychoTest'))
+            <a href="{{route('psychoTest.info')}}" id="home">
+                <button class="denied__link">Go Back</button>
+            </a>
+            <script>
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because this candidate already have a result for this psycho test.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+            </script>
+        @else
+            <a href="{{route('home-seeker')}}" id="home">
+                <button class="denied__link">Go Home</button>
+            </a>
+            <script>
+                @if(\Illuminate\Support\Facades\Request::is('admin*'))
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
+                    type: 'warning',
+                    timer: '3500'
+                });
+                @endif
+            </script>
+        @endif
     @endauth
 </div>
 </body>
