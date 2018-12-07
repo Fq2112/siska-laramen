@@ -18,8 +18,16 @@
 $router->group(['prefix' => 'jwt','middleware' => 'api'], function ($router){
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
+    $router->post('seeker', 'AuthController@seeker');
     $router->post('recover', 'AuthController@recover');
     $router->post('me', 'AuthController@me');
+
+    $router->group(['prefix' => 'vacancy'],function ($router){
+        $router->post('apply',[
+            'uses' => 'AuthController@apiApply'
+        ]);
+    });
+
     $router->group(['middleware' => ['jwt.auth']], function($router) {
         $router->get('logout', 'AuthController@logout');
         $router->get('test', function(){
@@ -52,7 +60,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         'uses' => 'PostController@feedback',
         'as' => 'get.vacancy'
     ]);
-
+    $router->get('user', 'MobileController@user');
 
 
     $router->group(['prefix' => 'auth'], function ($router) {

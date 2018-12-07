@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Accepting;
+use App\Seekers;
 use App\User;
+use App\Vacancies;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use function Sodium\crypto_box_seed_keypair;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -18,7 +21,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register','verifyUser','recover']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'verifyUser', 'recover']]);
     }
 
     /**
@@ -31,10 +34,10 @@ class AuthController extends Controller
     {
 
         $json = file_get_contents('php://input');
-        $obj = json_decode($json,true);
+        $obj = json_decode($json, true);
 
         $name = $obj['name'];
-        $email =  $obj['email'];
+        $email = $obj['email'];
         $password = $obj['password'];
         $repassword = $obj['repassword'];
 //
@@ -45,24 +48,23 @@ class AuthController extends Controller
 //                'error'=> $validator->messages()]);
 //        }
 
-        if($name == null || $email == null || $password == null || $repassword ==null){ //check All input not null
+        if ($name == null || $email == null || $password == null || $repassword == null) { //check All input not null
             return response()->json([
                 'status' => 'warning',
                 'success' => false,
                 'error' => 'Some input is not filled yet!!'
             ]);
-        }else {
-            $check = User::where('email',$email)->count();
+        } else {
+            $check = User::where('email', $email)->count();
             if ($check < 1) {// check email is available
 
-                if($password != $repassword){//check Password Match or not wit repassword
+                if ($password != $repassword) {//check Password Match or not wit repassword
                     return response()->json([
                         'status' => 'warning',
                         'success' => false,
                         'error' => 'Password doesn\'t match!!'
                     ]);
-                }
-                else {
+                } else {
                     $user = User::create([
                         'ava' => 'seeker.png',
                         'name' => $name,
@@ -90,7 +92,7 @@ class AuthController extends Controller
                         'message' => 'Thanks for signing up! Please check your email to complete your registration.']);
                 }
 
-            }else {
+            } else {
                 return response()->json([
                     'status' => 'warning',
                     'success' => false,
@@ -109,26 +111,29 @@ class AuthController extends Controller
     public function verifyUser($verification_code)
     {
         //$check = DB::table('user_verifications')->where('token',$verification_code)->first();
-        $check = User::where('verifyToken',$verification_code)->first();
-        if(!is_null($check)){
+        $check = User::where('verifyToken', $verification_code)->first();
+        if (!is_null($check)) {
             $user = User::find($check->id);
-            if($user->status == 1){
+            if ($user->status == 1) {
                 return response()->json([
-                    'success'=> true,
-                    'message'=> 'Account already verified..'
+                    'success' => true,
+                    'message' => 'Account already verified..'
                 ]);
             }
             $user->update([
                 'status' => true,
                 'verifyToken' => null
             ]);
+            Seekers::create([
+                'user_id' => $user->id
+            ]);
             //DB::table('user_verifications')->where('token',$verification_code)->delete();
             return response()->json([
-                'success'=> true,
-                'message'=> 'You have successfully verified your email address.'
+                'success' => true,
+                'message' => 'You have successfully verified your email address.'
             ]);
         }
-        return response()->json(['success'=> false, 'error'=> "Verification code is invalid."]);
+        return response()->json(['success' => false, 'error' => "Verification code is invalid."]);
     }
 
     /**
@@ -139,6 +144,20 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $email = $obj['email'];
+        $password = $obj['password'];
+
+        if ($email == null || $password == null) {
+            return response()->json([
+                'status' => 'warning',
+                'success' => false,
+                'error' => 'Data not filled yet!!'
+            ]);
+        }
+
         $credentials = $request->only('email', 'password');
 
         $rules = [
@@ -147,15 +166,15 @@ class AuthController extends Controller
         ];
 
         $validator = Validator::make($credentials, $rules);
-        if($validator->fails()) {
-            return response()->json(['success'=> false, 'error'=> $validator->messages()], 401);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'error' => $validator->messages()], 401);
         }
 
         $credentials['status'] = 1;
 
         try {
             // attempt to verify the credentials and create a token for the user
-            if (! $token = JWTAuth::attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'success' => false,
                     'error' => 'We cant find an account with this credentials. Please make sure you entered the right information and you have verified your email address.'],
@@ -181,12 +200,13 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $this->validate($request, ['token' => 'required']);
 
         try {
             JWTAuth::invalidate($request->input('token'));
-            return response()->json(['success' => true, 'message'=> "You have successfully logged out."]);
+            return response()->json(['success' => true, 'message' => "You have successfully logged out."]);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json(['success' => false, 'error' => 'Failed to logout, please try again.'], 500);
@@ -205,7 +225,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
         if (!$user) {
             $error_message = "Your email address was not found.";
-            return response()->json(['success' => false, 'error' => ['email'=> $error_message]], 401);
+            return response()->json(['success' => false, 'error' => ['email' => $error_message]], 401);
         }
         try {
             Password::sendResetLink($request->only('email'), function (Message $message) {
@@ -217,7 +237,7 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'error' => $error_message], 401);
         }
         return response()->json([
-            'success' => true, 'data'=> ['message'=> 'A reset email has been sent! Please check your email.']
+            'success' => true, 'data' => ['message' => 'A reset email has been sent! Please check your email.']
         ]);
     }
 
@@ -229,6 +249,127 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json($this->guard()->user());
+    }
+
+    /**
+     * Get Current User
+     *
+     * @return mixed
+     */
+    public function seeker($user_id)
+    {
+        $seeker = Seekers::where('user_id', $user_id)->first();
+        return $seeker;
+    }
+
+    /**
+     * Create Apply in Accepting table
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiApply()
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $vacancy_id = $obj['vacancy_id'];
+        $seeker = $this->seeker(Auth::user()->id);
+
+        $check = Accepting::where('vacancy_id', $vacancy_id)
+            ->where('seeker_id', $seeker->id);
+
+        if ($check->count() > 1) {
+            return response()->json([
+                'status' => 'warning',
+                'success' => false,
+                'error' => 'Already applied!!'
+            ]);
+        } else {
+            Accepting::create([
+                'seeker_id' => $seeker->id,
+                'vacancy_id' => $vacancy_id,
+                'isApply' => true,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'success' => true,
+                'error' => 'Vacancy is successfully applied!!'
+            ]);
+        }
+    }
+
+    /**
+     * Abort Vacancy
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiAbortApply()
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json,false);
+
+        $vacancy_id = $obj['vacancy_id'];
+        $seeker = $this->seeker(Auth::user()->id);
+
+        $vacancy = Accepting::where('seeker_id',$seeker->id)->where('vacancy_id',$vacancy_id)->first();
+        $vacancy->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'success' => true,
+            'message' => 'Vacancy is successfully aborted!!'
+        ]);
+    }
+
+    /**
+     * Bookmark vacancy
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function apiBookmark()
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $vacancy_id = $obj['vacancy_id'];
+        $seeker = $this->seeker(Auth::user()->id);
+
+        $check = Accepting::where('vacancy_id', $vacancy_id)
+            ->where('seeker_id', $seeker->id)->first();
+
+        if ($check->count() > 1) {
+            if ($check->isApply == true) {
+                $check->update([
+                    'isBookmark' => false
+                ]);
+                return response()->json([
+                    'status' => 'success',
+                    'success' => true,
+                    'error' => 'Bookmarks successfully remove!!'
+                ]);
+            } elseif ($check->isApply == false) {
+                $check->delete();
+                return response()->json([
+                    'status' => 'success',
+                    'success' => true,
+                    'error' => 'Bookmarks successfully remove!!'
+                ]);
+            }
+
+        } else {
+            Accepting::create([
+                'seeker_id' => $seeker->id,
+                'vacancy_id' => $vacancy_id,
+                'isBookmark' => true,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'success' => true,
+                'error' => 'Vacancy is successfully applied!!'
+            ]);
+        }
     }
 
 
