@@ -25,6 +25,7 @@ class PsychoTestMiddleware
             if (!$check) {
                 return $next($request);
             }
+
         } elseif (Auth::guard('admin')->check()) {
             $check = PsychoTestResult::where('psychoTest_id', decrypt($request->psychoTest_id))
                 ->where('seeker_id', $request->seeker_id)->count();
@@ -32,6 +33,7 @@ class PsychoTestMiddleware
                 return $next($request);
             }
         }
+
         return response(view('errors.403'), 403);
     }
 }

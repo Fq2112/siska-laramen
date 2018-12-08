@@ -468,6 +468,14 @@
                     type: 'warning',
                     timer: '3500'
                 });
+                @elseif(\Illuminate\Support\Facades\Request::is('seekers*'))
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You\'re redirected here because the page you requested requires authentication, ' +
+                        'please login to your account.',
+                    type: 'warning',
+                    timer: '3500'
+                });
                 @endif
             </script>
         @endif

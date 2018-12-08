@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Middleware\Auth;
+namespace App\Http\Middleware\Agencies;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class AdminMiddleware
+class HomeAgencyMiddleware
 {
     /**
      * Handle an incoming request.
@@ -16,16 +16,10 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::guard('admin')->check()) {
+        if (Auth::guest() || Auth::check() && Auth::user()->isAgency() || Auth::guard('admin')->check()) {
             return $next($request);
 
-        } else {
-            if (Auth::guest()) {
-                return redirect()->guest(route('home-seeker'))
-                    ->with('expire', 'The page you requested requires authentication, please login to your account.');
-            }
         }
-
         return response(view('errors.403'), 403);
     }
 }

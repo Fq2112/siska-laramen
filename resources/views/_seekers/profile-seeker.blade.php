@@ -114,30 +114,26 @@
                                 </li>
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
-                                @auth
-                                    @if(Auth::user()->isSeeker() && Auth::user()->id == $seeker->user_id)
-                                        <li class="ld ld-breath" id="btn_edit">
-                                            <a href="{{route('seeker.edit.profile')}}" class="btn btn-info btn-block">
-                                                <i class="fa fa-user-edit"></i>&ensp;<strong>Edit</strong>
-                                            </a>
-                                        </li>
-                                    @else
-                                        <li class="{{!Auth::user()->isAgency() ? '' : 'ld ld-heartbeat'}}"
-                                            id="invite" data-placement="top" data-toggle="tooltip">
-                                            <button type="button" class="btn btn-info btn-block"
-                                                    {{!Auth::user()->isAgency() ? 'disabled' : ''}}>
-                                                <i class="fa fa-envelope"></i>&ensp;<strong>Invite</strong>
-                                            </button>
-                                        </li>
-                                    @endif
-                                @else
-                                    <li id="invite" data-placement="top"
+                                @if(Auth::check() && Auth::user()->isSeeker())
+                                    <li class="ld ld-breath" id="btn_edit">
+                                        <a href="{{route('seeker.edit.profile')}}" class="btn btn-info btn-block">
+                                            <i class="fa fa-user-edit"></i>&ensp;<strong>Edit</strong>
+                                        </a>
+                                    </li>
+                                @elseif(Auth::check() && Auth::user()->isAgency())
+                                    <li class="ld ld-heartbeat" id="invite" data-placement="top"
                                         data-toggle="tooltip">
+                                        <button type="button" class="btn btn-info btn-block">
+                                            <i class="fa fa-envelope"></i>&ensp;<strong>Invite</strong>
+                                        </button>
+                                    </li>
+                                @elseif(Auth::guard('admin')->check())
+                                    <li id="invite" data-placement="top" data-toggle="tooltip">
                                         <button type="button" class="btn btn-info btn-block" disabled>
                                             <i class="fa fa-envelope"></i>&ensp;<strong>Invite</strong>
                                         </button>
                                     </li>
-                                @endauth
+                                @endif
                             </ul>
                         </div>
                     </nav>
@@ -510,27 +506,25 @@
                                                             @endif
                                                         </div>
                                                         <div class="media-body">
-                                                            @auth
-                                                                @if(Auth::user()->isAgency())
-                                                                    <form class="pull-right to-animate-2"
-                                                                          id="form-download-attachments{{$row->id}}"
-                                                                          action="{{route('download.seeker.attachments',
+                                                            @if(Auth::check() && Auth::user()->isAgency())
+                                                                <form class="pull-right to-animate-2"
+                                                                      id="form-download-attachments{{$row->id}}"
+                                                                      action="{{route('download.seeker.attachments',
                                                                           ['files' => $row->files])}}"
-                                                                          data-toggle="tooltip" data-placement="left"
-                                                                          title="Download {{$row->files}}">
-                                                                        {{csrf_field()}}
-                                                                        <div class="anim-icon anim-icon-md download ld ld-breath"
-                                                                             id="{{$row->id}}"
-                                                                             onclick="downloadAttachments(id)"
-                                                                             style="font-size: 25px">
-                                                                            <input type="hidden" name="attachments_id"
-                                                                                   value="{{$row->id}}">
-                                                                            <input type="checkbox">
-                                                                            <label for="download"></label>
-                                                                        </div>
-                                                                    </form>
-                                                                @endif
-                                                            @endauth
+                                                                      data-toggle="tooltip" data-placement="left"
+                                                                      title="Download {{$row->files}}">
+                                                                    {{csrf_field()}}
+                                                                    <div class="anim-icon anim-icon-md download ld ld-breath"
+                                                                         id="{{$row->id}}"
+                                                                         onclick="downloadAttachments(id)"
+                                                                         style="font-size: 25px">
+                                                                        <input type="hidden" name="attachments_id"
+                                                                               value="{{$row->id}}">
+                                                                        <input type="checkbox">
+                                                                        <label for="download"></label>
+                                                                    </div>
+                                                                </form>
+                                                            @endif
                                                             <blockquote style="font-size: 12px;text-transform: none">
                                                                 {{$row->files}}
                                                             </blockquote>
@@ -932,179 +926,176 @@
             @endif
         </div>
     </div>
-    @auth
-        @if(Auth::user()->isAgency())
-            <style>
-                .card-read-more button {
-                    color: #00ADB5;
-                }
+    @if(Auth::check() && Auth::user()->isAgency())
+        <style>
+            .card-read-more button {
+                color: #00ADB5;
+            }
 
-                .card-read-more button:hover {
-                    color: #fff;
-                }
-            </style>
-            <div class="modal fade login" id="inviteModal">
-                <div class="modal-dialog login animated">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Hi {{Auth::user()->name}},</h4>
-                        </div>
-                        <form method="post" action="{{route('invite.seeker')}}" id="form-invite">
-                            {{csrf_field()}}
-                            <div class="modal-body">
-                                <div class="box">
-                                    <div class="content">
-                                        <p style="font-size: 17px" align="justify">
-                                            You will invite this seeker with the following details:</p>
-                                        <hr class="hr-divider">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="media">
-                                                    <div class="media-left media-middle">
-                                                        @if($user->ava == ""||$user->ava == "seeker.png")
-                                                            <img width="100" class="media-object"
-                                                                 src="{{asset('images/seeker.png')}}">
-                                                        @else
-                                                            <img width="100" class="media-object"
-                                                                 src="{{asset('storage/users/'.$user->ava)}}">
-                                                        @endif
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <small class="media-heading" style="font-size: 17px;">
-                                                            <a href="{{route('seeker.profile',['id'=>$seeker->id])}}"
-                                                               style="color: #00ADB5">
-                                                                {{$user->name}}</a>
-                                                            <a href="mailto:{{$user->email}}" style="color: #fa5555">
-                                                                <sub>&ndash; {{$user->email}}</sub></a>
-                                                        </small>
-                                                        <blockquote style="font-size: 16px;color: #7f7f7f">
-                                                            <ul class="list-inline">
-                                                                <li>
-                                                                    <a class="tag">
-                                                                        <i class="fa fa-user-tie"></i>&ensp;
-                                                                        {{count($job_title->get()) != 0 ?
-                                                                        'Current Title: '.$job_title->first()->job_title
-                                                                        : 'Current Status: Looking for a Job'}}
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="tag">
-                                                                        <i class="fa fa-briefcase"></i>&ensp;
-                                                                        Work Experience: {{$seeker->total_exp}} years
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="tag" id="expected_salary3">
-                                                                        @if($seeker->lowest_salary != "")
-                                                                            <script>
-                                                                                var low = ("{{$seeker->lowest_salary}}") / 1000000,
-                                                                                    high = ("{{$seeker->highest_salary}}") / 1000000;
-                                                                                document.getElementById("expected_salary3").innerHTML = "<i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary: IDR " + low + " to " + high + " millions";
-                                                                            </script>
-                                                                        @else
-                                                                            Anything
-                                                                        @endif
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="tag">
-                                                                        <i class="fa fa-graduation-cap"></i>&ensp;
-                                                                        {{count($last_edu->get()) != 0 ?
-                                                                        'Latest Degree: '.\App\Tingkatpend::find
-                                                                        ($last_edu->first()->tingkatpend_id)->name :
-                                                                        'Latest Degree (-)'}}
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="tag">
-                                                                        <i class="fa fa-user-graduate"></i>&ensp;
-                                                                        {{count($last_edu->get()) != 0 ?
-                                                                        'Latest Major: '.\App\Jurusanpend::find
-                                                                        ($last_edu->first()->jurusanpend_id)->name :
-                                                                        'Latest Major (-)'}}
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                            <table style="font-size: 12px">
-                                                                <tr>
-                                                                    <td><i class="fa fa-calendar-check"></i></td>
-                                                                    <td>&nbsp;Member Since</td>
-                                                                    <td>
-                                                                        : {{$seeker->created_at->format('j F Y')}}
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><i class="fa fa-clock"></i></td>
-                                                                    <td>&nbsp;Last Update</td>
-                                                                    <td>
-                                                                        : {{$seeker->updated_at->diffForHumans()}}
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                            <hr>
-                                                            <div class="row form-group">
-                                                                <div class="col-lg-12">
-                                                                    <p align="justify"
-                                                                       style="font-size:17px;margin-bottom: .5em">
-                                                                        Select one of the following vacancies that you
-                                                                        have in order to offer it for this Job Seeker.
-                                                                    </p>
-                                                                    <div class="input-group">
+            .card-read-more button:hover {
+                color: #fff;
+            }
+        </style>
+        <div class="modal fade login" id="inviteModal">
+            <div class="modal-dialog login animated">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Hi {{Auth::user()->name}},</h4>
+                    </div>
+                    <form method="post" action="{{route('invite.seeker')}}" id="form-invite">
+                        {{csrf_field()}}
+                        <div class="modal-body">
+                            <div class="box">
+                                <div class="content">
+                                    <p style="font-size: 17px" align="justify">
+                                        You will invite this seeker with the following details:</p>
+                                    <hr class="hr-divider">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="media">
+                                                <div class="media-left media-middle">
+                                                    @if($user->ava == ""||$user->ava == "seeker.png")
+                                                        <img width="100" class="media-object"
+                                                             src="{{asset('images/seeker.png')}}">
+                                                    @else
+                                                        <img width="100" class="media-object"
+                                                             src="{{asset('storage/users/'.$user->ava)}}">
+                                                    @endif
+                                                </div>
+                                                <div class="media-body">
+                                                    <small class="media-heading" style="font-size: 17px;">
+                                                        <a href="{{route('seeker.profile',['id'=>$seeker->id])}}"
+                                                           style="color: #00ADB5">
+                                                            {{$user->name}}</a>
+                                                        <a href="mailto:{{$user->email}}" style="color: #fa5555">
+                                                            <sub>&ndash; {{$user->email}}</sub></a>
+                                                    </small>
+                                                    <blockquote style="font-size: 16px;color: #7f7f7f">
+                                                        <ul class="list-inline">
+                                                            <li>
+                                                                <a class="tag">
+                                                                    <i class="fa fa-user-tie"></i>&ensp;
+                                                                    {{count($job_title->get()) != 0 ?
+                                                                    'Current Title: '.$job_title->first()->job_title
+                                                                    : 'Current Status: Looking for a Job'}}
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="tag">
+                                                                    <i class="fa fa-briefcase"></i>&ensp;
+                                                                    Work Experience: {{$seeker->total_exp}} years
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="tag" id="expected_salary3">
+                                                                    @if($seeker->lowest_salary != "")
+                                                                        <script>
+                                                                            var low = ("{{$seeker->lowest_salary}}") / 1000000,
+                                                                                high = ("{{$seeker->highest_salary}}") / 1000000;
+                                                                            document.getElementById("expected_salary3").innerHTML = "<i class='fa fa-hand-holding-usd'></i>&ensp;Expected Salary: IDR " + low + " to " + high + " millions";
+                                                                        </script>
+                                                                    @else
+                                                                        Anything
+                                                                    @endif
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="tag">
+                                                                    <i class="fa fa-graduation-cap"></i>&ensp;
+                                                                    {{count($last_edu->get()) != 0 ?
+                                                                    'Latest Degree: '.\App\Tingkatpend::find
+                                                                    ($last_edu->first()->tingkatpend_id)->name :
+                                                                    'Latest Degree (-)'}}
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="tag">
+                                                                    <i class="fa fa-user-graduate"></i>&ensp;
+                                                                    {{count($last_edu->get()) != 0 ?
+                                                                    'Latest Major: '.\App\Jurusanpend::find
+                                                                    ($last_edu->first()->jurusanpend_id)->name :
+                                                                    'Latest Major (-)'}}
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                        <table style="font-size: 12px">
+                                                            <tr>
+                                                                <td><i class="fa fa-calendar-check"></i></td>
+                                                                <td>&nbsp;Member Since</td>
+                                                                <td>
+                                                                    : {{$seeker->created_at->format('j F Y')}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><i class="fa fa-clock"></i></td>
+                                                                <td>&nbsp;Last Update</td>
+                                                                <td>
+                                                                    : {{$seeker->updated_at->diffForHumans()}}
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <hr>
+                                                        <div class="row form-group">
+                                                            <div class="col-lg-12">
+                                                                <p align="justify"
+                                                                   style="font-size:17px;margin-bottom: .5em">
+                                                                    Select one of the following vacancies that you
+                                                                    have in order to offer it for this Job Seeker.
+                                                                </p>
+                                                                <div class="input-group">
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-briefcase"></i></span>
-                                                                        <select class="form-control selectpicker"
-                                                                                name="vacancy_id" data-container="body"
-                                                                                id="vacancy_id" required>
-                                                                            <option value="" selected disabled>
-                                                                                -- Choose Vacancy --
-                                                                            </option>
-                                                                            @foreach(\App\Vacancies::where('agency_id',
-                                                                            \App\Agencies::where
-                                                                            ('user_id',Auth::user()->id)->first()->id)
-                                                                            ->get() as $vacancy)
-                                                                                <option value="{{$vacancy->id}}"
-                                                                                        {{$vacancy->isPost == false ?
-                                                                                        'disabled' : ''}}>
-                                                                                    {{$vacancy->judul}}</option>
-                                                                            @endforeach
-                                                                        </select>
-                                                                    </div>
-                                                                    <small style="font-size: 10px;color: #00ADB5;float: left">
-                                                                        P.S.: You're only permitted to select your
-                                                                        vacancy that has been posted.
-                                                                    </small>
+                                                                    <select class="form-control selectpicker"
+                                                                            name="vacancy_id" data-container="body"
+                                                                            id="vacancy_id" required>
+                                                                        <option value="" selected disabled>
+                                                                            -- Choose Vacancy --
+                                                                        </option>
+                                                                        @foreach(\App\Vacancies::where('agency_id',
+                                                                        \App\Agencies::where
+                                                                        ('user_id',Auth::user()->id)->first()->id)
+                                                                        ->get() as $vacancy)
+                                                                            <option value="{{$vacancy->id}}"
+                                                                                    {{$vacancy->isPost == false ?
+                                                                                    'disabled' : ''}}>
+                                                                                {{$vacancy->judul}}</option>
+                                                                        @endforeach
+                                                                    </select>
                                                                 </div>
+                                                                <small style="font-size: 10px;color: #00ADB5;float: left">
+                                                                    P.S.: You're only permitted to select your
+                                                                    vacancy that has been posted.
+                                                                </small>
                                                             </div>
-                                                        </blockquote>
-                                                    </div>
+                                                        </div>
+                                                    </blockquote>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <div class="card-read-more" id="btn-invite">
-                                    <input type="hidden" name="seeker_id" value="{{$seeker->id}}">
-                                    <button class="btn btn-link btn-block" type="button">
-                                        <i class="fa fa-envelope"></i>&ensp;Invite
-                                    </button>
-                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="card-read-more" id="btn-invite">
+                                <input type="hidden" name="seeker_id" value="{{$seeker->id}}">
+                                <button class="btn btn-link btn-block" type="button">
+                                    <i class="fa fa-envelope"></i>&ensp;Invite
+                                </button>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        @endif
-    @endauth
+        </div>
+    @endif
 @endsection
 @push("scripts")
     <script>
         var $btnInvite = $("#invite button");
 
-        $btnInvite.click(function () {
-            @auth
+        $btnInvite.on("click", function () {
             $("#inviteModal").modal('show');
             $("#btn-invite button").click(function () {
                 if ($("#vacancy_id").val()) {
@@ -1122,21 +1113,14 @@
                     });
                 }
             });
-            @else
-            openLoginModal();
-            @endauth
         });
-        @auth
-        @if(\App\Invitation::where('seeker_id',$seeker->id)->count())
-        @if(\App\Invitation::where('seeker_id',$seeker->id)->first()->isInvite == true)
+
+        @if($invitation->count() && $invitation->first()->isInvite == true)
         $("#invite").removeClass('ld ld-heartbeat').attr('title', 'Please, check Invited Seeker ' +
             'in your Dashboard.');
         $btnInvite.css('background', '#393e46').attr('disabled', true).html('<i class="fa fa-envelope">' +
             '</i>&ensp;Invited');
-
         @endif
-        @endif
-        @endauth
 
         function downloadAttachments(id) {
             $("#" + id).removeClass('ld ld-breath');
@@ -1152,10 +1136,10 @@
             }, 0);
         });
 
-        $(".profilebar-brand img").click(function () {
+        $(".profilebar-brand img").on("click", function () {
             $("#avaModal").modal('show');
         });
-        $(".slider").click(function () {
+        $(".slider").on("click", function () {
             $("#backgroundModal").modal('show');
         });
     </script>

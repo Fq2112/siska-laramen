@@ -36,6 +36,7 @@ class AgencyController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'agency'])->except(['index', 'showProfile']);
+        $this->middleware('agency.home')->only('index');
     }
 
     public function index()

@@ -457,10 +457,7 @@
         });
 
         function vacancyCheck(id, job_ads) {
-            @guest
-            openLoginModal();
-            @else
-            @if(Auth::user()->isSeeker() || Auth::guard('admin')->check())
+            @auth('admin')
             swal({
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Agency.',
@@ -468,6 +465,7 @@
                 timer: '3500'
             });
             @else
+            @if(Auth::check() && Auth::user()->isAgency())
             $.get("{{route('get.vacancyCheck',['id' => ''])}}/" + id, function (data) {
                 if (data == 0) {
                     swal({
@@ -532,8 +530,10 @@
                     $("#form-plans-" + id)[0].submit();
                 }
             });
+            @else
+            openLoginModal();
             @endif
-            @endguest
+            @endauth
         }
     </script>
 @endpush

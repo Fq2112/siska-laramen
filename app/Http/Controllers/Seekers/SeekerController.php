@@ -39,6 +39,7 @@ class SeekerController extends Controller
     public function __construct()
     {
         $this->middleware(['auth', 'seeker'])->except(['index', 'showProfile']);
+        $this->middleware('seeker.profile')->only('showProfile');
     }
 
     public function index()
@@ -87,8 +88,11 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
+        $invitation = Invitation::where('seeker_id', $seeker->id);
+
         return view('_seekers.profile-seeker', compact('provinces', 'seeker', 'user', 'attachments',
-            'experiences', 'educations', 'trainings', 'organizations', 'languages', 'skills', 'job_title', 'last_edu'));
+            'experiences', 'educations', 'trainings', 'organizations', 'languages', 'skills', 'job_title', 'last_edu',
+            'invitation'));
     }
 
     public function favoriteAgency(Request $request)
