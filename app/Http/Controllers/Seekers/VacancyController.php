@@ -83,7 +83,7 @@ class VacancyController extends Controller
 
         $acc = Accepting::where('vacancy_id', $vacancy->id)->where('seeker_id', $seeker->id);
 
-        if (count($acc->get()) == 0) {
+        if (!$acc->count()) {
             Accepting::create([
                 'seeker_id' => $seeker->id,
                 'vacancy_id' => $vacancy->id,
@@ -95,6 +95,10 @@ class VacancyController extends Controller
         } else {
             if ($acc->first()->isBookmark == true) {
                 $acc->first()->update(['isBookmark' => false]);
+
+                if ($acc->first()->isApply == false) {
+                    $acc->first()->delete();
+                }
 
                 return back()->with('vacancy', '' . $vacancy->judul . ' is successfully unmarked!');
 

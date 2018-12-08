@@ -272,11 +272,11 @@
                     $attr = 'disabled';
                     $label = 'APPLIED'
                 }
-                if (val.acc == null || val.acc.isBookmark == false) {
+                if (val.bookmark == null || val.bookmark.isBookmark == false) {
                     $prop = '';
                     $class2 = ' ld ld-breath';
                     $tooltip = 'Bookmark';
-                } else if (val.acc.isBookmark == true) {
+                } else if (val.bookmark.isBookmark == true) {
                     $prop = 'checked';
                     $class2 = '';
                     $tooltip = 'Unmark';

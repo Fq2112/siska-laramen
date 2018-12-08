@@ -447,13 +447,15 @@ class SeekerController extends Controller
             $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s',
                 $vacancy['updated_at'])->diffForHumans());
             $acc = array('acc' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->first());
+            $bookmark = array('bookmark' => Accepting::where('vacancy_id', $vacancy['id'])
+                ->where('isBookmark', true)->first());
             $totalApp = array('total_app' => Accepting::where('vacancy_id', $vacancy['id'])->where('isApply', true)->count());
             $isQuiz = array('isQuiz' => $plan->isQuiz);
             $isPsychoTest = array('isPsychoTest' => $plan->isPsychoTest);
 
             $result['data'][$i] = array_replace($ava, $result['data'][$i], $city, $degrees, $majors, $jobfunc,
-                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc, $totalApp,
-                $quizDate, $psychoTestDate, $isQuiz, $isPsychoTest);
+                $industry, $jobtype, $joblevel, $salary, $interview, $startDate, $endDate, $update_at, $acc, $bookmark,
+                $totalApp, $quizDate, $psychoTestDate, $isQuiz, $isPsychoTest);
             $i = $i + 1;
         }
 

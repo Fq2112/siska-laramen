@@ -67,7 +67,7 @@
                                             <form class="pull-right to-animate-2" id="form-bookmark-{{$vacancy->id}}"
                                                   method="post" action="{{route('bookmark.vacancy')}}">
                                                 {{csrf_field()}}
-                                                <div class="anim-icon anim-icon-md bookmark ld ld-breath"
+                                                <div class="anim-icon anim-icon-md bookmark"
                                                      onclick="removeBookmark('{{$vacancy->id}}','{{$vacancy->judul}}')"
                                                      data-toggle="tooltip" data-placement="bottom"
                                                      title="Unmark" style="font-size: 25px">
