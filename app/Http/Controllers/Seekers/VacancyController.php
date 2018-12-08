@@ -131,6 +131,10 @@ class VacancyController extends Controller
             if ($acc->first()->isApply == true) {
                 $acc->first()->update(['isApply' => false]);
 
+                if ($acc->first()->isBookmark == false) {
+                    $acc->first()->delete();
+                }
+
                 return back()->with('vacancy', 'Application for ' . $vacancy->judul . ' is successfully aborted!');
 
             } else {
