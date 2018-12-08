@@ -45,7 +45,12 @@ class AccountController extends Controller
 
     public function getAccSeeker(Request $request)
     {
-        $result = Accepting::where('vacancy_id', $request->vacancy_id)->paginate(6)->toArray();
+        $start = $request->recruitmentDate_start;
+        $end = $request->recruitmentDate_end;
+
+        $result = Accepting::where('vacancy_id', $request->vacancy_id)
+            ->whereBetween('created_at', [$start, $end])->orderByDesc('id')->paginate(6)->toArray();
+
         $result = $this->array_AccInv_seekers($result);
 
         return $result;
@@ -88,7 +93,7 @@ class AccountController extends Controller
             foreach ($reqExp as $exp) {
                 $query->orWhere('total_exp', '>=', $exp);
             }
-        })->paginate(6)->appends($request->only('q'))->toArray();
+        })->orderByDesc('total_exp')->paginate(6)->appends($request->only('q'))->toArray();
 
         $result = $this->array_seekers($result);
         return $result;
@@ -171,8 +176,11 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
+        $start = $request->recruitmentDate_start;
+        $end = $request->recruitmentDate_end;
+
         $result = Invitation::where('agency_id', $agency->id)->where('vacancy_id', $request->vacancy_id)
-            ->paginate(6)->toArray();
+            ->whereBetween('created_at', [$start, $end])->orderByDesc('id')->paginate(6)->toArray();
 
         $result = $this->array_AccInv_seekers($result);
 

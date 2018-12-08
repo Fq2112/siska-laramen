@@ -17,7 +17,7 @@
     <!-- NProgress -->
     <link href="{{asset('_admins/css/nprogress.css')}}" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
-    <link href="{{asset('_admins/css/daterangepicker.css')}}" rel="stylesheet">
+    <link href="{{asset('css/daterangepicker.css')}}" rel="stylesheet">
     <!-- bootstrap-datepicker -->
     <link href="{{ asset('css/bootstrap-datepicker.css') }}" rel="stylesheet">
     <!-- bootstrap-datetimepicker -->
@@ -786,7 +786,7 @@
 <script src="{{asset('_admins/js/bootstrap-progressbar.min.js')}}"></script>
 <!-- bootstrap-daterangepicker -->
 <script src="{{asset('js/moment.js')}}"></script>
-<script src="{{asset('_admins/js/daterangepicker.js')}}"></script>
+<script src="{{asset('js/daterangepicker.js')}}"></script>
 <!-- bootstrap-datepicker -->
 <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
 <!-- bootstrap-datetimepicker -->

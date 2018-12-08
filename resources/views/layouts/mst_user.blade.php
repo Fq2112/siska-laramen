@@ -45,6 +45,7 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap-datetimepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-select.css') }}">
     <link rel="stylesheet" href="{{ asset('css/bootstrap-toggle.css') }}">
+    <link rel="stylesheet" href="{{asset('css/daterangepicker.css')}}">
     <!-- Owl Carousel  -->
     <link rel="stylesheet" href="{{asset('css/owl.carousel.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/owl.theme.default.min.css')}}">
@@ -710,6 +711,7 @@
 <script src="{{ asset('js/bootstrap-datetimepicker.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap-select.js') }}"></script>
 <script src="{{ asset('js/bootstrap-toggle.js') }}"></script>
+<script src="{{asset('js/daterangepicker.js')}}"></script>
 <!-- Waypoints -->
 <script src="{{asset('js/jquery.waypoints.min.js')}}"></script>
 <!-- Stellar Parallax -->

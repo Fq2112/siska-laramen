@@ -17,6 +17,9 @@
                             </ul>
                             <form id="form-loadInvSeeker">
                                 <input type="hidden" name="vacancy_id" id="vacancy_id">
+                                <input type="hidden" name="recruitmentDate_start" id="recruitmentDate_start">
+                                <input type="hidden" name="recruitmentDate_end" id="recruitmentDate_end">
+                                <input type="hidden" id="recruitmentDate">
                             </form>
                         </div>
                     </div>
@@ -24,7 +27,14 @@
                         <div class="tab-content" id="vac-tab-content">
                             <div class="tab-pane to-animate">
                                 <div class="row">
-                                    <div class="col-lg-12 to-animate">
+                                    <div class="col-lg-4 to-animate-2">
+                                        <div id="daterangepicker" class="myDateRangePicker" data-toggle="tooltip"
+                                             data-placement="top" title="Recruitment Date Filter">
+                                            <i class="fa fa-calendar-alt"></i>&nbsp;
+                                            <span></span> <i class="fa fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 to-animate">
                                         <small id="show-result" class="pull-right"></small>
                                     </div>
                                 </div>
@@ -51,10 +61,25 @@
 @push('scripts')
     <script>
         $(function () {
-            var first_vac = $("#vac-nav-tabs li").first();
+            var first_vac = $("#vac-nav-tabs li").first(), start = moment().subtract(29, 'days'), end = moment();
             first_vac.addClass('active');
             $("#vac-tab-content .tab-pane").addClass('active');
             setVacancy(first_vac.attr('id'));
+
+            $('#daterangepicker').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, searchDate);
+
+            searchDate(start, end);
         });
 
         function setVacancy(id) {
@@ -62,7 +87,15 @@
             loadInvSeeker();
         }
 
-        function loadInvSeeker() {
+        function searchDate(start, end) {
+            $('#daterangepicker span').html(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+            $("#recruitmentDate_start").val(start.format('YYYY-MM-D'));
+            $("#recruitmentDate_end").val(end.format('YYYY-MM-D'));
+            $("#recruitmentDate").val(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+            loadInvSeeker(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+        }
+
+        function loadInvSeeker(date) {
             clearTimeout(this.delay);
             this.delay = setTimeout(function () {
                 $.ajax({
@@ -71,16 +104,14 @@
                     data: $("#form-loadInvSeeker").serialize(),
                     beforeSend: function () {
                         $('#image').show();
-                        $('#search-result').hide();
-                        $('.myPagination').hide();
+                        $('#search-result, #vac-control, .myPagination').hide();
                     },
                     complete: function () {
                         $('#image').hide();
-                        $('#search-result').show();
-                        $('.myPagination').show();
+                        $('#search-result, #vac-control, .myPagination').show();
                     },
                     success: function (data) {
-                        successLoad(data);
+                        successLoad(data, date);
                     },
                     error: function () {
                         swal({
@@ -97,6 +128,8 @@
         }
 
         $('.myPagination ul').on('click', 'li', function () {
+            var date = $("#recruitmentDate").val();
+
             $(window).scrollTop(0);
 
             page = $(this).children().text();
@@ -136,16 +169,14 @@
                     data: $("#form-loadInvSeeker").serialize(),
                     beforeSend: function () {
                         $('#image').show();
-                        $('#search-result').hide();
-                        $('.myPagination').hide();
+                        $('#search-result, #vac-control, .myPagination').hide();
                     },
                     complete: function () {
                         $('#image').hide();
-                        $('#search-result').show();
-                        $('.myPagination').show();
+                        $('#search-result, #vac-control, .myPagination').show();
                     },
                     success: function (data) {
-                        successLoad(data, page);
+                        successLoad(data, date, page);
                     },
                     error: function () {
                         swal({
@@ -161,15 +192,26 @@
             return false;
         });
 
-        function successLoad(data, page) {
-            var title, $result = '', pagination = '', $page = '', $style, $label, $phone, $salary, $display, $param;
+        function successLoad(data, date, page) {
+            var title, total, $date, $result = '', pagination = '', $page = '',
+                $style, $label, $phone, $salary, $display, $param;
 
             if (data.total > 0) {
-                title = data.total > 1 ? 'Showing ' + data.total + ' invited seekers' : 'Showing an invited seeker';
+                title = data.total > 1 ? 'Showing <strong>' + data.total + '</strong> invited seekers' :
+                    'Showing an invited seeker';
+
+                $date = date != undefined ? ' for <strong>"' + date + '"</strong>' : ' for <strong>"{{today()
+                ->subDays(29)->formatLocalized('%d %b %Y')." - ".today()->formatLocalized('%d %b %Y')}}"</strong>';
+
+                total = $.trim(data.total) ? ' (<strong>' + data.from + '</strong> - ' +
+                    '<strong>' + data.to + '</strong> of <strong>' + data.total + '</strong>)' : '';
+
             } else {
                 title = '<em>There seems to be none of the invited seeker was found&hellip;</em>';
+                total = '';
+                $date = '';
             }
-            $('#show-result').html(title);
+            $('#show-result').html(title + $date + total);
 
             $.each(data.data, function (i, val) {
                 if (val.isApply == 0) {
@@ -177,7 +219,7 @@
                     $label = 'NOT APPLY';
                     $display = '';
                 } else {
-                    $style = '#00adb5';
+                    $style = '#393e46';
                     $label = 'APPLIED';
                     $display = 'none';
                 }
@@ -201,7 +243,7 @@
                     '<a href="mailto:' + val.seeker.email + '" style="color: #fa5555">' +
                     '<sub>&ndash; ' + val.seeker.email + '</sub></a>' +
                     '<a style="display: ' + $phone + '" href="tel:' + val.seeker.phone + '">' +
-                    '<sub>| ' + val.seeker.phone + '</sub></a>' +
+                    '<sub> | ' + val.seeker.phone + '</sub></a>' +
                     '<span class="pull-right" style="color: #00ADB5">Invited on ' + val.created_at + '</span>' +
                     '</small>' +
                     '<blockquote style="font-size: 16px;color: #7f7f7f">' +

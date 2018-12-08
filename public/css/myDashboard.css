@@ -457,3 +457,11 @@
 #svg-exp-hi .progress-value {
     stroke: #cd4b4b;
 }
+
+.myDateRangePicker {
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    font-size: 85%;
+    margin-bottom: 1em;
+}
