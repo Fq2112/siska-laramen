@@ -3,17 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invitation extends Model
 {
-    use SoftDeletes;
-
     protected $table = 'invitations';
 
     protected $guarded = ['id'];
-
-    protected $dates = ['deleted_at'];
 
     public function GetAgency()
     {

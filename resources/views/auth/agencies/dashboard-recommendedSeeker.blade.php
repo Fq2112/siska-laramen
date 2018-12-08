@@ -247,11 +247,10 @@
                     $attr = 'disabled';
                     $label = 'INVITED'
                 }
-                if (val.seeker.low == 0 || val.seeker.high == 0) {
-                    $salary = 'Anything';
-                } else {
-                    $salary = 'IDR ' + val.seeker.low + ' to ' + val.seeker.high + ' millions';
-                }
+
+                $salary = val.seeker.low == 0 || val.seeker.high == 0 ? 'Anything' :
+                    'IDR ' + val.seeker.low + ' to ' + val.seeker.high + ' millions';
+
                 $result +=
                     '<div class="media">' +
                     '<div class="media-left media-middle">' +

@@ -152,6 +152,11 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
             'as' => 'agency.dashboard'
         ]);
 
+        Route::get('application_received/seekers', [
+            'uses' => 'AccountController@getAccSeeker',
+            'as' => 'get.acc.seeker'
+        ]);
+
         Route::get('recommended_seeker', [
             'uses' => 'AccountController@recommendedSeeker',
             'as' => 'agency.recommended.seeker'
@@ -170,6 +175,11 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
         Route::get('invited_seeker', [
             'uses' => 'AccountController@invitedSeeker',
             'as' => 'agency.invited.seeker'
+        ]);
+
+        Route::get('invited_seeker/seekers', [
+            'uses' => 'AccountController@getInvitedSeeker',
+            'as' => 'get.invited.seeker'
         ]);
 
     });

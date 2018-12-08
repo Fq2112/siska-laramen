@@ -73,15 +73,14 @@ class AgencyController extends Controller
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
         $vacancy = Vacancies::find($request->vacancy_id);
         $seeker = Seekers::find($request->seeker_id);
-        $seekerName = User::find($seeker->user_id)->name;
+        $seekerName = $seeker->user->name;
         $inv = Invitation::where('seeker_id', $seeker->id)->where('agency_id', $agency->id);
 
-        if (count($inv->get()) == 0) {
+        if (!$inv->count()) {
             Invitation::create([
                 'agency_id' => $agency->id,
                 'vacancy_id' => $vacancy->id,
                 'seeker_id' => $seeker->id,
-                'isInvite' => true,
             ]);
 
             return back()->with('seeker', '' . $seekerName . ' is successfully invited for ' . $vacancy->judul . '!');

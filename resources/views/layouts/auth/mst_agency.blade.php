@@ -115,6 +115,10 @@
             background-color: #00ADB5;
             border-color: #00ADB5;
         }
+
+        #vac-tab-content .tab-pane {
+            margin: 0 15px;
+        }
     </style>
 @endpush
 @section('content')
@@ -125,7 +129,7 @@
 
         $inv = \App\Invitation::wherehas('GetVacancy', function ($q) use ($agency) {
             $q->where('agency_id', $agency->id)->where('isPost', true);
-        })->where('isInvite', true)->count();
+        })->count();
 
         $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)
         ->whereDate('created_at','>=',now()->subDay())->count();

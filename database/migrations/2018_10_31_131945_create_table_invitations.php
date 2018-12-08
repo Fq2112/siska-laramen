@@ -24,9 +24,7 @@ class CreateTableInvitations extends Migration
             $table->integer('seeker_id')->unsigned();
             $table->foreign('seeker_id')->references('id')->on('seekers')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->boolean('isInvite')->default(false);
             $table->boolean('isApply')->default(false);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

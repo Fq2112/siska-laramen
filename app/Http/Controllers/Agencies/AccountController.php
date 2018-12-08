@@ -43,6 +43,14 @@ class AccountController extends Controller
         return view('auth.agencies.dashboard', compact('user', 'agency', 'vacancies'));
     }
 
+    public function getAccSeeker(Request $request)
+    {
+        $result = Accepting::where('vacancy_id', $request->vacancy_id)->paginate(6)->toArray();
+        $result = $this->array_AccInv_seekers($result);
+
+        return $result;
+    }
+
     public function recommendedSeeker(Request $request)
     {
         $user = Auth::user();
@@ -91,11 +99,10 @@ class AccountController extends Controller
         $i = 0;
         foreach ($result['data'] as $row) {
             $userSeeker = User::find($row['user_id']);
-            if ($userSeeker->ava == "seeker.png" || $userSeeker->ava == "") {
-                $filename = asset('images/seeker.png');
-            } else {
-                $filename = asset('storage/users/' . $userSeeker->ava);
-            }
+
+            $filename = $userSeeker->ava == "seeker.png" || $userSeeker->ava == "" ?
+                asset('images/seeker.png') : asset('storage/users/' . $userSeeker->ava);
+
             $job_title = Experience::where('seeker_id', $row['id'])->where('end_date', null)
                 ->orderby('id', 'desc')->take(1);
             $last_edu = Education::where('seeker_id', $row['id'])->wherenotnull('end_period')
@@ -111,9 +118,10 @@ class AccountController extends Controller
             );
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->format('j F Y'));
             $update_at = array('updated_at' => Carbon::parse($row['updated_at'])->diffForHumans());
-            $inv = array('inv' => Invitation::where('seeker_id', $row['id'])->where('isInvite', true)->first());
+            $inv = array('inv' => Invitation::where('seeker_id', $row['id'])->first());
 
-            $result['data'][$i] = array_replace($ava, $result['data'][$i], $exp, $totalExp, $edu, $created_at, $update_at, $inv);
+            $result['data'][$i] = array_replace($ava, $result['data'][$i], $exp, $totalExp, $edu, $created_at,
+                $update_at, $inv);
             $i = $i + 1;
         }
 
@@ -156,6 +164,54 @@ class AccountController extends Controller
         $vacancies = Vacancies::where('agency_id', $agency->id)->where('isPost', true)->get();
 
         return view('auth.agencies.dashboard-invitedSeeker', compact('user', 'agency', 'vacancies'));
+    }
+
+    public function getInvitedSeeker(Request $request)
+    {
+        $user = Auth::user();
+        $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+
+        $result = Invitation::where('agency_id', $agency->id)->where('vacancy_id', $request->vacancy_id)
+            ->paginate(6)->toArray();
+
+        $result = $this->array_AccInv_seekers($result);
+
+        return $result;
+    }
+
+    private function array_AccInv_seekers($result)
+    {
+        $i = 0;
+        foreach ($result['data'] as $row) {
+            $seeker = Seekers::find($row['seeker_id']);
+
+            $filename = $seeker->user->ava == "seeker.png" || $seeker->user->ava == "" ?
+                asset('images/seeker.png') : asset('storage/users/' . $seeker->user->ava);
+
+            $job_title = Experience::where('seeker_id', $row['seeker_id'])->where('end_date', null)
+                ->orderby('id', 'desc')->take(1);
+            $last_edu = Education::where('seeker_id', $row['seeker_id'])->wherenotnull('end_period')
+                ->orderby('tingkatpend_id', 'desc')->take(1);
+
+            $ava['seeker'] = array('ava' => $filename, 'name' => $seeker->user->name, 'email' => $seeker->user->email,
+                'phone' => $seeker->phone,
+                'low' => $seeker->lowest_salary / 1000000, 'high' => $seeker->highest_salary / 1000000,
+                'jobTitle' => $job_title->count() ? 'Current Title: ' . $job_title->first()->job_title :
+                    'Current Status: Looking for a Job',
+                'total_exp' => is_null($seeker->total_exp) ? 0 : $seeker->total_exp,
+                'last_deg' => $last_edu->count() ? Tingkatpend::find($last_edu->first()->tingkatpend_id)->name : '-',
+                'last_maj' => $last_edu->count() ? Jurusanpend::find($last_edu->first()->jurusanpend_id)->name : '-',
+                'created_at' => Carbon::parse($seeker->created_at)->format('j F Y'),
+                'updated_at' => Carbon::parse($seeker->updated_at)->diffForHumans()
+            );
+
+            $created_at = array('created_at' => Carbon::parse($row['created_at'])->format('j F Y'));
+
+            $result['data'][$i] = array_replace($ava, $result['data'][$i], $created_at);
+            $i = $i + 1;
+        }
+
+        return $result;
     }
 
     public function editProfile()
