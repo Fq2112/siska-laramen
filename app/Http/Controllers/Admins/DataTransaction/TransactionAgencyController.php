@@ -36,50 +36,10 @@ class TransactionAgencyController extends Controller
 
     public function showJobPostingsTable(Request $request)
     {
-        $postings = ConfirmAgency::all();
+        $postings = ConfirmAgency::orderByDesc('id')->get();
         $findAgency = $request->q;
 
         return view('_admins.tables._transactions.agencies.jobPosting-table', compact('postings', 'findAgency'));
-    }
-
-    public function showJobPostingsInvoice($id)
-    {
-        $confirmAgency = ConfirmAgency::find(decrypt($id));
-        $vac_ids = ConfirmAgency::where('id', decrypt($id))->pluck('vacancy_ids')->toArray();
-        $vacancies = Vacancies::whereIn('id', $vac_ids[0])->get();
-        $agency = Agencies::find($confirmAgency->agency_id);
-        $user = User::find($agency->user_id);
-
-        $pm = PaymentMethod::find($confirmAgency->payment_method_id);
-        $pc = PaymentCategory::find($pm->payment_category_id);
-        $pl = Plan::find($confirmAgency->plans_id);
-
-        $plan_price = $pl->price - ($pl->price * $pl->discount / 100);
-        $price_per_ads = Plan::find(1)->price - (Plan::find(1)->price * Plan::find(1)->discount / 100);
-
-        $old_totalVacancy = array_sum(str_split(filter_var($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
-        $diffTotalVacancy = $confirmAgency->total_ads - $old_totalVacancy;
-        $totalVacancy = $old_totalVacancy . "(+" . $diffTotalVacancy . ")";
-        $price_totalVacancy = $diffTotalVacancy * $price_per_ads;
-
-        $old_totalQuizApplicant = $pl->quiz_applicant;
-        $diffTotalQuizApplicant = $confirmAgency->total_quiz - $old_totalQuizApplicant;
-        $totalQuizApplicant = $old_totalQuizApplicant . "(+" . $diffTotalQuizApplicant . ")";
-        $price_totalQuiz = $diffTotalQuizApplicant * $pl->price_quiz_applicant;
-
-        $old_totalPsychoTest = $pl->psychoTest_applicant;
-        $diffTotalPsychoTest = $confirmAgency->total_psychoTest - $old_totalPsychoTest;
-        $totalPsychoTest = $old_totalPsychoTest . "(+" . $diffTotalPsychoTest . ")";
-        $price_totalPsychoTest = $diffTotalPsychoTest * $pl->price_psychoTest_applicant;
-
-        $date = Carbon::parse($confirmAgency->created_at);
-        $romanDate = RomanConverter::numberToRoman($date->format('y')) . '/' .
-            RomanConverter::numberToRoman($date->format('m'));
-        $invoice = 'INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
-
-        return view('_agencies.inv-jobPosting', compact('confirmAgency', 'vacancies', 'agency', 'user',
-            'pm', 'pc', 'pl', 'plan_price', 'totalVacancy', 'price_per_ads', 'price_totalVacancy', 'totalQuizApplicant',
-            'price_totalQuiz', 'totalPsychoTest', 'price_totalPsychoTest', 'invoice'));
     }
 
     public function updateJobPostings(Request $request)

@@ -215,26 +215,16 @@
                                                                     ($vacancy->recruitmentDate_end)
                                                                     ->format('j F Y') : 'Unknown'}}
                                                                 </span> |
-                                                                @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
-                                                                    <strong data-toggle="tooltip" data-placement="right"
-                                                                            title="Quiz (Online TPA & TKD) Date">
-                                                                        {{$vacancy->quizDate_start != "" &&
-                                                                        $vacancy->quizDate_end != "" ?
-                                                                        \Carbon\Carbon::parse($vacancy->quizDate_start)
-                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
-                                                                        ($vacancy->quizDate_end)->format('j F Y') :
-                                                                        'Unknown'}}
-                                                                    </strong><br>
-                                                                @elseif($vacancy->plan_id != "" && $vacancy->plan_id == 3)
-                                                                    <strong data-toggle="tooltip" data-placement="right"
-                                                                            title="Quiz (Online TPA & TKD) Date">
-                                                                        {{$vacancy->quizDate_start != "" &&
-                                                                        $vacancy->quizDate_end != "" ?
-                                                                        \Carbon\Carbon::parse($vacancy->quizDate_start)
-                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
-                                                                        ($vacancy->quizDate_end)->format('j F Y') :
-                                                                        'Unknown'}}
-                                                                    </strong><br>
+                                                                <strong data-toggle="tooltip" data-placement="right"
+                                                                        title="Quiz (Online TPA & TKD) Date">
+                                                                    {{$vacancy->quizDate_start != "" &&
+                                                                    $vacancy->quizDate_end != "" ?
+                                                                    \Carbon\Carbon::parse($vacancy->quizDate_start)
+                                                                    ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                    ($vacancy->quizDate_end)->format('j F Y') :
+                                                                    'Unknown'}}
+                                                                </strong><br>
+                                                                @if($vacancy->getPlan->isPsychoTest == true)
                                                                     <span data-toggle="tooltip" data-placement="left"
                                                                           title="Psycho Test (Online Interview) Date"
                                                                           style="line-height: 0">
@@ -280,30 +270,28 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        @if($vacancy->getPlan->isQuiz == true)
-                                            <table>
-                                                <tr>
-                                                    <td>Total Participant for Quiz with <strong>{{$vacancy
+                                        <table>
+                                            <tr>
+                                                <td>Total Participant for Quiz with <strong>{{$vacancy
                                                     ->passing_grade}}</strong> passing grade
-                                                    </td>
+                                                </td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>
+                                                    <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == false ? '800' : 'normal'}}">{{$vacancy->quiz_applicant}}</span>
+                                                    persons
+                                                </td>
+                                            </tr>
+                                            @if($vacancy->getPlan->isPsychoTest == true)
+                                                <tr>
+                                                    <td>Total Participant for Psycho Test</td>
                                                     <td>&nbsp;:&nbsp;</td>
                                                     <td>
-                                                        <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == false ? '800' : 'normal'}}">{{$vacancy->quiz_applicant}}</span>
-                                                        participants
+                                                        <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == true ? '800' : 'normal'}}">{{$vacancy->psychoTest_applicant}}</span>
+                                                        persons
                                                     </td>
                                                 </tr>
-                                                @if($vacancy->getPlan->isPsychoTest == true)
-                                                    <tr>
-                                                        <td>Total Participant for Psycho Test</td>
-                                                        <td>&nbsp;:&nbsp;</td>
-                                                        <td>
-                                                            <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == true ? '800' : 'normal'}}">{{$vacancy->psychoTest_applicant}}</span>
-                                                            participants
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                            </table>
-                                        @endif
+                                            @endif
+                                        </table>
                                     </td>
                                     <td style="vertical-align: middle;font-weight: 600;text-align: center">{{$result->score}}</td>
                                     <td style="vertical-align: middle" align="center">

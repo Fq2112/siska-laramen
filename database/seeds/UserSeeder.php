@@ -316,6 +316,11 @@ class UserSeeder extends Seeder
             'name' => 'Rabbit Media'
         ]);
 
+        User::find(26)->update([
+            'email' => 'fiqy_a@icloud.com',
+            'name' => 'Fiqy Ainuzzaqy'
+        ]);
+
         Admin::find(1)->update([
             'email' => 'jquinn211215@gmail.com',
             'name' => 'jQuinn',

@@ -14,9 +14,12 @@ use App\Invitation;
 use App\JobLevel;
 use App\JobType;
 use App\Jurusanpend;
+use App\PaymentMethod;
+use App\Plan;
 use App\Provinces;
 use App\Salaries;
 use App\Seekers;
+use App\Support\RomanConverter;
 use App\Tingkatpend;
 use App\User;
 use App\Vacancies;
@@ -365,32 +368,57 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
-        $time = $request->time;
-        if ($request->has('time')) {
-            if ($time == 2) {
-                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)
-                    ->whereDate('created_at', Carbon::today())
-                    ->orderByDesc('id')->paginate(5);
-            } elseif ($time == 3) {
-                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)
-                    ->whereDate('created_at', '>', Carbon::today()->subWeek()->toDateTimeString())
-                    ->orderByDesc('id')->paginate(5);
-            } elseif ($time == 4) {
-                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)
-                    ->whereDate('created_at', '>', Carbon::today()->subMonth()->toDateTimeString())
-                    ->orderByDesc('id')->paginate(5);
-            } else {
-                $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
-            }
-        } else {
-            $confirmAgency = ConfirmAgency::where('agency_id', $agency->id)->orderByDesc('id')->paginate(5);
-        }
         $req_id = $request->id;
         $req_invoice = $request->invoice;
         $findConfirm = $req_id != null ? ConfirmAgency::find(decrypt($req_id)) : '';
 
-        return view('auth.agencies.dashboard-vacancyStatus', compact('user', 'agency', 'time',
-            'confirmAgency', 'req_id', 'req_invoice', 'findConfirm'));
+        return view('auth.agencies.dashboard-vacancyStatus', compact('user', 'agency',
+            'req_id', 'req_invoice', 'findConfirm'));
+    }
+
+    public function getVacancyStatus(Request $request)
+    {
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        $result = ConfirmAgency::where('agency_id', $request->agency_id)
+            ->whereBetween('created_at', [$start, $end])->orderByDesc('id')->paginate(6)->toArray();
+
+        $i = 0;
+        foreach ($result['data'] as $row) {
+            $id['encryptID'] = encrypt($row['id']);
+            $date = Carbon::parse($row['created_at']);
+            $romanDate = RomanConverter::numberToRoman($date->format('y')) . '/' .
+                RomanConverter::numberToRoman($date->format('m'));
+
+            $filename = $row['isPaid'] == true ? asset('images/stamp_paid.png') :
+                asset('images/stamp_unpaid.png');
+
+            $plan = Plan::find($row['plans_id']);
+            $payment_method = PaymentMethod::find($row['payment_method_id']);
+
+            $vacancies['vacancy_ids'] = Vacancies::whereIn('id', $row['vacancy_ids'])
+                ->select('id', 'judul', 'isPost')->get()->toArray();
+
+            $paid = array('ava' => $filename);
+            $invoice = array('invoice' => '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $row['id']);
+            $pl = array('plan' => $plan->name);
+            $pm = array('pm' => $payment_method->name);
+            $pc = array('pc' => $payment_method->paymentCategories->name);
+            $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());
+            $created_at1DayAdd = array('add_day' => Carbon::parse($row['created_at'])->addDay());
+            $deadline = array('deadline' => Carbon::parse($row['created_at'])->addDay()->format('l, j F Y') .
+                ' at ' . Carbon::parse($row['created_at'])->addDay()->format('H:i'));
+
+            $orderDate = array('date_order' => Carbon::parse($row['created_at'])->format('l, j F Y'));
+            $paidDate = array('date_payment' => Carbon::parse($row['date_payment'])->format('l j F Y'));
+
+            $result['data'][$i] = array_replace($paid, $id, $invoice, $result['data'][$i], $pl, $pm, $pc,
+                $created_at, $created_at1DayAdd, $orderDate, $paidDate, $deadline, $vacancies);
+            $i = $i + 1;
+        }
+
+        return $result;
     }
 
     public function showVacancy()

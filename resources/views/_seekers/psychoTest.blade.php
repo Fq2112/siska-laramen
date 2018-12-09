@@ -210,15 +210,14 @@
                             contentType: false,
                             processData: false,
                             success: function (data) {
-                                swal("Success!", "Psycho Test with Room Code #{{$roomCode}} is successfully submitted!", "success");
+                                swal("Success!", "Psycho Test with Room Code #{{$roomCode}} is " +
+                                    "successfully submitted!", "success");
+                                $("#form-scoring input, #form-scoring textarea").attr('disabled', 'disabled');
+                                $(".sticky-footer button").attr('disabled', 'disabled');
                             },
                             error: function () {
-                                swal({
-                                    title: 'Oops...',
-                                    text: 'Something went wrong! Please refresh the page.',
-                                    type: 'error',
-                                    timer: '1500'
-                                })
+                                swal("Error!", "Psycho Test with Room Code #{{$roomCode}} is failed to submit! " +
+                                    "Something went wrong, please refresh the page.", "error");
                             }
                         });
                     });

@@ -89,14 +89,15 @@
                 <!-- Mobile Toggle Menu Button -->
                 <a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle" data-toggle="collapse"
                    data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
-                <a class="navbar-brand"
-                   href="{{Auth::check() && Auth::user()->isAgency() ? route('home-agency') : route('home-seeker')}}">
-                    SISKA</a>
+                <a class="navbar-brand" target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ?
+                '_blank' : ''}}" href="{{Auth::check() && Auth::user()->isAgency() ? route('home-agency') :
+                route('home-seeker')}}">SISKA</a>
                 @if(Auth::guest() || Auth::user()->isAgency() && \Illuminate\Support\Facades\Request::is('search*') ||
                 Auth::user()->isSeeker() && !\Illuminate\Support\Facades\Request::is
                 (['account/job_vacancy/recommended_vacancy','quiz','psychoTest']))
                     <form class="navbar-form search-form form-horizontal" role="search"
-                          action="{{route('search.vacancy')}}">
+                          action="{{route('search.vacancy')}}"
+                          style="display: {{Auth::guard('admin')->check() && \Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? 'none' : ''}}">
                         <div id="custom-search-input">
                             <div class="input-group">
                                 <div class="input-group-btn dropdown">
@@ -499,7 +500,7 @@
                                     class="icon-twitter"></i></a></li>
                     <li><a href="https://instagram.com/siskaku" class="instagram" target="_blank"><i
                                     class="icon-instagram"></i></a></li>
-                    <li><a href="https://github.com/Fq2124/siska" class="github" target="_blank"><i
+                    <li><a href="https://github.com/Fq2124/siska-laramen" class="github" target="_blank"><i
                                     class="icon-github"></i></a></li>
                 </ul>
             </div>
@@ -511,24 +512,31 @@
                     <div class="form-group">
                         <label for="name" class="sr-only">Name</label>
                         <input name="name" type="text" class="form-control" id="name" placeholder="Name"
-                               value="{{ Auth::guest() ? '' : Auth::user()->name}}" required>
+                               value="{{ Auth::guest() ? '' : Auth::user()->name}}"
+                               {{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? 'disabled' : ''}}
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="email" class="sr-only">Email</label>
                         <input name="email" type="email" class="form-control" id="email" placeholder="Email"
-                               value="{{ Auth::guest() ? '' : Auth::user()->email}}" required>
+                               value="{{ Auth::guest() ? '' : Auth::user()->email}}"
+                               {{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? 'disabled' : ''}}
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="subject" class="sr-only">Subject</label>
-                        <input name="subject" type="text" class="form-control" id="subject" placeholder="Subject">
+                        <input name="subject" type="text" class="form-control" id="subject" placeholder="Subject"
+                                {{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? 'disabled' : ''}}>
                     </div>
                     <div class="form-group">
                         <label for="message" class="sr-only">Message</label>
                         <textarea name="message" class="form-control" id="message" rows="5" placeholder="Message"
+                                  {{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? 'disabled' : ''}}
                                   required></textarea>
                     </div>
                     <div class="form-group">
-                        <button type="submit" id="btn-submit" class="btn btn-send-message btn-md">
+                        <button type="submit" id="btn-submit" class="btn btn-send-message btn-md"
+                                {{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? 'disabled' : ''}}>
                             Send Message
                         </button>
                     </div>

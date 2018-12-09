@@ -12,7 +12,7 @@ class PaymentMethod extends Model
 
     public function paymentCategories()
     {
-        return $this->belongsTo(PaymentCategory::class);
+        return $this->belongsTo(PaymentCategory::class, 'payment_category_id');
     }
 
     public function confirmAgencies()

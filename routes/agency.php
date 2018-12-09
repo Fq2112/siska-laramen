@@ -118,6 +118,11 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
             'as' => 'agency.vacancy.status'
         ]);
 
+        Route::get('status/vacancies', [
+            'uses' => 'AccountController@getVacancyStatus',
+            'as' => 'get.vacancy.status'
+        ]);
+
         Route::get('/', [
             'uses' => 'AccountController@showVacancy',
             'as' => 'agency.vacancy.show'

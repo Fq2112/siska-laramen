@@ -1,7 +1,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scaleable=no">
-    <title>Quiz Result List</title>
+    <title>Psycho Test Result List</title>
     <style type="text/css">
         /*Bootstrap*/
         .alert {
@@ -474,11 +474,11 @@
                                                         <td>
                                                             <small style="line-height: 2em">
                                                                 <strong style="font-size: 22px">
-                                                                    Here is the quiz result list for your vacancy
+                                                                    Here is the psycho test result list for your vacancy
                                                                 </strong><br>
                                                                 Thank you for giving us the opportunity to manage your
                                                                 vacancy recruitment along with the online quiz (TPA &
-                                                                TKD) selection.
+                                                                TKD) selection and also psycho test (online interview).
                                                             </small>
                                                         </td>
                                                     </tr>
@@ -489,34 +489,17 @@
                                     </table>
                                     <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
                                            align="center">
-                                        @php $plan = \App\Plan::find($vacancy['plan_id']); @endphp
                                         <tr>
                                             <td>
-                                                <div class="alert alert-success text-center">
-                                                    We're only send the best quiz results based on the
-                                                    <strong>passing grade</strong> and the amount of
-                                                    <strong>quiz participants</strong> of your vacancy that
-                                                    you've set in the job posting process.
+                                                <div class="alert alert-info text-center">
+                                                    Download <strong>the attached pdf file</strong> to check the
+                                                    psycho test result list of your vacancy.
                                                 </div>
                                             </td>
                                         </tr>
-                                        @if($plan->isPsychoTest == true)
-                                            <tr>
-                                                <td>
-                                                    <div class="alert alert-info text-center">
-                                                        According to the amount of psycho test participants of your
-                                                        vacancy that you've set before, there's only
-                                                        <strong>{{$vacancy['psychoTest_applicant']}}</strong> candidates
-                                                        that will become participants.
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endif
                                         <tr>
                                             <td>
-                                                <div class="alert alert-warning text-center">
-                                                    Download <strong>the attached pdf file</strong> to check it.
-                                                </div>
+                                                <div style="font-size:20px;line-height:20px;">&nbsp;</div>
                                             </td>
                                         </tr>
                                         <tr>

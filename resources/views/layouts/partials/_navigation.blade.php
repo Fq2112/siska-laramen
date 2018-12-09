@@ -93,6 +93,7 @@
             <ul class="dropdown-menu">
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{Auth::user()->isSeeker() ? route('seeker.dashboard') : route('agency.dashboard')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-tachometer-alt" style="margin-right: 7px"></i>Dashboard</a></li>
@@ -105,11 +106,13 @@
                 @endif
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{Auth::user()->isSeeker() ? route('seeker.edit.profile') : route('agency.edit.profile')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-user-edit" style="margin-right: 5px"></i>Edit Profile</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{Auth::user()->isSeeker() ? route('seeker.settings') : route('agency.settings')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-cogs" style="margin-right: 5px"></i>Account Settings</a></li>
@@ -197,21 +200,25 @@
             <ul class="dropdown-menu">
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{route('home-admin')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-tachometer-alt" style="margin-right: 5px"></i>Dashboard</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{route('admin.inbox')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-envelope" style="margin-right: 7px"></i>Inbox</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{route('quiz.info')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-grin-beam" style="margin-right: 6px"></i>Quiz</a></li>
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
                        href="{{route('psychoTest.info')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-comments" style="margin-right: 6px"></i>Psycho Test</a></li>

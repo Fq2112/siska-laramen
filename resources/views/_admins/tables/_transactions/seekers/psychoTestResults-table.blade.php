@@ -37,8 +37,7 @@
                                 <th>ID</th>
                                 <th>Code</th>
                                 <th>Details</th>
-                                <th>Score</th>
-                                <th>Status</th>
+                                <th>Result</th>
                             </tr>
                             </thead>
 
@@ -46,7 +45,16 @@
                             @foreach($psychoTestResults as $result)
                                 @php
                                     $info = $result->getPsychoTestInfo;
+                                    $admin = \App\Admin::find($result->admin_id);
                                     $seeker = \App\Seekers::find($result->seeker_id);
+                                    $room = '';
+                                    foreach($info->room_codes as $code){
+                                        strtok($code, '_');
+                                        $participantID = strtok('');
+                                        if($seeker->id == $participantID){
+                                            $room = $code;
+                                        }
+                                    }
                                     $userSeeker = \App\User::find($seeker->user_id);
                                     $last_edu = \App\Education::where('seeker_id', $seeker->id)
                                     ->wherenotnull('end_period')->orderby('tingkatpend_id', 'desc')->take(1)->get();
@@ -62,14 +70,11 @@
                                         <input type="checkbox" class="flat">
                                     </td>
                                     <td style="vertical-align: middle">{{$result->id}}</td>
-                                    <td style="vertical-align: middle">{{$info->unique_code}}</td>
+                                    <td style="vertical-align: middle">{{$room}}</td>
                                     <td style="vertical-align: middle">
-                                        <i class="fa fa-shield-alt"></i> Quiz Code:
-                                        <strong>{{$info->unique_code}}</strong>&ensp;|&ensp;<i
-                                                class="fa fa-question-circle"></i>
-                                        Total Question: <strong>{{$info->total_question}}</strong> items&ensp;|&nbsp;
-                                        <i class="fa fa-stopwatch"></i> Time Limit: <strong>{{$info->time_limit}}
-                                        </strong> minutes
+                                        <i class="fa fa-shield-alt"></i> Room Code:
+                                        <strong>{{$room}}</strong>&ensp;|&ensp;<i class="fa fa-user-tie"></i>
+                                        Interviewer: <strong>{{$admin->name}}</strong>
                                         <hr style="margin: .5em auto">
                                         <table>
                                             <tr>
@@ -215,38 +220,26 @@
                                                                     ($vacancy->recruitmentDate_end)
                                                                     ->format('j F Y') : 'Unknown'}}
                                                                 </span> |
-                                                                @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
-                                                                    <strong data-toggle="tooltip" data-placement="right"
-                                                                            title="Quiz (Online TPA & TKD) Date">
+                                                                <span data-toggle="tooltip" data-placement="right"
+                                                                      title="Quiz (Online TPA & TKD) Date">
                                                                         {{$vacancy->quizDate_start != "" &&
                                                                         $vacancy->quizDate_end != "" ?
                                                                         \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->quizDate_end)->format('j F Y') :
                                                                         'Unknown'}}
-                                                                    </strong><br>
-                                                                @elseif($vacancy->plan_id != "" && $vacancy->plan_id == 3)
-                                                                    <strong data-toggle="tooltip" data-placement="right"
-                                                                            title="Quiz (Online TPA & TKD) Date">
-                                                                        {{$vacancy->quizDate_start != "" &&
-                                                                        $vacancy->quizDate_end != "" ?
-                                                                        \Carbon\Carbon::parse($vacancy->quizDate_start)
-                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
-                                                                        ($vacancy->quizDate_end)->format('j F Y') :
-                                                                        'Unknown'}}
-                                                                    </strong><br>
-                                                                    <span data-toggle="tooltip" data-placement="left"
-                                                                          title="Psycho Test (Online Interview) Date"
-                                                                          style="line-height: 0">
-                                                                        {{$vacancy->psychoTestDate_start != "" &&
-                                                                        $vacancy->psychoTestDate_end != "" ?
-                                                                        \Carbon\Carbon::parse
-                                                                        ($vacancy->psychoTestDate_start)
-                                                                        ->format('j F Y').' - '.\Carbon\Carbon::parse
-                                                                        ($vacancy->psychoTestDate_end)
-                                                                        ->format('j F Y') : 'Unknown'}}
-                                                                    </span> |
-                                                                @endif
+                                                                    </span><br>
+                                                                <strong data-toggle="tooltip" data-placement="left"
+                                                                        title="Psycho Test (Online Interview) Date"
+                                                                        style="line-height: 0">
+                                                                    {{$vacancy->psychoTestDate_start != "" &&
+                                                                    $vacancy->psychoTestDate_end != "" ?
+                                                                    \Carbon\Carbon::parse
+                                                                    ($vacancy->psychoTestDate_start)
+                                                                    ->format('j F Y').' - '.\Carbon\Carbon::parse
+                                                                    ($vacancy->psychoTestDate_end)
+                                                                    ->format('j F Y') : 'Unknown'}}
+                                                                </strong> |
                                                                 <span data-toggle="tooltip" data-placement="right"
                                                                       title="Job Interview Date" style="line-height: 0">
                                                                     {{$vacancy->interview_date != "" ?
@@ -280,38 +273,73 @@
                                                 </td>
                                             </tr>
                                         </table>
-                                        @if($vacancy->getPlan->isQuiz == true)
-                                            <table>
-                                                <tr>
-                                                    <td>Total Participant for Quiz with <strong>{{$vacancy
+                                        <table>
+                                            <tr>
+                                                <td>Total Participant for Quiz with <strong>{{$vacancy
                                                     ->passing_grade}}</strong> passing grade
-                                                    </td>
-                                                    <td>&nbsp;:&nbsp;</td>
-                                                    <td>
-                                                        <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == false ? '800' : 'normal'}}">{{$vacancy->quiz_applicant}}</span>
-                                                        participants
-                                                    </td>
-                                                </tr>
-                                                @if($vacancy->getPlan->isPsychoTest == true)
-                                                    <tr>
-                                                        <td>Total Participant for Psycho Test</td>
-                                                        <td>&nbsp;:&nbsp;</td>
-                                                        <td>
-                                                            <span style="font-weight: {{$vacancy->getPlan->isPsychoTest == true ? '800' : 'normal'}}">{{$vacancy->psychoTest_applicant}}</span>
-                                                            participants
-                                                        </td>
-                                                    </tr>
-                                                @endif
-                                            </table>
-                                        @endif
+                                                </td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>
+                                                    <span>{{$vacancy->quiz_applicant}}</span> participants
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Participant for Psycho Test</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>
+                                                            <span style="font-weight: 800">
+                                                                {{$vacancy->psychoTest_applicant}}</span>
+                                                    participants
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </td>
-                                    <td style="vertical-align: middle;font-weight: 600;text-align: center">{{$result->score}}</td>
-                                    <td style="vertical-align: middle" align="center">
-                                        <span class="label label-default" style="background: {{$result->score >= $info
-                                        ->getVacancy->passing_grade ? '#00adb5' : '#fa5555'}};font-size: 14px;">
-                                            <i class="fa fa-{{$result->isPassed == true ? 'grin-beam' : 'sad-cry'}}">
-                                            </i>&ensp;{{$result->isPassed == true ? 'PASSED' : 'NOT PASSED'}}
-                                        </span>
+                                    <td style="vertical-align: middle;">
+                                        <table>
+                                            <tr>
+                                                <td><i class="fa fa-user-check"></i>&nbsp;</td>
+                                                <td>Kompetensi</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->kompetensi}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-user-shield"></i>&nbsp;</td>
+                                                <td>Karakter</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->karakter}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-user-plus"></i>&nbsp;</td>
+                                                <td>Attitude</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->attitude}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-male"></i>&nbsp;<i class="fa fa-female"></i>&nbsp;
+                                                </td>
+                                                <td>Grooming</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->grooming}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-users"></i>&nbsp;</td>
+                                                <td>Komunikasi</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->komunikasi}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-users-cog"></i>&nbsp;</td>
+                                                <td>Anthusiasme</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->anthusiasme}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><i class="fa fa-user-tag"></i>&nbsp;</td>
+                                                <td>Note</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td style="font-weight: 700">{{$result->note != "" ? $result->note : '-'}}</td>
+                                            </tr>
+                                        </table>
                                     </td>
                                 </tr>
                             @endforeach
@@ -330,10 +358,10 @@
                                     </button>
                                 </div>
                             </div>
-                            <form method="post" id="form-quiz-result">
+                            <form method="post" id="form-psychoTest-result">
                                 {{csrf_field()}}
-                                <input id="quizResult_ids" type="hidden" name="quizResult_ids">
-                                <input id="quizCodes" type="hidden" name="codes">
+                                <input id="psychoTestResult_ids" type="hidden" name="psychoTestResult_ids">
+                                <input id="psychoTestCodes" type="hidden" name="codes">
                             </form>
                         </div>
                     </div>
@@ -408,12 +436,12 @@
                 }), codes = $.map(table.rows('.selected').data(), function (item) {
                     return item[2]
                 });
-                $("#quizResult_ids").val(ids);
-                $("#quizCodes").val(codes);
-                $("#form-quiz-result").attr("action", "{{route('table.quizResults.massSend')}}");
+                $("#psychoTestResult_ids").val(ids);
+                $("#psychoTestCodes").val(codes);
+                $("#form-psychoTest-result").attr("action", "{{route('table.psychoTestResults.massSend')}}");
 
                 swal({
-                    title: 'Send Quiz Results',
+                    title: 'Send Psycho Test Results',
                     text: 'Are you sure to send this ' + ids.length + ' selected records to the Agency\'s email? ' +
                         'You won\'t be able to revert this!',
                     type: 'warning',
@@ -424,7 +452,7 @@
 
                     preConfirm: function () {
                         return new Promise(function (resolve) {
-                            $("#form-quiz-result")[0].submit();
+                            $("#form-psychoTest-result")[0].submit();
                         });
                     },
                     allowOutsideClick: false
@@ -436,11 +464,11 @@
                 var ids = $.map(table.rows('.selected').data(), function (item) {
                     return item[1]
                 });
-                $("#quizResult_ids").val(ids);
-                $("#form-quiz-result").attr("action", "{{route('table.quizResults.massDelete')}}");
+                $("#psychoTestResult_ids").val(ids);
+                $("#form-psychoTest-result").attr("action", "{{route('table.psychoTestResults.massDelete')}}");
 
                 swal({
-                    title: 'Remove Quiz Results',
+                    title: 'Remove Psycho Test Results',
                     text: 'Are you sure to remove this ' + ids.length + ' selected records? ' +
                         'You won\'t be able to revert this!',
                     type: 'warning',
@@ -451,7 +479,7 @@
 
                     preConfirm: function () {
                         return new Promise(function (resolve) {
-                            $("#form-quiz-result")[0].submit();
+                            $("#form-psychoTest-result")[0].submit();
                         });
                     },
                     allowOutsideClick: false

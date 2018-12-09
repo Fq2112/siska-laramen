@@ -10,139 +10,38 @@
                             <h4 style="margin-bottom: 10px">Vacancy Status</h4>
                             <small>Here is the current and previous status of your vacancies.</small>
                             <hr>
-                        </div>
-                    </div>
-                    <div class="row" style="margin-bottom: .5em">
-                        <div class="col-lg-3 to-animate-2">
-                            <form id="form-time" action="{{route('agency.vacancy.status')}}">
-                                <select class="form-control selectpicker" name="time" data-container="body">
-                                    <option value="1" {{$time == 1 ? 'selected' : ''}}>All Time</option>
-                                    <option value="2" {{$time == 2 ? 'selected' : ''}}>Today</option>
-                                    <option value="3" {{$time == 3 ? 'selected' : ''}}>Last 7 Days</option>
-                                    <option value="4" {{$time == 4 ? 'selected' : ''}}>Last 30 Days</option>
-                                </select>
+                            <form id="form-loadVacStats">
+                                <input type="hidden" name="agency_id" value="{{$agency->id}}">
+                                <input type="hidden" name="start_date" id="start_date">
+                                <input type="hidden" name="end_date" id="end_date">
+                                <input type="hidden" id="date">
                             </form>
                         </div>
-                        <div class="col-lg-9 to-animate">
-                            <small class="pull-right">
-                                @if(count($confirmAgency) > 1)
-                                    Showing <strong>{{count($confirmAgency)}}</strong> vacancy status
-                                @elseif(count($confirmAgency) == 1)
-                                    Showing a vacancy status
-                                @else
-                                    <em>There seems to be none of the vacancy status was found&hellip;</em>
-                                @endif
-                            </small>
-                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12">
-                            @foreach($confirmAgency as $row)
-                                @php
-                                    $vac_ids = \App\ConfirmAgency::where('id', $row->id)->pluck('vacancy_ids')->toArray();
-                                    $vacancies = \App\Vacancies::whereIn('id',$vac_ids[0])->get();
-                                    $plan = \App\Plan::find($row->plans_id);
-                                    $pm = \App\PaymentMethod::find($row->payment_method_id);
-                                    $pc = \App\PaymentCategory::find($pm->payment_category_id);
-                                    $date = \Carbon\Carbon::parse($row->created_at);
-                                    $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')) . '/' .
-                                    \App\Support\RomanConverter::numberToRoman($date->format('m'));
-                                    $invoice = '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $row->id;
-                                @endphp
-                                <div class="media to-animate">
-                                    <div class="media-left media-middle">
-                                        @if($row->isPaid == true)
-                                            <img width="100" class="media-object"
-                                                 src="{{asset('images/stamp_paid.png')}}">
-                                        @else
-                                            <img width="100" class="media-object"
-                                                 src="{{asset('images/stamp_unpaid.png')}}">
-                                        @endif
-                                    </div>
-                                    <div class="media-body">
-                                        <small class="media-heading">
-                                            <a style="color: {{$row->isPaid == true ? '#00adb5' : '#fa5555'}}"
-                                               target="_blank"
-                                               href="{{route('invoice.job.posting',['id'=>encrypt($row->id)])}}">
-                                                <i class="fa fa-file-invoice-dollar"></i>&ensp;{{$invoice}}</a>
-                                            <sub>&ndash; {{$row->created_at->diffForHumans()}}</sub>
-                                        </small>
-                                        <blockquote style="font-size: 12px;color: #7f7f7f">
-                                            @if($row->isPaid == false && now() <= $row->created_at->addDay())
-                                                <form class="pull-right to-animate-2"
-                                                      id="form-paymentProof-{{$row->id}}" method="post"
-                                                      action="{{route('upload.paymentProof')}}">{{csrf_field()}}
-                                                    <div class="anim-icon anim-icon-md upload {{$row->isPaid == true ?
-                                                    '' : 'ld ld-breath'}}" onclick="uploadPaymentProof('{{$row->id}}',
-                                                            '{{$row->payment_proof}}','{{$invoice}}')"
-                                                         data-toggle="tooltip" data-placement="bottom"
-                                                         title="Payment Proof" style="font-size: 25px">
-                                                        <input type="hidden" name="confirmAgency_id"
-                                                               value="{{$row->id}}">
-                                                        <input id="upload{{$row->id}}" type="checkbox" checked>
-                                                        <label for="upload{{$row->id}}"></label>
-                                                    </div>
-                                                </form>
-                                            @endif
-                                            <ul class="list-inline">
-                                                @foreach($vacancies as $vacancy)
-                                                    <li><a class="tag" target="_blank" href="{{route('detail.vacancy',
-                                                    ['id' => $vacancy->id])}}"><i class="fa fa-briefcase"></i>&ensp;
-                                                            {{$vacancy->judul}} &ndash; <strong>{{$vacancy->isPost ==
-                                                            true ? 'POSTED' : 'NOT POSTED YET'}}</strong></a></li>
-                                                @endforeach
-                                                <li>
-                                                    <a class="tag tag-plans">
-                                                        <i class="fa fa-thumbtack"></i>&ensp;Plan:
-                                                        <strong style="text-transform: uppercase">{{$plan->name}}</strong>
-                                                        Package</a>
-                                                </li>
-                                                <li>
-                                                    <a class="tag tag-plans">
-                                                        <i class="fa fa-credit-card"></i>&ensp;Payment:
-                                                        {{$pc->name}} &ndash;
-                                                        <strong style="text-transform: uppercase">{{$pm->name}}</strong>
-                                                    </a></li>
-                                            </ul>
-                                            <small>
-                                                @if($row->isPaid == true)
-                                                    <strong>Paid</strong> on
-                                                    {{\Carbon\Carbon::parse($row->date_payment)->format('l, j F Y').
-                                                    ' at '.\Carbon\Carbon::parse($row->date_payment)->format('H:i')}}
-                                                @else
-                                                    <strong>Ordered</strong> on
-                                                    {{\Carbon\Carbon::parse($row->created_at)->format('l, j F Y').
-                                                    ' at '.\Carbon\Carbon::parse($row->created_at)->format('H:i')}}
-                                                @endif
-                                            </small>
-                                            @if($row->isPaid == false && now() <= $row->created_at->addDay())
-                                                <a href="{{route('delete.job.posting',['id'=>encrypt($row->id)])}}"
-                                                   onclick="deleteJobPosting('{{$row->id}}','{{$invoice}}')">
-                                                    <div class="anim-icon anim-icon-md apply ld ld-heartbeat"
-                                                         data-toggle="tooltip" data-placement="right"
-                                                         title="Click here to abort this order!"
-                                                         style="font-size: 15px">
-                                                        <input id="apply{{$row->id}}" type="checkbox" checked>
-                                                        <label for="apply{{$row->id}}"></label>
-                                                    </div>
-                                                </a>
-                                                <small class="to-animate-2">
-                                                    P.S.: You are only permitted to COMPLETE the payment or
-                                                    even ABORT this order before <strong>
-                                                        {{$row->created_at->addDay()->format('l, j F Y').' at '.
-                                                        $row->created_at->addDay()->format('H:i').'.'}}</strong>
-                                                </small>
-                                            @endif
-                                        </blockquote>
-                                    </div>
+                    <div class="row" style="margin: 0">
+                        <div class="row" id="vac-control">
+                            <div class="col-lg-4 to-animate-2">
+                                <div id="daterangepicker" class="myDateRangePicker" data-toggle="tooltip"
+                                     data-placement="top" title="Ordered Date Filter">
+                                    <i class="fa fa-calendar-alt"></i>&nbsp;
+                                    <span></span> <i class="fa fa-caret-down"></i>
                                 </div>
-                                <hr class="hr-divider">
-                            @endforeach
+                            </div>
+                            <div class="col-lg-8 to-animate">
+                                <small class="pull-right" id="show-result" style="text-align: right"></small>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 to-animate-2 myPagination">
-                            {{$confirmAgency->links()}}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <img src="{{asset('images/loading3.gif')}}" id="image"
+                                     class="img-responsive ld ld-fade">
+                                <div id="search-result"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 to-animate-2 myPagination">
+                                <ul class="pagination"></ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -174,8 +73,8 @@
 @endsection
 @push('scripts')
     <script>
-        @if($findConfirm != "")
         $(function () {
+            @if($findConfirm != "")
             @if(now() <= $findConfirm->created_at->addDay())
             uploadPaymentProof('{{$findConfirm->id}}', '{{$findConfirm->payment_proof}}', '{{$req_invoice}}');
             @else
@@ -185,9 +84,264 @@
                 type: 'warning',
                 timer: '3500'
             });
-            @endif
+                    @endif
+                    @endif
+
+            var start = moment().startOf('month'), end = moment().endOf('month');
+
+            $('#daterangepicker').daterangepicker({
+                startDate: start,
+                endDate: end,
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                }
+            }, searchDate);
+
+            searchDate(start, end);
         });
-        @endif
+
+        function searchDate(start, end) {
+            $('#daterangepicker span').html(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+            $("#start_date").val(start.format('YYYY-MM-D'));
+            $("#end_date").val(end.format('YYYY-MM-D'));
+            $("#date").val(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+            loadVacStats(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+        }
+
+        function loadVacStats(date) {
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: "{{route('get.vacancy.status')}}",
+                    type: "GET",
+                    data: $("#form-loadVacStats").serialize(),
+                    beforeSend: function () {
+                        $('#image').show();
+                        $('#search-result, #vac-control, .myPagination').hide();
+                    },
+                    complete: function () {
+                        $('#image').hide();
+                        $('#search-result, #vac-control, .myPagination').show();
+                    },
+                    success: function (data) {
+                        successLoad(data, date);
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Vacancy Status',
+                            text: 'Data not found!',
+                            type: 'error',
+                            timer: '1500'
+                        })
+                    }
+                });
+            }.bind(this), 800);
+
+            return false;
+        }
+
+        $('.myPagination ul').on('click', 'li', function () {
+            var date = $("#date").val();
+
+            $(window).scrollTop(0);
+
+            page = $(this).children().text();
+            active = $(this).parents("ul").find('.active').eq(0).text();
+            hellip_prev = $(this).closest('.hellip_prev').next().find('a').text();
+            hellip_next = $(this).closest('.hellip_next').prev().find('a').text();
+
+            if (page > 0) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=' + page;
+            }
+            if ($(this).hasClass('prev')) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=' + parseInt(active - 1);
+            }
+            if ($(this).hasClass('next')) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=' + parseInt(+active + +1);
+            }
+            if ($(this).hasClass('hellip_prev')) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=' + parseInt(hellip_prev - 1);
+                page = parseInt(hellip_prev - 1);
+            }
+            if ($(this).hasClass('hellip_next')) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=' + parseInt(+hellip_next + +1);
+                page = parseInt(+hellip_next + +1);
+            }
+            if ($(this).hasClass('first')) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=1';
+            }
+            if ($(this).hasClass('last')) {
+                $url = "{{url('/account/agency/vacancy/status/vacancies')}}" + '?page=' + last_page;
+            }
+
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: $url,
+                    type: "GET",
+                    data: $("#form-loadVacStats").serialize(),
+                    beforeSend: function () {
+                        $('#image').show();
+                        $('#search-result, #vac-control, .myPagination').hide();
+                    },
+                    complete: function () {
+                        $('#image').hide();
+                        $('#search-result, #vac-control, .myPagination').show();
+                    },
+                    success: function (data) {
+                        console.log(data.data);
+                        successLoad(data, date, page);
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Vacancy Status',
+                            text: 'Data not found!',
+                            type: 'error',
+                            timer: '1500'
+                        })
+                    }
+                });
+            }.bind(this), 800);
+
+            return false;
+        });
+
+        function successLoad(data, date, page) {
+            var title, total, $date, pagination = '', $page = '',
+                $color, $display, $class, $param, $param2, $label;
+
+            if (data.total > 0) {
+                title = data.total > 1 ? 'Showing <strong>' + data.total + '</strong> vacancy status' :
+                    'Showing a vacancy status';
+
+                $date = date != undefined ? ' for <strong>"' + date + '"</strong>' : ' for <strong>"{{today()
+                ->startOfMonth()->formatLocalized('%d %b %Y')." - ".today()
+                ->endOfMonth()->formatLocalized('%d %b %Y')}}"</strong>';
+
+                total = $.trim(data.total) ? ' (<strong>' + data.from + '</strong> - ' +
+                    '<strong>' + data.to + '</strong> of <strong>' + data.total + '</strong>)' : '';
+
+            } else {
+                title = '<em>There seems to be none of the vacancy status was found&hellip;</em>';
+                total = '';
+                $date = '';
+            }
+            $('#show-result').html(title + $date + total);
+
+            $("#search-result").empty();
+            $.each(data.data, function (i, val) {
+                $('[data-toggle="tooltip"]').tooltip();
+
+                $color = val.isPaid == 1 ? '#00adb5' : '#fa5555';
+                $display = val.isPaid == 0 && '{{now()}}' <= val.add_day ? '' : 'none';
+                $class = val.isPaid == 1 ? '' : 'ld ld-breath';
+                $label = val.isPaid == 1 ? "<strong>Paid</strong> on " + val.date_payment :
+                    "<strong>Ordered</strong> on " + val.date_order;
+                $param = val.id + ",'" + val.payment_proof + "','" + val.invoice + "'";
+                $param2 = val.id + ",'" + val.invoice + "'";
+
+                $("#search-result").append(
+                    '<div class="media">' +
+                    '<div class="media-left media-middle">' +
+                    '<img width="100" class="media-object" src="' + val.ava + '"></div>' +
+                    '<div class="media-body">' +
+                    '<small class="media-heading">' +
+                    '<a style="color: ' + $color + '" target="_blank" ' +
+                    'href="{{route('invoice.job.posting',['id'=> ''])}}/' + val.encryptID + '">' +
+                    '<i class="fa fa-file-invoice-dollar"></i>&ensp;' + val.invoice + '</a>' +
+                    '<sub>&ndash; ' + val.created_at + '</sub></small>' +
+                    '<blockquote style="font-size: 12px;color: #7f7f7f">' +
+                    '<form style="display: ' + $display + '" class="pull-right" id="form-paymentProof-' + val.id + '" ' +
+                    'method="post" action="{{route('upload.paymentProof')}}">{{csrf_field()}}' +
+                    '<div class="anim-icon anim-icon-md upload ' + $class + '" ' +
+                    'onclick="uploadPaymentProof(' + $param + ')" data-toggle="tooltip" data-placement="bottom" ' +
+                    'title="Payment Proof" style="font-size: 25px">' +
+                    '<input type="hidden" name="confirmAgency_id" value="' + val.id + '">' +
+                    '<input id="upload' + val.id + '" type="checkbox" checked>' +
+                    '<label for="upload' + val.id + '"></label></div></form>' +
+                    '<ul class="list-inline" id="vacancies' + val.id + '"></ul>' +
+                    '<small>' + $label + '</small>' +
+                    '<a style="display: ' + $display + '" ' +
+                    'href="{{route('delete.job.posting',['id'=>''])}}/' + val.encryptID + '" ' +
+                    'onclick="deleteJobPosting(' + $param2 + ')">' +
+                    '<div class="anim-icon anim-icon-md apply ld ld-heartbeat" data-toggle="tooltip" ' +
+                    'data-placement="right" title="Click here to abort this order!" style="font-size: 15px">' +
+                    '<input id="apply' + val.id + '" type="checkbox" checked>' +
+                    '<label for="apply' + val.id + '"></label></div></a>' +
+                    '<small style="display: ' + $display + '">P.S.: You are only permitted to COMPLETE the payment or ' +
+                    'even ABORT this order before <strong>' + val.deadline + '.</strong></small>' +
+                    '</blockquote></div></div><hr class="hr-divider">'
+                );
+
+                var $vacancies = '', $status;
+                $.each(val.vacancy_ids, function (x, nilai) {
+                    $status = nilai.isPost == 1 ? 'POSTED' : 'NOT POSTED YET';
+                    $vacancies +=
+                        '<li><a target="_blank" href="{{route('detail.vacancy',['id' => ''])}}/' + nilai.id + '" ' +
+                        'class="tag tag-plans"><i class="fa fa-briefcase"></i>&ensp;' + nilai.judul + ' &ndash; ' +
+                        '<strong>' + $status + '</strong></li>';
+                });
+                $("#vacancies" + val.id).html($vacancies +
+                    '<li><a class="tag tag-plans"><i class="fa fa-thumbtack"></i>&ensp;Plan: ' +
+                    '<strong style="text-transform: uppercase">' + val.plan + '</strong> Package</a></li>' +
+                    '<li><a class="tag tag-plans"><i class="fa fa-credit-card"></i>&ensp;Payment: ' + val.pc + ' &ndash; ' +
+                    '<strong style="text-transform: uppercase">' + val.pm + '</strong></a></li>'
+                );
+            });
+
+            if (data.last_page > 1) {
+
+                if (data.current_page > 4) {
+                    pagination += '<li class="first"><a href="' + data.first_page_url + '"><i class="fa fa-angle-double-left"></i></a></li>';
+                }
+
+                if ($.trim(data.prev_page_url)) {
+                    pagination += '<li class="prev"><a href="' + data.prev_page_url + '" rel="prev"><i class="fa fa-angle-left"></i></a></li>';
+                } else {
+                    pagination += '<li class="disabled"><span><i class="fa fa-angle-left"></i></span></li>';
+                }
+
+                if (data.current_page > 4) {
+                    pagination += '<li class="hellip_prev"><a style="cursor: pointer">&hellip;</a></li>'
+                }
+
+                for ($i = 1; $i <= data.last_page; $i++) {
+                    if ($i >= data.current_page - 3 && $i <= data.current_page + 3) {
+                        if (data.current_page == $i) {
+                            pagination += '<li class="active"><span>' + $i + '</span></li>'
+                        } else {
+                            pagination += '<li><a style="cursor: pointer">' + $i + '</a></li>'
+                        }
+                    }
+                }
+
+                if (data.current_page < data.last_page - 3) {
+                    pagination += '<li class="hellip_next"><a style="cursor: pointer">&hellip;</a></li>'
+                }
+
+                if ($.trim(data.next_page_url)) {
+                    pagination += '<li class="next"><a href="' + data.next_page_url + '" rel="next"><i class="fa fa-angle-right"></i></a></li>';
+                } else {
+                    pagination += '<li class="disabled"><span><i class="fa fa-angle-right"></i></span></li>';
+                }
+
+                if (data.current_page < data.last_page - 3) {
+                    pagination += '<li class="last"><a href="' + data.last_page_url + '"><i class="fa fa-angle-double-right"></i></a></li>';
+                }
+            }
+            $('.myPagination ul').html(pagination);
+
+            if (page != "" && page != undefined) {
+                $page = '?page=' + page;
+            }
+            window.history.replaceState("", "", '{{url('/account/agency/vacancy/status')}}' + $page);
+            return false;
+        }
 
         function uploadPaymentProof(id, image, invoice) {
             $("#paymentProof").html(
@@ -372,12 +526,12 @@
 
         function deleteJobPosting(id, invoice) {
             swal({
-                title: 'Are you sure to delete ' + invoice + '?',
+                title: 'Are you sure to abort ' + invoice + '?',
                 text: "You won't be able to revert this action!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#fa5555',
-                confirmButtonText: 'Yes, delete it!',
+                confirmButtonText: 'Yes, abort it!',
                 showLoaderOnConfirm: true,
                 allowOutsideClick: false,
             }).then(function () {

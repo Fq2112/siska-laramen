@@ -25,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Agencies\QuizResultList' => [
             'App\Listeners\Agencies\SendQuizResultList',
         ],
+        'App\Events\Agencies\PsychoTestResultList' => [
+            'App\Listeners\Agencies\SendPsychoTestResultList',
+        ],
     ];
 
     /**

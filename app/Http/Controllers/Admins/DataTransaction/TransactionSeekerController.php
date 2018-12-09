@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admins\DataTransaction;
 
 use App\Accepting;
 use App\Events\Agencies\ApplicantList;
+use App\Events\Agencies\PsychoTestResultList;
 use App\Events\Agencies\QuizResultList;
 use App\Invitation;
 use App\PsychoTestResult;
@@ -147,39 +148,39 @@ class TransactionSeekerController extends Controller
 
     public function massSendPsychoTestResults(Request $request)
     {
-        $ids = explode(",", $request->quizResult_ids);
-        $vacancies = Vacancies::whereHas('getQuizInfo', function ($info) use ($ids) {
-            $info->whereHas('getQuizResult', function ($result) use ($ids) {
+        $ids = explode(",", $request->psychoTestResult_ids);
+        $vacancies = Vacancies::whereHas('getPsychoTestInfo', function ($info) use ($ids) {
+            $info->whereHas('getPsychoTestResult', function ($result) use ($ids) {
                 $result->whereIn('id', $ids);
             });
         })->get();
 
         foreach ($vacancies as $vacancy) {
-            $applicants = QuizResult::where('quiz_id', $vacancy->getQuizInfo->id)->where('isPassed', true)
-                ->orderByDesc('score')->take($vacancy->quiz_applicant)->get()->toArray();
+            $applicants = PsychoTestResult::where('psychoTest_id', $vacancy->getPsychoTestInfo->id)
+                ->orderByDesc('id')->take($vacancy->psychoTest_applicant)->get()->toArray();
 
-            $date = Carbon::parse($vacancy->quizDate_start)->format('dmy') . '-' .
-                Carbon::parse($vacancy->quizDate_end)->format('dmy');
+            $date = Carbon::parse($vacancy->psychoTestDate_start)->format('dmy') . '-' .
+                Carbon::parse($vacancy->psychoTestDate_end)->format('dmy');
 
-            $filename = 'QuizResultList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
-            $pdf = PDF::loadView('reports.quizResultList-pdf', compact('applicants', 'vacancy'));
-            Storage::put('public/users/agencies/reports/quizResults/' . $filename, $pdf->output());
+            $filename = 'PsychoTestResultList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
+            $pdf = PDF::loadView('reports.psychoTestResultList-pdf', compact('applicants', 'vacancy'));
+            Storage::put('public/users/agencies/reports/psychoTestResults/' . $filename, $pdf->output());
 
-            event(new QuizResultList($vacancy, $vacancy->agencies->user->email, $filename));
+            event(new PsychoTestResultList($vacancy, $vacancy->agencies->user->email, $filename));
         }
 
-        return back()->with('success', '' . count($ids) . ' quiz result(s) is successfully sent to their email!');
+        return back()->with('success', '' . count($ids) . ' psycho test result(s) is successfully sent to their email!');
     }
 
     public function massDeletePsychoTestResults(Request $request)
     {
-        $quizResults = QuizResult::whereIn('id', explode(",", $request->quizResult_ids))->get();
+        $psychoTestResults = PsychoTestResult::whereIn('id', explode(",", $request->psychoTestResult_ids))->get();
 
-        foreach ($quizResults as $quizResult) {
-            $quizResult->delete();
+        foreach ($psychoTestResults as $psychoTestResult) {
+            $psychoTestResult->delete();
         }
 
-        return back()->with('success', '' . count($quizResults) . ' quiz result(s) is successfully deleted!');
+        return back()->with('success', '' . count($psychoTestResults) . ' psycho test result(s) is successfully deleted!');
     }
 
     public function showInvitationsTable()

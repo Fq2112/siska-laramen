@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'psychoTest' => \App\Http\Middleware\Seekers\PsychoTestMiddleware::class,
         'agency' => \App\Http\Middleware\Auth\AgencyMiddleware::class,
         'agency.home' => \App\Http\Middleware\Agencies\HomeAgencyMiddleware::class,
+        'agency.invoice' => \App\Http\Middleware\Agencies\InvoiceAgencyMiddleware::class,
         'admin' => \App\Http\Middleware\Auth\AdminMiddleware::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',

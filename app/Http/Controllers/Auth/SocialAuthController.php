@@ -34,7 +34,6 @@ class SocialAuthController extends Controller
             $checkUser = User::where('email', $userSocial->email)->first();
 
             if (!$checkUser) {
-
                 Storage::disk('local')
                     ->put('public/users/' . $userSocial->getId() . ".jpg", file_get_contents($userSocial->getAvatar()));
 
@@ -54,7 +53,14 @@ class SocialAuthController extends Controller
                     'provider' => $provider
                 ]);
                 Auth::loginUsingId($user->id);
+
             } else {
+                if ($checkUser->ava == "seeker.png" || $checkUser->ava == "") {
+                    Storage::disk('local')
+                        ->put('public/users/' . $userSocial->getId() . ".jpg", file_get_contents($userSocial->getAvatar()));
+
+                    $checkUser->update(['ava' => $userSocial->getId() . ".jpg"]);
+                }
                 Auth::loginUsingId($checkUser->id);
             }
 
