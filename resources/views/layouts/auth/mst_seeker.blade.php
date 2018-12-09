@@ -58,30 +58,51 @@
 
         $totalQuizInv = $quizInv - $submittedQuizInv;
 
-        $psychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
-            $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+        $findRoom = \App\PsychoTestInfo::whereHas('getVacancy', function ($vac) use ($seeker) {
+            $vac->whereHas('getAccepting', function ($acc) use ($seeker) {
+                $acc->where('seeker_id', $seeker->id)->where('isApply', true);
+            })->whereHas('getQuizInfo', function ($info) use ($seeker) {
                 $info->whereHas('getQuizResult', function ($res) use ($seeker) {
                     $res->where('seeker_id', $seeker->id)->where('isPassed', true);
                 });
-            })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
-            ->where('psychoTestDate_start', '<=', today()->addDay())
-            ->where('psychoTestDate_end', '>=', today());
-        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+            });
+        })->first();
 
-        $submittedPsychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
-            $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
-                $info->whereHas('getQuizResult', function ($res) use ($seeker) {
-                    $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+        $candidate = '';
+        if ($findRoom != null) {
+            foreach ($findRoom->room_codes as $room) {
+                strtok($room, '_');
+                $participantID = strtok('');
+                if ($seeker->id == $participantID) {
+                    $candidate = $seeker->id;
+                }
+            }
+        }
+
+        $psychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($candidate) {
+            $vac->whereHas('getQuizInfo', function ($info) use ($candidate) {
+                $info->whereHas('getQuizResult', function ($res) use ($candidate) {
+                    $res->where('seeker_id', $candidate)->where('isPassed', true);
+                });
+            })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+                ->where('psychoTestDate_start', '<=', today()->addDay())
+                ->where('psychoTestDate_end', '>=', today());
+        })->where('seeker_id', $candidate)->where('isApply', true)->count();
+
+        $submittedPsychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($candidate) {
+            $vac->whereHas('getQuizInfo', function ($info) use ($candidate) {
+                $info->whereHas('getQuizResult', function ($res) use ($candidate) {
+                    $res->where('seeker_id', $candidate)->where('isPassed', true);
                 });
             })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
             ->where('psychoTestDate_start', '<=', today()->addDay())
             ->where('psychoTestDate_end', '>=', today())
-            ->whereHas('getPsychoTestInfo', function ($q) use ($seeker){
-                $q->whereHas('getPsychoTestResult', function ($q) use ($seeker){
-                    $q->where('seeker_id', $seeker->id);
+            ->whereHas('getPsychoTestInfo', function ($q) use ($candidate){
+                $q->whereHas('getPsychoTestResult', function ($q) use ($candidate){
+                    $q->where('seeker_id', $candidate);
                 });
             });
-        })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+        })->where('seeker_id', $candidate)->where('isApply', true)->count();
 
         $totalPsychoTestInv = $psychoTestInv - $submittedPsychoTestInv;
 
@@ -118,28 +139,32 @@
                                 <ul class="nav nav-list nav-menu-list-style">
                                     <li class="nav-menu-header">
                                         <label class="nav-header glyphicon-icon-rpad">
-                                                <span class="fa fa-tachometer-alt m5"
-                                                      style="margin-right: 15px"></span>Dashboard
-                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down">
-                                                </span>
+                                            <span class="fa fa-tachometer-alt m5" style="margin-right: 15px"></span>Dashboard
+                                            <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
                                         </label>
                                         <ul class="nav nav-list tree bullets">
-                                            <li><a href="{{route('seeker.dashboard')}}">Application Status
+                                            <li>
+                                                <a href="{{route('seeker.dashboard')}}">Application Status
                                                     <span class="badge">{{$totalApp > 999 ? '999+' : $totalApp }}</span>
                                                 </a>
                                             </li>
-                                            <li><a href="{{route('seeker.invitation.quiz')}}">Quiz Invitation
+                                            <li>
+                                                <a href="{{route('seeker.invitation.quiz')}}">Quiz Invitation
                                                     <span class="badge">{{$totalQuizInv > 999 ? '999+' : $totalQuizInv}}
-                                                    </span></a>
+                                                    </span>
+                                                </a>
                                             </li>
-                                            <li><a href="{{route('seeker.invitation.psychoTest')}}">Psycho Test
-                                                    Invitation
-                                                    <span class="badge"
-                                                          style="background: #FA5555;">{{$totalPsychoTestInv > 999 ? '999+' : $totalPsychoTestInv}}</span></a>
+                                            <li>
+                                                <a href="{{route('seeker.invitation.psychoTest')}}">
+                                                    Psycho Test Invitation
+                                                    <span class="badge">{{$totalPsychoTestInv > 999 ? '999+' :
+                                                    $totalPsychoTestInv}}</span>
+                                                </a>
                                             </li>
-                                            <li><a href="{{route('seeker.jobInvitation')}}">Job Invitation
-                                                    <span class="badge" style="background: #FA5555;">
-                                                        {{$totalInvToApply > 999 ? '999+' : $totalInvToApply}}</span>
+                                            <li>
+                                                <a href="{{route('seeker.jobInvitation')}}">
+                                                    Job Invitation <span class="badge">{{$totalInvToApply > 999 ?
+                                                    '999+' : $totalInvToApply}}</span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -151,12 +176,15 @@
                                             <span class="menu-collapsible-icon glyphicon glyphicon-chevron-down"></span>
                                         </label>
                                         <ul class="nav nav-list tree bullets">
-                                            <li><a href="{{route('seeker.recommended.vacancy')}}">Recommended Vacancy
-                                                    <span class="badge">{{$rec > 999 ? '999+' : $rec}}</span></a>
+                                            <li>
+                                                <a href="{{route('seeker.recommended.vacancy')}}">Recommended Vacancy
+                                                    <span class="badge">{{$rec > 999 ? '999+' : $rec}}</span>
+                                                </a>
                                             </li>
-                                            <li><a href="{{route('seeker.bookmarked.vacancy')}}">Bookmarked Vacancy
-                                                    <span class="badge">{{$totalBook > 999 ? '999+' : $totalBook}}
-                                                    </span></a>
+                                            <li>
+                                                <a href="{{route('seeker.bookmarked.vacancy')}}">Bookmarked Vacancy
+                                                    <span class="badge">{{$totalBook > 999 ? '999+' : $totalBook}}</span>
+                                                </a>
                                             </li>
                                         </ul>
                                     </li>

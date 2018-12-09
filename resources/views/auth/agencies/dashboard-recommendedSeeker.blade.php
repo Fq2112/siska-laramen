@@ -51,7 +51,7 @@
                             </form>
                         </div>
                         <div class="col-lg-7 to-animate">
-                            <small class="pull-right" id="show-result"></small>
+                            <small class="pull-right" id="show-result" style="text-align: right"></small>
                         </div>
                     </div>
                     <div class="row">

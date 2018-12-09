@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-8 to-animate">
-                                <small id="show-result" class="pull-right"></small>
+                                <small class="pull-right" id="show-result" style="text-align: right"></small>
                             </div>
                         </div>
                         <div class="row">

@@ -14,15 +14,15 @@
                     </div>
                     <div class="row" style="margin-bottom: .5em">
                         <div class="col-lg-12 to-animate">
-                            <small>
-                                @if(count($quizInv) > 1)
-                                    Showing all <strong>{{count($quizInv)}}</strong> quiz invitations
-                                @elseif(count($quizInv) == 1)
-                                    Showing a quiz invitation
-                                @else
-                                    <em>There seems to be none of the quiz invitation was found&hellip;</em>
-                                @endif
-                            </small>
+                            @if(count($quizInv) > 1)
+                                <small class="pull-right">Showing all <strong>{{count($quizInv)}}</strong> quiz
+                                    invitations
+                                </small>
+                            @elseif(count($quizInv) == 1)
+                                <small class="pull-right">Showing a quiz invitation</small>
+                            @else
+                                <small><em>There seems to be none of the quiz invitation was found&hellip;</em></small>
+                            @endif
                         </div>
                     </div>
                     <div class="row">

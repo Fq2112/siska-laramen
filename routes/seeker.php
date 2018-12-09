@@ -251,6 +251,11 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.bookmarked.vacancy'
             ]);
 
+            Route::get('bookmarked_vacancy/vacancies', [
+                'uses' => 'SeekerController@getBookmarkedVacancies',
+                'as' => 'get.bookmarked.vacancies'
+            ]);
+
         });
     });
 

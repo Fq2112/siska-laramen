@@ -57,30 +57,51 @@
 
             $totalQuizInv = $quizInv - $submittedQuizInv;
 
-            $psychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
-                $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
+            $findRoom = \App\PsychoTestInfo::whereHas('getVacancy', function ($vac) use ($seeker) {
+                $vac->whereHas('getAccepting', function ($acc) use ($seeker) {
+                    $acc->where('seeker_id', $seeker->id)->where('isApply', true);
+                })->whereHas('getQuizInfo', function ($info) use ($seeker) {
                     $info->whereHas('getQuizResult', function ($res) use ($seeker) {
                         $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+                    });
+                });
+            })->first();
+
+            $candidate = '';
+            if ($findRoom != null) {
+                foreach ($findRoom->room_codes as $room) {
+                    strtok($room, '_');
+                    $participantID = strtok('');
+                    if ($seeker->id == $participantID) {
+                        $candidate = $seeker->id;
+                    }
+                }
+            }
+
+            $psychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($candidate) {
+                $vac->whereHas('getQuizInfo', function ($info) use ($candidate) {
+                    $info->whereHas('getQuizResult', function ($res) use ($candidate) {
+                        $res->where('seeker_id', $candidate)->where('isPassed', true);
                     });
                 })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
                     ->where('psychoTestDate_start', '<=', today()->addDay())
                     ->where('psychoTestDate_end', '>=', today());
-            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+            })->where('seeker_id', $candidate)->where('isApply', true)->count();
 
-            $submittedPsychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($seeker) {
-                $vac->whereHas('getQuizInfo', function ($info) use ($seeker) {
-                    $info->whereHas('getQuizResult', function ($res) use ($seeker) {
-                        $res->where('seeker_id', $seeker->id)->where('isPassed', true);
+            $submittedPsychoTestInv = \App\Accepting::wherehas('getVacancy', function ($vac) use ($candidate) {
+                $vac->whereHas('getQuizInfo', function ($info) use ($candidate) {
+                    $info->whereHas('getQuizResult', function ($res) use ($candidate) {
+                        $res->where('seeker_id', $candidate)->where('isPassed', true);
                     });
                 })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
-                    ->where('psychoTestDate_start', '<=', today()->addDay())
-                    ->where('psychoTestDate_end', '>=', today())
-                    ->whereHas('getPsychoTestInfo', function ($q) use ($seeker){
-                    $q->whereHas('getPsychoTestResult', function ($q) use ($seeker){
-                        $q->where('seeker_id', $seeker->id);
+                ->where('psychoTestDate_start', '<=', today()->addDay())
+                ->where('psychoTestDate_end', '>=', today())
+                ->whereHas('getPsychoTestInfo', function ($q) use ($candidate){
+                    $q->whereHas('getPsychoTestResult', function ($q) use ($candidate){
+                        $q->where('seeker_id', $candidate);
                     });
                 });
-            })->where('seeker_id', $seeker->id)->where('isApply', true)->count();
+            })->where('seeker_id', $candidate)->where('isApply', true)->count();
 
             $totalPsychoTestInv = $psychoTestInv - $submittedPsychoTestInv;
         @endphp

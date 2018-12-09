@@ -139,7 +139,7 @@ class SeekerController extends Controller
         $end = $request->end_date;
 
         $result = Accepting::where('seeker_id', $request->seeker_id)->whereBetween('created_at', [$start, $end])
-            ->orderByDesc('id')->paginate(6)->toArray();
+            ->where('isApply', true)->orderByDesc('id')->paginate(6)->toArray();
 
         $result = $this->array_AccInv_vacancies($result);
 
@@ -258,11 +258,13 @@ class SeekerController extends Controller
         })->first();
 
         $candidate = '';
-        foreach ($findRoom->room_codes as $room) {
-            strtok($room, '_');
-            $participantID = strtok('');
-            if ($seeker->id == $participantID) {
-                $candidate = $seeker->id;
+        if ($findRoom != null) {
+            foreach ($findRoom->room_codes as $room) {
+                strtok($room, '_');
+                $participantID = strtok('');
+                if ($seeker->id == $participantID) {
+                    $candidate = $seeker->id;
+                }
             }
         }
 
@@ -554,5 +556,18 @@ class SeekerController extends Controller
 
         return view('auth.seekers.dashboard-bookmarked', compact('user', 'provinces', 'seeker',
             'job_title', 'last_edu', 'bookmark'));
+    }
+
+    public function getBookmarkedVacancies(Request $request)
+    {
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        $result = Accepting::where('seeker_id', $request->seeker_id)->whereBetween('created_at', [$start, $end])
+            ->where('isBookmark', true)->orderByDesc('id')->paginate(6)->toArray();
+
+        $result = $this->array_AccInv_vacancies($result);
+
+        return $result;
     }
 }
