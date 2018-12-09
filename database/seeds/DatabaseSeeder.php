@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             SalarySeeder::class,
             UserSeeder::class,
             PaymentMethodSeeder::class,
+            ConfirmAgencySeeder::class,
             QuizSeeder::class,
             BlogSeeder::class,
         ]);

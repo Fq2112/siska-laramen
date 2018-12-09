@@ -441,12 +441,9 @@
                     @for($i=1;$i<=12;$i++)
                             @php
                                 $total = 0;
-                                $postings = \App\ConfirmAgency::where('isPaid',true)->whereMonth('date_payment',$i)->get();
-                                foreach ($postings as $posting){
-                                    $plan = \App\Plan::find($posting->plans_id);
-                                    $pm = \App\PaymentMethod::find($posting->payment_method_id);
-                                    $total += $pm->payment_category_id == 1 ? $plan->price - $posting->payment_code :
-                                    $plan->price;
+                                $postings = \App\ConfirmAgency::where('isPaid',true)->whereMonth('date_payment',$i);
+                                foreach ($postings->get() as $posting){
+                                    $total += $posting->total_payment;
                                 }
                                 $income = number_format($total/1000000,1,'.','');
                             @endphp
