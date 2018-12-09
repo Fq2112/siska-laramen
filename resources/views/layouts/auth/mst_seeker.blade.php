@@ -101,6 +101,9 @@
                     $query->orWhere('tingkatpend_id', '<=', $degree);
                 }
         })->where('isPost', true)->where('pengalaman', '<=', $totalExp)->count();
+
+        $totalBook = \App\Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
+        $totalInvToApply = \App\Invitation::where('seeker_id', $seeker->id)->count();
     @endphp
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
         <div class="wrapper">

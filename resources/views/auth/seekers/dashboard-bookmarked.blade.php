@@ -14,7 +14,7 @@
                     </div>
                     <div class="row" style="margin-bottom: .5em">
                         <div class="col-lg-12 to-animate">
-                            <small class="pull-right">
+                            <small>
                                 @if(count($bookmark) > 1)
                                     Showing <strong>{{count($bookmark)}}</strong> bookmarked vacancies
                                 @elseif(count($bookmark) == 1)

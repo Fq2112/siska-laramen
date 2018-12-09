@@ -220,20 +220,21 @@
         });
 
         function successLoad(data, keyword, page) {
-            var title, $result = '', pagination = '', $page = '', $class, $style, $attr, $label, $salary;
+            var title, $q, total, $result = '', pagination = '', $page = '', $class, $style, $attr, $label, $salary;
 
-            title = 'for <strong>"' + keyword + '"</strong>';
-            if (data.total != 0) {
-                if ($.trim(data.total)) {
-                    total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
-                        '<strong>' + data.total + '</strong>)';
-                } else {
-                    total = '';
-                }
-                $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended seekers matched ' + title + total);
+            $q = keyword != "" ? ' for <strong>"' + keyword + '"</strong>' : '';
+            if (data.total > 0) {
+                title = data.total > 1 ? 'Showing <strong>' + data.total + '</strong> recommended seekers matched' :
+                    'Showing a recommended seeker matched';
+
+                total = $.trim(data.total) ? '<br>Page: <strong>' + data.from + '</strong> - ' +
+                    '<strong>' + data.to + '</strong> of <strong>' + data.total + '</strong>' : '';
+
             } else {
-                $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended seekers matched ' + title);
+                title = 'Showing <strong>0</strong> recommended seeker matched';
+                total = '';
             }
+            $('#show-result').html(title + $q + total);
 
             $.each(data.data, function (i, val) {
                 if (val.inv == null) {

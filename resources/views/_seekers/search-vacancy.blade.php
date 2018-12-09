@@ -11,6 +11,7 @@
 
             #wrapper-filter {
                 width: 670px;
+                margin: 0 0 0 23px;
             }
 
             .pill {
@@ -37,6 +38,7 @@
 
             #wrapper-filter {
                 width: 610px;
+                margin: 0 0 0 23px;
             }
 
             .pill {
@@ -61,8 +63,13 @@
                 width: 450px;
             }
 
+            #wrapper-filter {
+                width: 600px;
+                margin: 0 0 0 23px;
+            }
+
             .pill {
-                width: 355px;
+                width: 220px;
             }
 
             #filter-bar.option-1 .pill {
@@ -70,11 +77,11 @@
             }
 
             #filter-bar.option-2 .pill {
-                margin-left: 300px;
+                margin-left: 178px;
             }
 
             #filter-bar.option-3 .pill {
-                margin-left: 630px;
+                margin-left: 365px;
             }
         }
 
@@ -451,6 +458,7 @@
         });
 
         $("#list-lokasi li a").on("click", function () {
+            $("#txt_location").val($(this).text());
             loadVacancy();
         });
 
@@ -707,25 +715,22 @@
         });
 
         function successLoad(data, keyword, location, sort, salary, jobfunc, industry, degrees, majors, page) {
-            var title, $pengalaman;
-            if ((keyword != "") && (location != "")) {
-                title = 'for <strong>"' + keyword + '"</strong> in <strong>"' + location + '"</strong>'
-            } else if (location == "") {
-                title = 'for <strong>"' + keyword + '"</strong>'
+            var title, total, $q, $loc, $pengalaman;
+
+            $q = keyword != "" ? ' for <strong>"' + keyword + '"</strong>' : '';
+            $loc = location != "" ? ' in <strong>"' + location + '"</strong>' : '';
+
+            if (data.total > 0) {
+                title = data.total > 1 ? 'Showing <strong>' + data.total + '</strong> opportunities matched' :
+                    'Showing an opportunity matched';
+                total = $.trim(data.total) ? ' (<strong>' + data.from + '</strong> - ' +
+                    '<strong>' + data.to + '</strong> of <strong>' + data.total + '</strong>)' : '';
+
             } else {
-                title = 'in <strong>"' + location + '"</strong>'
+                title = 'Showing <strong>0</strong> opportunity matched';
+                total = '';
             }
-            if (data.total != 0) {
-                if ($.trim(data.total)) {
-                    total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
-                        '<strong>' + data.total + '</strong>)';
-                } else {
-                    total = '';
-                }
-                $('#show-result').html('Showing <strong>' + data.total + '</strong> opportunities matched ' + title + total);
-            } else {
-                $('#show-result').html('Showing <strong>' + data.total + '</strong> opportunities matched ' + title);
-            }
+            $('#show-result').html(title + $q + $loc + total);
 
             // sort
             var sort_opt1 = $("#filter-bar .option-1"), sort_opt2 = $("#filter-bar .option-2"),

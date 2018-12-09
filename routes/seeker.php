@@ -192,6 +192,11 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
                 'as' => 'seeker.dashboard'
             ]);
 
+            Route::get('application_status/vacancies', [
+                'uses' => 'SeekerController@getAccVacancies',
+                'as' => 'get.acc.vacancies'
+            ]);
+
             Route::get('application_status/compare/{id}', [
                 'uses' => 'SeekerController@showCompare',
                 'as' => 'compare.application'
@@ -210,6 +215,11 @@ Route::group(['prefix' => '/', 'namespace' => 'Seekers'], function () {
             Route::get('job_invitation', [
                 'uses' => 'SeekerController@showJobInvitation',
                 'as' => 'seeker.jobInvitation'
+            ]);
+
+            Route::get('job_invitation/vacancies', [
+                'uses' => 'SeekerController@getInvVacancies',
+                'as' => 'get.inv.vacancies'
             ]);
 
             Route::put('job_invitation/apply', [

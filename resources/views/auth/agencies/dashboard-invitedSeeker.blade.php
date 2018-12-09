@@ -17,19 +17,19 @@
                             </ul>
                             <form id="form-loadInvSeeker">
                                 <input type="hidden" name="vacancy_id" id="vacancy_id">
-                                <input type="hidden" name="recruitmentDate_start" id="recruitmentDate_start">
-                                <input type="hidden" name="recruitmentDate_end" id="recruitmentDate_end">
-                                <input type="hidden" id="recruitmentDate">
+                                <input type="hidden" name="start_date" id="start_date">
+                                <input type="hidden" name="end_date" id="end_date">
+                                <input type="hidden" id="date">
                             </form>
                         </div>
                     </div>
                     <div class="row" style="margin-top: 1em">
                         <div class="tab-content" id="vac-tab-content">
                             <div class="tab-pane to-animate">
-                                <div class="row">
+                                <div class="row" id="vac-control">
                                     <div class="col-lg-4 to-animate-2">
                                         <div id="daterangepicker" class="myDateRangePicker" data-toggle="tooltip"
-                                             data-placement="top" title="Recruitment Date Filter">
+                                             data-placement="top" title="Invited Date Filter">
                                             <i class="fa fa-calendar-alt"></i>&nbsp;
                                             <span></span> <i class="fa fa-caret-down"></i>
                                         </div>
@@ -61,7 +61,8 @@
 @push('scripts')
     <script>
         $(function () {
-            var first_vac = $("#vac-nav-tabs li").first(), start = moment().subtract(29, 'days'), end = moment();
+            var first_vac = $("#vac-nav-tabs li").first(),
+                start = moment().startOf('month'), end = moment().endOf('month');
             first_vac.addClass('active');
             $("#vac-tab-content .tab-pane").addClass('active');
             setVacancy(first_vac.attr('id'));
@@ -89,9 +90,9 @@
 
         function searchDate(start, end) {
             $('#daterangepicker span').html(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
-            $("#recruitmentDate_start").val(start.format('YYYY-MM-D'));
-            $("#recruitmentDate_end").val(end.format('YYYY-MM-D'));
-            $("#recruitmentDate").val(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
+            $("#start_date").val(start.format('YYYY-MM-D'));
+            $("#end_date").val(end.format('YYYY-MM-D'));
+            $("#date").val(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
             loadInvSeeker(start.format('D MMM YYYY') + ' - ' + end.format('D MMM YYYY'));
         }
 
@@ -128,7 +129,7 @@
         }
 
         $('.myPagination ul').on('click', 'li', function () {
-            var date = $("#recruitmentDate").val();
+            var date = $("#date").val();
 
             $(window).scrollTop(0);
 
@@ -201,7 +202,8 @@
                     'Showing an invited seeker';
 
                 $date = date != undefined ? ' for <strong>"' + date + '"</strong>' : ' for <strong>"{{today()
-                ->subDays(29)->formatLocalized('%d %b %Y')." - ".today()->formatLocalized('%d %b %Y')}}"</strong>';
+                ->startOfMonth()->formatLocalized('%d %b %Y')." - ".today()
+                ->endOfMonth()->formatLocalized('%d %b %Y')}}"</strong>';
 
                 total = $.trim(data.total) ? ' (<strong>' + data.from + '</strong> - ' +
                     '<strong>' + data.to + '</strong> of <strong>' + data.total + '</strong>)' : '';
@@ -278,7 +280,8 @@
                     '<input type="hidden" name="seeker_id" value="' + val.seeker_id + '">' +
                     '<input id="invitation' + val.id + '" type="checkbox" checked>' +
                     '<label for="invitation' + val.id + '"></label></div></form>' +
-                    '<small>P.S.: You are only permitted to abort this invitation before the ' +
+                    '<small style="display:' + $display + '">' +
+                    'P.S.: You are only permitted to abort this invitation before the ' +
                     'seeker that you\'ve invite apply it.</small>' +
                     '</blockquote></div></div>' +
                     '<hr class="hr-divider">';

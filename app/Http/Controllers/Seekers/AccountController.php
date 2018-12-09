@@ -65,14 +65,11 @@ class AccountController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
-
         return view('auth.seekers.profile', compact(
             'user', 'nations', 'provinces', 'job_functions', 'industries', 'job_levels', 'job_types',
             'salaries', 'degrees', 'majors', 'seeker', 'seeker_degree', 'seeker_major', 'attachments',
             'experiences', 'educations', 'trainings', 'organizations', 'languages', 'skills', 'job_title',
-            'last_edu', 'totalBook', 'totalInvToApply'
+            'last_edu'
         ));
     }
 
@@ -173,11 +170,8 @@ class AccountController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $totalBook = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->count();
-        $totalInvToApply = Invitation::where('seeker_id', $seeker->id)->where('isInvite', true)->count();
-
         return view('auth.seekers.settings', compact('user', 'provinces', 'seeker', 'job_title',
-            'last_edu', 'totalBook', 'totalInvToApply'));
+            'last_edu'));
     }
 
     public function updateAccount(Request $request)

@@ -46,7 +46,7 @@
                             </form>
                         </div>
                         <div class="col-lg-7 to-animate">
-                            <small class="pull-right" id="show-result"></small>
+                            <small class="pull-right" id="show-result" style="text-align: right"></small>
                         </div>
                     </div>
                     <div class="row">
@@ -243,21 +243,24 @@
         });
 
         function successLoad(data, keyword, page) {
-            var title, $result = '', pagination = '', $page = '', $class1, $class2, $style, $attr, $prop, $label,
+            var title, total, $q, $result = '', pagination = '', $page = '',
+                $class1, $class2, $style, $attr, $prop, $label,
                 $tooltip, $recruitmentDate, $pengalaman, $style_quiz, $style_psychoTest;
 
-            title = 'for <strong>"' + keyword + '"</strong>';
-            if (data.total != 0) {
-                if ($.trim(data.total)) {
-                    total = ' (<strong>' + data.from + '</strong> - <strong>' + data.to + '</strong> of ' +
-                        '<strong>' + data.total + '</strong>)';
-                } else {
-                    total = '';
-                }
-                $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended vacancies matched ' + title + total);
+            $q = keyword != "" ? ' for <strong>"' + keyword + '"</strong>' : '';
+            if (data.total > 0) {
+                title = data.total > 1 ? 'Showing <strong>' + data.total + '</strong> recommended vacancies matched' :
+                    'Showing a recommended vacancy matched';
+
+                total = $.trim(data.total) ? '<br>Page: <strong>' + data.from + '</strong> - ' +
+                    '<strong>' + data.to + '</strong> of <strong>' + data.total + '</strong>' : '';
+
             } else {
-                $('#show-result').html('Showing <strong>' + data.total + '</strong> recommended vacancies matched ' + title);
+                title = 'Showing <strong>0</strong> recommended vacancy matched';
+                total = '';
             }
+            $('#show-result').html(title + $q + total);
+
             $.each(data.data, function (i, val) {
                 $('[data-toggle="tooltip"]').tooltip();
 

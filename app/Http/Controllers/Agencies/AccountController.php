@@ -45,8 +45,8 @@ class AccountController extends Controller
 
     public function getAccSeeker(Request $request)
     {
-        $start = $request->recruitmentDate_start;
-        $end = $request->recruitmentDate_end;
+        $start = $request->start_date;
+        $end = $request->end_date;
 
         $result = Accepting::where('vacancy_id', $request->vacancy_id)
             ->whereBetween('created_at', [$start, $end])->orderByDesc('id')->paginate(6)->toArray();
@@ -176,8 +176,8 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
-        $start = $request->recruitmentDate_start;
-        $end = $request->recruitmentDate_end;
+        $start = $request->start_date;
+        $end = $request->end_date;
 
         $result = Invitation::where('agency_id', $agency->id)->where('vacancy_id', $request->vacancy_id)
             ->whereBetween('created_at', [$start, $end])->orderByDesc('id')->paginate(6)->toArray();
