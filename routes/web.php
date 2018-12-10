@@ -740,6 +740,25 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
             Route::group(['prefix' => 'seekers'], function () {
 
+                Route::group(['prefix' => 'applied_invitations'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'TransactionSeekerController@showAppliedInvitationsTable',
+                        'as' => 'table.appliedInvitations'
+                    ]);
+
+                    Route::post('send', [
+                        'uses' => 'TransactionSeekerController@massSendAppliedInvitations',
+                        'as' => 'table.appliedInvitations.massSend'
+                    ]);
+
+                    Route::post('delete', [
+                        'uses' => 'TransactionSeekerController@massDeleteAppliedInvitations',
+                        'as' => 'table.appliedInvitations.massDelete'
+                    ]);
+
+                });
+
                 Route::group(['prefix' => 'applications'], function () {
 
                     Route::get('/', [
@@ -793,20 +812,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                     Route::post('delete', [
                         'uses' => 'TransactionSeekerController@massDeletePsychoTestResults',
                         'as' => 'table.psychoTestResults.massDelete'
-                    ]);
-
-                });
-
-                Route::group(['prefix' => 'invitations'], function () {
-
-                    Route::get('/', [
-                        'uses' => 'TransactionSeekerController@showInvitationsTable',
-                        'as' => 'table.invitations'
-                    ]);
-
-                    Route::get('{id}/delete', [
-                        'uses' => 'TransactionSeekerController@deleteInvitations',
-                        'as' => 'table.invitations.delete'
                     ]);
 
                 });

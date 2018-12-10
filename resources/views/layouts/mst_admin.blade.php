@@ -164,6 +164,10 @@
     })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
     ->whereDate('quizDate_end','<=',today())->whereDoesntHave('getPsychoTestInfo')->get();
 
+    $invitations = \App\Vacancies::whereHas('getInvitation', function ($inv){
+        $inv->where('isApply', true);
+    })->whereDate('recruitmentDate_end','>=', today())->get();
+
     $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
     })->whereDate('recruitmentDate_end','>=', today())->get();
@@ -182,7 +186,7 @@
         $psycho->whereHas('getPsychoTestResult');
     })->whereDate('psychoTestDate_end','>=', today())->get();
 
-    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
+    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -279,11 +283,12 @@
                                             </li>
                                             <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.appliedInvitations')}}">
+                                                            Applied Invitations</a></li>
                                                     <li><a href="{{route('table.applications')}}">Applications</a></li>
                                                     <li><a href="{{route('table.quizResults')}}">Quiz Results</a></li>
                                                     <li><a href="{{route('table.psychoTestResults')}}">
                                                             Psycho Test Results</a></li>
-                                                    <li><a href="{{route('table.invitations')}}">Invitations</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -518,6 +523,39 @@
                                         <li class="divider"
                                             style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
+
+                                        @if(count($invitations) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-envelope"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Applied Invitations</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($invitations as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.appliedInvitations').'?q='.$vacancy->judul}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                        <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                        <span class="message">
+                                                        Make sure the applied invitation list for this vacancy are sent today
+                                                        to <strong>{{$vacancy->agencies->user->name}}</strong>!
+                                                        <span style="color: #fa5555">#This message only appears today.</span>
+                                                    </span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
                                     @if(count($acceptings) > 0)
                                         <li style="padding: 0">

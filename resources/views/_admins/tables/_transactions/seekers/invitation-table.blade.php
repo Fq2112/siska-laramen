@@ -1,12 +1,12 @@
 @extends('layouts.mst_admin')
-@section('title', 'Job Invitations Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Applied Invitations Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Job Invitations
+                        <h2>Applied Invitations
                             <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -18,18 +18,29 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
-                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                        <div class="row form-group">
+                            <div class="col-lg-12 has-feedback">
+                                <label for="vacancy_id">Vacancy Filter</label>
+                                <select id="vacancy_id" class="form-control selectpicker" title="-- Select Agency --"
+                                        data-live-search="true" data-max-options="1" multiple>
+                                    @foreach($vacancies as $vacancy)
+                                        <option value="{{$vacancy->judul}}">{{$vacancy->judul}}</option>
+                                    @endforeach
+                                </select>
+                                <span class="fa fa-briefcase form-control-feedback right" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <table id="myDataTable" class="table table-striped table-bordered bulk_action">
                             <thead>
                             <tr>
-                                <th>No</th>
+                                <th><input type="checkbox" id="check-all" class="flat"></th>
+                                <th>ID</th>
                                 <th>Details</th>
                                 <th>Status</th>
-                                <th>Action</th>
                             </tr>
                             </thead>
 
                             <tbody>
-                            @php $no = 1; @endphp
                             @foreach($invitations as $invitation)
                                 @php
                                     $seeker = \App\Seekers::find($invitation->seeker_id);
@@ -44,9 +55,12 @@
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
                                 @endphp
                                 <tr>
-                                    <td style="vertical-align: middle" align="center">{{$no++}}</td>
+                                    <td class="a-center" style="vertical-align: middle" align="center">
+                                        <input type="checkbox" class="flat">
+                                    </td>
+                                    <td style="vertical-align: middle">{{$invitation->id}}</td>
                                     <td style="vertical-align: middle">
-                                        <table style="margin: 0">
+                                        <table>
                                             <tr>
                                                 <td>
                                                     <a href="{{route('seeker.profile',['id' => $seeker->id])}}"
@@ -98,7 +112,7 @@
                                                                           title="Work Experience">
                                                                         <i class="fa fa-briefcase"></i>&ensp;0 year
                                                                     </span>
-                                                                @endif&nbsp;|
+                                                                @endif|
                                                                 <span data-toggle="tooltip"
                                                                       title="Latest Education Degree"
                                                                       class="label label-primary">
@@ -123,7 +137,7 @@
                                             </tr>
                                         </table>
                                         <hr style="margin: .5em auto">
-                                        <table style="margin: 0">
+                                        <table>
                                             <tr>
                                                 <td>
                                                     <a href="{{route('agency.profile',['id' => $agency->id])}}"
@@ -138,12 +152,12 @@
                                                                  src="{{asset('storage/users/'.$userAgency->ava)}}">
                                                         @endif
                                                     </a>
-                                                    <table style="margin: 0">
+                                                    <table>
                                                         <tr>
                                                             <td>
                                                                 <a href="{{route('detail.vacancy',['id' =>
                                                                 $vacancy->id])}}" target="_blank">
-                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;&nbsp;
+                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;
                                                                 @if($vacancy->isPost == true)
                                                                     <span data-toggle="tooltip" data-placement="bottom"
                                                                           title="Plan" class="label label-info">
@@ -171,8 +185,9 @@
                                                         <tr>
                                                             <td>
                                                                 <a href="{{route('agency.profile',['id' => $agency->id])}}"
-                                                                   target="_blank">
-                                                                    {{$userAgency->name}}</a>&nbsp;&ndash;
+                                                                   target="_blank">{{$userAgency->name}}</a>&nbsp;&ndash;
+                                                                <a href="mailto:{{$userAgency->email}}">
+                                                                    {{$userAgency->email}}</a>&nbsp;&ndash;
                                                                 {{substr($city, 0, 2) == "Ko" ? substr($city,5) :
                                                                 substr($city,10)}}
                                                             </td>
@@ -190,27 +205,30 @@
                                                                     ->format('j F Y') : 'Unknown'}}
                                                                 </strong> |
                                                                 @if($vacancy->plan_id != "" && $vacancy->plan_id == 2)
-                                                                    <strong data-toggle="tooltip" data-placement="right"
-                                                                            title="Quiz (Online TPA & TKD) Date">
+                                                                    <span data-toggle="tooltip" data-placement="right"
+                                                                          title="Quiz (Online TPA & TKD) Date"
+                                                                          style="line-height: 0">
                                                                         {{$vacancy->quizDate_start != "" &&
                                                                         $vacancy->quizDate_end != "" ?
                                                                         \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->quizDate_end)->format('j F Y') :
                                                                         'Unknown'}}
-                                                                    </strong><br>
+                                                                    </span><br>
                                                                 @elseif($vacancy->plan_id != "" && $vacancy->plan_id == 3)
-                                                                    <strong data-toggle="tooltip" data-placement="right"
-                                                                            title="Quiz (Online TPA & TKD) Date">
+                                                                    <span data-toggle="tooltip" data-placement="right"
+                                                                          title="Quiz (Online TPA & TKD) Date"
+                                                                          style="line-height: 0">
                                                                         {{$vacancy->quizDate_start != "" &&
                                                                         $vacancy->quizDate_end != "" ?
                                                                         \Carbon\Carbon::parse($vacancy->quizDate_start)
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->quizDate_end)->format('j F Y') :
                                                                         'Unknown'}}
-                                                                    </strong><br>
-                                                                    <strong data-toggle="tooltip" data-placement="left"
-                                                                            title="Psycho Test (Online Interview) Date">
+                                                                    </span><br>
+                                                                    <span data-toggle="tooltip" data-placement="left"
+                                                                          title="Psycho Test (Online Interview) Date"
+                                                                          style="line-height: 0">
                                                                         {{$vacancy->psychoTestDate_start != "" &&
                                                                         $vacancy->psychoTestDate_end != "" ?
                                                                         \Carbon\Carbon::parse
@@ -218,14 +236,14 @@
                                                                         ->format('j F Y').' - '.\Carbon\Carbon::parse
                                                                         ($vacancy->psychoTestDate_end)
                                                                         ->format('j F Y') : 'Unknown'}}
-                                                                    </strong> |
+                                                                    </span> |
                                                                 @endif
-                                                                <strong data-toggle="tooltip" data-placement="right"
-                                                                        title="Job Interview Date">
+                                                                <span data-toggle="tooltip" data-placement="right"
+                                                                      title="Job Interview Date" style="line-height: 0">
                                                                     {{$vacancy->interview_date != "" ?
                                                                     \Carbon\Carbon::parse($vacancy->interview_date)
                                                                     ->format('l, j F Y') : 'Unknown'}}
-                                                                </strong>
+                                                                </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -254,7 +272,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td style="vertical-align: middle;" align="center">
+                                    <td style="vertical-align: middle" align="center">
                                         @if($invitation->isApply == true)
                                             <span class="label label-default" style="background: #00adb5">APPLIED</span>
                                             &ndash;&nbsp;on&nbsp;&ndash;
@@ -266,31 +284,28 @@
                                                   style="background: #fa5555">NOT APPLY</span>
                                         @endif
                                     </td>
-                                    <td style="vertical-align: middle" align="center">
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-success btn-sm"
-                                                    style="font-weight: 600">
-                                                INVITE
-                                            </button>
-                                            <button type="button" class="btn btn-success btn-sm dropdown-toggle"
-                                                    data-toggle="dropdown" aria-expanded="false">
-                                                <span class="caret"></span>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                            </button>
-                                            <ul class="dropdown-menu" role="menu">
-                                                <li>
-                                                    <a href="{{route('table.applications.delete',['id'=> encrypt
-                                                    ($invitation->id)])}}" class="delete-application">
-                                                        <i class="fa fa-trash-alt"></i>&ensp;Delete
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
+                        <div class="row form-group">
+                            <div class="col-sm-4" id="action-btn">
+                                <div class="btn-group" style="float: right">
+                                    <button id="btn_send_app" type="button" class="btn btn-success btn-sm"
+                                            style="font-weight: 600" disabled>
+                                        <i class="fa fa-envelope"></i>&ensp;SEND
+                                    </button>
+                                    <button id="btn_remove_app" type="button" class="btn btn-danger btn-sm"
+                                            style="font-weight: 600" disabled>
+                                        <i class="fa fa-trash"></i>&ensp;REMOVE
+                                    </button>
+                                </div>
+                            </div>
+                            <form method="post" id="form-invitations">
+                                {{csrf_field()}}
+                                <input id="applicant_ids" type="hidden" name="applicant_ids">
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -299,25 +314,112 @@
 @endsection
 @push("scripts")
     <script>
-        $(".delete-application").on("click", function () {
-            var linkURL = $(this).attr("href");
-            swal({
-                title: 'Delete Application',
-                text: 'Are you sure? You won\'t be able to revert this!',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#fa5555',
-                confirmButtonText: 'Yes, delete it!',
-                showLoaderOnConfirm: true,
+        $(function () {
+            var table = $("#myDataTable").DataTable({
+                order: [[1, "asc"]],
+                columnDefs: [
+                    {
+                        targets: [0],
+                        orderable: false
+                    },
+                    {
+                        targets: [1],
+                        visible: false,
+                        searchable: false
+                    }
+                ]
+            }), toolbar = $("#myDataTable_wrapper").children().eq(0);
 
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        window.location.href = linkURL;
-                    });
-                },
-                allowOutsideClick: false
+            toolbar.children().toggleClass("col-sm-6 col-sm-4");
+            $('#action-btn').appendTo(toolbar);
+
+            @if($findVac != "")
+            $("#vacancy_id").val('{{$findVac}}').selectpicker('refresh');
+            $(".dataTables_filter input[type=search]").val('{{$findVac}}').trigger('keyup');
+            @endif
+
+            $("#vacancy_id").on('change', function () {
+                $(".dataTables_filter input[type=search]").val($(this).val()).trigger('keyup');
             });
-            return false;
+
+            $("#check-all").on("ifToggled", function () {
+                if ($(this).is(":checked")) {
+                    $("#myDataTable tbody tr").addClass("selected").find('input[type=checkbox]').iCheck("check");
+                    $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
+                } else {
+                    $("#myDataTable tbody tr").removeClass("selected").find('input[type=checkbox]').iCheck("uncheck");
+                    $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
+                }
+            });
+
+            $("#myDataTable tbody").on("click", "tr", function () {
+                $(this).toggleClass("selected");
+                $(this).find('input[type=checkbox]').iCheck("toggle");
+            });
+
+            $("#myDataTable tbody tr").find('input[type=checkbox]').on("ifToggled", function () {
+                var selected = table.rows('.selected').data().length;
+
+                if ($(this).is(":checked") || selected > 0) {
+                    $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
+                } else {
+                    $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
+                }
+            });
+
+            $('#btn_send_app').on("click", function () {
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    return item[1]
+                });
+                $("#applicant_ids").val(ids);
+                $("#form-invitations").attr("action", "{{route('table.appliedInvitations.massSend')}}");
+
+                swal({
+                    title: 'Send Applied Invitations',
+                    text: 'Are you sure to send this ' + ids.length + ' selected records to the Agency\'s email? ' +
+                        'You won\'t be able to revert this!',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#00adb5',
+                    confirmButtonText: 'Yes, send it!',
+                    showLoaderOnConfirm: true,
+
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            $("#form-invitations")[0].submit();
+                        });
+                    },
+                    allowOutsideClick: false
+                });
+                return false;
+            });
+
+            $('#btn_remove_app').on("click", function () {
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    return item[1]
+                });
+                $("#applicant_ids").val(ids);
+                $("#form-invitations").attr("action", "{{route('table.appliedInvitations.massDelete')}}");
+
+                swal({
+                    title: 'Remove Applied Invitations',
+                    text: 'Are you sure to remove this ' + ids.length + ' selected records? ' +
+                        'You won\'t be able to revert this!',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#fa5555',
+                    confirmButtonText: 'Yes, delete it!',
+                    showLoaderOnConfirm: true,
+
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            $("#form-invitations")[0].submit();
+                        });
+                    },
+                    allowOutsideClick: false
+                });
+                return false;
+            });
         });
     </script>
 @endpush
