@@ -142,6 +142,10 @@
             content: '\f057';
             font-style: normal;
         }
+
+        .scroll-content {
+            max-height: 470px;
+        }
     </style>
 </head>
 
@@ -866,7 +870,8 @@
 <script src="{{asset('_admins/js/pnotify.nonblock.js')}}"></script>
 <!-- ECharts -->
 <script src="{{asset('_admins/js/echarts.min.js')}}"></script>
-
+<!-- Smooth scroll -->
+<script src="{{asset('js/smooth-scrollbar.js')}}"></script>
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>
 <script>
@@ -910,6 +915,8 @@
         tinymce.init(editor_config);
 
         $('.datepicker').datepicker({format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true});
+
+        Scrollbar.initAll();
     });
 
     $(".btn_editProfile").on("click", function () {

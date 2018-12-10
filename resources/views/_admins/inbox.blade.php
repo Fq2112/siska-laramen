@@ -17,7 +17,7 @@
                     </div>
                     <div class="x_content">
                         <div class="row">
-                            <div class="col-sm-12 mail_list_column">
+                            <div class="col-sm-12 mail_list_column" data-scrollbar>
                                 <button id="compose" class="btn btn-sm btn-success btn-block" type="button">
                                     <strong><i class="fa fa-edit"></i>&ensp;COMPOSE</strong>
                                 </button>
