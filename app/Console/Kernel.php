@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Agencies\abortingPayment::class,
-        Commands\Seekers\inactiveVacancy::class,
+        Commands\Agencies\inactiveVacancy::class,
         Commands\deleteInactiveUser::class,
     ];
 
