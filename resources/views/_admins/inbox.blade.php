@@ -24,7 +24,7 @@
                                 @if(count($contacts) > 0)
                                     @foreach($contacts as $contact)
                                         @php $user = \App\User::where('email',$contact->email); @endphp
-                                        <a style="cursor: pointer"
+                                        <a style="cursor: pointer" id="{{$contact->id}}"
                                            onclick="viewMail('{{$contact->id}}','{{$contact->name}}',
                                                    '{{$contact->email}}','{{$contact->subject}}','{{$contact->message}}',
                                                    '{{\Carbon\Carbon::parse($contact->created_at)->format('l, j F Y').' at '.
@@ -124,6 +124,12 @@
 @endsection
 @push("scripts")
     <script>
+        $(function () {
+            @if($findMessage != null)
+            $("#{{$findMessage}}").click();
+            @endif
+        });
+
         function viewMail(id, name, email, subject, message, date, deleteId) {
             $(".mail_list img").addClass('img-circle');
 

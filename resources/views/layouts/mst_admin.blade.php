@@ -148,7 +148,8 @@
 <body class="nav-md">
 @php
     $auth = Auth::guard('admin')->user();
-    $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString());
+    $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
+    ->orderByDesc('id')->get();
 
     $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
     ->whereDate('created_at', '>=', now()->subDay())->get();
@@ -163,6 +164,10 @@
         $quiz->whereHas('getQuizResult');
     })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
     ->whereDate('quizDate_end','<=',today())->whereDoesntHave('getPsychoTestInfo')->get();
+
+    $invitations = \App\Vacancies::whereHas('getInvitation', function ($inv){
+        $inv->where('isApply', true);
+    })->whereDate('recruitmentDate_end','>=', today())->get();
 
     $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
@@ -182,7 +187,7 @@
         $psycho->whereHas('getPsychoTestResult');
     })->whereDate('psychoTestDate_end','>=', today())->get();
 
-    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
+    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -279,11 +284,12 @@
                                             </li>
                                             <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
                                                 <ul class="nav child_menu">
+                                                    <li><a href="{{route('table.appliedInvitations')}}">
+                                                            Applied Invitations</a></li>
                                                     <li><a href="{{route('table.applications')}}">Applications</a></li>
                                                     <li><a href="{{route('table.quizResults')}}">Quiz Results</a></li>
                                                     <li><a href="{{route('table.psychoTestResults')}}">
                                                             Psycho Test Results</a></li>
-                                                    <li><a href="{{route('table.invitations')}}">Invitations</a></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -369,14 +375,14 @@
                             <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="fa fa-envelope"></i>
-                                <span class="badge bg-green">{{$feedback->count()}}</span>
+                                <span class="badge bg-green">{{count($feedback)}}</span>
                             </a>
                             <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                @if($feedback->count())
-                                    @foreach($feedback->limit(5)->orderByDesc('id')->get() as $row)
+                                @if(count($feedback) > 0)
+                                    @foreach($feedback as $row)
                                         @php $user = \App\User::where('email',$row->email); @endphp
                                         <li>
-                                            <a style="cursor: text">
+                                            <a href="{{route('admin.inbox',['id' => $row->id])}}">
                                                 <span class="image">
                                                     @if($user->count())
                                                         @if($user->first()->ava == "" ||
@@ -400,15 +406,17 @@
                                         </li>
                                     @endforeach
                                 @else
-                                    <li><a style="text-decoration: none;cursor: text"><span class="message">
-                                                There seems to be none of the feedback was found this 3 days&hellip;</span></a>
+                                    <li>
+                                        <a style="text-decoration: none;cursor: text">
+                                            <span class="message">There seems to be none of the feedback was found
+                                                this 3 days&hellip;</span>
+                                        </a>
                                     </li>
                                 @endif
                                 <li>
                                     <div class="text-center">
                                         <a href="{{route('admin.inbox')}}">
-                                            <strong>See All Feedback</strong>
-                                            <i class="fa fa-angle-right"></i>
+                                            <strong>More Messages</strong>
                                         </a>
                                     </div>
                                 </li>
@@ -518,6 +526,39 @@
                                         <li class="divider"
                                             style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
+
+                                        @if(count($invitations) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-envelope"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Applied Invitations</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($invitations as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.appliedInvitations').'?q='.$vacancy->judul}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                        <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                        <span class="message">
+                                                        Make sure the applied invitation list for this vacancy are sent today
+                                                        to <strong>{{$vacancy->agencies->user->name}}</strong>!
+                                                        <span style="color: #fa5555">#This message only appears today.</span>
+                                                    </span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
                                     @if(count($acceptings) > 0)
                                         <li style="padding: 0">

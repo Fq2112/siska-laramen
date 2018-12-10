@@ -99,6 +99,8 @@
 @push("scripts")
     <script src="{{asset('js/twilio-video.min.js')}}"></script>
     <script>
+        var regExp = /\(([^)]+)\)/, check_candidate = false;
+
         Twilio.Video.createLocalTracks({
             audio: true,
             video: {width: 300}
@@ -130,6 +132,7 @@
         });
 
         function participantConnected(participant) {
+            var role;
             console.log('Participant "%s" connected', participant.identity);
 
             const div = document.createElement('div');
@@ -147,6 +150,11 @@
             participant.on('trackRemoved', trackRemoved);
 
             document.getElementById('psychoTest_content').appendChild(div);
+
+            role = regExp.exec(participant.identity);
+            if (role[1] == "CANDIDATE") {
+                check_candidate = true;
+            }
         }
 
         function participantDisconnected(participant) {
@@ -192,38 +200,51 @@
 
         $("#form-scoring").on("submit", function (e) {
             e.preventDefault();
-            swal({
-                title: 'Scoring Form',
-                text: "Are you sure to submit it? You wont't be able to revert this!",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#fa5555',
-                confirmButtonText: 'Yes, submit it!',
-                showLoaderOnConfirm: true,
+            if (check_candidate == true) {
+                swal({
+                    title: 'Scoring Form',
+                    text: "Are you sure to submit it? You wont't be able to revert this!",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#fa5555',
+                    confirmButtonText: 'Yes, submit it!',
+                    showLoaderOnConfirm: true,
 
-                preConfirm: function () {
-                    return new Promise(function (resolve) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{route('submit.psychoTest')}}",
-                            data: new FormData($("#form-scoring")[0]),
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                swal("Success!", "Psycho Test with Room Code #{{$roomCode}} is " +
-                                    "successfully submitted!", "success");
-                                $("#form-scoring input, #form-scoring textarea").attr('disabled', 'disabled');
-                                $(".sticky-footer button").attr('disabled', 'disabled');
-                            },
-                            error: function () {
-                                swal("Error!", "Psycho Test with Room Code #{{$roomCode}} is failed to submit! " +
-                                    "Something went wrong, please refresh the page.", "error");
-                            }
+                    preConfirm: function () {
+                        return new Promise(function (resolve) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{route('submit.psychoTest')}}",
+                                data: new FormData($("#form-scoring")[0]),
+                                contentType: false,
+                                processData: false,
+                                success: function (data) {
+                                    $("#form-scoring input, #form-scoring textarea").attr('disabled', 'disabled');
+                                    $(".sticky-footer button").attr('disabled', 'disabled');
+                                    $(".sticky-close").click();
+
+                                    swal("Success!", "Psycho Test with Room Code #{{$roomCode}} is " +
+                                        "successfully submitted!", "success");
+                                },
+                                error: function () {
+                                    swal("Error!", "Psycho Test with Room Code #{{$roomCode}} is failed to submit! " +
+                                        "Something went wrong, please refresh the page.", "error");
+                                }
+                            });
                         });
-                    });
-                },
-                allowOutsideClick: false
-            });
+                    },
+                    allowOutsideClick: false
+                });
+
+            } else {
+                $("#form-scoring")[0].reset();
+                $(".sticky-close").click();
+
+                swal("ATTENTION!", "The candidate, {{$seeker->user->name}}, hasn't been connected to this room yet! " +
+                    "Please, contact {{$seeker->gender == "female" ? 'her' : 'his'}} " +
+                    "phone: {{$seeker->phone}} or email: {{$seeker->user->email}}.", "warning");
+            }
+
             return false;
         });
         @endauth

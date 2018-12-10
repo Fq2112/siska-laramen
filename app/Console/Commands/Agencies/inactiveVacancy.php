@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Seekers;
+namespace App\Console\Commands\Agencies;
 
 use App\Accepting;
 use App\Vacancies;
@@ -20,7 +20,7 @@ class inactiveVacancy extends Command
      *
      * @var string
      */
-    protected $description = 'Update vacancy status to inactive when the recruitment date has been ended or already reached its applicant limit';
+    protected $description = 'Update vacancy status to inactive when the active_period has been ended or already reached its applicant limit';
 
     /**
      * Create a new command instance.

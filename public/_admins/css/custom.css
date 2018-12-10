@@ -1683,7 +1683,26 @@ ul.msg_list li a .message {
 }
 
 .navbar-nav .open .dropdown-menu.msg_list {
-    width: 300px
+    max-height: 25em;
+    overflow-y: hidden;
+    width: 300px;
+}
+
+.navbar-nav .open .dropdown-menu.msg_list:hover {
+    overflow-y: scroll;
+}
+
+.navbar-nav .open .dropdown-menu.msg_list::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+}
+
+.navbar-nav .open .dropdown-menu.msg_list::-webkit-scrollbar {
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+.navbar-nav .open .dropdown-menu.msg_list::-webkit-scrollbar-thumb {
+    background-color: #ccc;
 }
 
 .info-number .badge {

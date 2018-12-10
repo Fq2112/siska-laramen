@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Agencies;
 
+use App\Admin;
 use App\ConfirmAgency;
 use App\Events\Agencies\VacancyPaymentDetails;
 use App\PaymentCategory;
@@ -51,7 +52,7 @@ class abortingPayment extends Command
                 'isPaid' => false,
                 'date_payment' => null,
                 'isAbort' => true,
-                'admin_id' => 1
+                'admin_id' => Admin::where('role', 'root')->first()->id
             ]);
 
             $vacancies = Vacancies::whereIn('id', $posting->vacancy_ids)->get();
