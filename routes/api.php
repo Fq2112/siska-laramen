@@ -22,10 +22,19 @@ $router->group(['prefix' => 'jwt','middleware' => 'api'], function ($router){
     $router->post('recover', 'AuthController@recover');
     $router->post('me', 'AuthController@me');
 
-    $router->group(['prefix' => 'vacancy'],function ($router){
+    $router->group(['prefix' => 'vacancy','namespace' => 'Api'],function ($router){
         $router->post('apply',[
-            'uses' => 'AuthController@apiApply'
+            'uses' => 'ApplicantsController@apiApply'
         ]);
+
+        $router->post('bookmark',[
+            'uses' => 'ApplicantsController@apiBookmark'
+        ]);
+
+        $router->post('abort',[
+            'uses' => 'ApplicantsController@apiAbortApply'
+        ]);
+
     });
 
     $router->group(['middleware' => ['jwt.auth']], function($router) {

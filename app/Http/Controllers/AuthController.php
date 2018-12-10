@@ -258,7 +258,7 @@ class AuthController extends Controller
      */
     public function seeker($user_id)
     {
-        $seeker = Seekers::where('user_id', $user_id)->first();
+        $seeker = Seekers::where('user_id', $user_id)->get();
         return $seeker;
     }
 
