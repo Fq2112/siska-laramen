@@ -148,7 +148,8 @@
 <body class="nav-md">
 @php
     $auth = Auth::guard('admin')->user();
-    $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString());
+    $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
+    ->orderByDesc('id')->get();
 
     $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
     ->whereDate('created_at', '>=', now()->subDay())->get();
@@ -374,14 +375,14 @@
                             <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
                                aria-expanded="false">
                                 <i class="fa fa-envelope"></i>
-                                <span class="badge bg-green">{{$feedback->count()}}</span>
+                                <span class="badge bg-green">{{count($feedback)}}</span>
                             </a>
                             <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                @if($feedback->count())
-                                    @foreach($feedback->limit(5)->orderByDesc('id')->get() as $row)
+                                @if(count($feedback) > 0)
+                                    @foreach($feedback as $row)
                                         @php $user = \App\User::where('email',$row->email); @endphp
                                         <li>
-                                            <a style="cursor: text">
+                                            <a href="{{route('admin.inbox',['id' => $row->id])}}">
                                                 <span class="image">
                                                     @if($user->count())
                                                         @if($user->first()->ava == "" ||
@@ -405,15 +406,17 @@
                                         </li>
                                     @endforeach
                                 @else
-                                    <li><a style="text-decoration: none;cursor: text"><span class="message">
-                                                There seems to be none of the feedback was found this 3 days&hellip;</span></a>
+                                    <li>
+                                        <a style="text-decoration: none;cursor: text">
+                                            <span class="message">There seems to be none of the feedback was found
+                                                this 3 days&hellip;</span>
+                                        </a>
                                     </li>
                                 @endif
                                 <li>
                                     <div class="text-center">
                                         <a href="{{route('admin.inbox')}}">
-                                            <strong>See All Feedback</strong>
-                                            <i class="fa fa-angle-right"></i>
+                                            <strong>More Messages</strong>
                                         </a>
                                     </div>
                                 </li>

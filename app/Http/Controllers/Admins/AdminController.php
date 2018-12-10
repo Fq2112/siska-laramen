@@ -55,11 +55,17 @@ class AdminController extends Controller
             'users', 'agencies', 'seekers', 'blogs'));
     }
 
-    public function showInbox()
+    public function showInbox(Request $request)
     {
         $contacts = Feedback::orderByDesc('id')->get();
 
-        return view('_admins.inbox', compact('contacts'));
+        if ($request->has("id")) {
+            $findMessage = $request->id;
+        } else {
+            $findMessage = null;
+        }
+
+        return view('_admins.inbox', compact('contacts', 'findMessage'));
     }
 
     public function composeInbox(Request $request)
