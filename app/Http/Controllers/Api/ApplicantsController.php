@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Accepting;
-use App\Seekers;
-use Illuminate\Http\Request;
+use App\Education;
+use App\Experience;
 use App\Http\Controllers\Controller;
+use App\Seekers;
+use App\Vacancies;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicantsController extends Controller
 {
@@ -38,28 +41,64 @@ class ApplicantsController extends Controller
         $vacancy_id = $obj['vacancy_id'];
         $seeker = $this->seeker(Auth::user()->id);
 
-        $check = Accepting::where('vacancy_id', $vacancy_id)
-            ->where('seeker_id', $seeker->id);
+        $vacancy = Vacancies::find($vacancy_id);
+        $edu = Education::where('seeker_id', $seeker->id)->get();
+        $exp = Experience::where('seeker_id', $seeker->id)->get();
 
-        if ($check->count() > 1) {
+        $reqExp = filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT);
+        $checkEdu = Education::whereHas('seekers', function ($seeker) {
+            $seeker->where('user_id', Auth::user()->id);
+        })->where('tingkatpend_id', '>=', $vacancy->tingkatpend_id)->wherenotnull('end_period')->count();
+
+
+        if (count($edu) == 0 || count($exp) == 0 || $seeker->phone == "" || $seeker->address == "" ||
+            $seeker->birthday == "" || $seeker->gender == "") {
+            //if all req d match
             return response()->json([
                 'status' => 'warning',
                 'success' => false,
-                'error' => 'Already applied!!'
+                'message' => 'Your Personal Data is empty!!'
             ]);
         } else {
-            Accepting::create([
-                'seeker_id' => $seeker->id,
-                'vacancy_id' => $vacancy_id,
-                'isApply' => true,
-            ]);
+            //
+            if ($seeker->total_exp < $reqExp) {
+                return response()->json([
+                    'status' => 'warning',
+                    'success' => false,
+                    'message' => 'Work Experience Unqualified'
+                ]);
+            } elseif ($checkEdu < 1) {
+                return response()->json([
+                    'status' => 'warning',
+                    'success' => false,
+                    'message' => 'Education Degree Unqualified'
+                ]);
+            } else {
+                $check = Accepting::where('vacancy_id', $vacancy_id)
+                    ->where('seeker_id', $seeker->id);
 
-            return response()->json([
-                'status' => 'success',
-                'success' => true,
-                'error' => 'Vacancy is successfully applied!!'
-            ]);
+                if ($check->count() > 1) {
+                    return response()->json([
+                        'status' => 'warning',
+                        'success' => false,
+                        'message' => 'Already applied!!'
+                    ]);
+                } else {
+                    Accepting::create([
+                        'seeker_id' => $seeker->id,
+                        'vacancy_id' => $vacancy_id,
+                        'isApply' => true,
+                    ]);
+
+                    return response()->json([
+                        'status' => 'success',
+                        'success' => true,
+                        'message' => 'Vacancy is successfully applied!!'
+                    ]);
+                }
+            }
         }
+
     }
 
     /**
@@ -70,12 +109,12 @@ class ApplicantsController extends Controller
     public function apiAbortApply()
     {
         $json = file_get_contents('php://input');
-        $obj = json_decode($json,false);
+        $obj = json_decode($json, false);
 
         $vacancy_id = $obj['vacancy_id'];
         $seeker = $this->seeker(Auth::user()->id);
 
-        $vacancy = Accepting::where('seeker_id',$seeker->id)->where('vacancy_id',$vacancy_id)->first();
+        $vacancy = Accepting::where('seeker_id', $seeker->id)->where('vacancy_id', $vacancy_id)->first();
         $vacancy->delete();
 
         return response()->json([
