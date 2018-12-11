@@ -46,7 +46,7 @@ class SeekerController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
-        $blogs = Blog::orderByDesc('id')->take(4)->get();
+        $blogs = Blog::orderByDesc('id')->get();
 
         $id = [4, 9, 13, 26, 29, 30, 38, 40, 41, 45, 47, 49, 52, 58, 59, 61, 62, 63];
         $favIndustries = Industri::whereIn('id', $id)->get();
@@ -55,14 +55,14 @@ class SeekerController extends Controller
             ->selectRaw('COUNT(*) AS count')
             ->groupBy('agency_id')
             ->orderByDesc('count')
-            ->limit(6)
+            ->limit(9)
             ->get()->pluck('agency_id')->toArray();
 
-        if (count($favAgency) >= 6) {
-            $agencies = Agencies::wherehas('vacancies')->whereIn('id', $favAgency)->orderByDesc('id')->take(6)->get();
+        if (count($favAgency) >= 9) {
+            $agencies = Agencies::wherehas('vacancies')->whereIn('id', $favAgency)->orderByDesc('id')->take(9)->get();
 
         } else {
-            $agencies = Agencies::wherehas('vacancies')->orderByDesc('updated_at')->take(6)->get();
+            $agencies = Agencies::wherehas('vacancies')->orderByDesc('updated_at')->take(9)->get();
         }
 
         return view('home-seeker', compact('provinces', 'carousels', 'blogs', 'favIndustries', 'agencies'));

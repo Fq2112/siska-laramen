@@ -33,16 +33,16 @@ class VacanciesAPIController extends Controller
             ->selectRaw('COUNT(*) AS count')
             ->groupBy('vacancy_id')
             ->orderByDesc('count')
-            ->limit(8)
+            ->limit(12)
             ->get()->pluck('vacancy_id')->toArray();
 
-        if (count($favVacancy) >= 8) {
+        if (count($favVacancy) >= 12) {
             $vacancies = Vacancies::whereIn('id', $favVacancy)->where('isPost', true)->orderByDesc('id')
-                ->take(8)->get()->toArray();
+                ->take(12)->get()->toArray();
 
         } else {
             $vacancies = Vacancies::orderByDesc('salary_id')->where('isPost', true)
-                ->take(8)->get()->toArray();
+                ->take(12)->get()->toArray();
         }
 
         $vacancies = $this->array_vacancies($vacancies);
@@ -52,7 +52,7 @@ class VacanciesAPIController extends Controller
 
     public function loadLateVacancies()
     {
-        $vacancies = Vacancies::orderBy('updated_at', 'desc')->where('isPost', true)->take(12)->get()->toArray();
+        $vacancies = Vacancies::orderBy('updated_at', 'desc')->where('isPost', true)->take(16)->get()->toArray();
         $vacancies = $this->array_vacancies($vacancies);
 
         return $vacancies;

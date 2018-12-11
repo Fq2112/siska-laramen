@@ -1,7 +1,13 @@
 @extends('layouts.mst_user')
 @section('title', 'Seeker\'s Home | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
-    <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">@endpush
+    <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+    <style>
+        [data-scrollbar] {
+            max-height: 550px;
+        }
+    </style>
+@endpush
 @section('content')
     <section id="fh5co-home" data-section="home" data-stellar-background-ratio="0.5"
              style="background-color: #ffffff">
@@ -69,7 +75,7 @@
                     <div class="tab-content">
                         <div id="popular" class="tab-pane to-animate active row">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12" data-scrollbar>
                                     <img src="{{asset('images/loading3.gif')}}" id="image"
                                          class="img-responsive ld ld-breath">
                                     <div data-view="list-view" class="download-cards" id="fav-list-vacancy">
@@ -80,7 +86,7 @@
 
                         <div id="latest" class="tab-pane to-animate row">
                             <div class="row">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12" data-scrollbar>
                                     <div data-view="list-view" class="download-cards" id="late-list-vacancy"></div>
                                 </div>
                             </div>
@@ -111,7 +117,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12 to-animate">
+                            <div class="col-lg-12 to-animate" data-scrollbar>
                                 @foreach($agencies as $agency)
                                     <div class="col-lg-4">
                                         <article class="download-card Card">
@@ -354,7 +360,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" data-scrollbar>
                     @foreach($blogs as $blog)
                         <div class="col-md-6 to-animate blog">
                             <div class="blog-grid" style="background-image: url({{asset('images/blog/'.$blog->dir)}});">

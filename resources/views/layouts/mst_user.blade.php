@@ -724,6 +724,8 @@
 <script src="{{asset('js/jquery.waypoints.min.js')}}"></script>
 <!-- Stellar Parallax -->
 <script src="{{asset('js/jquery.stellar.min.js')}}"></script>
+<!-- Smooth scroll -->
+<script src="{{asset('js/smooth-scrollbar.js')}}"></script>
 <!-- Owl Carousel -->
 <script src="{{asset('js/owl.carousel.min.js')}}"></script>
 <!-- Counters -->

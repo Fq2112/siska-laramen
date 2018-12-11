@@ -164,6 +164,10 @@
                 margin-left: 220px;
             }
         }
+
+        [data-scrollbar] {
+            max-height: 575px;
+        }
     </style>
 @endpush
 @section('content')
@@ -323,15 +327,17 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12 to-animate">
+                            <div class="col-lg-12 to-animate" data-scrollbar>
                                 <img src="{{asset('images/loading.gif')}}" id="image"
                                      class="img-responsive ld ld-fade">
                                 <div data-view="list-view" class="download-cards" style="margin-left: -.5em"
                                      id="search-result">
                                 </div>
-                                <div class="col-lg-12 to-animate-2 myPagination">
-                                    <ul class="pagination"></ul>
-                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 1em">
+                            <div class="col-lg-12 to-animate-2 myPagination">
+                                <ul class="pagination"></ul>
                             </div>
                         </div>
                     </div>

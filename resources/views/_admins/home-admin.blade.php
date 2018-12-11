@@ -99,7 +99,7 @@
                             </ul>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="x_content">
+                        <div class="x_content" data-scrollbar>
                             @if(count($blogs) > 0)
                                 <ul class="list-unstyled timeline">
                                     @foreach($blogs as $blog)

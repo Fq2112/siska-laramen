@@ -1,6 +1,8 @@
 <script>
     var editor_config;
     $(document).ready(function () {
+        Scrollbar.initAll();
+
         $('.carousel-indicators:nth-child(1)').addClass('active');
         $('.item:nth-child(1)').addClass('active');
 
