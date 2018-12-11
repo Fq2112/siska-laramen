@@ -58,7 +58,7 @@ class VacanciesAPIController extends Controller
         return $vacancies;
     }
 
-    private function array_vacancies($vacancies)
+    public function array_vacancies($vacancies)
     {
         $i = 0;
         foreach ($vacancies as $row) {
