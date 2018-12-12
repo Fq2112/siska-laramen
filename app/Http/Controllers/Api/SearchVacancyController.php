@@ -936,7 +936,7 @@ class SearchVacancyController extends Controller
         return $result;
     }
 
-    private function array_vacancies($result)
+    public function array_vacancies($result)
     {
         $i = 0;
         foreach ($result['data'] as $row) {

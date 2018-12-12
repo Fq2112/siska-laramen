@@ -60,6 +60,10 @@ $router->group(['prefix' => 'jwt','middleware' => 'api'], function ($router){
 
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
+    $router->get('search', [
+       'uses' => 'SearchAPICOntroller@search'
+    ]);
+
     $router->get('vacancies/search', [
         'uses' => 'SearchVacancyController@getSearchResult',
         'as' => 'get.search.vacancy'
