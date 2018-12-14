@@ -254,7 +254,8 @@ class AccountController extends Controller
 
         } elseif ($request->check_form == 'address') {
             $address = str_replace(" ", "+", $request->alamat);
-            $json = file_get_contents("http://maps.google.com/maps/api/geocode/json?address=$address");
+            $json = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=" .
+                $address . "&key=AIzaSyBIljHbKjgtTrpZhEiHum734tF1tolxI68");
 
             $lat = json_decode($json)->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
             $long = json_decode($json)->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
