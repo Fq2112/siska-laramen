@@ -64,7 +64,8 @@
                                 <li data-placement="left" data-toggle="tooltip" title="Headquarter">
                                     <a><i class="fa fa-building"></i>&ensp;{{$agency->kantor_pusat}}</a></li>
                                 <li data-placement="bottom" data-toggle="tooltip" title="Industry">
-                                    <a><i class="fa fa-industry"></i>&ensp;{{$industry->nama}}</a></li>
+                                    <a><i class="fa fa-industry"></i>&ensp;{{$industry != "" ? $industry->nama : 'Unknown'}}
+                                    </a></li>
                                 <li data-placement="bottom" data-toggle="tooltip" title="Working Days">
                                     <a><i class="fa fa-calendar"></i>&ensp;{{$agency->hari_kerja}}</a></li>
                                 <li data-placement="right" data-toggle="tooltip" title="Working Hours">
