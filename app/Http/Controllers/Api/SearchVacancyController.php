@@ -917,13 +917,19 @@ class SearchVacancyController extends Controller
                     $ma_ids = explode(",", substr($ma_ids, 0, -2));
                     $majors = Jurusanpend::whereIn('id', $ma_ids)->get()->pluck('id')->toArray();
 
-                    $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
-                        ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
-                        ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
+                    $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')
+                        ->whereIn('cities_id', $city)
+                        ->whereIn('salary_id', $salaries)
+                        ->whereIn('fungsikerja_id', $fungsikerja)
+                        ->whereIn('industry_id', $industries)
+                        ->whereIn('tingkatpend_id', $degrees)
                         ->whereIn('jurusanpend_id', $majors)
-                        ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)
-                        ->whereIn('salary_id', $salaries)->whereIn('fungsikerja_id', $fungsikerja)
-                        ->whereIn('industry_id', $industries)->whereIn('tingkatpend_id', $degrees)
+                        ->orwhereIn('agency_id', $agency)
+                        ->whereIn('cities_id', $city)
+                        ->whereIn('salary_id', $salaries)
+                        ->whereIn('fungsikerja_id', $fungsikerja)
+                        ->whereIn('industry_id', $industries)
+                        ->whereIn('tingkatpend_id', $degrees)
                         ->whereIn('jurusanpend_id', $majors)
                         ->where('isPost', true)->paginate(12)->appends($request->only(['q', 'loc']))->toArray();
                 }
