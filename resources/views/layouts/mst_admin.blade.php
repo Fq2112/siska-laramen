@@ -171,17 +171,17 @@
 
     $invitations = \App\Vacancies::whereHas('getInvitation', function ($inv){
         $inv->where('isApply', true);
-    })->whereDate('recruitmentDate_end','>=', today())->get();
+    })->whereDate('recruitmentDate_end', today())->get();
 
     $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
-    })->whereDate('recruitmentDate_end','>=', today())->get();
+    })->whereDate('recruitmentDate_end', today())->get();
 
     $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
     })->whereHas('getQuizInfo', function ($info){
         $info->whereHas('getQuizResult');
-    })->whereDate('quizDate_end','>=', today())->get();
+    })->whereDate('quizDate_end', today())->get();
 
     $psychoTest_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
         $acc->where('isApply', true);
@@ -189,7 +189,7 @@
         $info->whereHas('getQuizResult');
     })->whereHas('getPsychoTestInfo', function ($psycho){
         $psycho->whereHas('getPsychoTestResult');
-    })->whereDate('psychoTestDate_end','>=', today())->get();
+    })->whereDate('psychoTestDate_end', today())->get();
 
     $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
 @endphp

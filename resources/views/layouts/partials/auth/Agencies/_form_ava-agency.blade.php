@@ -132,7 +132,7 @@
                     <div class="row form-group">
                         <div class="col-lg-12">
                             <div class="input-group">
-                                <span class="input-group-addon"><i class="fa fa-hand-holding-heart"></i></span>
+                                <span class="input-group-addon"><i class="fa fa-building"></i></span>
                                 <input type="text" class="form-control" name="kantor_pusat"
                                        placeholder="Surabaya" required maxlength="60"
                                        value="{{$agency->kantor_pusat == "" ? '' : $agency->kantor_pusat}}">

@@ -21,7 +21,7 @@
                         <div class="row form-group">
                             <div class="col-lg-12 has-feedback">
                                 <label for="vacancy_id">Vacancy Filter</label>
-                                <select id="vacancy_id" class="form-control selectpicker" title="-- Select Agency --"
+                                <select id="vacancy_id" class="form-control selectpicker" title="-- Select Vacancy --"
                                         data-live-search="true" data-max-options="1" multiple>
                                     @foreach($vacancies as $vacancy)
                                         <option value="{{$vacancy->judul}}">{{$vacancy->judul}}</option>
