@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
                         'name' => $faker->company,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
-                        'remember_token' => str_random(10),
+                        'remember_token' => str_random(60),
                         'role' => $role,
                         'status' => true,
                     ]);
