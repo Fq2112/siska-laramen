@@ -51,7 +51,7 @@ class AccountController extends Controller
         $start = $request->start_date;
         $end = $request->end_date;
 
-        $result = Accepting::where('vacancy_id', $request->vacancy_id)
+        $result = Accepting::where('vacancy_id', $request->vacancy_id)->where('isApply', true)
             ->whereBetween('created_at', [$start, $end])->orderByDesc('id')->paginate(6)->toArray();
 
         $result = $this->array_AccInv_seekers($result);

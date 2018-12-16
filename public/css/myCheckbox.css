@@ -39,14 +39,14 @@
     margin: 0;
     border: 1px solid #F6F4E8;
     border-left: none;
-    box-shadow: -3px 0 #F6F4E8;
+    box-shadow: inset -4px 0 #F6F4E8;
     color: #9DACAC;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .myCheckbox li:hover {
     background-color: #FFFFFF;
-    box-shadow: -3px 0 #00ADB5;
+    box-shadow: inset -4px 0 #00ADB5;
     color: #00ADB5;
 }
 
@@ -130,4 +130,5 @@
 .myCheckbox .active {
     background-color: #FFFFFF;
     color: #00ADB5;
+    box-shadow: inset -4px 0 #00ADB5;
 }

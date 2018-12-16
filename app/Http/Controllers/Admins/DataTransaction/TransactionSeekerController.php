@@ -43,7 +43,7 @@ class TransactionSeekerController extends Controller
         })->get();
 
         foreach ($vacancies as $vacancy) {
-            $applicants = $vacancy->getInvitation->toArray();
+            $applicants = Invitation::where('vacancy_id', $vacancy->id)->where('isApply', true)->toArray();
             $date = Carbon::parse($vacancy->recruitmentDate_start)->format('dmy') . '-' .
                 Carbon::parse($vacancy->recruitmentDate_end)->format('dmy');
 
@@ -90,7 +90,7 @@ class TransactionSeekerController extends Controller
         })->get();
 
         foreach ($vacancies as $vacancy) {
-            $applicants = $vacancy->getAccepting->toArray();
+            $applicants = Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->toArray();
             $date = Carbon::parse($vacancy->recruitmentDate_start)->format('dmy') . '-' .
                 Carbon::parse($vacancy->recruitmentDate_end)->format('dmy');
 

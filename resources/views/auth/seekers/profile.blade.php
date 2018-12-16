@@ -1,4 +1,11 @@
 @section('title', 'Edit Profile | SISKA &mdash; Sistem Informasi Karier')
+@push("styles")
+    <style>
+        [data-scrollbar] {
+            max-height: 350px;
+        }
+    </style>
+@endpush
 @extends('layouts.auth.mst_seeker')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
@@ -171,13 +178,16 @@
                                                                    id="selectAll">{{count($attachments) > 1 ?
                                                                'Select '.count($attachments).' files' :
                                                                'Select '.count($attachments).' file'}}</li>
-                                                        @foreach($attachments as $row)
-                                                            <li><input type="checkbox" name="attachments_cbs[]"
-                                                                       class="attachments_cb"
-                                                                       value="{{$row->id}}">{{$row->files}}</li>
-                                                            <input type="hidden" name="attachments[]"
-                                                                   value="{{$row->image}}">
-                                                        @endforeach
+                                                        <div data-scrollbar>
+                                                            @foreach($attachments as $row)
+                                                                <li><input type="checkbox" name="attachments_cbs[]"
+                                                                           class="attachments_cb" value="{{$row->id}}">
+                                                                    {{\Illuminate\Support\Str::words($row->files,4,'...')}}
+                                                                </li>
+                                                                <input type="hidden" name="attachments[]"
+                                                                       value="{{$row->image}}">
+                                                            @endforeach
+                                                        </div>
                                                     </ul>
                                                 </form>
                                             @else
@@ -261,19 +271,20 @@
                                                 @if(count($languages) == 0)
                                                     <p>Your language skill, local or foreign language.<br><br></p>
                                                 @else
-                                                    @foreach($languages as $row)
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media">
-                                                                    <div class="media-left media-middle">
-                                                                        <img width="64" class="media-object"
-                                                                             src="{{asset('images/lang.png')}}">
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                        <p class="media-heading">
-                                                                            <i class="fa fa-language"></i>&nbsp;
-                                                                            <small style="text-transform: uppercase">{{$row->name}}</small>
-                                                                            <span class="pull-right">
+                                                    <div data-scrollbar>
+                                                        @foreach($languages as $row)
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img width="64" class="media-object"
+                                                                                 src="{{asset('images/lang.png')}}">
+                                                                        </div>
+                                                                        <div class="media-body">
+                                                                            <p class="media-heading">
+                                                                                <i class="fa fa-language"></i>&nbsp;
+                                                                                <small style="text-transform: uppercase">{{$row->name}}</small>
+                                                                                <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editLang('{{encrypt
                                                                                    ($row->id)}}')">
@@ -287,15 +298,16 @@
                                                                                     <i class="fa fa-eraser"></i>&ensp;DELETE
                                                                                 </a>
                                                                             </span>
-                                                                        </p>
-                                                                        <blockquote
-                                                                                style="font-size: 12px;text-transform: none">
-                                                                            <table style="font-size: 12px;margin-top: 0">
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-comments"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;</td>
-                                                                                    <td align="justify">
+                                                                            </p>
+                                                                            <blockquote
+                                                                                    style="font-size: 12px;text-transform: none">
+                                                                                <table style="font-size: 12px;margin-top: 0">
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-comments"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;</td>
+                                                                                        <td align="justify">
                                                                                         <span style="text-transform: uppercase"
                                                                                               data-toggle="tooltip"
                                                                                               data-placement="right"
@@ -303,13 +315,14 @@
                                                                                             {{$row->spoken_lvl != "" ?
                                                                                             $row->spoken_lvl : '-'}}
                                                                                         </span>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-pencil-alt"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;</td>
-                                                                                    <td align="justify">
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-pencil-alt"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;</td>
+                                                                                        <td align="justify">
                                                                                         <span style="text-transform: uppercase"
                                                                                               data-toggle="tooltip"
                                                                                               data-placement="right"
@@ -317,16 +330,17 @@
                                                                                             {{$row->written_lvl != "" ?
                                                                                             $row->written_lvl : '-'}}
                                                                                         </span>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </table>
-                                                                        </blockquote>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr class="hr-divider">
-                                                    @endforeach
+                                                            <hr class="hr-divider">
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -425,20 +439,21 @@
                                                         Analysis, Accounting, App Developing, Time
                                                         Management, Creativity, etc.</p>
                                                 @else
-                                                    @foreach($skills as $row)
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media">
-                                                                    <div class="media-left media-middle">
-                                                                        <img width="64"
-                                                                             class="media-object"
-                                                                             src="{{asset('images/skill.png')}}">
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                        <p class="media-heading">
-                                                                            <i class="fa fa-user-secret"></i>&nbsp;
-                                                                            <small style="text-transform: uppercase">{{$row->name}}</small>
-                                                                            <span class="pull-right">
+                                                    <div data-scrollbar>
+                                                        @foreach($skills as $row)
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img width="64"
+                                                                                 class="media-object"
+                                                                                 src="{{asset('images/skill.png')}}">
+                                                                        </div>
+                                                                        <div class="media-body">
+                                                                            <p class="media-heading">
+                                                                                <i class="fa fa-user-secret"></i>&nbsp;
+                                                                                <small style="text-transform: uppercase">{{$row->name}}</small>
+                                                                                <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editSkill('{{encrypt
                                                                                    ($row->id)}}')">
@@ -451,15 +466,16 @@
                                                                                    style="color: #FA5555;">
                                                                                     <i class="fa fa-eraser"></i>&ensp;DELETE</a>
                                                                             </span>
-                                                                        </p>
-                                                                        <blockquote
-                                                                                style="font-size: 12px;text-transform: none">
-                                                                            <table style="font-size: 12px;margin-top: 0">
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-chart-line"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;</td>
-                                                                                    <td align="justify">
+                                                                            </p>
+                                                                            <blockquote
+                                                                                    style="font-size: 12px;text-transform: none">
+                                                                                <table style="font-size: 12px;margin-top: 0">
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-chart-line"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;</td>
+                                                                                        <td align="justify">
                                                                                         <span style="text-transform: uppercase"
                                                                                               data-toggle="tooltip"
                                                                                               data-placement="right"
@@ -467,16 +483,17 @@
                                                                                             {{$row->level != "" ?
                                                                                             $row->level : '-'}}
                                                                                         </span>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </table>
-                                                                        </blockquote>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr class="hr-divider">
-                                                    @endforeach
+                                                            <hr class="hr-divider">
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -890,7 +907,7 @@
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote id="stats_summary">
+                                            <blockquote id="stats_summary" data-scrollbar>
                                                 {!!$seeker->summary != "" ? $seeker->summary :
                                                 '<p align="justify">A Resume summary is a short, snappy introduction '.
                                                 'highlighting your career progress and skill set. '.
@@ -941,22 +958,23 @@
                                                         Please fill your current and previous work
                                                         experience and responsibilities.</p>
                                                 @else
-                                                    @foreach($experiences as $row)
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media">
-                                                                    <div class="media-left media-middle">
-                                                                        <img width="100"
-                                                                             class="media-object"
-                                                                             src="{{asset('images/exp.png')}}">
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                        <p class="media-heading">
-                                                                            <i class="fa fa-briefcase">&nbsp;</i>
-                                                                            <small style="text-transform: uppercase">
-                                                                                {{$row->job_title}}
-                                                                            </small>
-                                                                            <span class="pull-right">
+                                                    <div data-scrollbar>
+                                                        @foreach($experiences as $row)
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img width="100"
+                                                                                 class="media-object"
+                                                                                 src="{{asset('images/exp.png')}}">
+                                                                        </div>
+                                                                        <div class="media-body">
+                                                                            <p class="media-heading">
+                                                                                <i class="fa fa-briefcase">&nbsp;</i>
+                                                                                <small style="text-transform: uppercase">
+                                                                                    {{$row->job_title}}
+                                                                                </small>
+                                                                                <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editExp('{{encrypt($row->id)}}')">
                                                                                     EDIT&ensp;<i class="fa fa-edit"></i>
@@ -970,117 +988,125 @@
                                                                                     <i class="fa fa-eraser"></i>&ensp;
                                                                                     DELETE</a>
                                                                             </span>
-                                                                        </p>
-                                                                        <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-building"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Agency Name</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->company}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-level-up-alt"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Job Level</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\App\JobLevel::find
+                                                                            </p>
+                                                                            <blockquote
+                                                                                    style="font-size: 14px;text-transform: none">
+                                                                                <table style="font-size: 14px; margin-top: 0">
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-building"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Agency Name</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->company}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-level-up-alt"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Job Level</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\App\JobLevel::find
                                                                                     ($row->joblevel_id)->name}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-warehouse"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Job Function</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\App\FungsiKerja::find
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-warehouse"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Job Function</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\App\FungsiKerja::find
                                                                                     ($row->fungsikerja_id)->nama}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-industry"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Industry</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\App\Industri::find
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-industry"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Industry</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\App\Industri::find
                                                                                     ($row->industri_id)->nama}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-map-marked"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Location</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{substr(\App\Cities::find
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-map-marked"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Location</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{substr(\App\Cities::find
                                                                                     ($row->city_id)->name,0,2) == "Ko" ?
                                                                                     substr(\App\Cities::find($row->city_id)
                                                                                     ->name,5) : substr(\App\Cities::find
                                                                                     ($row->city_id)->name,10)}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-money-bill-wave"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Salary</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->salary_id != "" ?
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-money-bill-wave"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Salary</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->salary_id != "" ?
                                                                                     \App\Salaries::find($row->salary_id)
                                                                                     ->name : 'Rather not say'}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-calendar-alt"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Since</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\Carbon\Carbon::parse
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-calendar-alt"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Since</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\Carbon\Carbon::parse
                                                                                     ($row->start_date)->format('j F Y')}}
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-calendar-check"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Until</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->end_date != "" ?
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-calendar-check"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Until</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->end_date != "" ?
                                                                                     \Carbon\Carbon::parse($row->end_date)
                                                                                     ->format('j F Y') : 'Present'}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-user-clock"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Job Type</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->jobtype_id != "" ?
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-user-clock"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Job Type</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->jobtype_id != "" ?
                                                                                     \App\JobType::find($row->jobtype_id)
                                                                                     ->name : '(empty)'}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-user-tie"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Report to</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->report_to != "" ?
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-user-tie"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Report to</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->report_to != "" ?
                                                                                     $row->report_to : '(empty)'}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-comments"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Job Description</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>&nbsp;</td>
-                                                                                </tr>
-                                                                            </table>
-                                                                            {!! $row->job_desc != "" ?
-                                                                            $row->job_desc : '(empty)'!!}
-                                                                        </blockquote>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-comments"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Job Description</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>&nbsp;</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                                {!! $row->job_desc != "" ?
+                                                                                $row->job_desc : '(empty)'!!}
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr class="hr-divider">
-                                                    @endforeach
+                                                            <hr class="hr-divider">
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -1323,21 +1349,22 @@
                                                         Please fill your educational background details.
                                                     </p>
                                                 @else
-                                                    @foreach($educations as $row)
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media">
-                                                                    <div class="media-left media-middle">
-                                                                        <img width="100" class="media-object"
-                                                                             src="{{asset('images/edu.png')}}">
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                        <p class="media-heading">
-                                                                            <i class="fa fa-school">&nbsp;</i>
-                                                                            <small style="text-transform: uppercase">
-                                                                                {{$row->school_name}}
-                                                                            </small>
-                                                                            <span class="pull-right">
+                                                    <div data-scrollbar>
+                                                        @foreach($educations as $row)
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img width="100" class="media-object"
+                                                                                 src="{{asset('images/edu.png')}}">
+                                                                        </div>
+                                                                        <div class="media-body">
+                                                                            <p class="media-heading">
+                                                                                <i class="fa fa-school">&nbsp;</i>
+                                                                                <small style="text-transform: uppercase">
+                                                                                    {{$row->school_name}}
+                                                                                </small>
+                                                                                <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editEdu('{{encrypt
                                                                                    ($row->id)}}')">
@@ -1352,70 +1379,72 @@
                                                                                     <i class="fa fa-eraser"></i>&ensp;
                                                                                     DELETE</a>
                                                                             </span>
-                                                                        </p>
-                                                                        <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-graduation-cap"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Education Degree</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\App\Tingkatpend::find
+                                                                            </p>
+                                                                            <blockquote
+                                                                                    style="font-size: 14px;text-transform: none">
+                                                                                <table style="font-size: 14px; margin-top: 0">
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-graduation-cap"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Education Degree</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\App\Tingkatpend::find
                                                                                     ($row->tingkatpend_id)->name}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-user-graduate"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Education Major</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\App\Jurusanpend::find
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-user-graduate"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Education Major</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\App\Jurusanpend::find
                                                                                     ($row->jurusanpend_id)->name}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-hourglass-start"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Start Period</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->start_period}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-hourglass-end"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;End Period</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->end_period == "" ?
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-hourglass-start"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Start Period</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->start_period}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-hourglass-end"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;End Period</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->end_period == "" ?
                                                                                     'Present' : $row->end_period}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-grin-stars"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;GPA</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->nilai != "" ?
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-grin-stars"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;GPA</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->nilai != "" ?
                                                                                     $row->nilai : '(-)'}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-trophy"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Honors/Awards</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>&nbsp;</td>
-                                                                                </tr>
-                                                                            </table>
-                                                                            {!! $row->awards != "" ?
-                                                                            $row->awards : '(empty)'!!}
-                                                                        </blockquote>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td><i class="fa fa-trophy"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Honors/Awards</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>&nbsp;</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                                {!! $row->awards != "" ?
+                                                                                $row->awards : '(empty)'!!}
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr class="hr-divider">
-                                                    @endforeach
+                                                            <hr class="hr-divider">
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -1565,22 +1594,23 @@
                                                         Professional Certification, Organizational
                                                         Training, etc that you have taken.</p>
                                                 @else
-                                                    @foreach($trainings as $row)
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media">
-                                                                    <div class="media-left media-middle">
-                                                                        <img width="100"
-                                                                             class="media-object"
-                                                                             src="{{asset('images/cert.png')}}">
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                        <p class="media-heading">
-                                                                            <i class="fa fa-certificate"></i>&nbsp;
-                                                                            <small style="text-transform: uppercase">
-                                                                                {{$row->name}}
-                                                                            </small>
-                                                                            <span class="pull-right">
+                                                    <div data-scrollbar>
+                                                        @foreach($trainings as $row)
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img width="100"
+                                                                                 class="media-object"
+                                                                                 src="{{asset('images/cert.png')}}">
+                                                                        </div>
+                                                                        <div class="media-body">
+                                                                            <p class="media-heading">
+                                                                                <i class="fa fa-certificate"></i>&nbsp;
+                                                                                <small style="text-transform: uppercase">
+                                                                                    {{$row->name}}
+                                                                                </small>
+                                                                                <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editCert('{{encrypt
                                                                                    ($row->id)}}')">
@@ -1595,44 +1625,47 @@
                                                                                     <i class="fa fa-eraser"></i>&ensp;
                                                                                     DELETE</a>
                                                                             </span>
-                                                                        </p>
-                                                                        <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-university"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Issued by</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->issuedby}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-calendar-alt"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Issued Date</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{\Carbon\Carbon::parse
+                                                                            </p>
+                                                                            <blockquote
+                                                                                    style="font-size: 14px;text-transform: none">
+                                                                                <table style="font-size: 14px; margin-top: 0">
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-university"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Issued by</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->issuedby}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-calendar-alt"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Issued Date</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{\Carbon\Carbon::parse
                                                                                     ($row->isseuddate)->format
                                                                                     ('j F Y')}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-comments"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Job Description</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>&nbsp;</td>
-                                                                                </tr>
-                                                                            </table>
-                                                                            {!! $row->descript != "" ?
-                                                                            $row->descript : '(empty)'!!}
-                                                                        </blockquote>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-comments"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Job Description</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>&nbsp;</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                                {!! $row->descript != "" ?
+                                                                                $row->descript : '(empty)'!!}
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr class="hr-divider">
-                                                    @endforeach
+                                                            <hr class="hr-divider">
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -1729,22 +1762,23 @@
                                                         experience)
                                                     </p>
                                                 @else
-                                                    @foreach($organizations as $row)
-                                                        <div class="row">
-                                                            <div class="col-lg-12">
-                                                                <div class="media">
-                                                                    <div class="media-left media-middle">
-                                                                        <img width="100"
-                                                                             class="media-object"
-                                                                             src="{{asset('images/org.png')}}">
-                                                                    </div>
-                                                                    <div class="media-body">
-                                                                        <p class="media-heading">
-                                                                            <i class="fa fa-users">&nbsp;</i>
-                                                                            <small style="text-transform: uppercase">
-                                                                                {{$row->name}}
-                                                                            </small>
-                                                                            <span class="pull-right">
+                                                    <div data-scrollbar>
+                                                        @foreach($organizations as $row)
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="media">
+                                                                        <div class="media-left media-middle">
+                                                                            <img width="100"
+                                                                                 class="media-object"
+                                                                                 src="{{asset('images/org.png')}}">
+                                                                        </div>
+                                                                        <div class="media-body">
+                                                                            <p class="media-heading">
+                                                                                <i class="fa fa-users">&nbsp;</i>
+                                                                                <small style="text-transform: uppercase">
+                                                                                    {{$row->name}}
+                                                                                </small>
+                                                                                <span class="pull-right">
                                                                                 <a style="color: #00ADB5;cursor: pointer;"
                                                                                    onclick="editOrg('{{encrypt
                                                                                    ($row->id)}}')">
@@ -1759,44 +1793,46 @@
                                                                                     <i class="fa fa-eraser"></i>&ensp;
                                                                                     DELETE</a>
                                                                             </span>
-                                                                        </p>
-                                                                        <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-hourglass-start"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Start Period</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->start_period}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <i class="fa fa-hourglass-end"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;End Period</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>{{$row->end_period == "" ?
+                                                                            </p>
+                                                                            <blockquote
+                                                                                    style="font-size: 14px;text-transform: none">
+                                                                                <table style="font-size: 14px; margin-top: 0">
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-hourglass-start"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Start Period</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->start_period}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-hourglass-end"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;End Period</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->end_period == "" ?
                                                                                     'Present' : $row->end_period}}</td>
-                                                                                </tr>
-                                                                                <tr>
-                                                                                    <td><i class="fa fa-comments"></i>
-                                                                                    </td>
-                                                                                    <td>&nbsp;Description</td>
-                                                                                    <td>&nbsp;:&nbsp;</td>
-                                                                                    <td>&nbsp;</td>
-                                                                                </tr>
-                                                                            </table>
-                                                                            {!! $row->descript != "" ?
-                                                                            $row->descript : '(empty)'!!}
-                                                                        </blockquote>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <i class="fa fa-comments"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Description</td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>&nbsp;</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                                {!! $row->descript != "" ?
+                                                                                $row->descript : '(empty)'!!}
+                                                                            </blockquote>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <hr class="hr-divider">
-                                                    @endforeach
+                                                            <hr class="hr-divider">
+                                                        @endforeach
+                                                    </div>
                                                 @endif
                                             </div>
 
@@ -1894,89 +1930,91 @@
                                     <div class="card-title">
                                         <small>Test Result</small>
                                         <hr class="hr-divider">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="media">
-                                                    <div class="media-left media-middle">
-                                                        <img width="100" class="media-object"
-                                                             alt="English First"
-                                                             src="{{asset('images/ef.png')}}">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <small class="media-heading">
-                                                            EF Standard English Test - Express
-                                                            <a href="#">
+                                        <div data-scrollbar>
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="media">
+                                                        <div class="media-left media-middle">
+                                                            <img width="100" class="media-object"
+                                                                 alt="English First"
+                                                                 src="{{asset('images/ef.png')}}">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <small class="media-heading">
+                                                                EF Standard English Test - Express
+                                                                <a href="#">
                                                                                 <span class="pull-right"
                                                                                       style="color: #FA5555">
                                                                                     (Take Test ?)</span></a>
-                                                        </small>
-                                                        <blockquote style="font-size: 12px">
-                                                            <p>
-                                                                SISKA has been cooperated with EF
-                                                                (English First) to provide an
-                                                                International Standard and FREE English
-                                                                Test facility with. What are you
-                                                                waiting for!? Check it out and try to
-                                                                measure your English skills!</p>
-                                                        </blockquote>
+                                                            </small>
+                                                            <blockquote style="font-size: 12px">
+                                                                <p>
+                                                                    SISKA has been cooperated with EF
+                                                                    (English First) to provide an
+                                                                    International Standard and FREE English
+                                                                    Test facility with. What are you
+                                                                    waiting for!? Check it out and try to
+                                                                    measure your English skills!</p>
+                                                            </blockquote>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <hr class="hr-divider">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="media">
-                                                    <div class="media-left media-middle">
-                                                        <img width="100" class="media-object"
-                                                             alt="Communication Test"
-                                                             src="{{asset('images/comm_test.png')}}">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <small class="media-heading">
-                                                            Communication Style Test
-                                                            <a href="#">
+                                            <hr class="hr-divider">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="media">
+                                                        <div class="media-left media-middle">
+                                                            <img width="100" class="media-object"
+                                                                 alt="Communication Test"
+                                                                 src="{{asset('images/comm_test.png')}}">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <small class="media-heading">
+                                                                Communication Style Test
+                                                                <a href="#">
                                                                                 <span class="pull-right"
                                                                                       style="color: #FA5555">
                                                                                     (Take Test ?)</span></a>
-                                                        </small>
-                                                        <blockquote style="font-size: 12px">
-                                                            <p>
-                                                                Know your communication style, whether
-                                                                you are an Investigator, Leader,
-                                                                Counselor, or Communicator? Find the
-                                                                answer to a brilliant career!
-                                                            </p>
-                                                        </blockquote>
+                                                            </small>
+                                                            <blockquote style="font-size: 12px">
+                                                                <p>
+                                                                    Know your communication style, whether
+                                                                    you are an Investigator, Leader,
+                                                                    Counselor, or Communicator? Find the
+                                                                    answer to a brilliant career!
+                                                                </p>
+                                                            </blockquote>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <hr class="hr-divider">
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="media">
-                                                    <div class="media-left media-middle">
-                                                        <img width="100" class="media-object"
-                                                             alt="Interest Test"
-                                                             src="{{asset('images/int_test.png')}}">
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <small class="media-heading">
-                                                            Interest Test
-                                                            <a href="#">
+                                            <hr class="hr-divider">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    <div class="media">
+                                                        <div class="media-left media-middle">
+                                                            <img width="100" class="media-object"
+                                                                 alt="Interest Test"
+                                                                 src="{{asset('images/int_test.png')}}">
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <small class="media-heading">
+                                                                Interest Test
+                                                                <a href="#">
                                                                                 <span class="pull-right"
                                                                                       style="color: #FA5555">
                                                                                     (Take Test ?)</span></a>
-                                                        </small>
-                                                        <blockquote style="font-size: 12px">
-                                                            <p>
-                                                                Work interest is determining your
-                                                                career. Various facilities and
-                                                                professions to success. Find it out,
-                                                                your work interests!
-                                                            </p>
-                                                        </blockquote>
+                                                            </small>
+                                                            <blockquote style="font-size: 12px">
+                                                                <p>
+                                                                    Work interest is determining your
+                                                                    career. Various facilities and
+                                                                    professions to success. Find it out,
+                                                                    your work interests!
+                                                                </p>
+                                                            </blockquote>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

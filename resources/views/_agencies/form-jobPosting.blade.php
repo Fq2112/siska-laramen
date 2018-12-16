@@ -6,6 +6,11 @@
     <link href="{{ asset('css/countdown.css') }}" rel="stylesheet">
     <link href="{{ asset('css/fileUploader.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cc.css') }}" rel="stylesheet">
+    <style>
+        [data-scrollbar] {
+            max-height: 400px
+        }
+    </style>
 @endpush
 @section('content')
     <section id="fh5co-services" data-section="services">
@@ -231,7 +236,9 @@
                                                 <i class="fa fa-edit"></i>&nbsp;EDIT</span>
                                                     </small>
                                                     <hr class="hr-divider">
-                                                    <div id="vacancy_data"></div>
+                                                    <div data-scrollbar>
+                                                        <div id="vacancy_data"></div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <input type="button" name="previous" class="previous action-button"
@@ -966,19 +973,27 @@
                 }
 
                 if (isPsychoTest == 1) {
-                    if (parseInt($(".input_psychoTest_applicant").val()) > 0 && total_psychoTest_applicant >= old_total_psychoTest) {
-                        $(".psychoTest_setup").removeClass('has-error');
-                        $("#psychoTest_error small").text('');
-
-                    } else if (parseInt($(".input_psychoTest_applicant").val()) <= 0) {
-                        $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
-                        $("#psychoTest_error small").text("Psycho test applicant value can't be 0! " +
+                    if (parseFloat($(".input_passing_grade").val()) <= 0.00) {
+                        $(".quiz_setup, #quiz_error").addClass('has-error');
+                        $("#quiz_error small").text("Passing grade value can't be 0.00! " +
                             "Please fill it correctly for each vacancy that you've selected.");
 
-                    } else if (total_psychoTest_applicant < old_total_psychoTest) {
-                        $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
-                        $("#psychoTest_error small").text("The applicant amount you've entered doesn't meet " +
-                            "the requirements for total applicant (" + old_total_psychoTest + " applicants).");
+                    } else {
+                        if (parseInt($(".input_psychoTest_applicant").val()) > 0 &&
+                            total_psychoTest_applicant >= old_total_psychoTest) {
+                            $(".psychoTest_setup").removeClass('has-error');
+                            $("#psychoTest_error small").text('');
+
+                        } else if (parseInt($(".input_psychoTest_applicant").val()) <= 0) {
+                            $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
+                            $("#psychoTest_error small").text("Psycho test applicant value can't be 0! " +
+                                "Please fill it correctly for each vacancy that you've selected.");
+
+                        } else if (total_psychoTest_applicant < old_total_psychoTest) {
+                            $(".psychoTest_setup, #psychoTest_error").addClass('has-error');
+                            $("#psychoTest_error small").text("The applicant amount you've entered doesn't meet " +
+                                "the requirements for total applicant (" + old_total_psychoTest + " applicants).");
+                        }
                     }
                 }
             }
@@ -1327,8 +1342,7 @@
                         that.checkHour(that.values.seconds, $sec_1, $sec_2);
 
                         --that.total_seconds;
-                    }
-                    else {
+                    } else {
                         clearInterval(that.countdown_interval);
                     }
                 }, 1000);
@@ -1376,8 +1390,7 @@
                 if (value >= 10) {
                     if (fig_1_value !== val_1) this.animateFigure($el_1, val_1);
                     if (fig_2_value !== val_2) this.animateFigure($el_2, val_2);
-                }
-                else {
+                } else {
                     if (fig_1_value !== '0') this.animateFigure($el_1, 0);
                     if (fig_2_value !== val_1) this.animateFigure($el_2, val_1);
                 }

@@ -11,6 +11,7 @@ use App\Experience;
 use App\FungsiKerja;
 use App\Industri;
 use App\JobLevel;
+use App\JobType;
 use App\Jurusanpend;
 use App\Provinces;
 use App\Salaries;
@@ -66,13 +67,14 @@ class VacancyController extends Controller
         $salary = Salaries::find($vacancy->salary_id);
         $jobfunc = FungsiKerja::find($vacancy->fungsikerja_id);
         $joblevel = JobLevel::find($vacancy->joblevel_id);
+        $jobtype = JobType::find($vacancy->jobtype_id);
         $industry = Industri::find($vacancy->industry_id);
         $degrees = Tingkatpend::find($vacancy->tingkatpend_id);
         $majors = Jurusanpend::find($vacancy->jurusanpend_id);
         $applicants = Accepting::where('vacancy_id', $vacancy->id)->where('isApply', true)->count();
 
         return view('_agencies.detail-vacancy', compact('provinces', 'vacancy', 'carousels', 'agency', 'user',
-            'city', 'salary', 'jobfunc', 'joblevel', 'industry', 'degrees', 'majors', 'applicants'));
+            'city', 'salary', 'jobfunc', 'joblevel', 'jobtype', 'industry', 'degrees', 'majors', 'applicants'));
     }
 
     public function bookmarkVacancy(Request $request)

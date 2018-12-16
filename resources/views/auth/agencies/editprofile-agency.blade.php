@@ -127,14 +127,15 @@
                                                                id="selectAll">{{count($galleries) > 1 ?
                                                                'Select '.count($galleries).' files' :
                                                                'Select '.count($galleries).' file'}}</li>
-
+                                                    <div data-scrollbar style="max-height: 124px">
                                                     @foreach($galleries as $row)
                                                         <li><input type="checkbox" name="gallery_cbs[]"
-                                                                   class="gallery_cb"
-                                                                   value="{{$row->id}}">{{$row->image}}</li>
+                                                                   class="gallery_cb" value="{{$row->id}}">
+                                                            {{\Illuminate\Support\Str::words($row->image,4,'...')}}</li>
                                                         <input type="hidden" name="gallery_image[]"
                                                                value="{{$row->image}}">
                                                     @endforeach
+                                                    </div>
                                                 </ul>
                                             </form>
                                         @endif
@@ -206,7 +207,8 @@
                                                     <i class="fa fa-edit"></i>&nbsp;Edit</span>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote id="stats_agency_about">
+                                            <blockquote id="stats_agency_about" data-scrollbar
+                                                        style="max-height: 300px">
                                                 {!! $agency->tentang != "" ? $agency->tentang : '' !!}
                                                 <small>{{$agency->alasan != "" ? 'Why Choose Us?' : ''}}</small>
                                                 {!! $agency->alasan != "" ? $agency->alasan : '' !!}

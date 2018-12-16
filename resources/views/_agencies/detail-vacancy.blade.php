@@ -4,6 +4,11 @@
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+    <style>
+        [data-scrollbar] {
+            max-height: 350px;
+        }
+    </style>
 @endpush
 @section('content')
     <section id="fh5co-services" data-section="services" style="padding-top: 2.9em">
@@ -188,6 +193,14 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
+                                                    <td><i class="fa fa-user-clock"></i></td>
+                                                    <td>&nbsp;</td>
+                                                    <td>
+                                                        <span data-placement="right" data-toggle="tooltip"
+                                                              title="Job Type">{{$jobtype->name}}</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                     <td><i class="fa fa-money-bill-wave"></i></td>
                                                     <td>&nbsp;</td>
                                                     <td>
@@ -316,7 +329,7 @@
                                         <div class="card-title">
                                             <small>Requirements</small>
                                             <hr class="hr-divider">
-                                            <blockquote style="font-size: 14px" class="ulTinyMCE">
+                                            <blockquote style="font-size: 14px" class="ulTinyMCE" data-scrollbar>
                                                 {!! $vacancy->syarat !!}
                                             </blockquote>
                                         </div>
@@ -331,7 +344,7 @@
                                         <div class="card-title">
                                             <small>Responsibilities</small>
                                             <hr class="hr-divider">
-                                            <blockquote style="font-size: 14px" class="ulTinyMCE">
+                                            <blockquote style="font-size: 14px" class="ulTinyMCE" data-scrollbar>
                                                 {!! $vacancy->syarat !!}
                                             </blockquote>
                                         </div>
@@ -352,7 +365,7 @@
                                                           style="color: #FA5555">{{$agency->link}}</span></a>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote>
+                                            <blockquote data-scrollbar>
                                                 {!! $agency->tentang != "" ? $agency->tentang : '' !!}
                                                 <small>{{$agency->alasan != "" ? 'Why Choose Us?' : ''}}</small>
                                                 {!! $agency->alasan != "" ? $agency->alasan : '' !!}
@@ -369,123 +382,124 @@
                                         <div class="card-title">
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
-                                            @foreach(\App\Vacancies::where('agency_id',$agency->id)
-                                            ->where('isPost',true)->orderByDesc('updated_at')->get() as $row)
-                                                @php
-                                                    $agency_list = \App\Agencies::find($row->agency_id);
-                                                    $user_list = \App\User::find(\App\Agencies::find($row->agency_id)->user_id);
-                                                    $city_list = \App\Cities::find($row->cities_id)->name;
-                                                    $salary_list = \App\Salaries::find($row->salary_id);
-                                                    $jobfunc_list = \App\FungsiKerja::find($row->fungsikerja_id);
-                                                    $joblevel_list = \App\JobLevel::find($row->joblevel_id);
-                                                    $industry_list = \App\Industri::find($row->industry_id);
-                                                    $degrees_list = \App\Tingkatpend::find($row->tingkatpend_id);
-                                                    $majors_list = \App\Jurusanpend::find($row->jurusanpend_id);
-                                                    $applicants_list = \App\Accepting::where('vacancy_id', $row->id)
-                                                    ->where('isApply', true)->count();
-                                                @endphp
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div class="media">
-                                                            <div class="media-left media-middle">
-                                                                @if($user_list->ava == ""||$user_list->ava == "agency.png")
-                                                                    <img width="100" class="media-object"
-                                                                         src="{{asset('images/agency.png')}}">
-                                                                @else
-                                                                    <img width="100" class="media-object"
-                                                                         src="{{asset('storage/users/'.$user_list->ava)}}">
-                                                                @endif
-                                                            </div>
-                                                            <div class="media-body">
-                                                                <small class="media-heading">
-                                                                    <a href="{{route('detail.vacancy',['id'=>$row->id])}}">
-                                                                        {{$row->judul}}</a>
-                                                                    <sub style="color: #fa5555;text-transform: none">&ndash; {{$row->updated_at
+                                            <div data-scrollbar>
+                                                @foreach(\App\Vacancies::where('agency_id',$agency->id)
+                                                ->where('isPost',true)->orderByDesc('updated_at')->get() as $row)
+                                                    @php
+                                                        $agency_list = \App\Agencies::find($row->agency_id);
+                                                        $user_list = \App\User::find(\App\Agencies::find($row->agency_id)
+                                                        ->user_id);
+                                                        $city_list = \App\Cities::find($row->cities_id)->name;
+                                                        $salary_list = \App\Salaries::find($row->salary_id);
+                                                        $jobfunc_list = \App\FungsiKerja::find($row->fungsikerja_id);
+                                                        $industry_list = \App\Industri::find($row->industry_id);
+                                                        $degrees_list = \App\Tingkatpend::find($row->tingkatpend_id);
+                                                        $majors_list = \App\Jurusanpend::find($row->jurusanpend_id);
+                                                        $applicants_list = \App\Accepting::where('vacancy_id', $row->id)
+                                                        ->where('isApply', true)->count();
+                                                    @endphp
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <div class="media">
+                                                                <div class="media-left media-middle">
+                                                                    @if($user_list->ava == ""||$user_list->ava == "agency.png")
+                                                                        <img width="100" class="media-object"
+                                                                             src="{{asset('images/agency.png')}}">
+                                                                    @else
+                                                                        <img width="100" class="media-object"
+                                                                             src="{{asset('storage/users/'.$user_list->ava)}}">
+                                                                    @endif
+                                                                </div>
+                                                                <div class="media-body">
+                                                                    <small class="media-heading">
+                                                                        <a href="{{route('detail.vacancy',['id'=>$row->id])}}">
+                                                                            {{$row->judul}}</a>
+                                                                        <sub style="color: #fa5555;text-transform: none">&ndash; {{$row->updated_at
                                                                             ->diffForHumans()}}</sub>
-                                                                </small>
-                                                                <blockquote style="font-size: 12px;color: #7f7f7f">
-                                                                    <ul class="list-inline">
-                                                                        <li>
-                                                                            <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['loc' => substr($city_list, 0, 2)=="Ko" ? substr($city_list,5) : substr($city_list,10)])}}">
-                                                                                <i class="fa fa-map-marked"></i>&ensp;
-                                                                                {{substr($city_list, 0, 2)=="Ko" ? substr($city_list,5) : substr($city_list,10)}}
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['jobfunc_ids' => $row->fungsikerja_id])}}">
-                                                                                <i class="fa fa-warehouse"></i>&ensp;
-                                                                                {{$jobfunc_list->nama}}
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['industry_ids' => $row->industry_id])}}">
-                                                                                <i class="fa fa-industry"></i>&ensp;
-                                                                                {{$industry_list->nama}}
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['salary_ids' => $salary->id])}}">
-                                                                                <i class="fa fa-money-bill-wave"></i>
-                                                                                &ensp;IDR {{$salary_list->name}}</a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['degrees_ids' => $row->tingkatpend_id])}}">
-                                                                                <i class="fa fa-graduation-cap"></i>
-                                                                                &ensp;{{$degrees_list->name}}</a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag" target="_blank"
-                                                                               href="{{route('search.vacancy',['majors_ids' => $row->jurusanpend_id])}}">
-                                                                                <i class="fa fa-user-graduate"></i>
-                                                                                &ensp;{{$majors_list->name}}</a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag">
-                                                                                <i class="fa fa-briefcase"></i>
-                                                                                &ensp;At least {{$row->pengalaman > 1 ?
+                                                                    </small>
+                                                                    <blockquote style="font-size: 12px;color: #7f7f7f">
+                                                                        <ul class="list-inline">
+                                                                            <li>
+                                                                                <a class="tag" target="_blank"
+                                                                                   href="{{route('search.vacancy',['loc' => substr($city_list, 0, 2)=="Ko" ? substr($city_list,5) : substr($city_list,10)])}}">
+                                                                                    <i class="fa fa-map-marked"></i>&ensp;
+                                                                                    {{substr($city_list, 0, 2)=="Ko" ? substr($city_list,5) : substr($city_list,10)}}
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag" target="_blank"
+                                                                                   href="{{route('search.vacancy',['jobfunc_ids' => $row->fungsikerja_id])}}">
+                                                                                    <i class="fa fa-warehouse"></i>&ensp;
+                                                                                    {{$jobfunc_list->nama}}
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag" target="_blank"
+                                                                                   href="{{route('search.vacancy',['industry_ids' => $row->industry_id])}}">
+                                                                                    <i class="fa fa-industry"></i>&ensp;
+                                                                                    {{$industry_list->nama}}
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag" target="_blank"
+                                                                                   href="{{route('search.vacancy',['salary_ids' => $salary->id])}}">
+                                                                                    <i class="fa fa-money-bill-wave"></i>
+                                                                                    &ensp;IDR {{$salary_list->name}}</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag" target="_blank"
+                                                                                   href="{{route('search.vacancy',['degrees_ids' => $row->tingkatpend_id])}}">
+                                                                                    <i class="fa fa-graduation-cap"></i>
+                                                                                    &ensp;{{$degrees_list->name}}</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag" target="_blank"
+                                                                                   href="{{route('search.vacancy',['majors_ids' => $row->jurusanpend_id])}}">
+                                                                                    <i class="fa fa-user-graduate"></i>
+                                                                                    &ensp;{{$majors_list->name}}</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag">
+                                                                                    <i class="fa fa-briefcase"></i>
+                                                                                    &ensp;At least {{$row->pengalaman > 1 ?
                                                                                 $row->pengalaman.' years' :
                                                                                 $row->pengalaman.' year'}}
-                                                                            </a>
-                                                                        </li>
-                                                                        <li>
-                                                                            <a class="tag tag-plans">
-                                                                                <i class="fa fa-paper-plane"></i>&ensp;
-                                                                                <strong>{{$applicants_list}}</strong>
-                                                                                applicants
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                    <table style="font-size: 12px;margin-top: -.5em">
-                                                                        <tr>
-                                                                            <td><i class="fa fa-users"></i></td>
-                                                                            <td>&nbsp;Recruitment Date</td>
-                                                                            <td>:
-                                                                                {{$row->recruitmentDate_start &&
-                                                                                $row->recruitmentDate_end != "" ?
-                                                                                \Carbon\Carbon::parse
-                                                                                ($row->recruitmentDate_start)
-                                                                                ->format('j F Y')." - ".
-                                                                                \Carbon\Carbon::parse
-                                                                                ($row->recruitmentDate_end)
-                                                                                ->format('j F Y') : '-'}}
-                                                                            </td>
-                                                                        </tr>
-                                                                        @if($row->plan_id != "" &&
-                                                                                $row->plan_id == 2)
+                                                                                </a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="tag tag-plans">
+                                                                                    <i class="fa fa-paper-plane"></i>&ensp;
+                                                                                    <strong>{{$applicants_list}}</strong>
+                                                                                    applicants
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                        <table style="font-size: 12px;margin-top: -.5em">
                                                                             <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-grin-beam">
-                                                                                    </i>
+                                                                                <td><i class="fa fa-users"></i></td>
+                                                                                <td>&nbsp;Recruitment Date</td>
+                                                                                <td>:
+                                                                                    {{$row->recruitmentDate_start &&
+                                                                                    $row->recruitmentDate_end != "" ?
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->recruitmentDate_start)
+                                                                                    ->format('j F Y')." - ".
+                                                                                    \Carbon\Carbon::parse
+                                                                                    ($row->recruitmentDate_end)
+                                                                                    ->format('j F Y') : '-'}}
                                                                                 </td>
-                                                                                <td>&nbsp;Quiz
-                                                                                    (Online TPA & TKD) Date
-                                                                                </td>
-                                                                                <td>: {{$row->quizDate_start &&
+                                                                            </tr>
+                                                                            @if($row->plan_id != "" &&
+                                                                                    $row->plan_id == 2)
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <i class="fa fa-grin-beam">
+                                                                                        </i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Quiz
+                                                                                        (Online TPA & TKD) Date
+                                                                                    </td>
+                                                                                    <td>: {{$row->quizDate_start &&
                                                                                         $row->quizDate_end != "" ?
                                                                                         \Carbon\Carbon::parse
                                                                                         ($row->quizDate_start)
@@ -493,62 +507,65 @@
                                                                                         \Carbon\Carbon::parse
                                                                                         ($row->quizDate_end)
                                                                                         ->format('j F Y') : '-'}}
-                                                                                </td>
-                                                                            </tr>
-                                                                        @elseif($row->plan_id != "" &&
-                                                                        $row->plan_id == 3)
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-grin-beam"></i>
-                                                                                </td>
-                                                                                <td>&nbsp;Online Quiz (TPA & TKD) Date
-                                                                                </td>
-                                                                                <td>: {{$row->quizDate_start &&
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @elseif($row->plan_id != "" &&
+                                                                            $row->plan_id == 3)
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <i class="fa fa-grin-beam"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Online Quiz (TPA & TKD)
+                                                                                        Date
+                                                                                    </td>
+                                                                                    <td>: {{$row->quizDate_start &&
                                                                                 $row->quizDate_end != "" ?
                                                                                 \Carbon\Carbon::parse
                                                                                 ($row->quizDate_start)->format('j F Y').
                                                                                 " - ".\Carbon\Carbon::parse
                                                                                 ($row->quizDate_end)->format('j F Y') : '-'}}
-                                                                                </td>
-                                                                            </tr>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <i class="fa fa-comments"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Psycho Test (Online
+                                                                                        Interview)
+                                                                                        Date
+                                                                                    </td>
+                                                                                    <td>:
+                                                                                        {{$row->psychoTestDate_start &&
+                                                                                        $row->psychoTestDate_end != "" ?
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->psychoTestDate_start)
+                                                                                        ->format('j F Y')." - ".
+                                                                                        \Carbon\Carbon::parse
+                                                                                        ($row->psychoTestDate_end)
+                                                                                        ->format('j F Y') : '-'}}
+                                                                                    </td>
+                                                                                </tr>
+                                                                            @endif
                                                                             <tr>
-                                                                                <td>
-                                                                                    <i class="fa fa-comments"></i>
+                                                                                <td><i class="fa fa-user-tie"></i>
                                                                                 </td>
-                                                                                <td>&nbsp;Psycho Test (Online Interview)
-                                                                                    Date
-                                                                                </td>
+                                                                                <td>&nbsp;Job Interview Date</td>
                                                                                 <td>:
-                                                                                    {{$row->psychoTestDate_start &&
-                                                                                    $row->psychoTestDate_end != "" ?
+                                                                                    {{$row->interview_date != "" ?
                                                                                     \Carbon\Carbon::parse
-                                                                                    ($row->psychoTestDate_start)
-                                                                                    ->format('j F Y')." - ".
-                                                                                    \Carbon\Carbon::parse
-                                                                                    ($row->psychoTestDate_end)
-                                                                                    ->format('j F Y') : '-'}}
+                                                                                    ($row->interview_date)
+                                                                                    ->format('l, j F Y') : '-'}}
                                                                                 </td>
                                                                             </tr>
-                                                                        @endif
-                                                                        <tr>
-                                                                            <td><i class="fa fa-user-tie"></i>
-                                                                            </td>
-                                                                            <td>&nbsp;Job Interview Date</td>
-                                                                            <td>:
-                                                                                {{$row->interview_date != "" ?
-                                                                                \Carbon\Carbon::parse
-                                                                                ($row->interview_date)
-                                                                                ->format('l, j F Y') : '-'}}
-                                                                            </td>
-                                                                        </tr>
-                                                                    </table>
-                                                                </blockquote>
+                                                                        </table>
+                                                                    </blockquote>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <hr class="hr-divider">
-                                            @endforeach
+                                                    <hr class="hr-divider">
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-read-more">

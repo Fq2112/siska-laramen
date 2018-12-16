@@ -15,7 +15,7 @@
         }
 
         .myCheckbox li:hover {
-            box-shadow: -3px 0 #FA5555;
+            box-shadow: inset -4px 0 #FA5555;
             color: #FA5555;
         }
 
@@ -29,7 +29,9 @@
         }
 
         .myCheckbox .active {
-            color: #FA5555;
+            background-color: #FFFFFF;
+            color: #fa5555;
+            box-shadow: inset -4px 0 #fa5555;
         }
     </style>
 @endpush

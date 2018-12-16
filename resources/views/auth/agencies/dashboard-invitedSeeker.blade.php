@@ -9,9 +9,12 @@
                         <div class="col-lg-12">
                             <ul class="nav nav-tabs" id="vac-nav-tabs">
                                 @foreach($vacancies as $vacancy)
+                                    @php $total = \App\Invitation::where('agency_id', $agency->id)
+                                    ->where('vacancy_id', $vacancy->id)->count(); @endphp
                                     <li id="{{$vacancy->id}}">
                                         <a data-toggle="tab" href="#vac-{{$vacancy->id}}"
-                                           onclick="setVacancy('{{$vacancy->id}}')">{{$vacancy->judul}}</a>
+                                           onclick="setVacancy('{{$vacancy->id}}')">{{$vacancy->judul}}
+                                            <span class="badge">{{$total > 99 ? '99+' : $total}}</span></a>
                                     </li>
                                 @endforeach
                             </ul>
@@ -39,7 +42,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-12">
+                                    <div class="col-lg-12" data-scrollbar style="max-height: 400px;margin-bottom: 1em">
                                         <img src="{{asset('images/loading3.gif')}}" id="image"
                                              class="img-responsive ld ld-fade">
                                         <div id="search-result"></div>
