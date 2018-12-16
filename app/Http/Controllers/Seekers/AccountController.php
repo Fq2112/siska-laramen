@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Seekers;
 
-use App\Accepting;
 use App\Attachments;
 use App\Education;
 use App\Experience;
 use App\FungsiKerja;
 use App\Industri;
-use App\Invitation;
 use App\JobLevel;
 use App\JobType;
 use App\Jurusanpend;
