@@ -346,23 +346,17 @@
         </div>
     </section>
 @endsection
-@push("scripts")
-    <script src="{{ asset('js/filter-gridList.js') }}"></script>
-    <script>
-        $(function () {
-            $('.dc-view-switcher button[data-trigger="grid-view"]').click();
-        });
-    </script>
-@endpush
 @push("lumen.ajax")
+    <script src="{{ asset('js/filter-gridList.js') }}"></script>
     <script>
         var last_page;
 
         $(function () {
+            $('.dc-view-switcher button[data-trigger="grid-view"]').click();
+
             $('#image').hide();
             $('#search-result').show();
             $('.myPagination').show();
-            $('.dc-view-switcher button[data-trigger="grid-view"]').click();
 
             var keyword = '{{$keyword}}', location = '{{$location}}', sort = '{{$sort}}',
                 salary = '{{$salary_ids}}', jobfunc = '{{$jobfunc_ids}}', industry = '{{$industry_ids}}',
