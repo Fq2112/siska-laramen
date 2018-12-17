@@ -207,8 +207,8 @@
                                                 <div class="row form-group">
                                                     <div class="col-md-12">
                                                         <input type="file" name="attachments[]"
-                                                               style="display: none;" accept="image/*,.pdf,
-                                                    .doc,.docx,.xls,.xlsx,.odt,.ppt,.pptx"
+                                                               style="display: none;"
+                                                               accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.odt,.ppt,.pptx"
                                                                id="attach-files" required multiple>
                                                         <div class="input-group">
                                                             <input type="text" id="txt_attach"
