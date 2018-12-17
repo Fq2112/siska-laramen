@@ -1,4 +1,4 @@
-@section('title', 'Edit Profile | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Account Settings &ndash; Edit Profile | SISKA &mdash; Sistem Informasi Karier')
 @push("styles")
     <style>
         [data-scrollbar] {

@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Account Settings | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Account Settings &ndash; Change Password | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_seeker')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
