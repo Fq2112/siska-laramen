@@ -214,7 +214,8 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    $("#form-exp").attr("action", "{{ url('account/profile/experiences/update') }}" + '/' + id);
+                    var form = $("#form-exp");
+                    form.attr("action", "{{ url('account/profile/experiences/update') }}" + '/' + id);
                     $("#form-exp input[name='_method']").val('PUT');
                     $("#exp_settings").toggle(300);
                     $("#stats_exp").toggle(300);
@@ -241,6 +242,10 @@
                     $('#salary_id').val(data.salary_id).selectpicker("refresh");
                     $('#industry').val(data.industri_id).selectpicker("refresh");
                     $('#city_id').val(data.city_id).selectpicker("refresh");
+
+                    $('html, body').animate({
+                        scrollTop: form.offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({
@@ -259,7 +264,8 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    $("#form-edu").attr("action", "{{ url('account/profile/educations/update') }}" + '/' + id);
+                    var form = $("#form-edu");
+                    form.attr("action", "{{ url('account/profile/educations/update') }}" + '/' + id);
                     $("#form-edu input[name='_method']").val('PUT');
                     $("#edu_settings").toggle(300);
                     $("#stats_edu").toggle(300);
@@ -287,6 +293,10 @@
                     $('#nilai').val(data.nilai);
                     $('#tingkatpend').val(data.tingkatpend_id).selectpicker("refresh");
                     $('#jurusanpend').val(data.jurusanpend_id).selectpicker("refresh");
+
+                    $('html, body').animate({
+                        scrollTop: form.offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({
@@ -305,7 +315,8 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    $("#form-cert").attr("action", "{{ url('account/profile/trainings/update') }}" + '/' + id);
+                    var form = $("#form-cert");
+                    form.attr("action", "{{ url('account/profile/trainings/update') }}" + '/' + id);
                     $("#form-cert input[name='_method']").val('PUT');
                     $("#cert_settings").toggle(300);
                     $("#stats_cert").toggle(300);
@@ -320,6 +331,10 @@
                     $('#issuedby').val(data.issuedby);
                     $('#issueddate ').val(data.issueddate);
                     tinyMCE.get('desc_cert').setContent(data.descript);
+
+                    $('html, body').animate({
+                        scrollTop: form.offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({
@@ -338,7 +353,8 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    $("#form-org").attr("action", "{{ url('account/profile/organizations/update') }}" + '/' + id);
+                    var form = $("#form-org");
+                    form.attr("action", "{{ url('account/profile/organizations/update') }}" + '/' + id);
                     $("#form-org input[name='_method']").val('PUT');
                     $("#org_settings").toggle(300);
                     $("#stats_org").toggle(300);
@@ -364,6 +380,10 @@
                         startDate: data.start_period,
                     }).val(data.end_period);
                     tinyMCE.get('org_desc').setContent(data.descript);
+
+                    $('html, body').animate({
+                        scrollTop: form.offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({
@@ -382,7 +402,8 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    $("#form-lang").attr("action", "{{ url('account/profile/languages/update') }}" + '/' + id);
+                    var form = $("#form-lang");
+                    form.attr("action", "{{ url('account/profile/languages/update') }}" + '/' + id);
                     $("#form-lang input[name='_method']").val('PUT');
                     $("#lang_settings").toggle(300);
                     $("#stats_lang").toggle(300);
@@ -396,6 +417,10 @@
                     $('#name_lang').val(data.name);
                     $('#spoken_lvl').val(data.spoken_lvl).selectpicker("refresh");
                     $('#written_lvl ').val(data.written_lvl).selectpicker("refresh");
+
+                    $('html, body').animate({
+                        scrollTop: form.offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({
@@ -414,7 +439,8 @@
                 type: "GET",
                 dataType: "JSON",
                 success: function (data) {
-                    $("#form-skill").attr("action", "{{ url('account/profile/skills/update') }}" + '/' + id);
+                    var form = $("#form-skill");
+                    form.attr("action", "{{ url('account/profile/skills/update') }}" + '/' + id);
                     $("#form-skill input[name='_method']").val('PUT');
                     $("#skill_settings").toggle(300);
                     $("#stats_skill").toggle(300);
@@ -427,6 +453,10 @@
 
                     $('#name_skill').val(data.name);
                     $('#skill_lvl').val(data.level).selectpicker("refresh");
+
+                    $('html, body').animate({
+                        scrollTop: form.offset().top
+                    }, 500);
                 },
                 error: function () {
                     swal({

@@ -15,6 +15,10 @@
         } else {
             $("#btn_save_password").attr('disabled', 'disabled');
         }
+
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, 500);
     });
 
     $("#show_background_settings").click(function () {
@@ -29,6 +33,10 @@
         } else {
             $("#btn_save_contact").attr('disabled', 'disabled');
         }
+
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, 500);
     });
 
     $("#show_personal_data_settings").click(function () {
@@ -39,6 +47,10 @@
         } else {
             $("#btn_save_personal_data").attr('disabled', 'disabled');
         }
+
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, 500);
     });
 
     $("#show_summary_settings").click(function () {
@@ -49,6 +61,10 @@
         } else {
             $("#btn_save_summary").attr('disabled', 'disabled');
         }
+
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, 500);
     });
 
     $("#show_video_settings").on('click', function () {
@@ -62,11 +78,13 @@
         $("#stats_attachments").toggle(300);
         $("#btn_attachments").toggle(300);
         $("#btn_delete_attachments").toggle(300);
+
+        $('html, body').animate({
+            scrollTop: $(this).offset().top
+        }, 500);
     });
 
     $("#show_exp_settings, #btn_cancel_exp input[type=reset]").click(function () {
-        $(window).scrollTop(1600);
-
         var form = $("#form-exp"), input = $("#exp_settings"), stats = $("#stats_exp"), btn = $("#btn_save_exp");
         $("#btn_cancel_exp").hide();
         form[0].reset();
@@ -81,6 +99,10 @@
         $("#end_date").hide();
         form.attr('action', '{{route('create.experiences')}}');
         $("#form-exp input[name='_method']").val('POST');
+
+        $('html, body').animate({
+            scrollTop: form.offset().top
+        }, 500);
     });
 
     $("#show_edu_settings, #btn_cancel_edu input[type=reset]").click(function () {
@@ -99,6 +121,10 @@
         $("#end_period").hide();
         form.attr('action', '{{route('create.educations')}}');
         $("#form-edu input[name='_method']").val('POST');
+
+        $('html, body').animate({
+            scrollTop: form.offset().top
+        }, 500);
     });
 
     $("#show_cert_settings, #btn_cancel_cert input[type=reset]").click(function () {
@@ -115,6 +141,10 @@
         }
         form.attr('action', '{{route('create.trainings')}}');
         $("#form-cert input[name='_method']").val('POST');
+
+        $('html, body').animate({
+            scrollTop: form.offset().top
+        }, 500);
     });
 
     $("#show_org_settings, #btn_cancel_org input[type=reset]").click(function () {
@@ -132,6 +162,10 @@
         $("#end_period2").hide();
         form.attr('action', '{{route('create.organizations')}}');
         $("#form-org input[name='_method']").val('POST');
+
+        $('html, body').animate({
+            scrollTop: form.offset().top
+        }, 500);
     });
 
     $("#show_lang_settings, #btn_cancel_lang input[type=reset]").click(function () {
@@ -148,6 +182,10 @@
         }
         form.attr('action', '{{route('create.languages')}}');
         $("#form-lang input[name='_method']").val('POST');
+
+        $('html, body').animate({
+            scrollTop: form.offset().top
+        }, 500);
     });
 
     $("#show_skill_settings, #btn_cancel_skill input[type=reset]").click(function () {
@@ -165,6 +203,10 @@
         }
         form.attr('action', '{{route('create.skills')}}');
         $("#form-skill input[name='_method']").val('POST');
+
+        $('html, body').animate({
+            scrollTop: form.offset().top
+        }, 500);
     });
 
     $(".gpa").on('blur', function () {
@@ -206,7 +248,12 @@
             }
         });
         $("#btn_save_attachments").on('click', function () {
-            $("#form-attachments")[0].submit();
+            var count = $("#attach-files").get(0).files.length;
+            if (count > 0) {
+                $("#form-attachments")[0].submit();
+            } else {
+                swal("Error!", "There's no any file selected...", "error");
+            }
         });
         $btnDelete.on('click', function () {
             swal({

@@ -131,7 +131,8 @@
                                                     @foreach($galleries as $row)
                                                         <li><input type="checkbox" name="gallery_cbs[]"
                                                                    class="gallery_cb" value="{{$row->id}}">
-                                                            {{\Illuminate\Support\Str::words($row->image,4,'...')}}</li>
+                                                            {{\Illuminate\Support\Str::limit($row->image,25,'...')}}
+                                                        </li>
                                                         <input type="hidden" name="gallery_image[]"
                                                                value="{{$row->image}}">
                                                     @endforeach

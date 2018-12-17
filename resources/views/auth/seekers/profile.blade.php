@@ -182,7 +182,7 @@
                                                             @foreach($attachments as $row)
                                                                 <li><input type="checkbox" name="attachments_cbs[]"
                                                                            class="attachments_cb" value="{{$row->id}}">
-                                                                    {{\Illuminate\Support\Str::words($row->files,4,'...')}}
+                                                                    {{\Illuminate\Support\Str::limit($row->files,25,'...')}}
                                                                 </li>
                                                                 <input type="hidden" name="attachments[]"
                                                                        value="{{$row->image}}">
