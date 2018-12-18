@@ -194,19 +194,18 @@ class AccountController extends Controller
                 }
             }
         } else {
-            if ($request->hasFile('ava')) {
-                $name = $img->getClientOriginalName();
+            $name = $img->getClientOriginalName();
 
-                if ($user->ava != '' || $user->ava != 'seeker.png') {
-                    Storage::delete('public/users/' . $user->ava);
-                }
-
-                if ($img->isValid()) {
-                    $request->ava->storeAs('public/users', $name);
-                    $user->update(['ava' => $name]);
-                    return asset('storage/users/' . $name);
-                }
+            if ($user->ava != '' || $user->ava != 'seeker.png') {
+                Storage::delete('public/users/' . $user->ava);
             }
+
+            if ($img->isValid()) {
+                $request->ava->storeAs('public/users', $name);
+                $user->update(['ava' => $name]);
+                return asset('storage/users/' . $name);
+            }
+
         }
     }
 
@@ -221,7 +220,7 @@ class AccountController extends Controller
         ]);
 
         if ($request->hasFile('background')) {
-            $name = $img->getClientOriginalName();
+            $name = $seeker->id . str_random(6) . '.' . $img->getClientOriginalExtension();
 
             if ($seeker->background != '') {
                 Storage::delete('public/users/seekers/background/' . $seeker->background);

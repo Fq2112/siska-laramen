@@ -18,7 +18,7 @@ class CreateTableSeekers extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->string('background')->nullable();
+            $table->text('background')->nullable();
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('zip_code', 6)->nullable();

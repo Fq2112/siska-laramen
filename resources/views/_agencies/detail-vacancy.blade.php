@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', ''.$vacancy->judul.' Vacancy\'s Detail | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$vacancy->judul.'\'s Details | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">

@@ -291,7 +291,7 @@ class AccountController extends Controller
 
         if ($request->hasfile('galleries')) {
             foreach ($request->file('galleries') as $file) {
-                $name = $file->getClientOriginalName();
+                $name = $agency->id . str_random(6) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('public/users/agencies/galleries', $name);
 
                 Gallery::create([
@@ -348,19 +348,18 @@ class AccountController extends Controller
                 }
             }
         } else {
-            if ($request->hasFile('ava')) {
-                $name = $img->getClientOriginalName();
+            $name = $img->getClientOriginalName();
 
-                if ($user->ava != '' || $user->ava != 'agency.png') {
-                    Storage::delete('public/users/' . $user->ava);
-                }
-
-                if ($img->isValid()) {
-                    $request->ava->storeAs('public/users', $name);
-                    $user->update(['ava' => $name]);
-                    return asset('storage/users/' . $name);
-                }
+            if ($user->ava != '' || $user->ava != 'agency.png') {
+                Storage::delete('public/users/' . $user->ava);
             }
+
+            if ($img->isValid()) {
+                $request->ava->storeAs('public/users', $name);
+                $user->update(['ava' => $name]);
+                return asset('storage/users/' . $name);
+            }
+
         }
     }
 
