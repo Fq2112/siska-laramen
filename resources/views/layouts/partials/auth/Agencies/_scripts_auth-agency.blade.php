@@ -255,7 +255,7 @@
                 if ($start == "") {
                     $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: '{{today()}}',
+                        startDate: new Date(),
                         endDate: $active_period
                     }).on('changeDate', function (selected) {
                         var minDate = new Date(selected.date.valueOf());
@@ -275,7 +275,7 @@
                 } else {
                     $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: '{{today()}}',
+                        startDate: new Date(),
                         endDate: $active_period
                     });
                     $("#recruitmentDate_end").datepicker({
@@ -307,7 +307,7 @@
                 if ($start == "") {
                     $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: '{{today()}}',
+                        startDate: new Date(),
                         endDate: $active_period
                     }).on('changeDate', function (selected) {
                         var minDate = new Date(selected.date.valueOf());
@@ -339,7 +339,7 @@
                 } else {
                     $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: '{{today()}}',
+                        startDate: new Date(),
                         endDate: $active_period
                     });
                     $("#recruitmentDate_end").datepicker({
@@ -392,7 +392,7 @@
                 if ($start == "") {
                     $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: '{{today()}}',
+                        startDate: new Date(),
                         endDate: $active_period
                     }).on('changeDate', function (selected) {
                         var minDate = new Date(selected.date.valueOf());
@@ -439,7 +439,7 @@
                 } else {
                     $("#recruitmentDate_start").datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: '{{today()}}',
+                        startDate: new Date(),
                         endDate: $active_period
                     });
                     $("#recruitmentDate_end").datepicker({

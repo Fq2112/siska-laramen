@@ -50,45 +50,67 @@
                                         <table style="margin: 0">
                                             <tr>
                                                 <td>
-                                                    <a href="{{route('agency.profile',['id' => $vacancy->agency_id])}}"
-                                                       target="_blank"
-                                                       style="float: left;margin-right: .5em;margin-bottom: 0">
-                                                        @if($user->ava == "" || $user->ava == "agency.png")
-                                                            <img class="img-responsive" width="64" alt="agency.png"
-                                                                 src="{{asset('images/agency.png')}}">
-                                                        @else
-                                                            <img class="img-responsive" width="64" alt="{{$user->ava}}"
-                                                                 src="{{asset('storage/users/'.$user->ava)}}">
-                                                        @endif
-                                                    </a>
-                                                    <table style="margin: 0">
+                                                    <table style="float: left;margin-right: .5em;margin-bottom: 0">
+                                                        <tr>
+                                                            <td style="vertical-align: middle;text-align: center">
+                                                                <a href="{{route('agency.profile',['id' =>
+                                                                $vacancy->agency_id])}}" target="_blank">
+                                                                    <img class="img-responsive" width="100"
+                                                                         style="margin: 0 auto"
+                                                                         src="{{$user->ava == "" || $user->ava ==
+                                                                         "agency.png" ? asset('images/agency.png') :
+                                                                         asset('storage/users/'.$user->ava)}}">
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: middle;text-align: center">
+                                                                <span data-toggle="tooltip" data-placement="left"
+                                                                      title="Status" class="label label-default"
+                                                                      style="background: {{$vacancy->isPost == true ?
+                                                                      '#00adb5' : '#fa5555'}}"><strong
+                                                                            style="text-transform: uppercase">{{$vacancy->isPost
+                                                                      == true ? 'Active' : 'Inactive'}}</strong>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: middle;text-align: center">
+                                                                <span data-toggle="tooltip" data-placement="bottom"
+                                                                      title="Active Period"
+                                                                      style="text-transform: uppercase"
+                                                                      class="label label-{{$vacancy->active_period != ""
+                                                                       ? 'primary' : 'warning'}}">
+                                                                    {{$vacancy->active_period != "" ? 'Until '.
+                                                                    \Carbon\Carbon::parse($vacancy->active_period)
+                                                                    ->format('j F Y') : 'Unknown'}}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table>
                                                         <tr>
                                                             <td>
                                                                 <a href="{{route('detail.vacancy',['id' =>
                                                                 $vacancy->id])}}" target="_blank">
-                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;&nbsp;
+                                                                    <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;
                                                                 @if($vacancy->isPost == true)
                                                                     <span data-toggle="tooltip" data-placement="bottom"
-                                                                          title="Plan" class="label label-info">
+                                                                          title="Plan" class="label label-success">
                                                                         <strong style="text-transform: uppercase">
                                                                             <i class="fa fa-thumbtack"></i>&ensp;
                                                                             {{$plan->name}}
                                                                         </strong> Package</span>&nbsp;|
                                                                 @endif
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Status" class="label label-default"
-                                                                      style="background: {{$vacancy->isPost == true ?
-                                                                      '#00adb5' : '#fa5555'}}">
-                                                                    <strong style="text-transform: uppercase">{{$vacancy->isPost == true ?
-                                                                    'Active' : 'Inactive'}}</strong></span>&nbsp;|
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Active Period"
-                                                                      style="text-transform: uppercase"
-                                                                      class="label label-{{$vacancy->active_period != "" ?
-                                                                      'primary' : 'warning'}}">
-                                                                    {{$vacancy->active_period != "" ? 'Until '.
-                                                                    \Carbon\Carbon::parse($vacancy->active_period)
-                                                                    ->format('j F Y') : 'Unknown'}}</span>
+                                                                <span class="label label-default" data-toggle="tooltip"
+                                                                      data-placement="bottom" title="Created at">
+                                                                <i class="fa fa-calendar-alt"></i>&ensp;
+                                                                    {{\Carbon\Carbon::parse($vacancy->created_at)
+                                                                    ->format('j F Y')}}</span> |
+                                                                <span class="label label-default" data-toggle="tooltip"
+                                                                      data-placement="bottom" title="Last Update">
+                                                                    <i class="fa fa-clock"></i>&ensp;{{$vacancy
+                                                                    ->updated_at->diffForHumans()}}</span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -158,103 +180,89 @@
                                                             </td>
                                                         </tr>
                                                     </table>
+                                                    <hr style="margin: .5em auto">
+                                                    <table>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Job Function">
+                                                            <td><i class="fa fa-warehouse"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$jobfunc->nama}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Industry">
+                                                            <td><i class="fa fa-industry"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$industry->nama}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Job Level">
+                                                            <td><i class="fa fa-level-up-alt"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$joblevel->name}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Salary">
+                                                            <td><i class="fa fa-money-bill-wave"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>IDR {{$salary->name}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Education Degree">
+                                                            <td><i class="fa fa-graduation-cap"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$degrees->name}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Education Major">
+                                                            <td><i class="fa fa-user-graduate"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$majors->name}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Work Experience">
+                                                            <td><i class="fa fa-briefcase"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>At least {{$vacancy->pengalaman > 1 ?
+                                                                $vacancy->pengalaman.' years' :
+                                                                $vacancy->pengalaman.' year'}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Total Applicant">
+                                                            <td><i class="fa fa-paper-plane"></i></td>
+                                                            <td>&nbsp;</td>
+                                                            <td><strong>{{\App\Accepting::where
+                                                            ('vacancy_id',$vacancy->id)->where('isApply',true)->count()}}
+                                                                </strong> applicants
+                                                            </td>
+                                                        </tr>
+                                                        @if($vacancy->plan_id != null && $plan->isQuiz == true)
+                                                            <tr data-toggle="tooltip" data-placement="left"
+                                                                title="Quiz Passing Grade & Participant">
+                                                                <td><i class="fa fa-grin-beam"></i></td>
+                                                                <td>&nbsp;</td>
+                                                                <td><strong>{{$vacancy->passing_grade." / ".
+                                                                $vacancy->quiz_applicant}}</strong> persons
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                        @if($vacancy->plan_id != null && $plan->isPsychoTest == true)
+                                                            <tr data-toggle="tooltip" data-placement="left"
+                                                                title="Psycho Test Participant">
+                                                                <td><i class="fa fa-comments"></i></td>
+                                                                <td>&nbsp;</td>
+                                                                <td><strong>{{$vacancy->psychoTest_applicant}}</strong>
+                                                                    persons
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    </table>
                                                 </td>
                                             </tr>
-                                        </table>
-                                        <hr style="margin: .5em auto">
-                                        <table style="margin: 0">
-                                            <tr>
-                                                <td><i class="fa fa-warehouse"></i>&nbsp;</td>
-                                                <td>Job Function</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$jobfunc->nama}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-industry"></i>&nbsp;</td>
-                                                <td>Industry</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$industry->nama}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-level-up-alt"></i>&nbsp;</td>
-                                                <td>Job Level</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$joblevel->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-money-bill-wave"></i>&nbsp;</td>
-                                                <td>Salary</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>IDR {{$salary->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-graduation-cap"></i>&nbsp;</td>
-                                                <td>Education Degree</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$degrees->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-user-graduate"></i>&nbsp;</td>
-                                                <td>Education Major</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$majors->name}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-briefcase"></i>&nbsp;</td>
-                                                <td>Work Experience</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>
-                                                    At least {{$vacancy->pengalaman > 1 ?
-                                                    $vacancy->pengalaman.' years' : $vacancy->pengalaman.' year'}}
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-paper-plane"></i></td>
-                                                <td>Total Applicant</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td><strong>{{\App\Accepting::where('vacancy_id',$vacancy->id)
-                                                ->where('isApply',true)->count()}}</strong> applicants
-                                                </td>
-                                            </tr>
-                                            @if($vacancy->plan_id != null && $plan->isQuiz == true)
-                                                <tr>
-                                                    <td><i class="fa fa-grin-beam"></i></td>
-                                                    <td>Total Participant for Quiz with
-                                                        <strong>{{$vacancy->passing_grade}}</strong> passing grade
-                                                    </td>
-                                                    <td>&nbsp;:&nbsp;</td>
-                                                    <td><strong>{{$vacancy->quiz_applicant}}</strong> persons</td>
-                                                </tr>
-                                            @endif
-                                            @if($vacancy->plan_id != null && $plan->isPsychoTest == true)
-                                                <tr>
-                                                    <td><i class="fa fa-comments"></i></td>
-                                                    <td>Total Participant for Psycho Test</td>
-                                                    <td>&nbsp;:&nbsp;</td>
-                                                    <td><strong>{{$vacancy->psychoTest_applicant}}</strong> persons
-                                                    </td>
-                                                </tr>
-                                            @endif
                                         </table>
                                         <hr style="margin: .5em auto">
                                         <strong>Requirements</strong><br>{!! $vacancy->syarat !!}
                                         <hr style="margin: .5em auto">
                                         <strong>Responsibilities</strong><br>{!! $vacancy->tanggungjawab !!}
-                                        <hr style="margin: .5em auto">
-                                        <table style="margin: 0">
-                                            <tr>
-                                                <td><i class="fa fa-calendar"></i>&nbsp;</td>
-                                                <td>Created at</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{\Carbon\Carbon::parse($vacancy->created_at)->format('j F Y')}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><i class="fa fa-clock"></i>&nbsp;</td>
-                                                <td>Last Update</td>
-                                                <td>&nbsp;:&nbsp;</td>
-                                                <td>{{$vacancy->updated_at->diffForHumans()}}</td>
-                                            </tr>
-                                        </table>
                                     </td>
                                     <td style="vertical-align: middle" align="center">
                                         <a href="{{route('detail.vacancy',['id' => $vacancy->id])}}" target="_blank"
