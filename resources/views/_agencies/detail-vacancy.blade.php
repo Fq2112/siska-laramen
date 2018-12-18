@@ -130,9 +130,13 @@
                                         </div>
                                     </form>
                                 </li>
-                                <li class="{{$vacancy->isPost == false || Auth::check() && Auth::user()->isAgency() ||
-                                Auth::guard('admin')->check() ? '' : 'ld ld-heartbeat'}}" id="apply"
-                                    data-placement="top" data-toggle="tooltip">
+                                <li class="{{$vacancy->isPost == false || now() < $vacancy->recruitmentDate_start ||
+                                            now() > $vacancy->recruitmentDate_end ||
+                                            is_null($vacancy->recruitmentDate_start) ||
+                                            is_null($vacancy->recruitmentDate_end) ||
+                                            Auth::check() && Auth::user()->isAgency() ||
+                                            Auth::guard('admin')->check() ? '' : 'ld ld-heartbeat'}}"
+                                    id="apply" data-placement="top" data-toggle="tooltip">
                                     <button type="button" class="btn btn-danger btn-block"
                                             {{$vacancy->isPost == false || now() < $vacancy->recruitmentDate_start ||
                                             now() > $vacancy->recruitmentDate_end ||
@@ -953,7 +957,7 @@
         $("#apply").removeClass('ld ld-heartbeat').attr('title', 'Please, check Application Status ' +
             'in your Dashboard.');
         $btnApply.css('background', '#393e46').attr('disabled', true).html('<i class="fa fa-paper-plane">' +
-            '</i>&ensp;Applied');
+            '</i>&ensp;<strong>Applied</strong>');
         @endif
         @endif
         @endif
@@ -1012,7 +1016,7 @@
                         $("#applyModal").modal('hide');
                         $("#apply").toggleClass('ld ld-heartbeat');
                         $btnApply.css('background', '#393e46').attr('disabled', true)
-                            .html('<i class="fa fa-paper-plane"></i>&ensp;Applied');
+                            .html('<i class="fa fa-paper-plane"></i>&ensp;<strong>Applied</strong>');
                         $('#form-apply')[0].submit();
                     }
                 });
