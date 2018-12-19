@@ -327,6 +327,7 @@ class SeekerController extends Controller
                 asset('images/agency.png') : asset('storage/users/' . $userAgency->ava);
 
             $judul['vacancy'] = array('id' => $vacancy->id, 'judul' => $vacancy->judul, 'city' => $cities,
+                'pengalaman' => filter_var($vacancy->pengalaman, FILTER_SANITIZE_NUMBER_INT),
                 'degrees' => Tingkatpend::findOrFail($vacancy->tingkatpend_id)->name,
                 'majors' => Jurusanpend::findOrFail($vacancy->jurusanpend_id)->name,
                 'job_func' => FungsiKerja::findOrFail($vacancy->fungsikerja_id)->nama,
@@ -552,10 +553,8 @@ class SeekerController extends Controller
         $last_edu = Education::where('seeker_id', $seeker->id)->wherenotnull('end_period')
             ->orderby('tingkatpend_id', 'desc')->take(1);
 
-        $bookmark = Accepting::where('seeker_id', $seeker->id)->where('isBookmark', true)->paginate(5);
-
         return view('auth.seekers.dashboard-bookmarked', compact('user', 'provinces', 'seeker',
-            'job_title', 'last_edu', 'bookmark'));
+            'job_title', 'last_edu'));
     }
 
     public function getBookmarkedVacancies(Request $request)
