@@ -72,8 +72,8 @@
                                         </div>
                                         <div class="media-body">
                                             <small class="media-heading">
-                                                <a style="color: #00ADB5" id="vacJudul">Editor</a>
-                                                <sub>– <a id="agencyName">Rabbit Media</a></sub>
+                                                <a style="color: #00ADB5" id="vacJudul"></a>
+                                                <sub>– <a id="agencyName"></a></sub>
                                             </small>
                                             <blockquote style="font-size: 12px;color: #7f7f7f">
                                                 <ul class="list-inline">
@@ -84,86 +84,11 @@
                                                     <li><a class="tag" target="_blank" id="vacDegree"></a></li>
                                                     <li><a class="tag" target="_blank" id="vacMajor"></a></li>
                                                     <li><a class="tag" id="vacExp"></a></li>
-                                                    <li><a class="tag tag-plans"><i class="fa fa-paper-plane"></i>
-                                                            <strong class="vacTotalApp"></strong> applicant(s)
-                                                        </a>
-                                                    </li>
+                                                    <li><a class="tag tag-plans" id="vacTotalApp"></a></li>
                                                 </ul>
                                                 <hr>
                                                 <table>
-                                                    <tbody>
-                                                    <tr style="font-size: 14px">
-                                                        <th colspan="3">
-                                                            <i class="fa fa-users"></i> Applicants
-                                                        </th>
-                                                        <th colspan="3">
-                                                            <i class="fa fa-graduation-cap"></i> Education Degree
-                                                        </th>
-                                                        <th colspan="2">
-                                                            <i class="fa fa-briefcase"></i> Work Experience
-                                                        </th>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="counter-count vacTotalApp" data-toggle="tooltip"
-                                                            data-placement="bottom" title="Total Applicants"></td>
-                                                        <td>&ensp;&ensp;&ensp;</td>
-                                                        <td>&ensp;&ensp;&ensp;</td>
-                                                        <td>
-                                                            <div class="progress-container" id="eduEqual">
-                                                                <svg class="progress-bar-circle" id="svg-edu-eq"
-                                                                     width="120" height="120" viewPort="0 0 100 100"
-                                                                     version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                                    <circle class="progress-meter" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                    <circle class="progress-value" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                </svg>
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Equal Degree"></span></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="progress-container" id="eduHigher">
-                                                                <svg class="progress-bar-circle" id="svg-edu-hi"
-                                                                     width="120" height="120" viewPort="0 0 100 100"
-                                                                     version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                                    <circle class="progress-meter" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                    <circle class="progress-value" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                </svg>
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Higher Degree"></span></div>
-                                                        </td>
-                                                        <td>&ensp;&ensp;&ensp;</td>
-                                                        <td>
-                                                            <div class="progress-container" id="expEqual">
-                                                                <svg class="progress-bar-circle" id="svg-exp-eq"
-                                                                     width="120" height="120" viewPort="0 0 100 100"
-                                                                     version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                                    <circle class="progress-meter" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                    <circle class="progress-value" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                </svg>
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Equal Experience"></span></div>
-                                                        </td>
-                                                        <td>
-                                                            <div class="progress-container" id="expHigher">
-                                                                <svg class="progress-bar-circle" id="svg-exp-hi"
-                                                                     width="120" height="120" viewPort="0 0 100 100"
-                                                                     version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                                                    <circle class="progress-meter" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                    <circle class="progress-value" r="36" cx="60"
-                                                                            cy="60" stroke-width="15"></circle>
-                                                                </svg>
-                                                                <span data-toggle="tooltip" data-placement="bottom"
-                                                                      title="Higher Experience"></span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    </tbody>
+                                                    <tbody id="compare_result"></tbody>
                                                 </table>
                                             </blockquote>
                                         </div>
@@ -327,8 +252,6 @@
             $('#show-result').html(title + $date + total);
 
             $.each(data.data, function (i, val) {
-                $('[data-toggle="tooltip"]').tooltip();
-
                 $recruitmentDate = val.vacancy.recruitmentDate_start == "-" ||
                 val.vacancy.recruitmentDate_end == "-" ? '-' :
                     val.vacancy.recruitmentDate_start + ' - ' + val.vacancy.recruitmentDate_end;
@@ -415,6 +338,7 @@
                     '</blockquote></div></div><hr class="hr-divider">';
             });
             $("#search-result").empty().append($result);
+            $('[data-toggle="tooltip"]').tooltip();
 
             if (data.last_page > 1) {
 
@@ -521,12 +445,46 @@
                         .attr("href", "{{route('search.vacancy',['majors_ids' => ''])}}" + data.jurusanpend_id)
                         .html('<i class="fa fa-user-graduate"></i>&ensp;' + data.majors);
                     $("#vacExp").html('<i class="fa fa-briefcase"></i>&ensp;' + $pengalaman);
-                    $(".vacTotalApp").text(data.total_app);
+                    $("#vacTotalApp").html('<i class="fa fa-paper-plane"></i>&ensp;' +
+                        '<strong>' + data.total_app + '</strong> applicant(s)');
 
-                    $("#eduEqual").attr('data-value', $eduEqual);
-                    $("#eduHigher").attr('data-value', $eduHigher);
-                    $("#expEqual").attr('data-value', $expEqual);
-                    $("#expHigher").attr('data-value', $expHigher);
+                    $("#compare_result").html(
+                        '<tr style="font-size: 14px">' +
+                        '<th colspan="3"><i class="fa fa-users"></i> Applicants</th>' +
+                        '<th colspan="3"><i class="fa fa-graduation-cap"></i> Education Degree</th>' +
+                        '<th colspan="2"><i class="fa fa-briefcase"></i> Work Experience</th></tr>' +
+                        '<tr><td class="counter-count" data-toggle="tooltip" data-placement="bottom" ' +
+                        'title="Total Applicants">' + data.total_app + '</td>' +
+                        '<td>&ensp;&ensp;&ensp;</td>' +
+                        '<td>&ensp;&ensp;&ensp;</td>' +
+                        '<td><div class="progress-container" data-value="' + $eduEqual + '">' +
+                        '<svg class="progress-bar-circle" id="svg-edu-eq" width="120" height="120" ' +
+                        'viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+                        '<circle class="progress-meter" r="36" cx="60" cy="60" stroke-width="15"></circle>' +
+                        '<circle class="progress-value" r="36" cx="60" cy="60" stroke-width="15"></circle></svg>' +
+                        '<span data-toggle="tooltip" data-placement="bottom" title="Equal Degree"></span></div></td>' +
+                        '<td><div class="progress-container" data-value="' + $eduHigher + '">' +
+                        '<svg class="progress-bar-circle" id="svg-edu-hi" width="120" height="120" ' +
+                        'viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+                        '<circle class="progress-meter" r="36" cx="60" cy="60" stroke-width="15"></circle>' +
+                        '<circle class="progress-value" r="36" cx="60" cy="60" stroke-width="15"></circle></svg>' +
+                        '<span data-toggle="tooltip" data-placement="bottom" title="Higher Degree"></span></div></td>' +
+                        '<td>&ensp;&ensp;&ensp;</td>' +
+                        '<td><div class="progress-container" data-value="' + $expEqual + '">' +
+                        '<svg class="progress-bar-circle" id="svg-exp-eq" width="120" height="120" ' +
+                        'viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+                        '<circle class="progress-meter" r="36" cx="60" cy="60" stroke-width="15"></circle>' +
+                        '<circle class="progress-value" r="36" cx="60" cy="60" stroke-width="15"></circle></svg>' +
+                        '<span data-toggle="tooltip" data-placement="bottom" title="Equal Experience"></span></div></td>' +
+                        '<td><div class="progress-container" data-value="' + $expHigher + '">' +
+                        '<svg class="progress-bar-circle" id="svg-exp-hi" width="120" height="120" ' +
+                        'viewPort="0 0 100 100" version="1.1" xmlns="http://www.w3.org/2000/svg">' +
+                        '<circle class="progress-meter" r="36" cx="60" cy="60" stroke-width="15"></circle>' +
+                        '<circle class="progress-value" r="36" cx="60" cy="60" stroke-width="15"></circle></svg>' +
+                        '<span data-toggle="tooltip" data-placement="bottom" title="Higher Experience"></span></div>' +
+                        '</td></tr>'
+                    );
+
                     $("#compare" + id).prop('checked', false);
                     $("#compareModal").modal('show');
                     $(document).on('hide.bs.modal', '#compareModal', function (event) {

@@ -290,6 +290,7 @@
                     '<hr class="hr-divider">';
             });
             $("#search-result").empty().append($result);
+            $('[data-toggle="tooltip"]').tooltip();
 
             if (data.last_page > 1) {
 

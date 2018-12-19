@@ -269,8 +269,6 @@
             $('#show-result').html(title + $date + total);
 
             $.each(data.data, function (i, val) {
-                $('[data-toggle="tooltip"]').tooltip();
-
                 $recruitmentDate = val.vacancy.recruitmentDate_start == "-" ||
                 val.vacancy.recruitmentDate_end == "-" ? '-' :
                     val.vacancy.recruitmentDate_start + ' - ' + val.vacancy.recruitmentDate_end;
@@ -362,6 +360,7 @@
                     '</blockquote></div></div><hr class="hr-divider">';
             });
             $("#search-result").empty().append($result);
+            $('[data-toggle="tooltip"]').tooltip();
 
             if (data.last_page > 1) {
 

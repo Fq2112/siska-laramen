@@ -262,8 +262,6 @@
             $('#show-result').html(title + $q + total);
 
             $.each(data.data, function (i, val) {
-                $('[data-toggle="tooltip"]').tooltip();
-
                 if (val.acc == null || val.acc.isApply == false) {
                     $class1 = ' ld ld-heartbeat';
                     $style = '#fa5555';
@@ -354,6 +352,7 @@
                     '</blockquote></div></div><hr class="hr-divider">';
             });
             $("#search-result").empty().append($result);
+            $('[data-toggle="tooltip"]').tooltip();
 
             if (data.last_page > 1) {
 

@@ -235,8 +235,6 @@
 
             $("#search-result").empty();
             $.each(data.data, function (i, val) {
-                $('[data-toggle="tooltip"]').tooltip();
-
                 $color = val.isPaid == 1 ? '#00adb5' : '#fa5555';
                 $display = val.isPaid == 0 && '{{now()}}' <= val.add_day ? '' : 'none';
                 $class = val.isPaid == 1 ? '' : 'ld ld-breath';
@@ -293,6 +291,7 @@
                     '<strong style="text-transform: uppercase">' + val.pm + '</strong></a></li>'
                 );
             });
+            $('[data-toggle="tooltip"]').tooltip();
 
             if (data.last_page > 1) {
 
