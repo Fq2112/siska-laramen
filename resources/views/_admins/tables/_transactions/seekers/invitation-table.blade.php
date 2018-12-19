@@ -292,11 +292,11 @@
                             <div class="col-sm-4" id="action-btn">
                                 <div class="btn-group" style="float: right">
                                     <button id="btn_send_app" type="button" class="btn btn-success btn-sm"
-                                            style="font-weight: 600" disabled>
+                                            style="font-weight: 600">
                                         <i class="fa fa-envelope"></i>&ensp;SEND
                                     </button>
                                     <button id="btn_remove_app" type="button" class="btn btn-danger btn-sm"
-                                            style="font-weight: 600" disabled>
+                                            style="font-weight: 600">
                                         <i class="fa fa-trash"></i>&ensp;REMOVE
                                     </button>
                                 </div>
@@ -345,26 +345,14 @@
             $("#check-all").on("ifToggled", function () {
                 if ($(this).is(":checked")) {
                     $("#myDataTable tbody tr").addClass("selected").find('input[type=checkbox]').iCheck("check");
-                    $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
                 } else {
                     $("#myDataTable tbody tr").removeClass("selected").find('input[type=checkbox]').iCheck("uncheck");
-                    $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
                 }
             });
 
             $("#myDataTable tbody").on("click", "tr", function () {
                 $(this).toggleClass("selected");
                 $(this).find('input[type=checkbox]').iCheck("toggle");
-            });
-
-            $("#myDataTable tbody tr").find('input[type=checkbox]').on("ifToggled", function () {
-                var selected = table.rows('.selected').data().length;
-
-                if ($(this).is(":checked") || selected > 0) {
-                    $("#btn_send_app, #btn_remove_app").removeAttr("disabled");
-                } else {
-                    $("#btn_send_app, #btn_remove_app").attr("disabled", "disabled");
-                }
             });
 
             $('#btn_send_app').on("click", function () {
@@ -374,23 +362,27 @@
                 $("#applicant_ids").val(ids);
                 $("#form-invitations").attr("action", "{{route('table.appliedInvitations.massSend')}}");
 
-                swal({
-                    title: 'Send Applied Invitations',
-                    text: 'Are you sure to send this ' + ids.length + ' selected records to the Agency\'s email? ' +
-                        'You won\'t be able to revert this!',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#00adb5',
-                    confirmButtonText: 'Yes, send it!',
-                    showLoaderOnConfirm: true,
+                if (ids.length > 0) {
+                    swal({
+                        title: 'Send Applied Invitations',
+                        text: 'Are you sure to send this ' + ids.length + ' selected records to the Agency\'s email? ' +
+                            'You won\'t be able to revert this!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00adb5',
+                        confirmButtonText: 'Yes, send it!',
+                        showLoaderOnConfirm: true,
 
-                    preConfirm: function () {
-                        return new Promise(function (resolve) {
-                            $("#form-invitations")[0].submit();
-                        });
-                    },
-                    allowOutsideClick: false
-                });
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                $("#form-invitations")[0].submit();
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                } else {
+                    swal("Error!", "There's no any selected record!", "error");
+                }
                 return false;
             });
 
@@ -401,23 +393,27 @@
                 $("#applicant_ids").val(ids);
                 $("#form-invitations").attr("action", "{{route('table.appliedInvitations.massDelete')}}");
 
-                swal({
-                    title: 'Remove Applied Invitations',
-                    text: 'Are you sure to remove this ' + ids.length + ' selected records? ' +
-                        'You won\'t be able to revert this!',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#fa5555',
-                    confirmButtonText: 'Yes, delete it!',
-                    showLoaderOnConfirm: true,
+                if (ids.length > 0) {
+                    swal({
+                        title: 'Remove Applied Invitations',
+                        text: 'Are you sure to remove this ' + ids.length + ' selected records? ' +
+                            'You won\'t be able to revert this!',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#fa5555',
+                        confirmButtonText: 'Yes, delete it!',
+                        showLoaderOnConfirm: true,
 
-                    preConfirm: function () {
-                        return new Promise(function (resolve) {
-                            $("#form-invitations")[0].submit();
-                        });
-                    },
-                    allowOutsideClick: false
-                });
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                $("#form-invitations")[0].submit();
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                } else {
+                    swal("Error!", "There's no any selected record!", "error");
+                }
                 return false;
             });
         });
