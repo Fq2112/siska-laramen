@@ -330,7 +330,7 @@
         <div class="getting-started getting-started-1" style="background: #FA5555">
             <div class="getting-grid" style="background-image:  url({{asset('images/join.jpeg')}});">
                 <div class="desc" id="list-ads">
-                    <h2>Mengapa harus membuat akun <strong>SISKA</strong> ?</h2>
+                    <h2>Mengapa harus membuat akun <span>SISKA</span> ?</h2>
                     <ul>
                         <li>Mendapatkan lowongan sesuai resume melalui email.</li>
                         <li>Akses gratis tes dan fitur pengembangan karir oleh ahli psikologi.</li>
@@ -393,6 +393,26 @@
             </div>
         </div>
     </section>
+
+    @if(Auth::guest() || Auth::user()->role != 'seeker')
+        <div class="getting-started getting-started-1">
+            <div class="getting-grid" style="background-image: url({{asset('images/full_image_3.jpg')}});">
+                <div class="desc" id="list-ads">
+                    <h2>Mengapa beriklan di <span>SISKA</span> ?</h2>
+                    <ul>
+                        <li>Iklan lowongan paling terjangkau dengan fitur yang beragam.</li>
+                        <li>Kostumisasi jadwal rekrutmen.</li>
+                        <li>Online assessment yang dikembangkan institusi terpercaya.</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="{{route('home-agency')}}#pricing" class="getting-grid2">
+                <div class="call-to-action text-center">
+                    <p href="#" class="sign-up">Pasang Iklan Sekarang <i class="fa fa-hand-point-right"></i></p>
+                </div>
+            </a>
+        </div>
+    @endif
 
     <section id="fh5co-faq" class="fh5co-bg-color" data-section="faq">
         <div class="fh5co-faq">
@@ -647,25 +667,29 @@
         </div>
     </section>
 
-    @if(Auth::guest() || Auth::user()->role != 'seeker')
-        <div class="getting-started getting-started-1">
-            <div class="getting-grid" style="background-image:  url({{asset('images/full_image_3.jpg')}});">
+    <section id="fh5co-partner" class="fh5co-bg-color" data-section="partner">
+        <div class="getting-started getting-started-1" style="background: linear-gradient(#eb4b4b, #732f2f), #4b2222;">
+            <div class="getting-grid" style="background-image: url({{asset('images/mitra.jpg')}});">
                 <div class="desc" id="list-ads">
-                    <h2>Mengapa beriklan di <span>SISKA ?</span></h2>
+                    <h2>Mengapa harus menggunakan <span>SiskaLTE</span> dan bermitra dengan <span>SISKA</span> ?</h2>
                     <ul>
-                        <li>Iklan lowongan paling terjangkau.</li>
-                        <li>Online assessment yang dikembangkan institusi terpercaya.</li>
-                        <li>Kostumisasi rekrutmen dan program MT di kampus-kampus ternama.</li>
+                        <li>Kelola lowongan sekaligus rekruitmennya dalam Instansi Anda secara mandiri.
+                            <a href="https://github.com/Fq2124/siska-lte" target="_blank" style="color:#FFC12D">
+                                Klik disini</a> untuk instalasi SiskaLTE (<em>open source</em>).
+                        </li>
+                        <li>Sinkronisasi data lowongan SiskaLTE dari seluruh Instansi yang telah bermitra dengan
+                            SISKA.
+                        </li>
                     </ul>
                 </div>
             </div>
-            <a href="{{route('home-agency')}}#pricing" class="getting-grid2">
+            <a href="javascript:void(0)" onclick="partnershipModal();" class="getting-grid2">
                 <div class="call-to-action text-center">
-                    <p href="#" class="sign-up">Pasang Iklan Sekarang <i class="fa fa-hand-point-right"></i></p>
+                    <p href="#" class="sign-up">Bermitra Sekarang <i class="fa fa-handshake"></i></p>
                 </div>
             </a>
         </div>
-    @endif
+    </section>
 @endsection
 @push("scripts")
     <script src="{{ asset('js/filter-gridList.js') }}"></script>

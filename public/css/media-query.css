@@ -4,7 +4,7 @@
 */
 @media (min-width: 1440px) {
     #custom-search-input input {
-        width: 475px;
+        width: 464px;
     }
 
     .download-phone-ico {
@@ -24,7 +24,7 @@
 */
 @media (min-width: 1281px) and (max-width: 1439px) {
     #custom-search-input input {
-        width: 335px;
+        width: 324px;
     }
 
     .download-phone-ico {
@@ -38,13 +38,13 @@
     }
 }
 
-/* 
+/*
   ##Device = Laptops, Desktops
   ##Screen = B/w 1025px to 1280px
 */
 @media (min-width: 1025px) and (max-width: 1280px) {
     #custom-search-input input {
-        width: 200px;
+        width: 189px;
     }
 
     .alert-banner-text {
@@ -68,7 +68,7 @@
 */
 @media (min-width: 768px) and (max-width: 1024px) {
     #custom-search-input input {
-        width: 335px;
+        width: 324px;
     }
 
     .download-phone-ico {
@@ -88,7 +88,7 @@
 */
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
     #custom-search-input input {
-        width: 79px;
+        width: 68px;
     }
 
     .alert-banner-text {

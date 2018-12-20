@@ -5,6 +5,7 @@
         <li><a href="#" data-nav-section="explore"><span>Industries</span></a></li>
         <li><a href="#" data-nav-section="blog"><span>Blog</span></a></li>
         <li><a href="#" data-nav-section="faq"><span>FAQ</span></a></li>
+        <li><a href="#" data-nav-section="partner"><span>Partner</span></a></li>
     @elseif(\Illuminate\Support\Facades\Request::is('agency'))
         <li class="active"><a href="#" data-nav-section="home"><span>Home</span></a></li>
         <li><a href="#" data-nav-section="services"><span>Features</span></a></li>
