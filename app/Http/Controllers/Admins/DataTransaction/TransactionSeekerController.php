@@ -10,8 +10,6 @@ use App\Events\Agencies\QuizResultList;
 use App\Invitation;
 use App\PsychoTestResult;
 use App\QuizResult;
-use App\Seekers;
-use App\User;
 use App\Vacancies;
 use Barryvdh\DomPDF\Facade as PDF;
 use Carbon\Carbon;

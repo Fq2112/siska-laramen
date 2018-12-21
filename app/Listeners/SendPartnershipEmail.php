@@ -26,6 +26,6 @@ class SendPartnershipEmail
      */
     public function handle(UserPartnershipEmail $event)
     {
-        Mail::to($event->partnership->email)->send(new PartnershipEmail($event->partnership));
+        Mail::to($event->partnership->email)->send(new PartnershipEmail($event->partnership, $event->filename));
     }
 }

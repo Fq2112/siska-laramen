@@ -833,16 +833,21 @@
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 1) {
+                    if (data == 0) {
                         swal("SISKA Partnership", "Permintaan berhasil! Kami akan mengirimkan API Key & API Secret " +
                             "untuk SiskaLTE Instansi Anda melalui email: " + email + ". Mohon tunggu untuk " +
                             "beberapa menit kedepan dan tetap periksa email Anda, terimakasih.", "success");
                         $("#partnership_name, #partnership_email").val('');
+                        grecaptcha.reset(recaptcha_partnership);
                         $("#loginModal").modal('hide');
 
-                    } else if (data == 0) {
+                    } else if (data == 1) {
                         swal('SISKA Partnership', 'API key untuk SiskaLTE "' + instansi + '" sudah ' +
                             'tersedia!', 'error');
+
+                    } else if (data == 2) {
+                        swal('SISKA Partnership', 'Permintaan bermitra untuk "' + instansi + '" sudah dilakukan ' +
+                            'sebelumnya! Mohon tunggu dan tetap periksa email Anda, terimakasih.', 'error');
                     }
                 },
                 error: function () {

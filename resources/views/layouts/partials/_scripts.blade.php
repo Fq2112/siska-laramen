@@ -89,6 +89,35 @@
         @endif
     });
 
+    var recaptcha_login, recaptcha_partnership, recaptchaCallback = function () {
+        recaptcha_login = grecaptcha.render(document.getElementById('recaptcha-login'), {
+            'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
+            'callback': 'enable_btnLogin',
+            'expired-callback': 'disabled_btnLogin'
+        });
+        recaptcha_partnership = grecaptcha.render(document.getElementById('recaptcha-partnership'), {
+            'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
+            'callback': 'enable_btnPartnership',
+            'expired-callback': 'disabled_btnPartnership'
+        });
+    };
+
+    function enable_btnLogin() {
+        $("#btn_login").removeAttr('disabled');
+    }
+
+    function disabled_btnLogin() {
+        $("#btn_login").attr('disabled', 'disabled');
+    }
+
+    function enable_btnPartnership() {
+        $("#btn_partnership").removeAttr('disabled');
+    }
+
+    function disabled_btnPartnership() {
+        $("#btn_partnership").attr('disabled', 'disabled');
+    }
+
     $("#form-register").on("submit", function (e) {
         if ($.trim($("#reg_email,#reg_name,#reg_password,#reg_password_confirm").val()) === "") {
             return false;

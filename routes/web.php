@@ -166,6 +166,16 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
             'as' => 'show.partnership'
         ]);
 
+        Route::put('{id}/update', [
+            'uses' => 'AdminController@updatePartnership',
+            'as' => 'partnership.update'
+        ]);
+
+        Route::get('{id}/delete', [
+            'uses' => 'AdminController@deletePartnership',
+            'as' => 'partnership.delete'
+        ]);
+
     });
 
     Route::group(['prefix' => 'tables'], function () {

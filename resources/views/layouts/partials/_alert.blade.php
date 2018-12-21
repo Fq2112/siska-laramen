@@ -139,19 +139,4 @@
     });
     @endforeach
     @endif
-
-    $(function () {
-        $('#form-login').submit(function (event) {
-            var verified = grecaptcha.getResponse();
-            if (verified.length === 0) {
-                event.preventDefault();
-                swal({
-                    title: 'ATTENTION!',
-                    text: 'Please confirm us that you are not a robot, with clicking in the reCAPTCHA dialog-box.',
-                    type: 'warning',
-                    timer: '3500'
-                });
-            }
-        });
-    });
 </script>

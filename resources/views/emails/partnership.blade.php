@@ -490,19 +490,9 @@
                                            align="center">
                                         <tr>
                                             <td>
-                                                <div class="alert alert-info">
-                                                    <table>
-                                                        <tr>
-                                                            <td style="font-weight: 600;">API Key</td>
-                                                            <td>&nbsp;:&nbsp;</td>
-                                                            <td>{{$partnership->api_key}}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="font-weight: 600;">API Secret</td>
-                                                            <td>&nbsp;:&nbsp;</td>
-                                                            <td>{{$partnership->api_secret}}</td>
-                                                        </tr>
-                                                    </table>
+                                                <div class="alert alert-info text-center">
+                                                    Download <strong>the attached pdf file</strong> to check your
+                                                    credentials API Key & API Secret.
                                                 </div>
                                             </td>
                                         </tr>
@@ -510,9 +500,8 @@
                                             <td>
                                                 <div class="alert alert-warning text-center">
                                                     We'll <strong>not</strong> send this message <strong>twice</strong>!
-                                                    You may <strong>capture</strong> this credentials or just
-                                                    <strong>save</strong> it in a right place that
-                                                    <strong>easily</strong> to be found.
+                                                    Thus, we suggest you to <strong>save</strong> the pdf file in a
+                                                    right place that <strong>easily</strong> to be found.
                                                 </div>
                                             </td>
                                         </tr>

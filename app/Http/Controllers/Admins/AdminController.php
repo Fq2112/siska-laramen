@@ -18,6 +18,7 @@ use App\QuizType;
 use App\Seekers;
 use App\User;
 use App\Vacancies;
+use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -41,20 +42,20 @@ class AdminController extends Controller
 
     public function index()
     {
-        $newSeeker = Seekers::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
+        $newUser = User::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newApp = Accepting::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
-
-        $newAgency = Agencies::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newJobPost = ConfirmAgency::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
+        $newMitra = Partnership::where('created_at', '>=', today()->subDays(3)->toDateTimeString())->count();
 
         $users = User::all();
         $agencies = Agencies::all();
         $seekers = Seekers::all();
+        $mitras = Partnership::all();
 
         $blogs = Blog::all();
 
-        return view('_admins.home-admin', compact('newSeeker', 'newApp', 'newAgency', 'newJobPost',
-            'users', 'agencies', 'seekers', 'blogs'));
+        return view('_admins.home-admin', compact('newUser', 'newApp', 'newJobPost', 'newMitra',
+            'users', 'agencies', 'seekers', 'mitras', 'blogs'));
     }
 
     public function showInbox(Request $request)
@@ -292,31 +293,51 @@ class AdminController extends Controller
             ->with('success', 'Psycho Test for ' . $info->getVacancy->judul . ' is successfully deleted!');
     }
 
-    public function showPartnership()
+    public function showPartnership(Request $request)
     {
-        $partnerships = Partnership::all();
+        $partnership = Partnership::orderByDesc('id')->get();
+        $findPartner = $request->q;
 
-        return view('_admins.partnership-list', compact('partnerships'));
+        return view('_admins.partnership-list', compact('partnership', 'findPartner'));
     }
 
-    public function approvePartnership(Request $request)
+    public function updatePartnership(Request $request)
     {
         $partnership = Partnership::find($request->id);
 
-        if ($partnership->status == false) {
+        if ($request->status == 1) {
             $partnership->update([
                 'api_key' => $partnership->id . str_random(40),
                 'api_secret' => $partnership->id . str_random(40),
                 'api_expiry' => today()->addMonth(),
-                'status' => true
+                'status' => $request->status
             ]);
-            event(new UserPartnershipEmail($partnership));
+            $filename = 'SiskaLTE_' . str_replace(' ', '_', $partnership->name) . '_credentials.pdf';
+            $pdf = PDF::loadView('reports.partnership-pdf', compact('partnership'));
+            Storage::put('public/users/partners/' . $filename, $pdf->output());
+            event(new UserPartnershipEmail($partnership, $filename));
 
             return back()->with('success', 'Credentials API Key & API Secret for ' . $partnership->name . ' is ' .
-                'successfully sent to ' . $partnership->email . '!');
+                'successfully activated and sent to ' . $partnership->email . '!');
 
         } else {
-            return back()->with('error', 'API Key for ' . $partnership->name . ' is already exist!');
+            $partnership->update([
+                'api_key' => null,
+                'api_secret' => null,
+                'api_expiry' => null,
+                'status' => $request->status
+            ]);
+
+            return back()->with('success', 'Credentials API Key & API Secret for ' . $partnership->name . ' is ' .
+                'successfully deactivated!');
         }
+    }
+
+    public function deletePartnership($id)
+    {
+        $partnership = Partnership::find(decrypt($id));
+        $partnership->delete();
+
+        return back()->with('success', '' . $partnership->name . ' is successfully deleted from SISKA Partnership!');
     }
 }

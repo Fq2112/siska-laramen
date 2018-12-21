@@ -5,22 +5,23 @@
         <div class="">
             <div class="row top_tiles">
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('table.agencies')}}" class="agency">
+                    <a href="{{route('table.users')}}" class="agency">
                         <div class="tile-stats">
-                            <div class="icon"><i class="fa fa-user-tie"></i></div>
-                            <div class="count">{{$newAgency}}</div>
-                            <h3>New {{$newAgency > 1 ? 'Agencies' : 'Agency'}}</h3>
-                            <p>Total: <strong>{{count($agencies)}}</strong> job agencies</p>
+                            <div class="icon"><i class="fa fa-users"></i></div>
+                            <div class="count">{{$newUser}}</div>
+                            <h3>New {{$newUser > 1 ? 'Users' : 'User'}}</h3>
+                            <p>Total: <strong>{{count($users)}}</strong> users</p>
                         </div>
                     </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('table.seekers')}}" class="seeker">
+                    <a href="{{route('table.applications')}}" class="seeker">
                         <div class="tile-stats">
-                            <div class="icon"><i class="fa fa-user-graduate"></i></div>
-                            <div class="count">{{$newSeeker}}</div>
-                            <h3>New {{$newSeeker > 1 ? 'Seekers' : 'Seeker'}}</h3>
-                            <p>Total: <strong>{{count($seekers)}}</strong> job seekers</p>
+                            <div class="icon"><i class="fa fa-paper-plane"></i></div>
+                            <div class="count">{{$newApp}}</div>
+                            <h3>New {{$newApp > 1 ? 'Applications' : 'Application'}}</h3>
+                            <p>Total: <strong>{{\App\Accepting::where('isApply',true)->count()}}</strong>
+                                applied applications</p>
                         </div>
                     </a>
                 </div>
@@ -36,13 +37,12 @@
                     </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('table.applications')}}" class="seeker">
+                    <a href="{{route('show.partnership')}}" class="seeker">
                         <div class="tile-stats">
-                            <div class="icon"><i class="fa fa-paper-plane"></i></div>
-                            <div class="count">{{$newApp}}</div>
-                            <h3>New {{$newApp > 1 ? 'Applications' : 'Application'}}</h3>
-                            <p>Total: <strong>{{\App\Accepting::where('isApply',true)->count()}}</strong>
-                                applied applications</p>
+                            <div class="icon"><i class="fa fa-handshake"></i></div>
+                            <div class="count">{{$newMitra}}</div>
+                            <h3>New {{$newMitra > 1 ? 'Partners' : 'Partner'}}</h3>
+                            <p>Total: <strong>{{count($mitras)}}</strong> partners</p>
                         </div>
                     </a>
                 </div>
@@ -153,7 +153,7 @@
     <script>
         var theme = {
                 color: [
-                    '#00adb5', '#fa5555', '#BDC3C7', '#3498DB',
+                    '#00adb5', '#fa5555', '#FFC12D', '#3498DB',
                     '#9B59B6', '#8abb6f', '#759c6a', '#bfd3b7'
                 ],
 
@@ -373,7 +373,7 @@
             legend: {
                 x: 'center',
                 y: 'bottom',
-                data: ['Job Agency', 'Job Seeker']
+                data: ['Agencies', 'Seekers', 'Partners']
             },
             toolbox: {
                 show: true,
@@ -394,7 +394,7 @@
             },
             calculable: true,
             series: [{
-                name: 'Total: {{count($users)}} users',
+                name: 'Total: {{count($users) + count($mitras)}} users',
                 type: 'pie',
                 radius: [25, 90],
                 center: ['50%', 170],
@@ -404,10 +404,13 @@
                 sort: 'ascending',
                 data: [{
                     value: '{{count($agencies)}}',
-                    name: 'Job Agency'
+                    name: 'Agencies'
                 }, {
                     value: '{{count($seekers)}}',
-                    name: 'Job Seeker'
+                    name: 'Seekers'
+                }, {
+                    value: '{{count($mitras)}}',
+                    name: 'Partners'
                 }]
             }]
         });

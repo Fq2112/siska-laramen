@@ -670,8 +670,8 @@
                                         @if(count($partners) > 0)
                                             <li style="padding: 0;">
                                                 <a style="text-decoration: none;cursor: text">
-                                                <span><i class="fa fa-briefcase"></i>
-                                                    <strong style="margin-left: 5px;text-transform: uppercase">Job Postings</strong></span>
+                                                <span><i class="fa fa-handshake"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Partnership Request</strong></span>
                                                 </a>
                                             </li>
                                             @foreach($partners as $partner)
@@ -680,7 +680,7 @@
                                                     <span class="image">
                                                         <img src="{{asset('images/mitra.jpg')}}">
                                                     </span>
-                                                        <span><span>{{$partner->name}}</span></span>
+                                                        <span><span>{{$partner->email}}</span></span>
                                                         <span class="message">
                                                         Partnership request from
                                                         <strong style="text-transform: uppercase">{{$partner->name}}</strong>

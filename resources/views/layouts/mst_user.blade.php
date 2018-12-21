@@ -77,7 +77,7 @@
     <!--[if lt IE 9]>
     <script src="{{asset('js/respond.min.js')}}"></script>
     <![endif]-->
-    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
 </head>
 <body>
 <a href="#" onclick="scrollToTop()" title="Go to top"><strong class="to-top" style="color: #fff">TOP</strong></a>
@@ -254,14 +254,13 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="g-recaptcha" data-sitekey="{{env('reCAPTCHA_v2_SITEKEY')}}"></div>
-                                    </div>
+                                    <div class="col-lg-12" id="recaptcha-login"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <input class="btn btn-default btn-login" type="submit" value="SIGN IN"
-                                               style="background: #FA5555;border-color: #FA5555">
+                                        <input id="btn_login" class="btn btn-default btn-login" type="submit"
+                                               value="SIGN IN" style="background: #FA5555;border-color: #FA5555"
+                                               disabled>
                                     </div>
                                 </div>
                             </form>
@@ -424,8 +423,7 @@
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <input class="btn btn-default btn-login" type="submit"
-                                               value="reset password"
-                                               style="background: #FA5555;border-color: #FA5555">
+                                               value="reset password" style="background: #FA5555;border-color: #FA5555">
                                     </div>
                                 </div>
                             </form>
@@ -455,9 +453,14 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-lg-12" id="recaptcha-partnership"></div>
+                                </div>
+                                <div class="row">
                                     <div class="col-lg-12">
-                                        <input class="btn btn-default btn-login" type="submit" value="SUBMIT"
-                                               style="background: #FA5555;border-color: #FA5555">
+                                        <input id="btn_partnership" class="btn btn-default btn-login" type="submit"
+                                               value="SUBMIT"
+                                               style="background: linear-gradient(#eb4b4b, #732f2f), #4b2222;;border-color: transparent"
+                                               disabled>
                                     </div>
                                 </div>
                             </form>
@@ -475,11 +478,9 @@
                                                       style="color: #FA5555">Sign In</a></span>
                 </div>
                 <div class="forgot partnership-footer" style="display:none">
-                    <span style="font-size: 17px">Looking for
-                        <a href="https://github.com/Fq2124/siska-lte" target="_blank"
-                           style="color: #00ADB5;">SiskaLTE</a>
-                        installation guide?
-                    </span>
+                    <span style="font-size: 17px">Looking for <a href="https://github.com/Fq2124/siska-lte"
+                                                                 target="_blank"
+                                                                 style="color: #fa5555;">SiskaLTE</a> installation guide?</span>
                 </div>
             </div>
         </div>

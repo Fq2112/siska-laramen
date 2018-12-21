@@ -58,10 +58,15 @@ class UserController extends Controller
                 'email' => $request->email,
             ]);
 
-            return 1;
+            return 0;
 
         } else {
-            return 0;
+            if ($check->status == true) {
+                return 1;
+
+            } else {
+                return 2;
+            }
         }
     }
 }
