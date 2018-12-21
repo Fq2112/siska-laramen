@@ -29,6 +29,11 @@ Route::group(['prefix' => '/'], function () {
         'as' => 'contact.submit'
     ]);
 
+    Route::post('partnership/join', [
+        'uses' => 'UserController@joinPartnership',
+        'as' => 'join.partnership'
+    ]);
+
 });
 
 Route::group(['namespace' => 'Auth', 'prefix' => 'account'], function () {
@@ -150,6 +155,15 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
         Route::get('{id}/delete', [
             'uses' => 'AdminController@deletePsychoTestInfo',
             'as' => 'psychoTest.delete.info'
+        ]);
+
+    });
+
+    Route::group(['prefix' => 'partnership'], function () {
+
+        Route::get('/', [
+            'uses' => 'AdminController@showPartnership',
+            'as' => 'show.partnership'
         ]);
 
     });

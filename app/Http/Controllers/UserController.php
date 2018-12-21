@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Carousel;
 use App\Feedback;
+use App\Partnership;
 use App\Provinces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -44,6 +45,23 @@ class UserController extends Controller
             $message->subject($data['subject']);
         });
 
-        return back()->with('contact', 'Thank you for leaving us a message! Because, every comment or criticism that you have sent, it will make us better.');
+        return back()->with('contact', 'Thank you for leaving us a message! Because, every comment or criticism ' .
+            'that you have sent, it will make us better.');
+    }
+
+    public function joinPartnership(Request $request)
+    {
+        $check = Partnership::where('email', $request->email)->first();
+        if ($check == null) {
+            Partnership::create([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+
+            return 1;
+
+        } else {
+            return 0;
+        }
     }
 }

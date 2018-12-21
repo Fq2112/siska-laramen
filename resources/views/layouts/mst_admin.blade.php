@@ -191,7 +191,9 @@
         $psycho->whereHas('getPsychoTestResult');
     })->whereDate('psychoTestDate_end', today())->get();
 
-    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results);
+    $partners = \App\Partnership::where('status', false)->get();
+
+    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results) + count($partners);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -228,6 +230,8 @@
                             <li><a href="{{route('admin.inbox')}}"><i class="fa fa-envelope"></i> Inbox</a></li>
                             <li><a href="{{route('quiz.info')}}"><i class="fa fa-smile"></i> Quiz</a></li>
                             <li><a href="{{route('psychoTest.info')}}"><i class="fa fa-comments"></i> Psycho Test</a>
+                            </li>
+                            <li><a href="{{route('show.partnership')}}"><i class="fa fa-handshake"></i> Partnership</a>
                             </li>
                             <li>
                                 <a><i class="fa fa-table"></i> Tables
@@ -662,6 +666,32 @@
                                         <li class="divider"
                                             style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
+
+                                        @if(count($partners) > 0)
+                                            <li style="padding: 0;">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-briefcase"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Job Postings</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($partners as $partner)
+                                                <li>
+                                                    <a href="{{route('show.partnership').'?q='.$partner->name}}">
+                                                    <span class="image">
+                                                        <img src="{{asset('images/mitra.jpg')}}">
+                                                    </span>
+                                                        <span><span>{{$partner->name}}</span></span>
+                                                        <span class="message">
+                                                        Partnership request from
+                                                        <strong style="text-transform: uppercase">{{$partner->name}}</strong>
+                                                        hasn't been approve yet!
+                                                    </span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
                                 @else
                                     <li>
                                         <a style="text-decoration: none;cursor: text">

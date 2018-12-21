@@ -332,9 +332,11 @@
                 <div class="desc" id="list-ads">
                     <h2>Mengapa harus membuat akun <span>SISKA</span> ?</h2>
                     <ul>
-                        <li>Mendapatkan lowongan sesuai resume melalui email.</li>
-                        <li>Akses gratis tes dan fitur pengembangan karir oleh ahli psikologi.</li>
-                        <li>Info program khusus dan Management Trainee perusahaan nasional dan multinasional.</li>
+                        <li>Rekomendasi lowongan sesuai resume.</li>
+                        <li>Resume akan langsung dikirimkan ke agency terkait ketika rekruitmennya berakhir.</li>
+                        <li>Akses gratis online quiz (TPA & TKD) dan psycho test (Online Interview) oleh ahli
+                            psikologi.
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -401,14 +403,14 @@
                     <h2>Mengapa beriklan di <span>SISKA</span> ?</h2>
                     <ul>
                         <li>Iklan lowongan paling terjangkau dengan fitur yang beragam.</li>
-                        <li>Kostumisasi jadwal rekrutmen.</li>
+                        <li>Kostumisasi jadwal rekruitmen.</li>
                         <li>Online assessment yang dikembangkan institusi terpercaya.</li>
                     </ul>
                 </div>
             </div>
             <a href="{{route('home-agency')}}#pricing" class="getting-grid2">
                 <div class="call-to-action text-center">
-                    <p href="#" class="sign-up">Pasang Iklan Sekarang <i class="fa fa-hand-point-right"></i></p>
+                    <p class="sign-up">Pasang Iklan Sekarang <i class="fa fa-hand-point-right"></i></p>
                 </div>
             </a>
         </div>
@@ -667,41 +669,71 @@
         </div>
     </section>
 
-    <section id="fh5co-partner" class="fh5co-bg-color" data-section="partner">
-        <div class="getting-started getting-started-1" style="background: linear-gradient(#eb4b4b, #732f2f), #4b2222;">
-            <div class="getting-grid" style="background-image: url({{asset('images/mitra.jpg')}});">
-                <div class="desc" id="list-ads">
-                    <h2>Mengapa harus menggunakan <span>SiskaLTE</span> dan bermitra dengan <span>SISKA</span> ?</h2>
-                    <ul>
-                        <li>Kelola lowongan sekaligus rekruitmennya dalam Instansi Anda secara mandiri.
-                            <a href="https://github.com/Fq2124/siska-lte" target="_blank" style="color:#FFC12D">
-                                Klik disini</a> untuk instalasi SiskaLTE (<em>open source</em>).
-                        </li>
-                        <li>Sinkronisasi data lowongan SiskaLTE dari seluruh Instansi yang telah bermitra dengan
-                            SISKA.
-                        </li>
-                    </ul>
+    @guest
+        <style>
+            @media (min-width: 1440px) {
+                #custom-search-input input {
+                    width: 464px;
+                }
+            }
+
+            @media (min-width: 1281px) and (max-width: 1439px) {
+                #custom-search-input input {
+                    width: 324px;
+                }
+            }
+
+            @media (min-width: 1025px) and (max-width: 1280px) {
+                #custom-search-input input {
+                    width: 189px;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) {
+                #custom-search-input input {
+                    width: 324px;
+                }
+            }
+
+            @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+                #custom-search-input input {
+                    width: 68px;
+                }
+            }
+        </style>
+        <section id="fh5co-partner" class="fh5co-bg-color" data-section="partner">
+            <div class="getting-started getting-started-1"
+                 style="background: linear-gradient(#eb4b4b, #732f2f), #4b2222;">
+                <div class="getting-grid" style="background-image: url({{asset('images/mitra.jpg')}});">
+                    <div class="desc" id="list-ads">
+                        <h2>Mengapa harus menggunakan <span>SiskaLTE</span> dan bermitra dengan <span>SISKA</span> ?
+                        </h2>
+                        <ul>
+                            <li>Kelola lowongan sekaligus rekruitmennya dalam Instansi Anda secara mandiri.
+                                <a href="https://github.com/Fq2124/siska-lte" target="_blank" style="color:#FFC12D">
+                                    Klik disini</a> untuk instalasi SiskaLTE (<em>open source</em>).
+                            </li>
+                            <li>Sinkronisasi data lowongan SiskaLTE dari seluruh Instansi yang telah bermitra dengan
+                                SISKA.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+                <a href="javascript:void(0)" onclick="openPartnershipModal();" class="getting-grid2">
+                    <div class="call-to-action text-center">
+                        <p class="sign-up">Bermitra Sekarang <i class="fa fa-handshake"></i></p>
+                    </div>
+                </a>
             </div>
-            <a href="javascript:void(0)" onclick="partnershipModal();" class="getting-grid2">
-                <div class="call-to-action text-center">
-                    <p href="#" class="sign-up">Bermitra Sekarang <i class="fa fa-handshake"></i></p>
-                </div>
-            </a>
-        </div>
-    </section>
+        </section>
+    @endguest
 @endsection
-@push("scripts")
+@push("lumen.ajax")
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
-    <script>
+    <script type="text/javascript">
         $(function () {
             $('.dc-view-switcher button[data-trigger="grid-view"]').click();
-        });
-    </script>
-@endpush
-@push("lumen.ajax")
-    <script type="text/javascript">
-        $(document).ready(function () {
+
             setTimeout(getFavVacancy, 200);
             setTimeout(getLateVacancy, 200);
         });
@@ -789,5 +821,36 @@
                     'Read More</a></div></article>';
             });
         }
+
+        $("#form-partnership").on("submit", function (e) {
+            e.preventDefault();
+
+            var email = $("#partnership_email").val(), instansi = $("#partnership_name").val();
+            $.ajax({
+                type: "POST",
+                url: "{{route('join.partnership')}}",
+                data: new FormData($("#form-partnership")[0]),
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data == 1) {
+                        swal("SISKA Partnership", "Permintaan berhasil! Kami akan mengirimkan API Key & API Secret " +
+                            "untuk SiskaLTE Instansi Anda melalui email: " + email + ". Mohon tunggu untuk " +
+                            "beberapa menit kedepan dan tetap periksa email Anda, terimakasih.", "success");
+                        $("#partnership_name, #partnership_email").val('');
+                        $("#loginModal").modal('hide');
+
+                    } else if (data == 0) {
+                        swal('SISKA Partnership', 'API key untuk SiskaLTE "' + instansi + '" sudah ' +
+                            'tersedia!', 'error');
+                    }
+                },
+                error: function () {
+                    swal("Error!", "Something went wrong, please refresh the page.", "error");
+                }
+            });
+            return false;
+        });
+
     </script>
 @endpush

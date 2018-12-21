@@ -7,8 +7,10 @@ use App\Admin;
 use App\Agencies;
 use App\Blog;
 use App\ConfirmAgency;
+use App\Events\UserPartnershipEmail;
 use App\Feedback;
 use App\Http\Controllers\Controller;
+use App\Partnership;
 use App\PsychoTestInfo;
 use App\QuizInfo;
 use App\QuizResult;
@@ -288,5 +290,33 @@ class AdminController extends Controller
 
         return redirect()->route('psychoTest.info')
             ->with('success', 'Psycho Test for ' . $info->getVacancy->judul . ' is successfully deleted!');
+    }
+
+    public function showPartnership()
+    {
+        $partnerships = Partnership::all();
+
+        return view('_admins.partnership-list', compact('partnerships'));
+    }
+
+    public function approvePartnership(Request $request)
+    {
+        $partnership = Partnership::find($request->id);
+
+        if ($partnership->status == false) {
+            $partnership->update([
+                'api_key' => $partnership->id . str_random(40),
+                'api_secret' => $partnership->id . str_random(40),
+                'api_expiry' => today()->addMonth(),
+                'status' => true
+            ]);
+            event(new UserPartnershipEmail($partnership));
+
+            return back()->with('success', 'Credentials API Key & API Secret for ' . $partnership->name . ' is ' .
+                'successfully sent to ' . $partnership->email . '!');
+
+        } else {
+            return back()->with('error', 'API Key for ' . $partnership->name . ' is already exist!');
+        }
     }
 }

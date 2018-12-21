@@ -161,7 +161,7 @@
     </div>
 </header>
 
-{{--modal sign up--}}
+<!-- modal sign up -->
 <div class="modal fade login" id="loginModal">
     <div class="modal-dialog login animated">
         <div class="modal-content">
@@ -324,7 +324,7 @@
                                 <div class="row">
                                     <div class="col-lg-12" style="font-size: 14px;text-align: justify">
                                         <small>
-                                            By continuing this, you acknowledge that you accept on SISKA's
+                                            By continuing this, you acknowledge that you accept on SISKA
                                             <a href="{{route('info.siska')}}#privacy-policy" target="_blank"
                                                style="text-decoration: none">Privacy Policies</a> and
                                             <a href="{{route('info.siska')}}#terms-conditions" target="_blank"
@@ -343,7 +343,7 @@
                     </div>
                 </div>
 
-                {{--Reset password form--}}
+                <!-- Reset password form -->
                 <div class="box">
                     <div class="content emailBox" style="display:none;">
                         <div class="form">
@@ -432,6 +432,38 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Partnership -->
+                <div class="box">
+                    <div class="content partnershipBox" style="display: none">
+                        <div class="form">
+                            <form method="post" accept-charset="UTF-8" class="form-horizontal" id="form-partnership">
+                                {{ csrf_field() }}
+                                <div class="row has-feedback">
+                                    <div class="col-lg-12">
+                                        <input id="partnership_name" type="text"
+                                               placeholder="University/Institution/Instance"
+                                               class="form-control" name="name" required>
+                                        <span class="glyphicon glyphicon-education form-control-feedback"></span>
+                                    </div>
+                                </div>
+                                <div class="row has-feedback">
+                                    <div class="col-lg-12">
+                                        <input id="partnership_email" class="form-control" type="email"
+                                               placeholder="Email" name="email" required>
+                                        <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <input class="btn btn-default btn-login" type="submit" value="SUBMIT"
+                                               style="background: #FA5555;border-color: #FA5555">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="forgot login-footer">
@@ -441,6 +473,13 @@
                 <div class="forgot register-footer" style="display:none">
                     <span>Already have an account? <a href="javascript:showLoginForm()"
                                                       style="color: #FA5555">Sign In</a></span>
+                </div>
+                <div class="forgot partnership-footer" style="display:none">
+                    <span style="font-size: 17px">Looking for
+                        <a href="https://github.com/Fq2124/siska-lte" target="_blank"
+                           style="color: #00ADB5;">SiskaLTE</a>
+                        installation guide?
+                    </span>
                 </div>
             </div>
         </div>

@@ -428,11 +428,11 @@
     <div class="getting-started getting-started-1">
         <div class="getting-grid" style="background-image: url({{asset('images/full_image_3.jpg')}});">
             <div class="desc" id="list-ads">
-                <h2>Mengapa beriklan di <span>SISKA ?</span></h2>
+                <h2>Mengapa beriklan di <span>SISKA</span> ?</h2>
                 <ul>
-                    <li>Iklan lowongan paling terjangkau.</li>
+                    <li>Iklan lowongan paling terjangkau dengan fitur yang beragam.</li>
+                    <li>Kostumisasi jadwal rekruitmen.</li>
                     <li>Online assessment yang dikembangkan institusi terpercaya.</li>
-                    <li>Kostumisasi rekrutmen dan program MT di kampus-kampus ternama.</li>
                 </ul>
             </div>
         </div>

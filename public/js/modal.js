@@ -1,29 +1,43 @@
-// reset password form
 function showEmailForm() {
-    $('#loginModal .loginBox, .registerBox, .passwordBox').fadeOut('fast', function () {
-        $('.emailBox').fadeIn('fast');
-        $('.register-footer').fadeOut('fast', function () {
-            $('.login-footer').fadeIn('fast');
-        });
+    $('.loginBox, .registerBox, .passwordBox, .partnershipBox')
+        .fadeOut('fast', function () {
+            $('.emailBox').fadeIn('fast');
+            $('.register-footer, .partnership-footer').fadeOut('fast', function () {
+                $('.login-footer').fadeIn('fast');
+            });
 
-        $('.modal-title').html('Reset Password');
-    });
+            $('.modal-title').html('Reset Password');
+        });
     $('.error').removeClass('alert alert-danger').html('');
 }
 
 function showResetPasswordForm() {
-    $('#loginModal .emailBox, .registerBox, .loginBox').fadeOut('fast', function () {
-        $('.passwordBox').fadeIn('fast');
-        $('.login-footer').fadeOut('fast', function () {
-            $('.register-footer-footer').fadeIn('fast');
-        });
+    $('.emailBox, .registerBox, .loginBox, .partnershipBox')
+        .fadeOut('fast', function () {
+            $('.passwordBox').fadeIn('fast');
+            $('.login-footer, .partnership-footer').fadeOut('fast', function () {
+                $('.register-footer').fadeIn('fast');
+            });
 
-        $('.modal-title').html('Reset Password');
-    });
+            $('.modal-title').html('Reset Password');
+        });
     $('.error').removeClass('alert alert-danger').html('');
 }
 
+function showPartnershipForm() {
+    $('.emailBox, .registerBox, .loginBox, .passwordBox')
+        .fadeOut('fast', function () {
+            $('.partnershipBox').fadeIn('fast');
+            $('.login-footer, .register-footer').fadeOut('fast', function () {
+                $('.partnership-footer').fadeIn('fast');
+            });
+
+            $('.modal-title').html('SISKA Partnership');
+        });
+}
+
 function openLoginModal() {
+    $("#loginModal .social, #loginModal .division").show();
     showLoginForm();
     setTimeout(function () {
         $('#loginModal').modal('show');
@@ -31,14 +45,15 @@ function openLoginModal() {
 }
 
 function openRegisterModal() {
+    $("#loginModal .social, #loginModal .division").show();
     showRegisterForm();
     setTimeout(function () {
         $('#loginModal').modal('show');
     }, 230);
 }
 
-// reset password modal
 function openEmailModal() {
+    $("#loginModal .social, #loginModal .division").show();
     showEmailForm();
     setTimeout(function () {
         $('#loginModal').modal('show');
@@ -46,7 +61,17 @@ function openEmailModal() {
 }
 
 function openPasswordModal() {
+    $("#loginModal .social, #loginModal .division").show();
     showResetPasswordForm();
+    setTimeout(function () {
+        $('#loginModal').modal('show');
+    }, 230);
+}
+
+
+function openPartnershipModal() {
+    $("#loginModal .social, #loginModal .division").hide();
+    showPartnershipForm();
     setTimeout(function () {
         $('#loginModal').modal('show');
     }, 230);

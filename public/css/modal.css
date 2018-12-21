@@ -255,7 +255,7 @@
     width: 100%;
 }
 
-#loginModal input[value] {
+#loginModal input[value], #partnershipModal input[value] {
     font-weight: bold;
 }
 
