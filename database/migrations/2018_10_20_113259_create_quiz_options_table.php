@@ -16,7 +16,8 @@ class CreateQuizOptionsTable extends Migration
         Schema::create('quiz_options', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('question_id')->unsigned();
-            $table->foreign('question_id')->references('id')->on('quiz_questions');
+            $table->foreign('question_id')->references('id')->on('quiz_questions')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->text('option');
             $table->boolean('correct')->default(false);
             $table->timestamps();

@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Partnership;
+use App\PartnerCredential;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 
@@ -16,7 +16,7 @@ class UserPartnershipEmail
      *
      * @return void
      */
-    public function __construct(Partnership $partnership, $filename)
+    public function __construct(PartnerCredential $partnership, $filename)
     {
         $this->partnership = $partnership;
         $this->filename = $filename;

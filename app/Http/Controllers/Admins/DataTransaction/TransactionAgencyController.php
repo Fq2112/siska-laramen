@@ -21,7 +21,7 @@ class TransactionAgencyController extends Controller
 {
     public function showVacanciesTable()
     {
-        $vacancies = Vacancies::all();
+        $vacancies = Vacancies::orderByDesc('id')->get();
 
         return view('_admins.tables._transactions.agencies.vacancy-table', compact('vacancies'));
     }

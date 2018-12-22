@@ -7,10 +7,9 @@ use App\Admin;
 use App\Agencies;
 use App\Blog;
 use App\ConfirmAgency;
-use App\Events\UserPartnershipEmail;
 use App\Feedback;
 use App\Http\Controllers\Controller;
-use App\Partnership;
+use App\PartnerCredential;
 use App\PsychoTestInfo;
 use App\QuizInfo;
 use App\QuizResult;
@@ -18,7 +17,6 @@ use App\QuizType;
 use App\Seekers;
 use App\User;
 use App\Vacancies;
-use Barryvdh\DomPDF\Facade as PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -45,12 +43,12 @@ class AdminController extends Controller
         $newUser = User::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newApp = Accepting::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newJobPost = ConfirmAgency::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
-        $newMitra = Partnership::where('created_at', '>=', today()->subDays(3)->toDateTimeString())->count();
+        $newMitra = PartnerCredential::where('created_at', '>=', today()->subDays(3)->toDateTimeString())->count();
 
         $users = User::all();
         $agencies = Agencies::all();
         $seekers = Seekers::all();
-        $mitras = Partnership::all();
+        $mitras = PartnerCredential::all();
 
         $blogs = Blog::all();
 
@@ -293,51 +291,4 @@ class AdminController extends Controller
             ->with('success', 'Psycho Test for ' . $info->getVacancy->judul . ' is successfully deleted!');
     }
 
-    public function showPartnership(Request $request)
-    {
-        $partnership = Partnership::orderByDesc('id')->get();
-        $findPartner = $request->q;
-
-        return view('_admins.partnership-list', compact('partnership', 'findPartner'));
-    }
-
-    public function updatePartnership(Request $request)
-    {
-        $partnership = Partnership::find($request->id);
-
-        if ($request->status == 1) {
-            $partnership->update([
-                'api_key' => $partnership->id . str_random(40),
-                'api_secret' => $partnership->id . str_random(40),
-                'api_expiry' => today()->addMonth(),
-                'status' => $request->status
-            ]);
-            $filename = 'SiskaLTE_' . str_replace(' ', '_', $partnership->name) . '_credentials.pdf';
-            $pdf = PDF::loadView('reports.partnership-pdf', compact('partnership'));
-            Storage::put('public/users/partners/' . $filename, $pdf->output());
-            event(new UserPartnershipEmail($partnership, $filename));
-
-            return back()->with('success', 'Credentials API Key & API Secret for ' . $partnership->name . ' is ' .
-                'successfully activated and sent to ' . $partnership->email . '!');
-
-        } else {
-            $partnership->update([
-                'api_key' => null,
-                'api_secret' => null,
-                'api_expiry' => null,
-                'status' => $request->status
-            ]);
-
-            return back()->with('success', 'Credentials API Key & API Secret for ' . $partnership->name . ' is ' .
-                'successfully deactivated!');
-        }
-    }
-
-    public function deletePartnership($id)
-    {
-        $partnership = Partnership::find(decrypt($id));
-        $partnership->delete();
-
-        return back()->with('success', '' . $partnership->name . ' is successfully deleted from SISKA Partnership!');
-    }
 }

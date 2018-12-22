@@ -17,7 +17,8 @@ class CreateQuizInfosTable extends Migration
             $table->increments('id');
             $table->string('unique_code', 6)->unique();
             $table->integer('vacancy_id')->unsigned();
-            $table->foreign('vacancy_id')->references('id')->on('vacancy');
+            $table->foreign('vacancy_id')->references('id')->on('vacancy')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->integer('total_question');
             $table->text('question_ids');
             $table->integer('time_limit');

@@ -159,25 +159,6 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
     });
 
-    Route::group(['prefix' => 'partnership'], function () {
-
-        Route::get('/', [
-            'uses' => 'AdminController@showPartnership',
-            'as' => 'show.partnership'
-        ]);
-
-        Route::put('{id}/update', [
-            'uses' => 'AdminController@updatePartnership',
-            'as' => 'partnership.update'
-        ]);
-
-        Route::get('{id}/delete', [
-            'uses' => 'AdminController@deletePartnership',
-            'as' => 'partnership.delete'
-        ]);
-
-    });
-
     Route::group(['prefix' => 'tables'], function () {
 
         Route::group(['namespace' => 'DataMaster'], function () {
@@ -836,6 +817,44 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                     Route::post('delete', [
                         'uses' => 'TransactionSeekerController@massDeletePsychoTestResults',
                         'as' => 'table.psychoTestResults.massDelete'
+                    ]);
+
+                });
+
+            });
+
+            Route::group(['prefix' => 'partners'], function () {
+
+                Route::get('/', [
+                    'uses' => 'TransactionPartnerController@showPartnersCredentials',
+                    'as' => 'partners.credentials.show'
+                ]);
+
+                Route::put('{id}/update', [
+                    'uses' => 'TransactionPartnerController@updatePartnersCredentials',
+                    'as' => 'partners.credentials.update'
+                ]);
+
+                Route::get('{id}/delete', [
+                    'uses' => 'TransactionPartnerController@deletePartnersCredentials',
+                    'as' => 'partners.credentials.delete'
+                ]);
+
+                Route::group(['prefix' => 'vacancies'], function () {
+
+                    Route::get('/', [
+                        'uses' => 'TransactionPartnerController@showPartnersVacancies',
+                        'as' => 'partners.vacancies.show'
+                    ]);
+
+                    Route::post('pdf', [
+                        'uses' => 'TransactionPartnerController@massGeneratePDF',
+                        'as' => 'partners.vacancies.massPDF'
+                    ]);
+
+                    Route::post('delete', [
+                        'uses' => 'TransactionPartnerController@massDeletePartnersVacancies',
+                        'as' => 'partners.vacancies.massDelete'
                     ]);
 
                 });

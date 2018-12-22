@@ -5,9 +5,8 @@
         <li><a href="#" data-nav-section="explore"><span>Industries</span></a></li>
         <li><a href="#" data-nav-section="blog"><span>Blog</span></a></li>
         <li><a href="#" data-nav-section="faq"><span>FAQ</span></a></li>
-        @if(Auth::guest() || Auth::user()->role != 'seeker')
-            <li><a href="#" data-nav-section="partner"><span>Partner</span></a></li>
-        @endif
+        @guest
+            <li><a href="#" data-nav-section="partner"><span>Partner</span></a></li>@endguest
     @elseif(\Illuminate\Support\Facades\Request::is('agency'))
         <li class="active"><a href="#" data-nav-section="home"><span>Home</span></a></li>
         <li><a href="#" data-nav-section="services"><span>Features</span></a></li>
@@ -225,12 +224,6 @@
                        href="{{route('psychoTest.info')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-comments" style="margin-right: 6px"></i>Psycho Test</a></li>
-                <li><a id="external"
-                       style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
-                       target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
-                       href="{{route('show.partnership')}}"
-                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
-                        <i class="fa fa-handshake" style="margin-right: 6px"></i>Partnership</a></li>
                 <li class="divider"></li>
                 <li>
                     <a class="btn_signOut" onmouseover="this.style.color='#fff'"

@@ -1,13 +1,13 @@
 @extends('layouts.mst_admin')
-@section('title', 'Partnership List &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Partners Credentials Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
 @section('content')
     <div class="right_col" role="main">
         <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Partnership
-                            <small>List</small>
+                        <h2>Partners Credentials
+                            <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
                             <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
@@ -23,7 +23,7 @@
                                 <label for="instansi">Filter Instansi</label>
                                 <select id="instansi" class="form-control selectpicker" title="-- Pilih Instansi --"
                                         data-live-search="true" data-max-options="1" multiple>
-                                    @foreach(\App\Partnership::all() as $row)
+                                    @foreach(\App\PartnerCredential::all() as $row)
                                         <option value="{{$row->name}}">{{$row->name}}</option>
                                     @endforeach
                                 </select>
@@ -47,7 +47,8 @@
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
                                         <strong>{{$row->name}}</strong><br>
-                                        <a href="mailto:{{$row->email}}">{{$row->email}}</a>
+                                        <a href="mailto:{{$row->email}}">{{$row->email}}</a><br>
+                                        <a href="tel:{{$row->phone}}">{{$row->phone}}</a>
                                     </td>
                                     <td style="vertical-align: middle">
                                         <table>
@@ -80,8 +81,9 @@
                                         </table>
                                     </td>
                                     <td style="vertical-align: middle" align="center">
-                                        <form method="post" action="{{route('partnership.update',['id' => $row->id])}}"
-                                              id="form-approval{{$row->id}}">{{csrf_field()}} {{method_field('PUT')}}
+                                        <form id="form-approval{{$row->id}}" method="post"
+                                              action="{{route('partners.credentials.update',['id' => $row->id])}}">
+                                            {{csrf_field()}} {{method_field('PUT')}}
                                             <input type="hidden" name="status" id="input_status{{$row->id}}">
                                         </form>
                                         <div class="btn-group">
@@ -102,11 +104,9 @@
                                                             <i class="fa fa-power-off"></i>&ensp;Deactivate</a></li>
                                                 @endif
                                                 <li>
-                                                    <a href="{{route('partnership.delete',['id'=> encrypt($row->id)])}}"
-                                                       class="delete-partnership">
-                                                        <i class="fa fa-trash-alt"></i>&ensp;Delete
-                                                    </a>
-                                                </li>
+                                                    <a href="{{route('partners.credentials.delete',[
+                                                    'id' => encrypt($row->id)])}}" class="delete-partnership">
+                                                        <i class="fa fa-trash-alt"></i>&ensp;Delete</a></li>
                                             </ul>
                                         </div>
                                     </td>

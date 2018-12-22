@@ -191,9 +191,15 @@
         $psycho->whereHas('getPsychoTestResult');
     })->whereDate('psychoTestDate_end', today())->get();
 
-    $partners = \App\Partnership::where('status', false)->get();
+    $partnerAPI = \App\PartnerCredential::where('status', false)->get();
 
-    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results) + count($partners);
+    $partnerVacs = \App\PartnerCredential::whereHas('getPartnerVacancy', function($q){
+        $q->whereHas('getVacancy', function($vac){
+            $vac->where('isPost', false);
+        });
+    })->get();
+
+    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results) + count($partnerAPI) + count($partnerVacs);
 @endphp
 <div class="container body">
     <div class="main_container">
@@ -230,8 +236,6 @@
                             <li><a href="{{route('admin.inbox')}}"><i class="fa fa-envelope"></i> Inbox</a></li>
                             <li><a href="{{route('quiz.info')}}"><i class="fa fa-smile"></i> Quiz</a></li>
                             <li><a href="{{route('psychoTest.info')}}"><i class="fa fa-comments"></i> Psycho Test</a>
-                            </li>
-                            <li><a href="{{route('show.partnership')}}"><i class="fa fa-handshake"></i> Partnership</a>
                             </li>
                             <li>
                                 <a><i class="fa fa-table"></i> Tables
@@ -298,6 +302,14 @@
                                                     <li><a href="{{route('table.quizResults')}}">Quiz Results</a></li>
                                                     <li><a href="{{route('table.psychoTestResults')}}">
                                                             Psycho Test Results</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a>Partners <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li><a href="{{route('partners.credentials.show')}}">Credentials</a>
+                                                    </li>
+                                                    <li><a href="{{route('partners.vacancies.show')}}">Job Vacancies</a>
+                                                    </li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -667,16 +679,16 @@
                                             style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
 
-                                        @if(count($partners) > 0)
+                                        @if(count($partnerAPI) > 0)
                                             <li style="padding: 0;">
                                                 <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-handshake"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Partnership Request</strong></span>
                                                 </a>
                                             </li>
-                                            @foreach($partners as $partner)
+                                            @foreach($partnerAPI as $partner)
                                                 <li>
-                                                    <a href="{{route('show.partnership').'?q='.$partner->name}}">
+                                                    <a href="{{route('partners.credentials.show').'?q='.$partner->name}}">
                                                     <span class="image">
                                                         <img src="{{asset('images/mitra.jpg')}}">
                                                     </span>
@@ -685,6 +697,32 @@
                                                         Partnership request from
                                                         <strong style="text-transform: uppercase">{{$partner->name}}</strong>
                                                         hasn't been approve yet!
+                                                    </span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
+
+                                        @if(count($partnerVacs) > 0)
+                                            <li style="padding: 0;">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-handshake"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Partner Vacancies</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($partnerVacs as $partnerVac)
+                                                <li>
+                                                    <a href="{{route('partners.vacancies.show').'?q='.$partnerVac->name}}">
+                                                    <span class="image">
+                                                        <img src="{{asset('images/mitra.jpg')}}">
+                                                    </span>
+                                                        <span>
+                                                        <span>{{$partnerVac->name}}</span>
+                                                    </span>
+                                                        <span class="message">
+                                                        Vacancies from this partner hasn't been post yet!
                                                     </span>
                                                     </a>
                                                 </li>

@@ -82,6 +82,8 @@
 
         @if(session('success')||session('error')||session('logout')||session('expire')||session('inactive')||session('unknown'))
         openLoginModal();
+        @elseif($errors->has('email') || $errors->has('password') || $errors->has('name'))
+        openRegisterModal();
         @elseif(session('status'))
         openEmailModal();
         @elseif(session('reset'))
@@ -89,11 +91,16 @@
         @endif
     });
 
-    var recaptcha_login, recaptcha_partnership, recaptchaCallback = function () {
+    var recaptcha_login, recaptcha_register, recaptcha_partnership, recaptchaCallback = function () {
         recaptcha_login = grecaptcha.render(document.getElementById('recaptcha-login'), {
             'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
             'callback': 'enable_btnLogin',
             'expired-callback': 'disabled_btnLogin'
+        });
+        recaptcha_register = grecaptcha.render(document.getElementById('recaptcha-register'), {
+            'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
+            'callback': 'enable_btnRegister',
+            'expired-callback': 'disabled_btnRegister'
         });
         recaptcha_partnership = grecaptcha.render(document.getElementById('recaptcha-partnership'), {
             'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
@@ -110,6 +117,14 @@
         $("#btn_login").attr('disabled', 'disabled');
     }
 
+    function enable_btnRegister() {
+        $("#btn_register").removeAttr('disabled');
+    }
+
+    function disabled_btnRegister() {
+        $("#btn_register").attr('disabled', 'disabled');
+    }
+
     function enable_btnPartnership() {
         $("#btn_partnership").removeAttr('disabled');
     }
@@ -118,7 +133,21 @@
         $("#btn_partnership").attr('disabled', 'disabled');
     }
 
+    $("#form-login").on("submit", function (e) {
+        if (grecaptcha.getResponse(recaptcha_login).length === 0) {
+            e.preventDefault();
+            swal('ATTENTION!', 'Please confirm us that you\'re not a robot by clicking in ' +
+                'the reCAPTCHA dialog-box.', 'warning');
+        }
+    });
+
     $("#form-register").on("submit", function (e) {
+        if (grecaptcha.getResponse(recaptcha_register).length === 0) {
+            e.preventDefault();
+            swal('ATTENTION!', 'Please confirm us that you\'re not a robot by clicking in ' +
+                'the reCAPTCHA dialog-box.', 'warning');
+        }
+
         if ($.trim($("#reg_email,#reg_name,#reg_password,#reg_password_confirm").val()) === "") {
             return false;
 

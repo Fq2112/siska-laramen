@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePsychoTestInfosTable extends Migration
+class CreatePartnerVacanciesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,13 @@ class CreatePsychoTestInfosTable extends Migration
      */
     public function up()
     {
-        Schema::create('psycho_test_infos', function (Blueprint $table) {
+        Schema::create('partner_vacancies', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('room_codes');
             $table->integer('vacancy_id')->unsigned();
             $table->foreign('vacancy_id')->references('id')->on('vacancy')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->integer('partner_id')->unsigned();
+            $table->foreign('partner_id')->references('id')->on('partner_credentials')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->timestamps();
         });
@@ -30,6 +32,6 @@ class CreatePsychoTestInfosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('psycho_test_infos');
+        Schema::dropIfExists('partner_vacancies');
     }
 }

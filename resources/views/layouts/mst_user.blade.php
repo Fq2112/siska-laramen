@@ -332,9 +332,13 @@
                                     </div>
                                 </div>
                                 <div class="row">
+                                    <div class="col-lg-12" id="recaptcha-register"></div>
+                                </div>
+                                <div class="row">
                                     <div class="col-lg-12">
-                                        <input class="btn btn-default btn-register" type="submit"
-                                               value="CREATE ACCOUNT" style="background: #00ADB5;border-color: #00ADB5">
+                                        <input id="btn_register" class="btn btn-default btn-register" type="submit"
+                                               value="CREATE ACCOUNT" style="background: #00ADB5;border-color: #00ADB5"
+                                               disabled>
                                     </div>
                                 </div>
                             </form>
@@ -450,6 +454,14 @@
                                         <input id="partnership_email" class="form-control" type="email"
                                                placeholder="Email" name="email" required>
                                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                    </div>
+                                </div>
+                                <div class="row has-feedback">
+                                    <div class="col-lg-12">
+                                        <input id="partnership_phone" placeholder="Phone" type="text"
+                                               maxlength="13" class="form-control" name="phone"
+                                               onkeypress="return numberOnly(event, false)" required>
+                                        <span class="glyphicon glyphicon-phone form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row">

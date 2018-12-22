@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Carousel;
 use App\Feedback;
-use App\Partnership;
+use App\PartnerCredential;
 use App\Provinces;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -51,11 +51,12 @@ class UserController extends Controller
 
     public function joinPartnership(Request $request)
     {
-        $check = Partnership::where('email', $request->email)->first();
+        $check = PartnerCredential::where('name', $request->name)->where('email', $request->email)->first();
         if ($check == null) {
-            Partnership::create([
+            PartnerCredential::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone' => $request->phone,
             ]);
 
             return 0;

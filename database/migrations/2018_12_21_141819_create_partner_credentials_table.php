@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePartnershipsTable extends Migration
+class CreatePartnerCredentialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreatePartnershipsTable extends Migration
      */
     public function up()
     {
-        Schema::create('partnerships', function (Blueprint $table) {
+        Schema::create('partner_credentials', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('email')->unique();
+            $table->string('phone');
             $table->text('api_key')->nullable();
             $table->text('api_secret')->nullable();
             $table->date('api_expiry')->nullable();
@@ -32,6 +33,6 @@ class CreatePartnershipsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partnerships');
+        Schema::dropIfExists('partner_credentials');
     }
 }

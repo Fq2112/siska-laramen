@@ -16,9 +16,11 @@ class CreateQuizResultsTable extends Migration
         Schema::create('quiz_results', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('quiz_id')->unsigned();
-            $table->foreign('quiz_id')->references('id')->on('quiz_infos');
+            $table->foreign('quiz_id')->references('id')->on('quiz_infos')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->integer('seeker_id')->unsigned();
-            $table->foreign('seeker_id')->references('id')->on('seekers');
+            $table->foreign('seeker_id')->references('id')->on('seekers')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->decimal('score', 8, 2);
             $table->boolean('isPassed')->default(false);
             $table->timestamps();

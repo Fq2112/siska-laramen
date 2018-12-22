@@ -15,53 +15,41 @@
  *
  * JWT Auth
  */
-$router->group(['prefix' => 'jwt','middleware' => 'api'], function ($router){
+$router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
     $router->post('seeker', 'AuthController@seeker');
     $router->post('recover', 'AuthController@recover');
     $router->post('me', 'AuthController@me');
 
-    $router->group(['prefix' => 'vacancy','namespace' => 'Api'],function ($router){
-        $router->post('apply',[
+    $router->group(['prefix' => 'vacancy', 'namespace' => 'Api'], function ($router) {
+        $router->post('apply', [
             'uses' => 'ApplicantsController@apiApply'
         ]);
 
-        $router->post('bookmark',[
+        $router->post('bookmark', [
             'uses' => 'ApplicantsController@apiBookmark'
         ]);
 
-        $router->post('abort',[
+        $router->post('abort', [
             'uses' => 'ApplicantsController@apiAbortApply'
         ]);
 
     });
 
-    $router->group(['middleware' => ['jwt.auth']], function($router) {
+    $router->group(['middleware' => ['jwt.auth']], function ($router) {
         $router->get('logout', 'AuthController@logout');
-        $router->get('test', function(){
-            return response()->json(['foo'=>'bar']);
+        $router->get('test', function () {
+            return response()->json(['foo' => 'bar']);
         });
 
     });
 });
 
-/**
- * Route coba coba
- *
- */
-//$router->group(['prefix' => 'tes', 'namespace' => 'Tes', 'middleware' => 'api'], function ($router) {
-//    $router->post('login', 'AuthController@login');
-//    $router->post('logout', 'AuthController@logout');
-//    $router->post('refresh', 'AuthController@refresh');
-//    $router->post('me', 'AuthController@me');
-//
-//});
-
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
     $router->get('search', [
-       'uses' => 'SearchAPICOntroller@search'
+        'uses' => 'SearchAPICOntroller@search'
     ]);
 
     $router->get('vacancies/search', [
@@ -69,7 +57,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         'as' => 'get.search.vacancy'
     ]);
 
-    $router->post('feed',[
+    $router->post('feed', [
         'uses' => 'PostController@feedback',
         'as' => 'get.vacancy'
     ]);
@@ -126,8 +114,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'uses' => 'VacanciesAPIController@loadFavVacancies',
             'as' => 'load.fav.vacancies'
         ]);
-
-
 
         $router->get('vacancies/totalapply/{vacancy_id}', [
             'uses' => 'VacanciesAPIController@getTotalApllyVacancies',
@@ -194,7 +180,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'as' => 'load.degree'
         ]);
 
+    });
 
+    $router->group(['prefix' => 'partners', 'namespace' => 'Partners', 'middleware' => 'partner'], function ($router) {
+
+        $router->get('vacancies', 'PartnerController@getVacancies');
 
     });
 

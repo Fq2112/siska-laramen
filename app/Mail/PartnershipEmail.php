@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Partnership;
+use App\PartnerCredential;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -17,7 +17,7 @@ class PartnershipEmail extends Mailable
      *
      * @return void
      */
-    public function __construct(Partnership $partnership, $filename)
+    public function __construct(PartnerCredential $partnership, $filename)
     {
         $this->partnership = $partnership;
         $this->filename = $filename;

@@ -16,7 +16,8 @@ class CreateQuizQuestionsTable extends Migration
         Schema::create('quiz_questions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('quiztype_id')->unsigned();
-            $table->foreign('quiztype_id')->references('id')->on('quiz_types');
+            $table->foreign('quiztype_id')->references('id')->on('quiz_types')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->text('question_text');
             $table->timestamps();
         });

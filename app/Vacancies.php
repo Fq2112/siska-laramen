@@ -39,4 +39,9 @@ class Vacancies extends Model
     {
         return $this->belongsTo(Plan::class, 'plan_id');
     }
+
+    public function getPartnerVacancy()
+    {
+        return $this->hasMany(PartnerVacancy::class, 'vacancy_id');
+    }
 }

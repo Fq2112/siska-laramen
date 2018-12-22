@@ -826,34 +826,40 @@
             e.preventDefault();
 
             var email = $("#partnership_email").val(), instansi = $("#partnership_name").val();
-            $.ajax({
-                type: "POST",
-                url: "{{route('join.partnership')}}",
-                data: new FormData($("#form-partnership")[0]),
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data == 0) {
-                        swal("SISKA Partnership", "Permintaan berhasil! Kami akan mengirimkan API Key & API Secret " +
-                            "untuk SiskaLTE Instansi Anda melalui email: " + email + ". Mohon tunggu untuk " +
-                            "beberapa menit kedepan dan tetap periksa email Anda, terimakasih.", "success");
-                        $("#partnership_name, #partnership_email").val('');
-                        grecaptcha.reset(recaptcha_partnership);
-                        $("#loginModal").modal('hide');
+            if (grecaptcha.getResponse(recaptcha_partnership).length === 0) {
+                swal('ATTENTION!', 'Please confirm us that you\'re not a robot by clicking in ' +
+                    'the reCAPTCHA dialog-box.', 'warning');
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "{{route('join.partnership')}}",
+                    data: new FormData($("#form-partnership")[0]),
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data == 0) {
+                            swal("SISKA Partnership", "Permintaan berhasil! Kami akan mengirimkan API Key & API Secret " +
+                                "untuk SiskaLTE Instansi Anda melalui email: " + email + ". Mohon tunggu untuk " +
+                                "beberapa menit kedepan dan tetap periksa email Anda, terimakasih.", "success");
+                            $("#partnership_name, #partnership_email, #partnership_phone").val('');
+                            $("#btn_partnership").attr('disabled', 'disabled');
+                            grecaptcha.reset(recaptcha_partnership);
+                            $("#loginModal").modal('hide');
 
-                    } else if (data == 1) {
-                        swal('SISKA Partnership', 'API key untuk SiskaLTE "' + instansi + '" sudah ' +
-                            'tersedia!', 'error');
+                        } else if (data == 1) {
+                            swal('SISKA Partnership', 'API key untuk SiskaLTE "' + instansi + '" sudah ' +
+                                'tersedia!', 'error');
 
-                    } else if (data == 2) {
-                        swal('SISKA Partnership', 'Permintaan bermitra untuk "' + instansi + '" sudah dilakukan ' +
-                            'sebelumnya! Mohon tunggu dan tetap periksa email Anda, terimakasih.', 'error');
+                        } else if (data == 2) {
+                            swal('SISKA Partnership', 'Permintaan bermitra untuk "' + instansi + '" sudah dilakukan ' +
+                                'sebelumnya! Mohon tunggu dan tetap periksa email Anda, terimakasih.', 'error');
+                        }
+                    },
+                    error: function () {
+                        swal("Error!", "Email atau instansi yang diminta sudah tersedia!", "error");
                     }
-                },
-                error: function () {
-                    swal("Error!", "Something went wrong, please refresh the page.", "error");
-                }
-            });
+                });
+            }
             return false;
         });
 
