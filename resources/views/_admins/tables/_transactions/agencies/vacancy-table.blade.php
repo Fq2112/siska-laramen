@@ -40,6 +40,7 @@
                                     $salary = \App\Salaries::find($vacancy->salary_id);
                                     $jobfunc = \App\FungsiKerja::find($vacancy->fungsikerja_id);
                                     $joblevel = \App\JobLevel::find($vacancy->joblevel_id);
+                                    $jobtype = \App\JobType::find($vacancy->jobtype_id);
                                     $industry = \App\Industri::find($vacancy->industry_id);
                                     $degrees = \App\Tingkatpend::find($vacancy->tingkatpend_id);
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
@@ -199,6 +200,12 @@
                                                             <td><i class="fa fa-level-up-alt"></i>&nbsp;</td>
                                                             <td>&nbsp;</td>
                                                             <td>{{$joblevel->name}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Job Type">
+                                                            <td><i class="fa fa-user-clock"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$jobtype->name}}</td>
                                                         </tr>
                                                         <tr data-toggle="tooltip" data-placement="left"
                                                             title="Salary">

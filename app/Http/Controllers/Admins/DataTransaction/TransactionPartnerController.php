@@ -73,6 +73,45 @@ class TransactionPartnerController extends Controller
             'partnerVacancies', 'findPartner'));
     }
 
+    public function editPartnersVacancies($id)
+    {
+        return Vacancies::find($id);
+    }
+
+    public function updatePartnersVacancies(Request $request)
+    {
+        $partnerVacancy = Vacancies::find($request->id);
+
+        if ($request->check_form == 'vacancy') {
+            $partnerVacancy->update([
+                'judul' => $request->judul,
+                'cities_id' => $request->cities_id,
+                'syarat' => $request->syarat,
+                'tanggungjawab' => $request->tanggungjawab,
+                'pengalaman' => 'At least ' . $request->pengalaman . ' years',
+                'jobtype_id' => $request->jobtype_id,
+                'industry_id' => $request->industri_id,
+                'joblevel_id' => $request->joblevel_id,
+                'salary_id' => $request->salary_id,
+                'agency_id' => $request->agency_id,
+                'tingkatpend_id' => $request->tingkatpend_id,
+                'jurusanpend_id' => $request->jurusanpend_id,
+                'fungsikerja_id' => $request->fungsikerja_id,
+            ]);
+
+        } elseif ($request->check_form == 'schedule') {
+            $partnerVacancy->update([
+                'isPost' => $request->isPost,
+                'active_period' => $request->isPost == 1 ? today()->addMonth() : null,
+                'recruitmentDate_start' => $request->isPost == 1 ? $request->recruitmentDate_start : null,
+                'recruitmentDate_end' => $request->isPost == 1 ? $request->recruitmentDate_end : null,
+                'interview_date' => $request->isPost == 1 ? $request->interview_date : null,
+            ]);
+        }
+
+        return back()->with('success', '' . $partnerVacancy->judul . ' is successfully updated!');
+    }
+
     public function massGeneratePDF(Request $request)
     {
         $ids = explode(",", $request->partnerVac_ids);

@@ -6,7 +6,7 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Partners Vacancies
+                        <h2 id="panel_title">Partners Vacancies
                             <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -17,7 +17,7 @@
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="x_content">
+                    <div id="content1" class="x_content">
                         <div class="row form-group">
                             <div class="col-lg-12 has-feedback">
                                 <label for="partner_id">Partner Filter</label>
@@ -35,7 +35,9 @@
                             <tr>
                                 <th><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>ID</th>
+                                <th>Partner</th>
                                 <th>Details</th>
+                                <th>Action</th>
                             </tr>
                             </thead>
 
@@ -44,15 +46,13 @@
                             @foreach($partnerVacancies as $row)
                                 @php
                                     $vacancy = $row->getVacancy;
-                                    if($vacancy->plan_id != null){
-                                        $plan = \App\Plan::find($vacancy->plan_id);
-                                    }
                                     $agency = \App\Agencies::find($vacancy->agency_id);
                                     $user = \App\User::find($agency->user_id);
                                     $city = \App\Cities::find($vacancy->cities_id)->name;
                                     $salary = \App\Salaries::find($vacancy->salary_id);
                                     $jobfunc = \App\FungsiKerja::find($vacancy->fungsikerja_id);
                                     $joblevel = \App\JobLevel::find($vacancy->joblevel_id);
+                                    $jobtype = \App\JobType::find($vacancy->jobtype_id);
                                     $industry = \App\Industri::find($vacancy->industry_id);
                                     $degrees = \App\Tingkatpend::find($vacancy->tingkatpend_id);
                                     $majors = \App\Jurusanpend::find($vacancy->jurusanpend_id);
@@ -63,7 +63,12 @@
                                     </td>
                                     <td style="vertical-align: middle">{{$row->id}}</td>
                                     <td style="vertical-align: middle">
-                                        <table style="margin: 0">
+                                        <strong>{{$row->getPartner->name}}</strong><br>
+                                        <a href="mailto:{{$row->getPartner->email}}">{{$row->getPartner->email}}</a><br>
+                                        <a href="tel:{{$row->getPartner->phone}}">{{$row->getPartner->phone}}</a>
+                                    </td>
+                                    <td style="vertical-align: middle">
+                                        <table>
                                             <tr>
                                                 <td>
                                                     <table style="float: left;margin-right: .5em;margin-bottom: 0">
@@ -110,14 +115,6 @@
                                                                 <a href="{{route('detail.vacancy',['id' =>
                                                                 $vacancy->id])}}" target="_blank">
                                                                     <strong>{{$vacancy->judul}}</strong></a>&nbsp;&ndash;
-                                                                @if($vacancy->isPost == true)
-                                                                    <span data-toggle="tooltip" data-placement="bottom"
-                                                                          title="Plan" class="label label-success">
-                                                                        <strong style="text-transform: uppercase">
-                                                                            <i class="fa fa-thumbtack"></i>&ensp;
-                                                                            {{$plan->name}}
-                                                                        </strong> Package</span>&nbsp;|
-                                                                @endif
                                                                 <span class="label label-default" data-toggle="tooltip"
                                                                       data-placement="bottom" title="Created at">
                                                                 <i class="fa fa-calendar-alt"></i>&ensp;
@@ -164,7 +161,6 @@
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                    <hr style="margin: .5em auto">
                                                     <table>
                                                         <tr data-toggle="tooltip" data-placement="left"
                                                             title="Job Function">
@@ -183,6 +179,12 @@
                                                             <td><i class="fa fa-level-up-alt"></i>&nbsp;</td>
                                                             <td>&nbsp;</td>
                                                             <td>{{$joblevel->name}}</td>
+                                                        </tr>
+                                                        <tr data-toggle="tooltip" data-placement="left"
+                                                            title="Job Type">
+                                                            <td><i class="fa fa-user-clock"></i>&nbsp;</td>
+                                                            <td>&nbsp;</td>
+                                                            <td>{{$jobtype->name}}</td>
                                                         </tr>
                                                         <tr data-toggle="tooltip" data-placement="left"
                                                             title="Salary">
@@ -228,6 +230,43 @@
                                         <hr style="margin: .5em auto">
                                         <strong>Responsibilities</strong><br>{!! $vacancy->tanggungjawab !!}
                                     </td>
+                                    <td style="vertical-align: middle" align="center">
+                                        <form method="post" id="form-deactivate{{$vacancy->id}}">
+                                            {{csrf_field()}} {{method_field('PUT')}}
+                                            <input type="hidden" name="check_form" value="schedule">
+                                            <input type="hidden" name="isPost" value="0">
+                                        </form>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-{{$vacancy->isPost == false ? 'success'
+                                            : 'warning'}} btn-sm" style="font-weight: 600"
+                                                    onclick="postPartnerVac('{{$vacancy->id}}','{{$vacancy->judul}}',
+                                                            '{{$vacancy->recruitmentDate_start}}',
+                                                            '{{$vacancy->recruitmentDate_end}}',
+                                                            '{{$vacancy->interview_date}}')">
+                                                <i class="glyphicon glyphicon-{{$vacancy->isPost == false ? 'check' :
+                                                'calendar'}}"></i>&ensp;{{$vacancy->isPost == false ? 'POST' : 'SCHEDULE'}}
+                                            </button>
+                                            <button type="button" class="btn btn-{{$vacancy->isPost == false ? 'success'
+                                            : 'warning'}} btn-sm dropdown-toggle" data-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                <span class="caret"></span>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu">
+                                                <li>
+                                                    <a onclick="editPartnerVac('{{$vacancy->id}}')">
+                                                        <i class="fa fa-edit"></i>&ensp;Edit</a>
+                                                </li>
+                                                @if($vacancy->isPost == true)
+                                                    <li>
+                                                        <a onclick="deactivatePartnerVac('{{$vacancy->id}}',
+                                                                '{{$vacancy->judul}}')">
+                                                            <i class="fa fa-power-off"></i>&ensp;Deactivate</a>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
@@ -235,10 +274,6 @@
                         <div class="row form-group">
                             <div class="col-sm-4" id="action-btn">
                                 <div class="btn-group" style="float: right">
-                                    <button id="btn_post" type="button" class="btn btn-success btn-sm"
-                                            style="font-weight: 600">
-                                        <i class="glyphicon glyphicon-check"></i>&ensp;POST
-                                    </button>
                                     <button id="btn_pdf" type="button" class="btn btn-primary btn-sm"
                                             style="font-weight: 600">
                                         <i class="fa fa-file-pdf"></i>&ensp;PDF
@@ -255,7 +290,226 @@
                             </form>
                         </div>
                     </div>
+                    <div id="content2" class="x_content" style="display: none;">
+                        <form method="post" id="form-vacancy">{{csrf_field()}} {{method_field('PUT')}}
+                            <input type="hidden" name="check_form" value="vacancy">
+                            <div class="row form-group">
+                                <div class="col-lg-12">
+                                    <label for="agency_id">Agency <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user-tie"></i></span>
+                                        <select id="agency_id" class="form-control selectpicker" name="agency_id"
+                                                data-live-search="true" title="-- Select Agency --" required>
+                                            @foreach(\App\Agencies::all() as $agency)
+                                                <option value="{{$agency->id}}">{{$agency->user->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-8">
+                                    <label for="judul">Vacancy <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-briefcase"></i></span>
+                                        <input type="text" id="judul" class="form-control" maxlength="200" name="judul"
+                                               placeholder="Vacancy name" required>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <label for="pengalaman">Work Experience <span class="required">*</span></label>
+                                    <div class="input-group" style="text-transform: none">
+                                        <span class="input-group-addon">At least</span>
+                                        <input class="form-control" type="text"
+                                               onkeypress="return numberOnly(event, false)"
+                                               maxlength="3" placeholder="0" id="pengalaman" name="pengalaman" required>
+                                        <span class="input-group-addon">year(s)</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-6">
+                                    <label for="jobfunction_id">Job Function <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-warehouse"></i></span>
+                                        <select id="jobfunction_id" class="form-control selectpicker"
+                                                name="fungsikerja_id"
+                                                data-live-search="true" title="-- Select Job Function --" required>
+                                            @foreach(\App\FungsiKerja::all() as $function)
+                                                <option value="{{$function->id}}">{{$function->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="industry_id">Industry <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-industry"></i></span>
+                                        <select id="industry_id" class="form-control selectpicker" name="industri_id"
+                                                data-live-search="true" title="-- Select Industry --" required>
+                                            @foreach(\App\Industri::all() as $industry)
+                                                <option value="{{$industry->id}}">{{$industry->nama}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-6">
+                                    <label for="joblevel_id">Job Level <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-level-up-alt"></i></span>
+                                        <select id="joblevel_id" class="form-control selectpicker" name="joblevel_id"
+                                                data-live-search="true" title="-- Select Job Level --" required>
+                                            @foreach(\App\JobLevel::all() as $level)
+                                                <option value="{{$level->id}}">{{$level->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="jobtype_id">Job Type <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user-clock"></i></span>
+                                        <select id="jobtype_id" class="form-control selectpicker" name="jobtype_id"
+                                                data-live-search="true" title="-- Select Job Type --" required>
+                                            @foreach(\App\JobType::all() as $type)
+                                                <option value="{{$type->id}}">{{$type->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-6">
+                                    <label for="city_id">Location <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-map-marked"></i></span>
+                                        <select class="form-control selectpicker" title="-- Select City --" id="city_id"
+                                                data-live-search="true" name="cities_id" required>
+                                            @foreach(\App\Provinces::all() as $province)
+                                                <optgroup label="{{$province->name}}">
+                                                    @foreach($province->cities as $city)
+                                                        <option value="{{$city->id}}">{{substr($city->name, 0, 2)=="Ko" ?
+                                                    substr($city->name,4) : substr($city->name,9)}}</option>
+                                                    @endforeach
+                                                </optgroup>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="salary_id">Salary <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><strong>Rp</strong></span>
+                                        <select id="salary_id" class="form-control selectpicker" name="salary_id"
+                                                data-live-search="true" title="-- Select Salary --" required>
+                                            @foreach(\App\Salaries::all() as $salary)
+                                                <option value="{{$salary->id}}">{{$salary->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-6">
+                                    <label for="degree_id">Education Degree <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-graduation-cap"></i></span>
+                                        <select id="degree_id" class="form-control selectpicker" name="tingkatpend_id"
+                                                data-live-search="true" title="-- Select Degree --" required>
+                                            @foreach(\App\Tingkatpend::all() as $degree)
+                                                <option value="{{$degree->id}}">{{$degree->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <label for="major_id">Education Major <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user-graduate"></i></span>
+                                        <select id="major_id" class="form-control selectpicker" name="jurusanpend_id"
+                                                data-live-search="true" title="-- Select Major --" required>
+                                            @foreach(\App\Jurusanpend::all() as $major)
+                                                <option value="{{$major->id}}">{{$major->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-12">
+                                    <label for="syarat">Requirements <span class="required">*</span></label>
+                                    <textarea id="syarat" class="use-tinymce" name="syarat"></textarea>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-12">
+                                    <label for="tanggungjawab">Responsibilities <span class="required">*</span></label>
+                                    <textarea id="tanggungjawab" class="use-tinymce" name="tanggungjawab"></textarea>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-lg-6">
+                                    <button id="btn_cancel" type="reset" class="btn btn-block btn-default">Cancel
+                                    </button>
+                                </div>
+                                <div class="col-lg-6">
+                                    <button id="btn_submit" type="submit" class="btn btn-block btn-primary">Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div id="scheduleModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title"><strong id="vacancy_title"></strong> &ndash; Vacancy Schedule</h4>
+                </div>
+                <form method="post" id="form-schedule">
+                    {{csrf_field()}} {{method_field('PUT')}}
+                    <input type="hidden" name="check_form" value="schedule">
+                    <input type="hidden" name="isPost" value="1">
+                    <div class="modal-body">
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <label>Recruitment Date <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input style="background-color: #fff;width: 50%" class="form-control" type="text"
+                                           maxlength="10" placeholder="yyyy-mm-dd" name="recruitmentDate_start"
+                                           id="recruitmentDate_start" required>
+                                    <input style="background-color: #fff;width:50%" class="form-control" type="text"
+                                           maxlength="10" placeholder="yyyy-mm-dd" name="recruitmentDate_end"
+                                           id="recruitmentDate_end" required>
+                                    <span class="input-group-addon"><i class="fa fa-users"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <label>Interview Date <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-comments"></i></span>
+                                    <input style="background-color: #fff" class="form-control" type="text"
+                                           maxlength="10" placeholder="yyyy-mm-dd" name="interview_date"
+                                           id="interview_date" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -323,7 +577,6 @@
 
                         preConfirm: function () {
                             return new Promise(function (resolve) {
-                                // $("#form-partnerVac")[0].submit();
                                 $.ajax({
                                     type: "POST",
                                     url: "{{route('partners.vacancies.massPDF')}}",
@@ -383,5 +636,126 @@
                 return false;
             });
         });
+
+        function editPartnerVac(id) {
+            $("#content1").toggle(300);
+            $("#content2").toggle(300);
+
+            $("#panel_title").html('Partner Vacancies<small>Setup</small>');
+
+            $.get("{{route('partners.vacancies.edit',['id' => ''])}}/" + id, function (data) {
+                $('#agency_id').val(data.agency_id).selectpicker("refresh");
+                $('#judul').val(data.judul);
+                $('#pengalaman').val(data.pengalaman);
+                $('#jobfunction_id').val(data.fungsikerja_id).selectpicker("refresh");
+                $('#industry_id').val(data.industry_id).selectpicker("refresh");
+                $('#joblevel_id').val(data.joblevel_id).selectpicker("refresh");
+                $('#jobtype_id').val(data.jobtype_id).selectpicker("refresh");
+                $('#city_id').val(data.cities_id).selectpicker("refresh");
+                $('#salary_id').val(data.salary_id).selectpicker("refresh");
+                $('#degree_id').val(data.tingkatpend_id).selectpicker("refresh");
+                $('#major_id').val(data.jurusanpend_id).selectpicker("refresh");
+                tinyMCE.get('syarat').setContent(data.syarat);
+                tinyMCE.get('tanggungjawab').setContent(data.tanggungjawab);
+            });
+
+            $("#form-vacancy").attr('action', '{{route('partners.vacancies.update',['id'=> ''])}}/' + id);
+            $("#btn_submit").html("<strong>SAVE CHANGES</strong>");
+        }
+
+        function postPartnerVac(id, judul, start, end, interview) {
+            var $start = $("#recruitmentDate_start"), $end = $("#recruitmentDate_end"),
+                $interview = $("#interview_date");
+
+            $("#vacancy_title").text(judul);
+            $("#form-schedule").attr('action', '{{route('partners.vacancies.update',['id'=> ''])}}/' + id);
+
+            $start.val(start);
+            $end.val(end);
+            $interview.val(interview);
+
+            if (start == "") {
+                $start.datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: new Date()
+                }).on('changeDate', function (selected) {
+                    var minDate = new Date(selected.date.valueOf());
+                    $end.datepicker({
+                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: minDate,
+                    }).on('changeDate', function (selected) {
+                        var minDate = new Date(selected.date.valueOf());
+                        $interview.datepicker({
+                            format: "yyyy-mm-dd",
+                            autoclose: true,
+                            todayHighlight: true,
+                            todayBtn: true,
+                            startDate: minDate
+                        });
+                    });
+                });
+
+            } else {
+                $start.datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: new Date(),
+                });
+                $end.datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: start,
+                });
+                $interview.datepicker({
+                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: end
+                });
+            }
+
+            $("#scheduleModal").modal('show');
+        }
+
+        function deactivatePartnerVac(id, judul) {
+            swal({
+                title: 'Deactivate Partner Vacancy - ' + judul,
+                text: 'The status of the vacancy will be change into "INACTIVE". Are you sure to deactivate it?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Yes, deactivate it!',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        $("#form-deactivate" + id).attr("action", "{{route('partners.vacancies.update',['id'=> ''])}}/" + id)[0].submit();
+                    });
+                },
+                allowOutsideClick: false
+            });
+            return false;
+        }
+
+        $("#btn_cancel").on("click", function () {
+            $("#content1").toggle(300);
+            $("#content2").toggle(300);
+
+            $("#panel_title").html('Partner Vacancies<small>Table</small>');
+        });
+
+        $("#form-vacancy").on("submit", function (e) {
+            e.preventDefault();
+            if (tinyMCE.get('syarat').getContent() == "") {
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'Requirements field can\'t be null!',
+                    type: 'warning',
+                    timer: '3500'
+                });
+
+            } else if (tinyMCE.get('tanggungjawab').getContent() == "") {
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'Responsibilities field can\'t be null!',
+                    type: 'warning',
+                    timer: '3500'
+                });
+
+            } else {
+                $('#form-vacancy')[0].submit();
+            }
+        })
     </script>
 @endpush
