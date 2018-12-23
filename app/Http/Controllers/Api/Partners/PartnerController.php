@@ -34,4 +34,9 @@ class PartnerController extends Controller
 
         return app(Search::class)->array_vacancies($result);
     }
+
+    public function createVacancies(Request $request)
+    {
+        return;
+    }
 }

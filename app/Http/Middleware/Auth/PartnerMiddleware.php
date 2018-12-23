@@ -16,14 +16,15 @@ class PartnerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $partner = PartnerCredential::where('api_key', $request->key)->where('api_secret', $request->secret)->first();
+        $partner = PartnerCredential::where('api_key', $request->key)->where('api_secret', $request->secret)
+            ->where('status', true)->first();
 
         if ($partner != null) {
             if (today() > $partner->api_expiry) {
                 return response()->json([
                     'status' => "403 Error",
                     'success' => false,
-                    'message' => 'API expired! Please request a new one.'
+                    'message' => 'Forbidden Access! Your API has been expired, please update it.'
                 ], 403);
             }
             return $next($request);
@@ -32,7 +33,7 @@ class PartnerMiddleware
         return response()->json([
             'status' => "403 Error",
             'success' => false,
-            'message' => 'Forbidden Access!'
+            'message' => 'Forbidden Access! Your client does not have permission to get URL /adsense from this server.'
         ], 403);
     }
 }
