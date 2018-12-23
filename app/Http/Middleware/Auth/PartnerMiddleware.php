@@ -16,19 +16,21 @@ class PartnerMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $partner = PartnerCredential::where('api_key', $request->key)->when($request->has('api_secret') ? $request->api_secret : null, function ($query) use ($request) {
-            $query->where('api_secret', $request->api_secret);
-        })->first();
+        $partner = PartnerCredential::where('api_key', $request->key)->where('api_secret', $request->secret)->first();
 
         if ($partner != null) {
-            $request->request->add([
-                'partner' => $partner
-            ]);
+            if (today() > $partner->api_expiry) {
+                return response()->json([
+                    'status' => "403 Error",
+                    'success' => false,
+                    'message' => 'API expired! Please request a new one.'
+                ], 403);
+            }
             return $next($request);
         }
 
         return response()->json([
-            'status' => 403,
+            'status' => "403 Error",
             'success' => false,
             'message' => 'Forbidden Access!'
         ], 403);

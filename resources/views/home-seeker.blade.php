@@ -839,7 +839,7 @@
                     success: function (data) {
                         if (data == 0) {
                             swal("SISKA Partnership", "Permintaan berhasil! Kami akan mengirimkan API Key & API Secret " +
-                                "untuk SiskaLTE Instansi Anda melalui email: " + email + ". Mohon tunggu untuk " +
+                                "untuk SiskaLTE Instansi Anda melalui " + email + ". Mohon tunggu dalam " +
                                 "beberapa menit kedepan dan tetap periksa email Anda, terimakasih.", "success");
                             $("#partnership_name, #partnership_email, #partnership_phone").val('');
                             $("#btn_partnership").attr('disabled', 'disabled');
@@ -847,16 +847,24 @@
                             $("#loginModal").modal('hide');
 
                         } else if (data == 1) {
-                            swal('SISKA Partnership', 'API key untuk SiskaLTE "' + instansi + '" sudah ' +
-                                'tersedia!', 'error');
+                            swal('SISKA Partnership', 'Masa aktif API key untuk SiskaLTE "' + instansi + '" belum berakhir!', 'error');
 
                         } else if (data == 2) {
-                            swal('SISKA Partnership', 'Permintaan bermitra untuk "' + instansi + '" sudah dilakukan ' +
+                            swal('SISKA Partnership', 'Permintaan berhasil! Kami akan mengirimkan API Key & API Secret ' +
+                                'yang baru untuk SiskaLTE Instansi Anda melalui ' + email + '. Mohon tunggu ' +
+                                'dalam beberapa menit kedepan dan tetap periksa email Anda, terimakasih.', 'success');
+                            $("#partnership_name, #partnership_email, #partnership_phone").val('');
+                            $("#btn_partnership").attr('disabled', 'disabled');
+                            grecaptcha.reset(recaptcha_partnership);
+                            $("#loginModal").modal('hide');
+
+                        } else if (data == 3) {
+                            swal('Error!', 'Permintaan bermitra untuk "' + instansi + '" sudah dilakukan ' +
                                 'sebelumnya! Mohon tunggu dan tetap periksa email Anda, terimakasih.', 'error');
                         }
                     },
                     error: function () {
-                        swal("Error!", "Email atau instansi yang diminta sudah tersedia!", "error");
+                        swal('Error!', 'University/institution/instance name or email requested is already exist!', 'error');
                     }
                 });
             }

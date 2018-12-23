@@ -186,6 +186,8 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
         $router->get('vacancies', 'PartnerController@getVacancies');
 
+        $router->post('vacancies/create', 'PartnerController@createVacancies');
+
     });
 
 });

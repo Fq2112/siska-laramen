@@ -75,8 +75,15 @@
                                                 <td><i class="fa fa-sync"></i>&nbsp;</td>
                                                 <td>Status</td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td><span class="label label-{{$row->status == true ? 'success' :
-                                                'danger'}}">{{$row->status == true ? 'ACTIVE' : 'INACTIVE'}}</span></td>
+                                                <td>
+                                                    @if($row->api_expiry != null && today() > $row->api_expiry)
+                                                        <span class="label label-warning">EXPIRED</span>
+                                                    @else
+                                                        <span class="label label-{{$row->status == true ? 'success' :
+                                                        'danger'}}">{{$row->status == true ? 'ACTIVE' : 'INACTIVE'}}
+                                                        </span>
+                                                    @endif
+                                                </td>
                                             </tr>
                                         </table>
                                     </td>

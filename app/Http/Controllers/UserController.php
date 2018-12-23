@@ -62,12 +62,16 @@ class UserController extends Controller
             return 0;
 
         } else {
-            if ($check->status == true) {
-                return 1;
+            if ($check->api_expiry != null) {
+                if (today() <= $check->api_expiry) {
+                    return 1;
 
-            } else {
-                return 2;
+                } elseif (today() > $check->api_expiry) {
+                    $check->update(['status' => false]);
+                    return 2;
+                }
             }
         }
+        return 3;
     }
 }

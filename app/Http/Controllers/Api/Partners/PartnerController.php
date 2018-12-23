@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Partners;
 
 use App\Agencies;
 use App\Cities;
-use App\PartnerVacancy;
+use App\Http\Controllers\Api\SearchVacancyController as Search;
 use App\Vacancies;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,38 +13,25 @@ class PartnerController extends Controller
 {
     public function getVacancies(Request $request)
     {
-        $partner = $request->partner;
-        $check = $partner->getPartnerVacancy;
-        $vac = [];
-        foreach ($check as $row) {
-            $vac[] = $row->getVacancy;
+        $input = $request->all();
+
+        if ($request->has(['q']) || $request->has(['loc'])) {
+            $keyword = $input['q'];
+            $location = $input['loc'];
+
+            $city = Cities::where('name', 'like', '%' . $location . '%')->get()->pluck('id')->toArray();
+            $agency = Agencies::whereHas('user', function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%');
+            })->get()->pluck('id')->toArray();
+
+            $result = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
+                ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->where('isPost', true)->paginate(12)
+                ->appends($request->only(['q', 'loc']))->toArray();
+
+        } else {
+            $result = Vacancies::where('isPost', true)->paginate(12)->toArray();
         }
-        $data = $this->getDatas($partner->api_key != null ? $vac : Vacancies::where('isPost', true)->get());
 
-        return $data;
-        $keyword = $request->q;
-        $location = $request->loc;
-
-        $city = Cities::where('name', 'like', '%' . $location . '%')->get()->pluck('id')->toArray();
-        $agency = Agencies::whereHas('user', function ($query) use ($keyword) {
-            $query->where('name', 'like', '%' . $keyword . '%');
-        })->get()->pluck('id')->toArray();
-
-        $vacancies = Vacancies::where('judul', 'like', '%' . $keyword . '%')->whereIn('cities_id', $city)
-            ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->where('isPost', true)->get()->toArray();
-
-        return $vacancies;
-    }
-
-    private function getDatas($ar)
-    {
-        $ars = [];
-//        if (!empty($ar)) {
-        foreach ($ar as $row) {
-            $ars[] = $row;
-        }
-//        }
-
-        return $ars;
+        return app(Search::class)->array_vacancies($result);
     }
 }
