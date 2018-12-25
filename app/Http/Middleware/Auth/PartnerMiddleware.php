@@ -22,16 +22,19 @@ class PartnerMiddleware
         if ($partner != null) {
             if (today() > $partner->api_expiry) {
                 return response()->json([
-                    'status' => "403 Error",
+                    'status' => "403 ERROR",
                     'success' => false,
                     'message' => 'Forbidden Access! Your API has been expired, please update it.'
                 ], 403);
             }
+            $request->request->add([
+                'partner' => $partner,
+            ]);
             return $next($request);
         }
 
         return response()->json([
-            'status' => "403 Error",
+            'status' => "403 ERROR",
             'success' => false,
             'message' => 'Forbidden Access! Your client does not have permission to get URL /adsense from this server.'
         ], 403);

@@ -702,7 +702,7 @@
             }
         </style>
         <section id="fh5co-partner" class="fh5co-bg-color" data-section="partner">
-            <div class="getting-started getting-started-1"
+            <div id="partner" class="getting-started getting-started-1"
                  style="background: linear-gradient(#eb4b4b, #732f2f), #4b2222;">
                 <div class="getting-grid" style="background-image: url({{asset('images/mitra.jpg')}});">
                     <div class="desc" id="list-ads">
@@ -871,5 +871,8 @@
             return false;
         });
 
+        $('html, body').animate({
+            scrollTop: $('#' + window.location.hash).offset().top
+        }, 500);
     </script>
 @endpush

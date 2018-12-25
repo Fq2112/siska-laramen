@@ -247,7 +247,7 @@
 
     $("#list-lokasi li a").click(function () {
         var location = $(this).text();
-        $('#lokasi').html($(this).text() + '&nbsp;<span class="fa fa-caret-down">' + '</span>');
+        $('#lokasi').html(location + '&nbsp;<span class="fa fa-caret-down">' + '</span>');
         $("#btn_reset").show();
         $("#txt_location").val(location);
     });

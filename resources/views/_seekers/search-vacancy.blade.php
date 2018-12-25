@@ -6,7 +6,7 @@
     <style>
         @media (min-width: 1440px) {
             #custom-search-input input {
-                width: 800px;
+                width: 570px;
             }
 
             #wrapper-filter {
@@ -33,7 +33,7 @@
 
         @media (min-width: 1281px) and (max-width: 1439px) {
             #custom-search-input input {
-                width: 660px;
+                width: 410px;
             }
 
             #wrapper-filter {
@@ -60,7 +60,7 @@
 
         @media (min-width: 1025px) and (max-width: 1280px) {
             #custom-search-input input {
-                width: 450px;
+                width: 250px;
             }
 
             #wrapper-filter {
@@ -87,7 +87,7 @@
 
         @media (min-width: 768px) and (max-width: 1024px) {
             #custom-search-input input {
-                width: 200px;
+                width: 150px;
             }
 
             .pill {
@@ -109,7 +109,7 @@
 
         @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
             #custom-search-input input {
-                width: 450px;
+                width: 250px;
             }
 
             .pill {

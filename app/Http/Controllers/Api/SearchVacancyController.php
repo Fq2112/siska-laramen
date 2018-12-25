@@ -946,19 +946,13 @@ class SearchVacancyController extends Controller
     {
         $i = 0;
         foreach ($result['data'] as $row) {
-
-            if (substr(Cities::find($row['cities_id'])->name, 0, 2) == "Ko") {
-                $cities = substr(Cities::find($row['cities_id'])->name, 5);
-            } else {
-                $cities = substr(Cities::find($row['cities_id'])->name, 10);
-            }
+            $cities = substr(Cities::find($row['cities_id'])->name, 0, 2) == "Ko" ?
+                substr(Cities::find($row['cities_id'])->name, 5) :
+                substr(Cities::find($row['cities_id'])->name, 10);
 
             $user = User::findOrFail(Agencies::findOrFail($row['agency_id'])->user_id);
-            if ($user->ava == "agency.png" || $user->ava == "") {
-                $filename = asset('images/agency.png');
-            } else {
-                $filename = asset('storage/users/' . $user->ava);
-            }
+            $filename = $user->ava == "agency.png" || $user->ava == "" ? asset('images/agency.png') :
+                asset('storage/users/' . $user->ava);
 
             $city = array('city' => $cities);
             $degrees = array('degrees' => Tingkatpend::findOrFail($row['tingkatpend_id'])->name);

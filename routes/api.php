@@ -183,11 +183,9 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     });
 
     $router->group(['prefix' => 'partners', 'namespace' => 'Partners', 'middleware' => 'partner'], function ($router) {
-
+        $router->get('/', 'PartnerController@getPartnerInfo');
         $router->get('vacancies', 'PartnerController@getVacancies');
-
-        $router->post('vacancies/create', 'PartnerController@createVacancies');
-
+        $router->post('vacancies/sync', 'PartnerController@syncVacancies');
     });
 
 });
