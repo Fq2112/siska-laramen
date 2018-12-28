@@ -444,7 +444,7 @@
                                 <div class="row has-feedback">
                                     <div class="col-lg-12">
                                         <input id="partnership_name" type="text"
-                                               placeholder="University/Institution/Instance"
+                                               placeholder="University/institution/instance name"
                                                class="form-control" name="name" required>
                                         <span class="glyphicon glyphicon-education form-control-feedback"></span>
                                     </div>
@@ -452,16 +452,23 @@
                                 <div class="row has-feedback">
                                     <div class="col-lg-12">
                                         <input id="partnership_email" class="form-control" type="email"
-                                               placeholder="Email" name="email" required>
+                                               placeholder="Email address" name="email" required>
                                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row has-feedback">
                                     <div class="col-lg-12">
-                                        <input id="partnership_phone" placeholder="Phone" type="text"
+                                        <input id="partnership_phone" placeholder="Phone number" type="text"
                                                maxlength="13" class="form-control" name="phone"
                                                onkeypress="return numberOnly(event, false)" required>
                                         <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+                                    </div>
+                                </div>
+                                <div class="row has-feedback">
+                                    <div class="col-lg-12">
+                                        <input id="partnership_uri" placeholder="SiskaLTE base URI: http://&hellip;"
+                                               type="text" class="form-control" name="uri" required>
+                                        <span class="glyphicon glyphicon-globe form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row">

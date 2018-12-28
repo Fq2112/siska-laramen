@@ -66,7 +66,7 @@ class TransactionPartnerController extends Controller
     public function showPartnersVacancies(Request $request)
     {
         $partnership = PartnerCredential::whereHas('getPartnerVacancy')->get();
-        $partnerVacancies = PartnerVacancy::orderByDesc('id')->get();
+        $partnerVacancies = PartnerVacancy::all();
         $findPartner = $request->q;
 
         return view('_admins.tables._transactions.partners.partnersVacancies-table', compact('partnership',
@@ -110,6 +110,20 @@ class TransactionPartnerController extends Controller
         }
 
         return back()->with('success', '' . $partnerVacancy->judul . ' is successfully updated!');
+    }
+
+    public function massPostPartnersVacancies(Request $request)
+    {
+        $partnerVacancies = PartnerVacancy::whereIn('id', explode(",", $request->partnerVac_ids))->get();
+
+        foreach ($partnerVacancies as $partnerVacancy) {
+            $partnerVacancy->getVacancy->update([
+                'isPost' => true,
+                'active_period' => today()->addMonth()
+            ]);
+        }
+
+        return back()->with('success', '' . count($partnerVacancies) . ' partner vacancies are successfully posted!');
     }
 
     public function massGeneratePDF(Request $request)

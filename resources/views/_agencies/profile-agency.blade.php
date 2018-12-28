@@ -30,7 +30,15 @@
                                     @endforeach
                                 @else
                                     <div class="item"
-                                         style="background-image: url({{asset('images/carousel/c0.png')}})">
+                                         style="background-image: url({{asset('images/carousel/c1.jpg')}});">
+                                        <div class="carousel-overlay"></div>
+                                    </div>
+                                    <div class="item"
+                                         style="background-image: url({{asset('images/carousel/c2.jpg')}});">
+                                        <div class="carousel-overlay"></div>
+                                    </div>
+                                    <div class="item"
+                                         style="background-image: url({{asset('images/carousel/c3.jpg')}});">
                                         <div class="carousel-overlay"></div>
                                     </div>
                                 @endif

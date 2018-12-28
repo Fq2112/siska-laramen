@@ -179,7 +179,7 @@
                             contentType: false,
                             processData: false,
                             success: function () {
-                                $(".aj_video").attr('src', '{{asset("images/vid-placeholder.mp4")}}');
+                                $(".aj_video").attr('src', '{{asset("images/vid-placeholder.mp4")}}').prop('controls', false);
                                 $("#btn_delete_video").css('display', "none");
                                 $(".aj_video_name").html("Video that describes You. Allowed extension: mp4, webm, " +
                                     "and ogg. Allowed size: < 30 MB. <br><br>");

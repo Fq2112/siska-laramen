@@ -35,7 +35,6 @@
                             <tr>
                                 <th><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>ID</th>
-                                <th>Partner</th>
                                 <th>Details</th>
                                 <th>Action</th>
                             </tr>
@@ -65,9 +64,10 @@
                                     <td style="vertical-align: middle">
                                         <strong>{{$row->getPartner->name}}</strong><br>
                                         <a href="mailto:{{$row->getPartner->email}}">{{$row->getPartner->email}}</a><br>
-                                        <a href="tel:{{$row->getPartner->phone}}">{{$row->getPartner->phone}}</a>
-                                    </td>
-                                    <td style="vertical-align: middle">
+                                        <a href="tel:{{$row->getPartner->phone}}">{{$row->getPartner->phone}}</a><br>
+                                        <a href="{{$row->getPartner->uri}}"
+                                           target="_blank">{{$row->getPartner->uri}}</a>
+                                        <hr style="margin: .5em auto">
                                         <table>
                                             <tr>
                                                 <td>
@@ -237,18 +237,16 @@
                                             <input type="hidden" name="isPost" value="0">
                                         </form>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-{{$vacancy->isPost == false ? 'success'
-                                            : 'warning'}} btn-sm" style="font-weight: 600"
+                                            <button type="button" class="btn btn-warning btn-sm"
+                                                    style="font-weight: 600"
                                                     onclick="postPartnerVac('{{$vacancy->id}}','{{$vacancy->judul}}',
                                                             '{{$vacancy->recruitmentDate_start}}',
                                                             '{{$vacancy->recruitmentDate_end}}',
                                                             '{{$vacancy->interview_date}}')">
-                                                <i class="glyphicon glyphicon-{{$vacancy->isPost == false ? 'check' :
-                                                'calendar'}}"></i>&ensp;{{$vacancy->isPost == false ? 'POST' : 'SCHEDULE'}}
+                                                <i class="fa fa-calendar-alt"></i>&ensp;SCHEDULE
                                             </button>
-                                            <button type="button" class="btn btn-{{$vacancy->isPost == false ? 'success'
-                                            : 'warning'}} btn-sm dropdown-toggle" data-toggle="dropdown"
-                                                    aria-expanded="false">
+                                            <button type="button" class="btn btn-warning btn-sm dropdown-toggle"
+                                                    data-toggle="dropdown" aria-expanded="false">
                                                 <span class="caret"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>
                                             </button>
@@ -274,6 +272,10 @@
                         <div class="row form-group">
                             <div class="col-sm-4" id="action-btn">
                                 <div class="btn-group" style="float: right">
+                                    <button id="btn_post" type="button" class="btn btn-success btn-sm"
+                                            style="font-weight: 600">
+                                        <i class="glyphicon glyphicon-check"></i>&ensp;POST
+                                    </button>
                                     <button id="btn_pdf" type="button" class="btn btn-primary btn-sm"
                                             style="font-weight: 600">
                                         <i class="fa fa-file-pdf"></i>&ensp;PDF
@@ -518,7 +520,7 @@
     <script>
         $(function () {
             var table = $("#myDataTable").DataTable({
-                order: [[1, "asc"]],
+                order: [[1, "desc"]],
                 columnDefs: [
                     {
                         targets: [0],
@@ -555,6 +557,37 @@
             $("#myDataTable tbody").on("click", "tr", function () {
                 $(this).toggleClass("selected");
                 $(this).find('input[type=checkbox]').iCheck("toggle");
+            });
+
+            $('#btn_post').on("click", function () {
+                var ids = $.map(table.rows('.selected').data(), function (item) {
+                    return item[1]
+                });
+                $("#partnerVac_ids").val(ids);
+                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massPost')}}");
+
+                if (ids.length > 0) {
+                    swal({
+                        title: 'Post Partner Vacancies',
+                        text: 'The status of the ' + ids.length + ' selected vacancies will be change into "ACTIVE". ' +
+                            'Are you sure to post them?',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00adb5',
+                        confirmButtonText: 'Yes, post them!',
+                        showLoaderOnConfirm: true,
+
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                $("#form-partnerVac")[0].submit();
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                } else {
+                    swal("Error!", "There's no any selected record!", "error");
+                }
+                return false;
             });
 
             $('#btn_pdf').on("click", function () {

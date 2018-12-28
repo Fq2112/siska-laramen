@@ -822,6 +822,11 @@
             });
         }
 
+        $("#partnership_uri").on("blur", function () {
+            var $uri = $(this).val().substr(0, 4) != 'http' ? 'http://' + $(this).val() : $(this).val();
+            $(this).val($uri);
+        });
+
         $("#form-partnership").on("submit", function (e) {
             e.preventDefault();
 
@@ -841,7 +846,7 @@
                             swal("SISKA Partnership", "Permintaan berhasil! Kami akan mengirimkan API Key & API Secret " +
                                 "untuk SiskaLTE Instansi Anda melalui " + email + ". Mohon tunggu dalam " +
                                 "beberapa menit kedepan dan tetap periksa email Anda, terimakasih.", "success");
-                            $("#partnership_name, #partnership_email, #partnership_phone").val('');
+                            $("#partnership_name, #partnership_email, #partnership_phone, #partnership_uri").val('');
                             $("#btn_partnership").attr('disabled', 'disabled');
                             grecaptcha.reset(recaptcha_partnership);
                             $("#loginModal").modal('hide');
@@ -853,7 +858,7 @@
                             swal('SISKA Partnership', 'Permintaan berhasil! Kami akan mengirimkan API Key & API Secret ' +
                                 'yang baru untuk SiskaLTE Instansi Anda melalui ' + email + '. Mohon tunggu ' +
                                 'dalam beberapa menit kedepan dan tetap periksa email Anda, terimakasih.', 'success');
-                            $("#partnership_name, #partnership_email, #partnership_phone").val('');
+                            $("#partnership_name, #partnership_email, #partnership_phone, #partnership_uri").val('');
                             $("#btn_partnership").attr('disabled', 'disabled');
                             grecaptcha.reset(recaptcha_partnership);
                             $("#loginModal").modal('hide');

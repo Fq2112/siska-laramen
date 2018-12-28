@@ -857,6 +857,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'partners.vacancies.update'
                     ]);
 
+                    Route::post('posts', [
+                        'uses' => 'TransactionPartnerController@massPostPartnersVacancies',
+                        'as' => 'partners.vacancies.massPost'
+                    ]);
+
                     Route::post('pdf', [
                         'uses' => 'TransactionPartnerController@massGeneratePDF',
                         'as' => 'partners.vacancies.massPDF'

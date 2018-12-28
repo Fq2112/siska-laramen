@@ -48,7 +48,8 @@
                                     <td style="vertical-align: middle">
                                         <strong>{{$row->name}}</strong><br>
                                         <a href="mailto:{{$row->email}}">{{$row->email}}</a><br>
-                                        <a href="tel:{{$row->phone}}">{{$row->phone}}</a>
+                                        <a href="tel:{{$row->phone}}">{{$row->phone}}</a><br>
+                                        <a href="{{$row->uri}}" target="_blank">{{$row->uri}}</a>
                                     </td>
                                     <td style="vertical-align: middle">
                                         <table>

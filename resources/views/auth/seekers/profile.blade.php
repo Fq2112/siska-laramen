@@ -2238,7 +2238,7 @@
                                     return xhr;
                                 },
                                 success: function (data) {
-                                    $(".aj_video").attr('src', data);
+                                    $(".aj_video").attr('src', data).prop('controls', true);
                                     $(".aj_video_name,#attached-video").text(file_name);
                                     $("#show_video_settings").click();
                                     $("#div_delVid").html(

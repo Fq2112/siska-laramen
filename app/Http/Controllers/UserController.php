@@ -57,6 +57,7 @@ class UserController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
+                'uri' => $request->uri,
             ]);
 
             return 0;
