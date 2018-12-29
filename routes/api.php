@@ -184,11 +184,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
     $router->group(['prefix' => 'partners', 'namespace' => 'Partners', 'middleware' => 'partner'], function ($router) {
 
-        $router->get('/', 'PartnerVacancyController@getPartnerInfo');
+        $router->get('/', 'SynchronizeController@getPartnerInfo');
+        $router->post('sync', 'SynchronizeController@synchronize');
 
         $router->group(['prefix' => 'vacancies'], function ($router) {
-            $router->get('/', 'PartnerVacancyController@getVacancies');
-            $router->post('sync', 'PartnerVacancyController@syncVacancies');
             $router->post('create', 'PartnerVacancyController@createVacancies');
             $router->put('update', 'PartnerVacancyController@updateVacancies');
             $router->delete('delete', 'PartnerVacancyController@deleteVacancies');

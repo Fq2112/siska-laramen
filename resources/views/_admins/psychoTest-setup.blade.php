@@ -10,8 +10,6 @@
                             <small>List</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
-                                    <i class="fa fa-chevron-up"></i></a></li>
                             <li><a class="btn_psychoTest" data-toggle="tooltip" title="Create" data-placement="right">
                                     <i class="fa fa-plus"></i></a></li>
                         </ul>

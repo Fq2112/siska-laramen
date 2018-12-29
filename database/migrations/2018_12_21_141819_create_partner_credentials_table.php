@@ -23,6 +23,7 @@ class CreatePartnerCredentialsTable extends Migration
             $table->text('api_secret')->nullable();
             $table->date('api_expiry')->nullable();
             $table->boolean('status')->default(false);
+            $table->boolean('isSync')->default(false);
             $table->timestamps();
         });
     }

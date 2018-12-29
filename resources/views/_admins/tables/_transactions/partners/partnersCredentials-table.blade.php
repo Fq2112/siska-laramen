@@ -76,7 +76,7 @@
                                                 <td><i class="fa fa-sync"></i>&nbsp;</td>
                                                 <td>Status</td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td>
+                                                <td style="text-transform: uppercase">
                                                     @if($row->api_expiry != null && today() > $row->api_expiry)
                                                         <span class="label label-warning">EXPIRED</span>
                                                     @else
@@ -84,6 +84,9 @@
                                                         'danger'}}">{{$row->status == true ? 'ACTIVE' : 'INACTIVE'}}
                                                         </span>
                                                     @endif
+                                                    &nbsp;|&nbsp;<span class="label label-{{$row->isSync == true ? 'primary'
+                                                    : 'default'}}">{{$row->isSync == true ? 'Synchronized' :
+                                                    'Not Synchronized Yet'}}</span>
                                                 </td>
                                             </tr>
                                         </table>
