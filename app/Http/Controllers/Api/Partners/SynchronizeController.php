@@ -78,12 +78,11 @@ class SynchronizeController extends Controller
                     'tentang' => $agency->tentang, 'alasan' => $agency->alasan, 'link' => $agency->link,
                     'alamat' => $agency->alamat, 'phone' => $agency->phone,
                     'hari_kerja' => $agency->hari_kerja, 'jam_kerja' => $agency->jam_kerja,
-                    'lat' => $agency->lat, 'long' => $agency->long);
+                    'lat' => $agency->lat, 'long' => $agency->long, 'isSISKA' => true);
                 $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s', $row['updated_at'])
                     ->diffForHumans());
-                $isSISKA = array('isSISKA' => true);
                 $siskaVacs[$i] = array_replace($ava, $siskaVacs[$i], $city, $degrees, $majors, $jobfunc,
-                    $industry, $jobtype, $joblevel, $salary, $update_at, $isSISKA);
+                    $industry, $jobtype, $joblevel, $salary, $update_at);
 
                 $i = $i + 1;
             }

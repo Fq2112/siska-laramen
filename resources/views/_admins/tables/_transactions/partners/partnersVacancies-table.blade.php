@@ -36,6 +36,7 @@
                                 <th><input type="checkbox" id="check-all" class="flat"></th>
                                 <th>ID</th>
                                 <th>Details</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
@@ -82,17 +83,6 @@
                                                                          "agency.png" ? asset('images/agency.png') :
                                                                          asset('storage/users/'.$user->ava)}}">
                                                                 </a>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td style="vertical-align: middle;text-align: center">
-                                                                <span data-toggle="tooltip" data-placement="left"
-                                                                      title="Status" class="label label-default"
-                                                                      style="background: {{$vacancy->isPost == true ?
-                                                                      '#00adb5' : '#fa5555'}}"><strong
-                                                                            style="text-transform: uppercase">{{$vacancy->isPost
-                                                                      == true ? 'Active' : 'Inactive'}}</strong>
-                                                                </span>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -229,6 +219,14 @@
                                         <strong>Requirements</strong><br>{!! $vacancy->syarat !!}
                                         <hr style="margin: .5em auto">
                                         <strong>Responsibilities</strong><br>{!! $vacancy->tanggungjawab !!}
+                                    </td>
+                                    <td style="vertical-align: middle;text-align: center">
+                                        <span data-toggle="tooltip" data-placement="left" title="Status"
+                                              class="label label-default" style="background: {{$vacancy->isPost == true ?
+                                                                      '#00adb5' : '#fa5555'}}">
+                                            <strong style="text-transform: uppercase">{{$vacancy->isPost == true ? 'Active' : 'Inactive'}}
+                                            </strong>
+                                        </span>
                                     </td>
                                     <td style="vertical-align: middle" align="center">
                                         <form method="post" id="form-deactivate{{$vacancy->id}}">
