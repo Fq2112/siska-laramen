@@ -286,22 +286,24 @@
                 '<div class="row form-group">' +
                 '<div class="col-lg-12 has-feedback">' +
                 '<label for="password">Current Password <span class="required">*</span></label>' +
-                '<input id="password" type="password" class="form-control" minlength="6" name="password" ' +
+                '<input id="password' + id + '" type="password" class="form-control" minlength="6" name="password" ' +
                 'placeholder="Current Password" required>' +
-                '<span class="glyphicon glyphicon-eye-open form-control-feedback right" aria-hidden="true"></span></div></div>' +
+                '<span onclick="togglePass(' + id + ')" style="pointer: cursor; pointer-events: all" ' +
+                'class="glyphicon glyphicon-eye-open form-control-feedback right" aria-hidden="true"></span></div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12 has-feedback">' +
                 '<label for="new_password">New Password <span class="required">*</span></label>' +
-                '<input id="new_password" type="password" class="form-control" minlength="6" ' +
+                '<input id="new_password' + id + '" type="password" class="form-control" minlength="6" ' +
                 'name="new_password" placeholder="New Password" required>' +
-                '<span class="glyphicon glyphicon-eye-open form-control-feedback right" aria-hidden="true"></span></div></div>' +
+                '<span onclick="toggleNewPass(' + id + ')" style="pointer: cursor; pointer-events: all" ' +
+                'class="glyphicon glyphicon-eye-open form-control-feedback right" aria-hidden="true"></span></div></div>' +
                 '<div class="row form-group">' +
                 '<div class="col-lg-12 has-feedback">' +
                 '<label for="confirm">Password Confirmation <span class="required">*</span></label>' +
-                '<input id="confirm" type="password" class="form-control" minlength="6" ' +
+                '<input id="confirm' + id + '" type="password" class="form-control" minlength="6" ' +
                 'name="password_confirmation" placeholder="Retype password" required>' +
-                '<span class="glyphicon glyphicon-eye-open form-control-feedback right" aria-hidden="true"></span>' +
-                '</div></div></div>' +
+                '<span onclick="toggleConfirmPass(' + id + ')" style="pointer: cursor; pointer-events: all" ' +
+                'class="glyphicon glyphicon-eye-open form-control-feedback right" aria-hidden="true"></span></div></div></div>' +
                 '<div class="modal-footer">' +
                 '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
                 '<button type="submit" class="btn btn-primary">Save Changes</button></div></form>'
@@ -310,6 +312,21 @@
                 $("#div" + role).remove();
             }
             $("#adminsSettingsModal").modal("show");
+        }
+
+        function togglePass(id) {
+            $('#password' + id + ' + .glyphicon').toggleClass('glyphicon-eye-open glyphicon-eye-close');
+            $('#password' + id).togglePassword();
+        }
+
+        function toggleNewPass(id) {
+            $('#new_password' + id + ' + .glyphicon').toggleClass('glyphicon-eye-open glyphicon-eye-close');
+            $('#new_password' + id).togglePassword();
+        }
+
+        function toggleConfirmPass(id) {
+            $('#confirm' + id + ' + .glyphicon').toggleClass('glyphicon-eye-open glyphicon-eye-close');
+            $('#confirm' + id).togglePassword();
         }
 
         $(".browse_files").on('click', function () {

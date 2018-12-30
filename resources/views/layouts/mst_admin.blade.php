@@ -878,6 +878,7 @@
 
 <!-- jQuery -->
 <script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('js/hideShowPassword.min.js')}}"></script>
 <!-- Bootstrap -->
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <!-- FastClick -->
