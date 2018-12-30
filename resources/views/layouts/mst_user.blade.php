@@ -233,9 +233,9 @@
                                 </div>
                                 <div class="row has-feedback">
                                     <div class="col-lg-12">
-                                        <input class="form-control" type="password" placeholder="Password"
-                                               name="password" minlength="6" required>
-                                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                        <input id="log_password" class="form-control" type="password"
+                                               placeholder="Password" name="password" minlength="6" required>
+                                        <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                         @if (session('error'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('password') }}</strong>
@@ -309,7 +309,7 @@
                                     <div class="col-lg-12">
                                         <input class="form-control" type="password" placeholder="Password"
                                                id="reg_password" name="password" minlength="6" required>
-                                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                        <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row has-feedback">
@@ -317,7 +317,7 @@
                                         <input class="form-control" type="password" placeholder="Retype password"
                                                id="reg_password_confirm" name="password_confirmation"
                                                minlength="6" required>
-                                        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                                        <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -407,9 +407,9 @@
                                 </div>
                                 <div class="row {{ $errors->has('password') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">
-                                        <input class="form-control" type="password" placeholder="New Password"
-                                               name="password" minlength="6" required>
-                                        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                        <input id="forg_password" class="form-control" type="password"
+                                               placeholder="New Password" name="password" minlength="6" required>
+                                        <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                         @if ($errors->has('password'))
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('password') }}</strong>
@@ -419,9 +419,10 @@
                                 </div>
                                 <div class="row {{ $errors->has('password_confirmation') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">
-                                        <input class="form-control" type="password" placeholder="Retype password"
-                                               name="password_confirmation" minlength="6" required>
-                                        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+                                        <input id="forg_password_confirm" class="form-control" type="password"
+                                               placeholder="Retype password" name="password_confirmation"
+                                               minlength="6" required>
+                                        <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -769,6 +770,7 @@
 <script src="{{asset('js/jquery.maskMoney.js')}}"></script>
 <script src="{{asset('js/simple.gpa.format.js')}}"></script>
 <script src="{{asset('js/filesize.min.js')}}"></script>
+<script src="{{asset('js/hideShowPassword.min.js')}}"></script>
 <!-- jQuery Easing -->
 <script src="{{asset('js/jquery.easing.1.3.js')}}"></script>
 <!-- Bootstrap -->

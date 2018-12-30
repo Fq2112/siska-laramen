@@ -180,3 +180,10 @@ li.dropdown:hover .dropdown-menu {
     -ms-border-radius: 6px;
     border-radius: 6px;
 }
+
+#log_password + .glyphicon, #reg_password + .glyphicon, #reg_password_confirm + .glyphicon,
+#forg_password + .glyphicon, #forg_password_confirm + .glyphicon,
+#check_password + .glyphicon, #password + .glyphicon, #password-confirm + .glyphicon {
+    cursor: pointer;
+    pointer-events: all;
+}

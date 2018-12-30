@@ -17,6 +17,21 @@
         }
     });
 
+    $('#check_password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#check_password').togglePassword();
+    });
+
+    $('#password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#password').togglePassword();
+    });
+
+    $('#password-confirm + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#password-confirm').togglePassword();
+    });
+
     $("#show_gallery_settings").click(function () {
         $(window).scrollTop(700);
         $("#gallery_settings").toggle(300);

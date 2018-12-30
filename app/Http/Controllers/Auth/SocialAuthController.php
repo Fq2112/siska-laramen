@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\PartnerCredential;
 use App\User;
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Storage;
@@ -52,17 +54,45 @@ class SocialAuthController extends Controller
                     'provider_id' => $userSocial->getId(),
                     'provider' => $provider
                 ]);
+
                 Auth::loginUsingId($user->id);
 
             } else {
-                if ($checkUser->ava == "seeker.png" || $checkUser->ava == "") {
-                    Storage::disk('local')
-                        ->put('public/users/' . $userSocial->getId() . ".jpg", file_get_contents($userSocial->getAvatar()));
-
-                    $checkUser->update(['ava' => $userSocial->getId() . ".jpg"]);
-                }
-                Auth::loginUsingId($checkUser->id);
+                $user = $checkUser;
             }
+
+            if ($user->ava == "seeker.png" || $user->ava == "") {
+                Storage::disk('local')
+                    ->put('public/users/' . $userSocial->getId() . ".jpg", file_get_contents($userSocial->getAvatar()));
+
+                $user->update(['ava' => $userSocial->getId() . ".jpg"]);
+            }
+
+            if ($user->isSeeker()) {
+                $data = array('name' => $user->name, 'email' => $user->email, 'password' => $user->password,
+                    'provider_id' => $userSocial->getId());
+                $partners = PartnerCredential::where('status', true)->where('isSync', true)
+                    ->whereDate('api_expiry', '>=', today())->get();
+                if (count($partners) > 0) {
+                    foreach ($partners as $partner) {
+                        $client = new Client([
+                            'base_uri' => $partner->uri,
+                            'defaults' => [
+                                'exceptions' => false
+                            ]
+                        ]);
+                        $client->post($partner->uri . '/api/SISKA/seekers/' . $provider, [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'seeker' => $data,
+                            ]
+                        ]);
+                    }
+                }
+            }
+
+            Auth::loginUsingId($user->id);
 
             if ($provider == "twitter" || $provider == "google") {
                 return redirect()->route('home-seeker')->with('signed', 'You`re now signed in as a Job Seeker.');

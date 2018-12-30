@@ -174,6 +174,31 @@
         }
     });
 
+    $('#log_password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#log_password').togglePassword();
+    });
+
+    $('#reg_password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#reg_password').togglePassword();
+    });
+
+    $('#reg_password_confirm + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#reg_password_confirm').togglePassword();
+    });
+
+    $('#forg_password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#forg_password').togglePassword();
+    });
+
+    $('#forg_password_confirm + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#forg_password_confirm').togglePassword();
+    });
+
     function checkRupiahValue() {
         var low = parseInt($("#lowest").val().split(',').join("")), input = $("#highest"),
             high = parseInt(input.val().split(',').join(""));
