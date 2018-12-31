@@ -183,21 +183,20 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     });
 
     $router->group(['prefix' => 'partners', 'namespace' => 'Partners', 'middleware' => 'partner'], function ($router) {
-
         $router->get('/', 'SynchronizeController@getPartnerInfo');
         $router->post('sync', 'SynchronizeController@synchronize');
 
         $router->group(['prefix' => 'vacancies'], function ($router) {
-            $router->post('create', 'PartnerVacancyController@createVacancies');
-            $router->put('update', 'PartnerVacancyController@updateVacancies');
-            $router->delete('delete', 'PartnerVacancyController@deleteVacancies');
+            $router->post('create', 'PartnerAgencyVacancyController@createVacancies');
+            $router->put('update', 'PartnerAgencyVacancyController@updateVacancies');
+            $router->delete('delete', 'PartnerAgencyVacancyController@deleteVacancies');
+            $router->put('agency/update', 'PartnerAgencyVacancyController@updateAgencies');
+            $router->delete('agency/delete', 'PartnerAgencyVacancyController@deleteAgencies');
         });
 
-        $router->group(['prefix' => 'agencies'], function ($router) {
-            $router->put('update', 'PartnerAgencyController@updateAgencies');
-            $router->delete('delete', 'PartnerAgencyController@deleteAgencies');
+        $router->group(['prefix' => 'seekers'], function ($router) {
+            $router->put('update', 'PartnerSeekerController@updateSeekers');
         });
-
     });
 
 });

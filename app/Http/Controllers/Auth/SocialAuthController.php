@@ -94,10 +94,7 @@ class SocialAuthController extends Controller
 
             Auth::loginUsingId($user->id);
 
-            if ($provider == "twitter" || $provider == "google") {
-                return redirect()->route('home-seeker')->with('signed', 'You`re now signed in as a Job Seeker.');
-            }
-            return back()->with('signed', 'You`re now signed in as a Job Seeker.');
+            return redirect()->route('home-seeker')->with('signed', 'You`re now signed in as a Job Seeker.');
 
         } catch (\Exception $e) {
             return back()->with('unknown', 'Please, login/register with SISKA account.');
