@@ -528,6 +528,25 @@
 
                 } else if (data == 3) {
                     $("#form-plans-" + id)[0].submit();
+
+                } else if (data == 4) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: "It seems that your company profile is incomplete.",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00ADB5',
+                        confirmButtonText: 'Yes, redirect me to Edit Profile page.',
+                        showLoaderOnConfirm: true,
+
+                        preConfirm: function () {
+                            return new Promise(function (resolve) {
+                                window.location.href = '{{route('agency.edit.profile')}}';
+                            });
+                        },
+                        allowOutsideClick: false
+                    });
+                    return false;
                 }
             });
             @else

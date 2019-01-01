@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\PartnerCredential;
 use App\User;
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 
 class deleteInactiveUser extends Command
@@ -45,26 +43,6 @@ class deleteInactiveUser extends Command
 
         foreach ($users as $user) {
             $user->forceDelete();
-
-            $partners = PartnerCredential::where('status', true)->where('isSync', true)
-                ->whereDate('api_expiry', '>=', today())->get();
-            if (count($partners) > 0) {
-                foreach ($partners as $partner) {
-                    $client = new Client([
-                        'base_uri' => $partner->uri,
-                        'defaults' => [
-                            'exceptions' => false
-                        ]
-                    ]);
-                    $client->delete($partner->uri . '/api/SISKA/seekers/delete', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'email' => $user->email,
-                        ]
-                    ]);
-                }
-            }
         }
     }
 }

@@ -118,21 +118,27 @@ class AgencyController extends Controller
         $number = filter_var($plan->job_ads, FILTER_SANITIZE_NUMBER_INT);
         $totalAds = array_sum(str_split($number));
 
-        if ($vacancies->count() > 0) {
-            if ($vacancies->where('isPost', false)->count() > 0) {
-                if ($vacancies->where('isPost', false)->count() >= $totalAds) {
-                    return 3;
+        if ($agency->kantor_pusat == "" || $agency->industri_id == "" || $agency->alamat == "" || $agency->phone == "" ||
+            $agency->hari_kerja == "" || $agency->jam_kerja == "") {
+            return 4;
+
+        } else {
+            if ($vacancies->count() > 0) {
+                if ($vacancies->where('isPost', false)->count() > 0) {
+                    if ($vacancies->where('isPost', false)->count() >= $totalAds) {
+                        return 3;
+
+                    } else {
+                        return 2;
+                    }
 
                 } else {
-                    return 2;
+                    return 1;
                 }
 
             } else {
-                return 1;
+                return 0;
             }
-
-        } else {
-            return 0;
         }
     }
 

@@ -99,23 +99,32 @@ class PartnerAgencyVacancyController extends Controller
             })->where('agency_id', $user->agencies->id)->where('judul', $vac['judul'])->first();
 
             if ($vacancy != null) {
-                $vacancy->update([
-                    'judul' => $data['judul'],
-                    'cities_id' => $data['city_id'],
-                    'syarat' => $data['syarat'],
-                    'tanggungjawab' => $data['tanggungjawab'],
-                    'pengalaman' => $data['pengalaman'],
-                    'jobtype_id' => $data['jobtype_id'],
-                    'industry_id' => $data['industry_id'],
-                    'joblevel_id' => $data['joblevel_id'],
-                    'salary_id' => $data['salary_id'],
-                    'tingkatpend_id' => $data['degree_id'],
-                    'jurusanpend_id' => $data['major_id'],
-                    'fungsikerja_id' => $data['jobfunction_id'],
-                    'recruitmentDate_start' => $data['isPost'] == 1 ? $data['recruitmentDate_start'] : null,
-                    'recruitmentDate_end' => $data['isPost'] == 1 ? $data['recruitmentDate_end'] : null,
-                    'interview_date' => $data['isPost'] == 1 ? $data['interview_date'] : null
-                ]);
+                if ($data['isPost'] == 1) {
+                    $vacancy->update([
+                        'judul' => $data['judul'],
+                        'cities_id' => $data['city_id'],
+                        'syarat' => $data['syarat'],
+                        'tanggungjawab' => $data['tanggungjawab'],
+                        'pengalaman' => $data['pengalaman'],
+                        'jobtype_id' => $data['jobtype_id'],
+                        'industry_id' => $data['industry_id'],
+                        'joblevel_id' => $data['joblevel_id'],
+                        'salary_id' => $data['salary_id'],
+                        'tingkatpend_id' => $data['degree_id'],
+                        'jurusanpend_id' => $data['major_id'],
+                        'fungsikerja_id' => $data['jobfunction_id'],
+                        'recruitmentDate_start' => $data['recruitmentDate_start'],
+                        'recruitmentDate_end' => $data['recruitmentDate_end'],
+                        'interview_date' => $data['interview_date']
+                    ]);
+
+                } else {
+                    $vacancy->update([
+                        'recruitmentDate_start' => null,
+                        'recruitmentDate_end' => null,
+                        'interview_date' => null
+                    ]);
+                }
 
                 return response()->json([
                     'status' => "200 OK",

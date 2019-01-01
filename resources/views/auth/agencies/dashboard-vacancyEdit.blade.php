@@ -109,8 +109,11 @@
                                                                         </span>
                                                                             </small>
                                                                             <blockquote
-                                                                                    style="font-size: 12px;color: #7f7f7f"
-                                                                                    class="ulTinyMCE">
+                                                                                    style="font-size: 12px; color: #7f7f7f; border-left: 5px solid {{$row->isPost == true &&
+                                                        $row->active_period != "" && $row->plan_id != "" &&
+                                                        ($row->recruitmentDate_start == "" ||
+                                                        $row->recruitmentDate_end == "" || $row->interview_date == "")
+                                                        ? '#00ADB5' : '#eee'}};" class="ulTinyMCE">
                                                                                 <ul class="list-inline">
                                                                                     <li>
                                                                                         <a class="tag" target="_blank"

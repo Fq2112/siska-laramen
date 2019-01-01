@@ -3,15 +3,24 @@
 namespace App\Http\Controllers\Admins\DataTransaction;
 
 use App\Agencies;
+use App\Cities;
 use App\ConfirmAgency;
 use App\Events\Agencies\VacancyPaymentDetails;
+use App\FungsiKerja;
+use App\Industri;
+use App\JobLevel;
+use App\JobType;
+use App\Jurusanpend;
+use App\PartnerCredential;
 use App\PaymentCategory;
 use App\PaymentMethod;
 use App\Plan;
+use App\Salaries;
 use App\Support\RomanConverter;
-use App\User;
+use App\Tingkatpend;
 use App\Vacancies;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +39,28 @@ class TransactionAgencyController extends Controller
     {
         $vacancy = Vacancies::find(decrypt($id));
         $vacancy->delete();
+
+        $data = array('email' => $vacancy->agencies->user->email, 'judul' => $vacancy->judul);
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'check_form' => 'vacancy',
+                        'agencies' => $data,
+                    ]
+                ]);
+            }
+        }
 
         return back()->with('success', '' . $vacancy->judul . ' is successfully deleted!');
     }
@@ -86,6 +117,61 @@ class TransactionAgencyController extends Controller
 
         if ($request->isPaid == 1 || $request->isAbort == 1) {
             $this->paymentDetailsMail($posting);
+        }
+
+        if ($request->isPaid == 1) {
+            $result = $vacancies->toArray();
+            $i = 0;
+            foreach ($result as $row) {
+                $cities = substr(Cities::find($row['cities_id'])->name, 0, 2) == "Ko" ?
+                    substr(Cities::find($row['cities_id'])->name, 5) :
+                    substr(Cities::find($row['cities_id'])->name, 10);
+                $agency = Agencies::findOrFail($row['agency_id']);
+                $user = $agency->user;
+                $filename = $user->ava == "agency.png" || $user->ava == "" ? asset('images/agency.png') :
+                    asset('storage/users/' . $user->ava);
+
+                $city = array('city' => $cities);
+                $degrees = array('degrees' => Tingkatpend::findOrFail($row['tingkatpend_id'])->name);
+                $majors = array('majors' => Jurusanpend::findOrFail($row['jurusanpend_id'])->name);
+                $jobfunc = array('job_func' => FungsiKerja::findOrFail($row['fungsikerja_id'])->nama);
+                $industry = array('industry' => Industri::findOrFail($row['industry_id'])->nama);
+                $jobtype = array('job_type' => JobType::findOrFail($row['jobtype_id'])->name);
+                $joblevel = array('job_level' => JobLevel::findOrFail($row['joblevel_id'])->name);
+                $salary = array('salary' => Salaries::findOrFail($row['salary_id'])->name);
+                $ava['agency'] = array('ava' => $filename, 'company' => $user->name, 'email' => $user->email,
+                    'kantor_pusat' => $agency->kantor_pusat, 'industry_id' => $agency->industri_id,
+                    'tentang' => $agency->tentang, 'alasan' => $agency->alasan, 'link' => $agency->link,
+                    'alamat' => $agency->alamat, 'phone' => $agency->phone,
+                    'hari_kerja' => $agency->hari_kerja, 'jam_kerja' => $agency->jam_kerja,
+                    'lat' => $agency->lat, 'long' => $agency->long, 'isSISKA' => true);
+                $update_at = array('updated_at' => Carbon::createFromFormat('Y-m-d H:i:s', $row['updated_at'])
+                    ->diffForHumans());
+                $result[$i] = array_replace($ava, $result[$i], $city, $degrees, $majors, $jobfunc,
+                    $industry, $jobtype, $joblevel, $salary, $update_at);
+
+                $i = $i + 1;
+            }
+
+            $partners = PartnerCredential::where('status', true)->where('isSync', true)
+                ->whereDate('api_expiry', '>=', today())->get();
+            if (count($partners) > 0) {
+                foreach ($partners as $partner) {
+                    $client = new Client([
+                        'base_uri' => $partner->uri,
+                        'defaults' => [
+                            'exceptions' => false
+                        ]
+                    ]);
+                    $client->post($partner->uri . '/api/SISKA/vacancies/create', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'vacancies' => $result,
+                        ]
+                    ]);
+                }
+            }
         }
 
         return back()->with('success', '' . $request->invoice . ' is successfully updated!')

@@ -10,8 +10,6 @@
                             <small>Table</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link" data-toggle="tooltip" title="Minimize" data-placement="left">
-                                    <i class="fa fa-chevron-up"></i></a></li>
                             <li><a class="close-link" data-toggle="tooltip" title="Close" data-placement="right">
                                     <i class="fa fa-times"></i></a></li>
                         </ul>
@@ -231,8 +229,7 @@
                                     <td style="vertical-align: middle" align="center">
                                         <form method="post" id="form-deactivate{{$vacancy->id}}">
                                             {{csrf_field()}} {{method_field('PUT')}}
-                                            <input type="hidden" name="check_form" value="schedule">
-                                            <input type="hidden" name="isPost" value="0">
+                                            <input type="hidden" name="check_form" value="deactivate">
                                         </form>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-warning btn-sm"
@@ -240,7 +237,7 @@
                                                     onclick="postPartnerVac('{{$vacancy->id}}','{{$vacancy->judul}}',
                                                             '{{$vacancy->recruitmentDate_start}}',
                                                             '{{$vacancy->recruitmentDate_end}}',
-                                                            '{{$vacancy->interview_date}}')">
+                                                            '{{$vacancy->interview_date}}','{{$row->getPartner->id}}')">
                                                 <i class="fa fa-calendar-alt"></i>&ensp;SCHEDULE
                                             </button>
                                             <button type="button" class="btn btn-warning btn-sm dropdown-toggle"
@@ -250,7 +247,7 @@
                                             </button>
                                             <ul class="dropdown-menu" role="menu">
                                                 <li>
-                                                    <a onclick="editPartnerVac('{{$vacancy->id}}')">
+                                                    <a onclick="editPartnerVac('{{$vacancy->id}}','{{$row->getPartner->id}}')">
                                                         <i class="fa fa-edit"></i>&ensp;Edit</a>
                                                 </li>
                                                 @if($vacancy->isPost == true)
@@ -293,6 +290,7 @@
                     <div id="content2" class="x_content" style="display: none;">
                         <form method="post" id="form-vacancy">{{csrf_field()}} {{method_field('PUT')}}
                             <input type="hidden" name="check_form" value="vacancy">
+                            <input type="hidden" name="partner_id" class="partner">
                             <div class="row form-group">
                                 <div class="col-lg-12">
                                     <label for="agency_id">Agency <span class="required">*</span></label>
@@ -476,7 +474,7 @@
                 <form method="post" id="form-schedule">
                     {{csrf_field()}} {{method_field('PUT')}}
                     <input type="hidden" name="check_form" value="schedule">
-                    <input type="hidden" name="isPost" value="1">
+                    <input type="hidden" name="partner_id" class="partner">
                     <div class="modal-body">
                         <div class="row form-group">
                             <div class="col-lg-12">
@@ -668,13 +666,14 @@
             });
         });
 
-        function editPartnerVac(id) {
+        function editPartnerVac(id, partner_id) {
             $("#content1").toggle(300);
             $("#content2").toggle(300);
 
             $("#panel_title").html('Partner Vacancies<small>Setup</small>');
 
             $.get("{{route('partners.vacancies.edit',['id' => ''])}}/" + id, function (data) {
+                $(".partner").val(partner_id);
                 $('#agency_id').val(data.agency_id).selectpicker("refresh");
                 $('#judul').val(data.judul);
                 $('#pengalaman').val(data.pengalaman);
@@ -694,12 +693,13 @@
             $("#btn_submit").html("<strong>SAVE CHANGES</strong>");
         }
 
-        function postPartnerVac(id, judul, start, end, interview) {
+        function postPartnerVac(id, judul, start, end, interview, partner_id) {
             var $start = $("#recruitmentDate_start"), $end = $("#recruitmentDate_end"),
                 $interview = $("#interview_date");
 
             $("#vacancy_title").text(judul);
             $("#form-schedule").attr('action', '{{route('partners.vacancies.update',['id'=> ''])}}/' + id);
+            $(".partner").val(partner_id);
 
             $start.val(start);
             $end.val(end);
