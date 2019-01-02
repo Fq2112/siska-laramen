@@ -42,6 +42,6 @@ class Vacancies extends Model
 
     public function getPartnerVacancy()
     {
-        return $this->hasMany(PartnerVacancy::class, 'vacancy_id');
+        return $this->hasOne(PartnerVacancy::class, 'vacancy_id');
     }
 }

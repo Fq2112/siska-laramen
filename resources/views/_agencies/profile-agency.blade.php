@@ -475,7 +475,7 @@
                 iwBackground.children(':nth-child(2)').css({'display': 'none'});
                 iwBackground.children(':nth-child(4)').css({'display': 'none'});
 
-                iwOuter.css('left', '-30px');
+                iwOuter.css({left: '-30px', top: '15px'});
                 iwOuter.parent().parent().css({left: '0'});
 
                 iwBackground.children(':nth-child(1)').attr('style', function (i, s) {

@@ -229,7 +229,9 @@
                                     <td style="vertical-align: middle" align="center">
                                         <form method="post" id="form-deactivate{{$vacancy->id}}">
                                             {{csrf_field()}} {{method_field('PUT')}}
-                                            <input type="hidden" name="check_form" value="deactivate">
+                                            <input type="hidden" name="check_form" value="schedule">
+                                            <input type="hidden" name="isPost" value="0">
+                                            <input type="hidden" name="partner_id" class="partner">
                                         </form>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-warning btn-sm"
@@ -253,7 +255,7 @@
                                                 @if($vacancy->isPost == true)
                                                     <li>
                                                         <a onclick="deactivatePartnerVac('{{$vacancy->id}}',
-                                                                '{{$vacancy->judul}}')">
+                                                                '{{$vacancy->judul}}','{{$row->getPartner->id}}')">
                                                             <i class="fa fa-power-off"></i>&ensp;Deactivate</a>
                                                     </li>
                                                 @endif
@@ -474,9 +476,10 @@
                 <form method="post" id="form-schedule">
                     {{csrf_field()}} {{method_field('PUT')}}
                     <input type="hidden" name="check_form" value="schedule">
+                    <input type="hidden" name="isPost" value="1">
                     <input type="hidden" name="partner_id" class="partner">
                     <div class="modal-body">
-                        <div class="row form-group">
+                        <div class="row form-group" id="recDate_errorDiv">
                             <div class="col-lg-12">
                                 <label>Recruitment Date <span class="required">*</span></label>
                                 <div class="input-group">
@@ -489,9 +492,10 @@
                                            id="recruitmentDate_end" required>
                                     <span class="input-group-addon"><i class="fa fa-users"></i></span>
                                 </div>
+                                <span class="help-block"><small class="recDate_errorTxt"></small></span>
                             </div>
                         </div>
-                        <div class="row form-group">
+                        <div class="row form-group" id="intDate_errorDiv">
                             <div class="col-lg-12">
                                 <label>Interview Date <span class="required">*</span></label>
                                 <div class="input-group">
@@ -500,6 +504,7 @@
                                            maxlength="10" placeholder="yyyy-mm-dd" name="interview_date"
                                            id="interview_date" required>
                                 </div>
+                                <span class="help-block"><small class="intDate_errorTxt"></small></span>
                             </div>
                         </div>
                     </div>
@@ -667,6 +672,8 @@
         });
 
         function editPartnerVac(id, partner_id) {
+            $("#recDate_errorDiv, #intDate_errorDiv").removeClass('has-error');
+            $(".recDate_errorTxt, .intDate_errorTxt").text('');
             $("#content1").toggle(300);
             $("#content2").toggle(300);
 
@@ -693,10 +700,10 @@
             $("#btn_submit").html("<strong>SAVE CHANGES</strong>");
         }
 
-        function postPartnerVac(id, judul, start, end, interview, partner_id) {
-            var $start = $("#recruitmentDate_start"), $end = $("#recruitmentDate_end"),
-                $interview = $("#interview_date");
+        var $start = $("#recruitmentDate_start"), $end = $("#recruitmentDate_end"), $interview = $("#interview_date"),
+            startVal, endVal, intVal;
 
+        function postPartnerVac(id, judul, start, end, interview, partner_id) {
             $("#vacancy_title").text(judul);
             $("#form-schedule").attr('action', '{{route('partners.vacancies.update',['id'=> ''])}}/' + id);
             $(".partner").val(partner_id);
@@ -704,42 +711,55 @@
             $start.val(start);
             $end.val(end);
             $interview.val(interview);
+            startVal = new Date(start);
+            endVal = new Date(end);
+            intVal = new Date(interview);
 
-            if (start == "") {
-                $start.datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: new Date()
-                }).on('changeDate', function (selected) {
-                    var minDate = new Date(selected.date.valueOf());
-                    $end.datepicker({
-                        format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: minDate,
-                    }).on('changeDate', function (selected) {
-                        var minDate = new Date(selected.date.valueOf());
-                        $interview.datepicker({
-                            format: "yyyy-mm-dd",
-                            autoclose: true,
-                            todayHighlight: true,
-                            todayBtn: true,
-                            startDate: minDate
-                        });
-                    });
-                });
+            $start.datepicker({
+                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+            }).on('changeDate', function () {
+                startVal = new Date($(this).datepicker('getUTCDate'));
+                recDate_check(startVal, endVal);
+            });
 
-            } else {
-                $start.datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: new Date(),
-                });
-                $end.datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: start,
-                });
-                $interview.datepicker({
-                    format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true, startDate: end
-                });
-            }
+            $end.datepicker({
+                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+            }).on('changeDate', function () {
+                endVal = new Date($(this).datepicker('getUTCDate'));
+                recDate_check(startVal, endVal);
+            });
+
+            $interview.datepicker({
+                format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
+            }).on('changeDate', function () {
+                intVal = new Date($(this).datepicker('getUTCDate'));
+                intDate_check(endVal, intVal);
+            });
 
             $("#scheduleModal").modal('show');
         }
 
-        function deactivatePartnerVac(id, judul) {
+        function recDate_check(startDate, endDate) {
+            if (startVal && endVal && (startDate > endDate)) {
+                $("#recDate_errorDiv").addClass('has-error');
+                $(".recDate_errorTxt").text('Recruitment end date value should be greater than recruitment start date value!');
+            } else {
+                $("#recDate_errorDiv").removeClass('has-error');
+                $(".recDate_errorTxt").text('');
+            }
+        }
+
+        function intDate_check(endDate, intDate) {
+            if (endVal && intVal && (endDate > intDate)) {
+                $("#intDate_errorDiv").addClass('has-error');
+                $(".intDate_errorTxt").text('Interview date value should be greater than recruitment end date value!');
+            } else {
+                $("#intDate_errorDiv").removeClass('has-error');
+                $(".intDate_errorTxt").text('');
+            }
+        }
+
+        function deactivatePartnerVac(id, judul, partner_id) {
             swal({
                 title: 'Deactivate Partner Vacancy - ' + judul,
                 text: 'The status of the vacancy will be change into "INACTIVE". Are you sure to deactivate it?',
@@ -751,6 +771,7 @@
 
                 preConfirm: function () {
                     return new Promise(function (resolve) {
+                        $(".partner").val(partner_id);
                         $("#form-deactivate" + id).attr("action", "{{route('partners.vacancies.update',['id'=> ''])}}/" + id)[0].submit();
                     });
                 },
@@ -786,6 +807,15 @@
 
             } else {
                 $('#form-vacancy')[0].submit();
+            }
+        });
+
+        $("#form-schedule").on("submit", function (e) {
+            e.preventDefault();
+            if ($("#recDate_errorDiv").hasClass('has-error') || $("#intDate_errorDiv").hasClass('has-error')) {
+                swal('Error!', 'There\'s still some error found!', 'error');
+            } else {
+                $('#form-schedule')[0].submit();
             }
         })
     </script>

@@ -14,7 +14,7 @@ use App\Tingkatpend;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use ZipArchive;
-use App\Events\UserPartnershipEmail;
+use App\Events\Partners\UserPartnershipEmail;
 use App\PartnerCredential;
 use App\PartnerVacancy;
 use App\Vacancies;
@@ -116,18 +116,11 @@ class TransactionPartnerController extends Controller
 
         } elseif ($request->check_form == 'schedule') {
             $partnerVacancy->update([
-                'recruitmentDate_start' => $request->recruitmentDate_start,
-                'recruitmentDate_end' => $request->recruitmentDate_end,
-                'interview_date' => $request->interview_date,
-            ]);
-
-        } elseif ($request->check_form == 'deactivate') {
-            $partnerVacancy->update([
-                'isPost' => false,
-                'active_period' => null,
-                'recruitmentDate_start' => null,
-                'recruitmentDate_end' => null,
-                'interview_date' => null,
+                'isPost' => $request->isPost == 1 ? $partnerVacancy->isPost : false,
+                'active_period' => $request->isPost == 1 ? $partnerVacancy->active_period : null,
+                'recruitmentDate_start' => $request->isPost == 1 ? $request->recruitmentDate_start : null,
+                'recruitmentDate_end' => $request->isPost == 1 ? $request->recruitmentDate_end : null,
+                'interview_date' => $request->isPost == 1 ? $request->interview_date : null,
             ]);
         }
 

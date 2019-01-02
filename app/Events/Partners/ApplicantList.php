@@ -1,24 +1,25 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Partners;
 
-use App\PartnerCredential;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class UserPartnershipEmail
+class ApplicantList
 {
     use Dispatchable, SerializesModels;
-    public $partnership, $filename;
+
+    public $vacancy, $email, $filename;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(PartnerCredential $partnership, $filename)
+    public function __construct($vacancy, $email, $filename)
     {
-        $this->partnership = $partnership;
+        $this->vacancy = $vacancy;
+        $this->email = $email;
         $this->filename = $filename;
     }
 }

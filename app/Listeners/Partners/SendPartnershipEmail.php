@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\Partners;
 
-use App\Events\UserPartnershipEmail;
-use App\Mail\PartnershipEmail;
+use App\Events\Partners\UserPartnershipEmail;
+use App\Mail\Partners\PartnershipEmail;
 use Illuminate\Support\Facades\Mail;
 
 class SendPartnershipEmail

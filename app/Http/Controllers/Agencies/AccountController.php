@@ -478,6 +478,36 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
+        if ($request->check_form == 'schedule') {
+            if ($request->quizDate_start == "" && $request->psychoTestDate_start == "") {
+                $this->validate($request, [
+                    'recruitmentDate_start' => 'required|date',
+                    'recruitmentDate_end' => 'required|date|after_or_equal:recruitmentDate_start',
+                    'interview_date' => 'required|date|after_or_equal:recruitmentDate_end',
+                ]);
+            } elseif ($request->quizDate_start != "" && $request->psychoTestDate_start == "") {
+                $this->validate($request, [
+                    'recruitmentDate_start' => 'required|date',
+                    'recruitmentDate_end' => 'required|date|after_or_equal:recruitmentDate_start',
+                    'quizDate_start' => 'required|date|after_or_equal:recruitmentDate_end',
+                    'quizDate_end' => 'required|date|after_or_equal:quizDate_start',
+                    'interview_date' => 'required|date|after_or_equal:quizDate_end',
+                ]);
+            } elseif ($request->quizDate_start != "" && $request->psychoTestDate_start != "") {
+                $this->validate($request, [
+                    'recruitmentDate_start' => 'required|date',
+                    'recruitmentDate_end' => 'required|date|after_or_equal:recruitmentDate_start',
+                    'quizDate_start' => 'required|date|after_or_equal:recruitmentDate_end',
+                    'quizDate_end' => 'required|date|after_or_equal:quizDate_start',
+                    'psychoTestDate_start' => 'required|date|after_or_equal:quizDate_end',
+                    'psychoTestDate_end' => 'required|date|after_or_equal:psychoTestDate_start',
+                    'interview_date' => 'required|date|after_or_equal:psychoTestDate_end',
+                ]);
+            }
+
+            $request->request->add(['isPost' => true]);
+        }
+
         $findVacancy = Vacancies::find($id);
         $data = array('email' => $user->email, 'judul' => $findVacancy->judul, 'input' => $request->toArray());
         $this->updatePartners($data, $request->check_form);

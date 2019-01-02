@@ -232,7 +232,6 @@
                     $('#start_date').val(data.start_date);
                     $('#end_date input').datepicker({
                         format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true,
-                        startDate: data.start_date,
                     }).val(data.end_date);
                     $('#report_to').val(data.report_to);
                     tinyMCE.get('job_desc').setContent(data.job_desc);
@@ -288,7 +287,6 @@
                         autoclose: true,
                         todayHighlight: true,
                         todayBtn: true,
-                        startDate: data.start_period,
                     }).val(data.end_period);
                     $('#nilai').val(data.nilai);
                     $('#tingkatpend').val(data.tingkatpend_id).selectpicker("refresh");
@@ -377,7 +375,6 @@
                         autoclose: true,
                         todayHighlight: true,
                         todayBtn: true,
-                        startDate: data.start_period,
                     }).val(data.end_period);
                     tinyMCE.get('org_desc').setContent(data.descript);
 

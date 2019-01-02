@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Partners;
 
 use App\PartnerCredential;
 use Illuminate\Bus\Queueable;

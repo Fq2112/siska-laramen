@@ -100,12 +100,8 @@
         timer: '3500'
     });
     @elseif(session('vacancy'))
-    swal({
-        title: 'Good Luck!',
-        text: '{{ session('vacancy') }}',
-        type: 'success',
-        timer: '10000'
-    });
+    swal('Good Luck!', '{{ session('vacancy') }}', 'success');
+
     @elseif(session('agency'))
     swal({
         title: 'Favorite Agency',
@@ -114,12 +110,8 @@
         timer: '3500'
     });
     @elseif(session('jobPosting'))
-    swal({
-        title: 'Job Posting',
-        text: '{{ session('jobPosting') }}',
-        type: 'success',
-        timer: '7000'
-    });
+    swal('Job Posting', '{{ session('jobPosting') }}', 'success');
+
     @elseif(session('seeker'))
     swal({
         title: 'Invite Seeker',
@@ -131,12 +123,7 @@
 
     @if (count($errors) > 0)
     @foreach ($errors->all() as $error)
-    swal({
-        title: 'Oops..!',
-        text: '{{ $error }}',
-        type: 'error',
-        timer: '3500'
-    });
+    swal('Oops..!', '{{ $error }}', 'error');
     @endforeach
     @endif
 </script>
