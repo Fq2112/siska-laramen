@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\Partners;
 
 use App\Agencies;
+use App\PartnerCredential;
 use App\PartnerVacancy;
 use App\User;
 use App\Vacancies;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -99,6 +101,11 @@ class PartnerAgencyVacancyController extends Controller
             })->where('agency_id', $user->agencies->id)->where('judul', $vac['judul'])->first();
 
             if ($vacancy != null) {
+                $partners = PartnerCredential::where('status', true)->where('isSync', true)
+                    ->whereDate('api_expiry', '>=', today())->where('id', '!=', $partner->id)->get();
+                $arr = array('email' => $user->email, 'judul' => $vac['judul'], 'input' => $data);
+                $this->updatePartners($partners, $arr, 'vacancies');
+
                 if ($data['isPost'] == 1) {
                     $vacancy->update([
                         'judul' => $data['judul'],
@@ -161,6 +168,11 @@ class PartnerAgencyVacancyController extends Controller
             })->where('agency_id', $user->agencies->id)->where('judul', $vac['judul'])->first();
 
             if ($vacancy != null) {
+                $partners = PartnerCredential::where('status', true)->where('isSync', true)
+                    ->whereDate('api_expiry', '>=', today())->where('id', '!=', $partner->id)->get();
+                $arr = array('email' => $user->email, 'judul' => $vac['judul']);
+                $this->deletePartners($partners, $arr, 'vacancy');
+
                 $vacancy->delete();
 
                 return response()->json([
@@ -178,7 +190,6 @@ class PartnerAgencyVacancyController extends Controller
         ], 200);
     }
 
-
     public function updateAgencies(Request $request)
     {
         $partner = $request->partner;
@@ -194,6 +205,11 @@ class PartnerAgencyVacancyController extends Controller
         })->where('email', $ag['email'])->first();
 
         if ($user != null) {
+            $partners = PartnerCredential::where('status', true)->where('isSync', true)
+                ->whereDate('api_expiry', '>=', today())->where('id', '!=', $partner->id)->get();
+            $arr = array('email' => $user->email, 'input' => $data);
+            $this->updatePartners($partners, $arr, 'agencies');
+
             $user->update([
                 'name' => $data['company'],
                 'email' => $data['email'],
@@ -227,6 +243,65 @@ class PartnerAgencyVacancyController extends Controller
         ], 200);
     }
 
+    private function updatePartners($partners, $arr, $check)
+    {
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+
+                if ($check == 'vacancies') {
+                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'vacancy',
+                            'agencies' => $arr,
+                        ]
+                    ]);
+                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'schedule',
+                            'agencies' => $arr,
+                        ]
+                    ]);
+
+                } elseif ($check == 'agencies') {
+                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'personal_data',
+                            'agencies' => $arr,
+                        ]
+                    ]);
+                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'address',
+                            'agencies' => $arr,
+                        ]
+                    ]);
+                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'about',
+                            'agencies' => $arr,
+                        ]
+                    ]);
+                }
+            }
+        }
+    }
+
     public function deleteAgencies(Request $request)
     {
         $partner = $request->partner;
@@ -243,6 +318,11 @@ class PartnerAgencyVacancyController extends Controller
         if ($user != null) {
             $user->forceDelete();
 
+            $partners = PartnerCredential::where('status', true)->where('isSync', true)
+                ->whereDate('api_expiry', '>=', today())->where('id', '!=', $partner->id)->get();
+            $arr = array('email' => $user->email, 'judul' => null);
+            $this->deletePartners($partners, $arr, 'agency');
+
             return response()->json([
                 'status' => "200 OK",
                 'success' => true,
@@ -255,5 +335,27 @@ class PartnerAgencyVacancyController extends Controller
             'success' => true,
             'message' => 'Forbidden Access! You\'re only permitted to update/delete your own agency.'
         ], 200);
+    }
+
+    private function deletePartners($partners, $arr, $check)
+    {
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'check_form' => $check,
+                        'agencies' => $arr,
+                    ]
+                ]);
+            }
+        }
     }
 }
