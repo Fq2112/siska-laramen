@@ -13,8 +13,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\UserPartnershipEmail' => [
-            'App\Listeners\SendPartnershipEmail',
+        'App\Events\Partners\UserPartnershipEmail' => [
+            'App\Listeners\Partners\SendPartnershipEmail',
+        ],
+        'App\Events\Partners\ApplicantList' => [
+            'App\Listeners\Partners\SendApplicantList',
         ],
         'App\Events\Auth\UserActivationEmail' => [
             'App\Listeners\Auth\SendActivationEmail',

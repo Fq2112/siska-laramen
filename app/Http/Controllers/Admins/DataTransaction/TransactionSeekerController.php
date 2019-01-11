@@ -8,6 +8,7 @@ use App\Events\Agencies\AppliedInvitationList;
 use App\Events\Agencies\PsychoTestResultList;
 use App\Events\Agencies\QuizResultList;
 use App\Invitation;
+use App\PartnerVacancy;
 use App\PsychoTestResult;
 use App\QuizResult;
 use App\Vacancies;
@@ -92,11 +93,20 @@ class TransactionSeekerController extends Controller
             $date = Carbon::parse($vacancy->recruitmentDate_start)->format('dmy') . '-' .
                 Carbon::parse($vacancy->recruitmentDate_end)->format('dmy');
 
-            $filename = 'ApplicationList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
-            $pdf = PDF::loadView('reports.applicantList-pdf', compact('applicants', 'vacancy'));
-            Storage::put('public/users/agencies/reports/applications/' . $filename, $pdf->output());
+            $partnerVac = PartnerVacancy::where('vacancy_id', $vacancy->id)->first();
+            if (!$partnerVac) {
+                $filename = 'ApplicationList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date . '.pdf';
+                $pdf = PDF::loadView('reports.applicantList-pdf', compact('applicants', 'vacancy'));
+                Storage::put('public/users/agencies/reports/applications/' . $filename, $pdf->output());
+                event(new ApplicantList($vacancy, $vacancy->agencies->user->email, $filename));
 
-            event(new ApplicantList($vacancy, $vacancy->agencies->user->email, $filename));
+            } else {
+                $filename = 'ApplicationList_' . str_replace(' ', '_', $vacancy->judul) . '_' . $date .
+                    '_' . str_replace(' ', '_', $partnerVac->getPartner->name) . '.pdf';
+                $pdf = PDF::loadView('reports.partners.applicantList-pdf', compact('applicants', 'vacancy'));
+                Storage::put('public/users/partners/reports/applications/' . $filename, $pdf->output());
+                event(new \App\Events\Partners\ApplicantList($vacancy, $partnerVac->getPartner->email, $filename));
+            }
         }
 
         return back()->with('success', '' . count($ids) . ' application(s) is successfully sent to their email!');

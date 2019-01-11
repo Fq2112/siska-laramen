@@ -847,6 +847,21 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'partners.vacancies.show'
                     ]);
 
+                    Route::get('edit/{id}', [
+                        'uses' => 'TransactionPartnerController@editPartnersVacancies',
+                        'as' => 'partners.vacancies.edit'
+                    ]);
+
+                    Route::put('update/{id}', [
+                        'uses' => 'TransactionPartnerController@updatePartnersVacancies',
+                        'as' => 'partners.vacancies.update'
+                    ]);
+
+                    Route::post('posts', [
+                        'uses' => 'TransactionPartnerController@massPostPartnersVacancies',
+                        'as' => 'partners.vacancies.massPost'
+                    ]);
+
                     Route::post('pdf', [
                         'uses' => 'TransactionPartnerController@massGeneratePDF',
                         'as' => 'partners.vacancies.massPDF'

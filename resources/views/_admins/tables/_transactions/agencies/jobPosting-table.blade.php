@@ -201,15 +201,21 @@
                                                     {{$posting->isPaid == false ? 'APPROVE' : 'APPROVED'}}
                                                 </button>
                                             @else
-                                                <button type="button" class="btn btn-danger btn-sm"
-                                                        style="font-weight: 600"
-                                                        onclick="aborting('{{$posting->id}}','{{$invoice}}')"
-                                                        {{$posting->isAbort == true ? 'disabled' : ''}}>
-                                                    {{$posting->isAbort == true ? 'ABORTED' : 'ABORT'}}
-                                                </button>
+                                                @if($posting->isPaid == true)
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                            style="font-weight: 600" disabled>APPROVED
+                                                    </button>
+                                                @else
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                            style="font-weight: 600"
+                                                            onclick="aborting('{{$posting->id}}','{{$invoice}}')"
+                                                            {{$posting->isAbort == true ? 'disabled' : ''}}>
+                                                        {{$posting->isAbort == true ? 'ABORTED' : 'ABORT'}}
+                                                    </button>
+                                                @endif
                                             @endif
-                                            <button type="button" class="btn btn-{{now() <= $posting->created_at->addDay()
-                                            ? 'success' : 'danger'}} btn-sm dropdown-toggle"
+                                            <button type="button" class="btn btn-{{$posting->isPaid == false &&
+                                            now() > $posting->created_at->addDay() ? 'danger' : 'success'}} btn-sm dropdown-toggle"
                                                     data-toggle="dropdown" aria-expanded="false">
                                                 <span class="caret"></span>
                                                 <span class="sr-only">Toggle Dropdown</span>

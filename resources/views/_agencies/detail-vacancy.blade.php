@@ -36,6 +36,19 @@
                                             </div>
                                         @endif
                                     @endforeach
+                                @else
+                                    <div class="item"
+                                         style="background-image: url({{asset('images/carousel/c1.jpg')}});">
+                                        <div class="carousel-overlay"></div>
+                                    </div>
+                                    <div class="item"
+                                         style="background-image: url({{asset('images/carousel/c2.jpg')}});">
+                                        <div class="carousel-overlay"></div>
+                                    </div>
+                                    <div class="item"
+                                         style="background-image: url({{asset('images/carousel/c3.jpg')}});">
+                                        <div class="carousel-overlay"></div>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -93,24 +106,6 @@
                                 @endif
                             </ul>
                             <ul class="nav to-animate-2 navbar-nav navbar-right">
-                                @php
-                                    $content = '';
-                                    $style = 'none';
-                                    if($vacancy->isPost == false){
-                                        $content = 'This vacancy is INACTIVE.';
-                                        $style = 'inline-block';
-                                    } else{
-                                        if(now() < $vacancy->recruitmentDate_start || is_null($vacancy
-                                        ->recruitmentDate_start)){
-                                            $content = 'The recruitment date of this vacancy hasn\'t started yet.';
-                                            $style = 'inline-block';
-                                        } elseif(now() > $vacancy->recruitmentDate_end || is_null($vacancy
-                                        ->recruitmentDate_end)){
-                                            $content = 'The recruitment date of this vacancy has been ended.';
-                                            $style = 'inline-block';
-                                        }
-                                    }
-                                @endphp
                                 <li data-placement="left" data-toggle="tooltip" id="bm"
                                     title="{{$vacancy->isPost == true ? 'Bookmark this vacancy' : ''}}">
                                     <form method="post" action="{{route('bookmark.vacancy')}}" id="form-bookmark">
@@ -122,27 +117,18 @@
                                             <label for="bookmark" style="cursor: {{$vacancy->isPost == false ?
                                             'not-allowed' : 'pointer'}}"></label>
                                         </div>
-                                        <div class="anim-icon anim-icon-md info" style="display: {{$style}};">
+                                        <div class="anim-icon anim-icon-md info">
                                             <input type="checkbox" id="info">
                                             <label for="info" style="cursor: help;" data-toggle="popover"
-                                                   data-placement="top"
-                                                   title="FYI" data-content="{{$content}}"></label>
+                                                   data-placement="top" title="FYI"></label>
                                         </div>
                                     </form>
                                 </li>
-                                <li class="{{$vacancy->isPost == false || now() < $vacancy->recruitmentDate_start ||
-                                            now() > $vacancy->recruitmentDate_end ||
-                                            is_null($vacancy->recruitmentDate_start) ||
-                                            is_null($vacancy->recruitmentDate_end) ||
-                                            Auth::check() && Auth::user()->isAgency() ||
-                                            Auth::guard('admin')->check() ? '' : 'ld ld-heartbeat'}}"
-                                    id="apply" data-placement="top" data-toggle="tooltip">
+                                <li class=" {{Auth::check() && Auth::user()->isAgency() ||
+                                Auth::guard('admin')->check() ? '' : 'ld ld-heartbeat'}}" id="apply"
+                                    data-placement="top" data-toggle="tooltip">
                                     <button type="button" class="btn btn-danger btn-block"
-                                            {{$vacancy->isPost == false || now() < $vacancy->recruitmentDate_start ||
-                                            now() > $vacancy->recruitmentDate_end ||
-                                            is_null($vacancy->recruitmentDate_start) ||
-                                            is_null($vacancy->recruitmentDate_end) ||
-                                            Auth::check() && Auth::user()->isAgency() ||
+                                            {{Auth::check() && Auth::user()->isAgency() ||
                                             Auth::guard('admin')->check() ? 'disabled' : ''}}>
                                         <i class="fa fa-paper-plane"></i>&ensp;<strong>Apply</strong>
                                     </button>
@@ -898,7 +884,7 @@
                 iwBackground.children(':nth-child(2)').css({'display': 'none'});
                 iwBackground.children(':nth-child(4)').css({'display': 'none'});
 
-                iwOuter.css('left', '-30px');
+                iwOuter.css({left: '-30px', top: '15px'});
                 iwOuter.parent().parent().css({left: '0'});
 
                 iwBackground.children(':nth-child(1)').attr('style', function (i, s) {
@@ -940,7 +926,37 @@
         google.maps.event.addDomListener(window, 'load', init);
 
         // apply validation
-        var $btnApply = $("#apply button"), $btnBookmark = $("#bm");
+        var $btnApply = $("#apply button"), $btnBookmark = $("#bm"),
+            startDate = '{{$vacancy->recruitmentDate_start}}', endDate = '{{$vacancy->recruitmentDate_end}}',
+            $content = '', $style = 'none', $class = '', $attr = false,
+            now = new Date(), day = ("0" + now.getDate()).slice(-2), month = ("0" + (now.getMonth() + 1)).slice(-2),
+            today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+        @if($vacancy->isPost == false)
+            $content = 'This vacancy is INACTIVE.';
+        $style = 'inline-block';
+        $class = '';
+        @else
+        if (today < startDate || startDate == "") {
+            $content = 'The recruitment date of this vacancy hasn\'t started yet.';
+            $style = 'inline-block';
+            $class = '';
+            $attr = true;
+        } else if (today > endDate || endDate == "") {
+            $content = 'The recruitment date of this vacancy has been ended.';
+            $style = 'inline-block';
+            $class = '';
+            $attr = true;
+        } else {
+            $content = '';
+            $class = 'ld ld-heartbeat';
+            $attr = false;
+        }
+        @endif
+        $(".info").css('display', $style);
+        $(".info label").data('content', $content);
+        $("#apply").addClass($class);
+        $btnApply.attr('disabled', $attr);
         @auth
         @if(Auth::user()->isSeeker())
         @php
@@ -951,7 +967,7 @@
         @if($acc->first()->isBookmark == true)
         $("#bookmark").prop('checked', true);
         $("#bm .bookmark").removeClass('ld ld-breath');
-        $btnBookmark.attr('title', 'Unmark this vacancy').tooltip('show');
+        $btnBookmark.attr('title', 'Unmark this vacancy');
         @endif
         @if($acc->first()->isApply == true)
         $("#apply").removeClass('ld ld-heartbeat').attr('title', 'Please, check Application Status ' +

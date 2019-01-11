@@ -21,6 +21,21 @@
         }, 500);
     });
 
+    $('#check_password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#check_password').togglePassword();
+    });
+
+    $('#password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#password').togglePassword();
+    });
+
+    $('#password-confirm + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#password-confirm').togglePassword();
+    });
+
     $("#show_background_settings").click(function () {
         $("#input-background").trigger('click');
     });

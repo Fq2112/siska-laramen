@@ -188,9 +188,20 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     });
 
     $router->group(['prefix' => 'partners', 'namespace' => 'Partners', 'middleware' => 'partner'], function ($router) {
+        $router->get('/', 'SynchronizeController@getPartnerInfo');
+        $router->post('sync', 'SynchronizeController@synchronize');
 
-        $router->get('vacancies', 'PartnerController@getVacancies');
+        $router->group(['prefix' => 'vacancies'], function ($router) {
+            $router->post('create', 'PartnerAgencyVacancyController@createVacancies');
+            $router->put('update', 'PartnerAgencyVacancyController@updateVacancies');
+            $router->delete('delete', 'PartnerAgencyVacancyController@deleteVacancies');
+            $router->put('agency/update', 'PartnerAgencyVacancyController@updateAgencies');
+            $router->delete('agency/delete', 'PartnerAgencyVacancyController@deleteAgencies');
+        });
 
+        $router->group(['prefix' => 'seekers'], function ($router) {
+            $router->put('update', 'PartnerSeekerController@updateSeekers');
+        });
     });
 
 });

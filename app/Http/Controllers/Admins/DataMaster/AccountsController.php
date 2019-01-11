@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admins\DataMaster;
 
 use App\Agencies;
+use App\PartnerCredential;
 use App\Seekers;
 use App\User;
 use App\Admin;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -119,6 +121,12 @@ class AccountsController extends Controller
             Storage::delete('public/users/' . $user->ava);
         }
         $user->forceDelete();
+        if ($user->isAgency()) {
+            $this->deletePartnersAgencies($user);
+
+        } elseif ($user->isSeeker()) {
+            $this->deletePartnersSeekers($user);
+        }
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
     }
@@ -138,8 +146,35 @@ class AccountsController extends Controller
             Storage::delete('public/users/' . $user->ava);
         }
         $user->forceDelete();
+        $this->deletePartnersAgencies($user);
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
+    }
+
+    private function deletePartnersAgencies($user)
+    {
+        $data = array('email' => $user->email, 'judul' => null);
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'check_form' => 'agency',
+                        'agencies' => $data,
+                    ]
+                ]);
+            }
+
+        }
     }
 
     public function showSeekersTable()
@@ -157,7 +192,31 @@ class AccountsController extends Controller
             Storage::delete('public/users/' . $user->ava);
         }
         $user->forceDelete();
+        $this->deletePartnersSeekers($user);
 
         return back()->with('success', '' . $user->name . ' is successfully deleted!');
+    }
+
+    private function deletePartnersSeekers($user)
+    {
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->delete($partner->uri . '/api/SISKA/seekers/delete', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'email' => $user->email,
+                    ]
+                ]);
+            }
+        }
     }
 }

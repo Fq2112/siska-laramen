@@ -14,6 +14,7 @@ use App\Invitation;
 use App\JobLevel;
 use App\JobType;
 use App\Jurusanpend;
+use App\PartnerCredential;
 use App\PaymentMethod;
 use App\Plan;
 use App\Provinces;
@@ -24,6 +25,7 @@ use App\Tingkatpend;
 use App\User;
 use App\Vacancies;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -242,12 +244,12 @@ class AccountController extends Controller
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
         if ($request->check_form == 'personal_data') {
-
             $user->update(['name' => $request->name]);
             $agency->update([
                 'kantor_pusat' => $request->kantor_pusat,
                 'industri_id' => $request->industri_id,
                 'link' => $request->link,
+                'phone' => $request->phone,
                 'hari_kerja' => $request->start_day . ' - ' . $request->end_day,
                 'jam_kerja' => $request->start_time . ' - ' . $request->end_time,
             ]);
@@ -257,23 +259,26 @@ class AccountController extends Controller
             $json = file_get_contents("https://maps.googleapis.com/maps/api/geocode/json?address=" .
                 $address . "&key=AIzaSyBIljHbKjgtTrpZhEiHum734tF1tolxI68");
 
-            $lat = json_decode($json)->{'results'}[0]->{'geometry'}->{'location'}->{'lat'};
-            $long = json_decode($json)->{'results'}[0]->{'geometry'}->{'location'}->{'lng'};
+            $request->request->add([
+                'lat' => json_decode($json)->{'results'}[0]->{'geometry'}->{'location'}->{'lat'},
+                'long' => json_decode($json)->{'results'}[0]->{'geometry'}->{'location'}->{'lng'}
+            ]);
 
             $agency->update([
                 'alamat' => $request->alamat,
-                'lat' => $lat,
-                'long' => $long,
+                'lat' => $request->lat,
+                'long' => $request->long,
             ]);
 
         } elseif ($request->check_form == 'about') {
-
             $agency->update([
                 'tentang' => $request->tentang,
                 'alasan' => $request->alasan,
             ]);
-
         }
+
+        $data = array('email' => $user->email, 'input' => $request->toArray());
+        $this->updatePartners($data, $request->check_form);
 
         return back()->with('update', 'Successfully updated!');
     }
@@ -473,14 +478,47 @@ class AccountController extends Controller
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
 
+        if ($request->check_form == 'schedule') {
+            if ($request->quizDate_start == "" && $request->psychoTestDate_start == "") {
+                $this->validate($request, [
+                    'recruitmentDate_start' => 'required|date',
+                    'recruitmentDate_end' => 'required|date|after_or_equal:recruitmentDate_start',
+                    'interview_date' => 'required|date|after_or_equal:recruitmentDate_end',
+                ]);
+            } elseif ($request->quizDate_start != "" && $request->psychoTestDate_start == "") {
+                $this->validate($request, [
+                    'recruitmentDate_start' => 'required|date',
+                    'recruitmentDate_end' => 'required|date|after_or_equal:recruitmentDate_start',
+                    'quizDate_start' => 'required|date|after_or_equal:recruitmentDate_end',
+                    'quizDate_end' => 'required|date|after_or_equal:quizDate_start',
+                    'interview_date' => 'required|date|after_or_equal:quizDate_end',
+                ]);
+            } elseif ($request->quizDate_start != "" && $request->psychoTestDate_start != "") {
+                $this->validate($request, [
+                    'recruitmentDate_start' => 'required|date',
+                    'recruitmentDate_end' => 'required|date|after_or_equal:recruitmentDate_start',
+                    'quizDate_start' => 'required|date|after_or_equal:recruitmentDate_end',
+                    'quizDate_end' => 'required|date|after_or_equal:quizDate_start',
+                    'psychoTestDate_start' => 'required|date|after_or_equal:quizDate_end',
+                    'psychoTestDate_end' => 'required|date|after_or_equal:psychoTestDate_start',
+                    'interview_date' => 'required|date|after_or_equal:psychoTestDate_end',
+                ]);
+            }
+
+            $request->request->add(['isPost' => true]);
+        }
+
         $findVacancy = Vacancies::find($id);
+        $data = array('email' => $user->email, 'judul' => $findVacancy->judul, 'input' => $request->toArray());
+        $this->updatePartners($data, $request->check_form);
+
         if ($request->check_form == 'vacancy') {
             $findVacancy->update([
                 'judul' => $request->judul,
                 'cities_id' => $request->cities_id,
                 'syarat' => $request->syarat,
                 'tanggungjawab' => $request->tanggungjawab,
-                'pengalaman' => 'At least ' . $request->pengalaman . ' years',
+                'pengalaman' => $request->pengalaman,
                 'jobtype_id' => $request->jobtype_id,
                 'industry_id' => $request->industri_id,
                 'joblevel_id' => $request->joblevel_id,
@@ -506,9 +544,59 @@ class AccountController extends Controller
         return back()->with('update', '' . $findVacancy->judul . ' is successfully updated!');
     }
 
+    private function updatePartners($data, $check)
+    {
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'check_form' => $check,
+                        'agencies' => $data,
+                    ]
+                ]);
+            }
+        }
+    }
+
     public function deleteVacancy($id, $judul)
     {
-        Vacancies::destroy(decrypt($id));
+        $vacancy = Vacancies::find(decrypt($id));
+        $vacancy->delete();
+
+        $data = array('email' => $vacancy->agencies->user->email, 'judul' => $judul);
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'check_form' => 'vacancy',
+                        'agencies' => $data,
+                    ]
+                ]);
+            }
+        }
+
         return back()->with('delete', '' . $judul . ' is successfully deleted!');
     }
 }

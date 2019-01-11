@@ -146,6 +146,11 @@
         .scroll-content {
             max-height: 470px;
         }
+
+        #myPassword + .glyphicon, #myNew_password + .glyphicon, #myConfirm + .glyphicon {
+            cursor: pointer;
+            pointer-events: all;
+        }
     </style>
 </head>
 
@@ -838,7 +843,8 @@
                                 <input id="myPassword" type="password" class="form-control" minlength="6"
                                        name="myPassword"
                                        placeholder="Current Password" required>
-                                <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-eye-open form-control-feedback right"
+                                      aria-hidden="true"></span>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -846,7 +852,8 @@
                                 <label for="myNew_password">New Password <span class="required">*</span></label>
                                 <input id="myNew_password" type="password" class="form-control" minlength="6"
                                        name="myNew_password" placeholder="New Password" required>
-                                <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-eye-open form-control-feedback right"
+                                      aria-hidden="true"></span>
                             </div>
                         </div>
                         <div class="row form-group">
@@ -854,7 +861,8 @@
                                 <label for="myConfirm">Password Confirmation <span class="required">*</span></label>
                                 <input id="myConfirm" type="password" class="form-control" minlength="6"
                                        name="myPassword_confirmation" placeholder="Retype password" required>
-                                <span class="fa fa-sign-in-alt form-control-feedback right" aria-hidden="true"></span>
+                                <span class="glyphicon glyphicon-eye-open form-control-feedback right"
+                                      aria-hidden="true"></span>
                             </div>
                         </div>
                     </div>
@@ -870,6 +878,7 @@
 
 <!-- jQuery -->
 <script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('js/hideShowPassword.min.js')}}"></script>
 <!-- Bootstrap -->
 <script src="{{asset('js/bootstrap.min.js')}}"></script>
 <!-- FastClick -->
@@ -1005,6 +1014,21 @@
 
     $(".btn_settings").on("click", function () {
         $("#settingsModal").modal("show");
+    });
+
+    $('#myPassword + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#myPassword').togglePassword();
+    });
+
+    $('#myNew_password + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#myNew_password').togglePassword();
+    });
+
+    $('#myConfirm + .glyphicon').on('click', function () {
+        $(this).toggleClass('glyphicon-eye-open glyphicon-eye-close');
+        $('#myConfirm').togglePassword();
     });
 
     function fullScreen() {

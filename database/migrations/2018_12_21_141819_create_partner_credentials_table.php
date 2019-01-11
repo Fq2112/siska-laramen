@@ -18,10 +18,12 @@ class CreatePartnerCredentialsTable extends Migration
             $table->string('name')->unique();
             $table->string('email')->unique();
             $table->string('phone');
+            $table->string('uri');
             $table->text('api_key')->nullable();
             $table->text('api_secret')->nullable();
             $table->date('api_expiry')->nullable();
             $table->boolean('status')->default(false);
+            $table->boolean('isSync')->default(false);
             $table->timestamps();
         });
     }

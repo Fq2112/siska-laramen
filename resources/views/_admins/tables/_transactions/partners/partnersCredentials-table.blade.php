@@ -48,7 +48,8 @@
                                     <td style="vertical-align: middle">
                                         <strong>{{$row->name}}</strong><br>
                                         <a href="mailto:{{$row->email}}">{{$row->email}}</a><br>
-                                        <a href="tel:{{$row->phone}}">{{$row->phone}}</a>
+                                        <a href="tel:{{$row->phone}}">{{$row->phone}}</a><br>
+                                        <a href="{{$row->uri}}" target="_blank">{{$row->uri}}</a>
                                     </td>
                                     <td style="vertical-align: middle">
                                         <table>
@@ -75,8 +76,18 @@
                                                 <td><i class="fa fa-sync"></i>&nbsp;</td>
                                                 <td>Status</td>
                                                 <td>&nbsp;:&nbsp;</td>
-                                                <td><span class="label label-{{$row->status == true ? 'success' :
-                                                'danger'}}">{{$row->status == true ? 'ACTIVE' : 'INACTIVE'}}</span></td>
+                                                <td style="text-transform: uppercase">
+                                                    @if($row->api_expiry != null && today() > $row->api_expiry)
+                                                        <span class="label label-warning">EXPIRED</span>
+                                                    @else
+                                                        <span class="label label-{{$row->status == true ? 'success' :
+                                                        'danger'}}">{{$row->status == true ? 'ACTIVE' : 'INACTIVE'}}
+                                                        </span>
+                                                    @endif
+                                                    &nbsp;|&nbsp;<span class="label label-{{$row->isSync == true ? 'primary'
+                                                    : 'default'}}">{{$row->isSync == true ? 'Synchronized' :
+                                                    'Not Synchronized Yet'}}</span>
+                                                </td>
                                             </tr>
                                         </table>
                                     </td>

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\Agencies;
+namespace App\Mail\Partners;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -37,7 +37,7 @@ class ApplicantListEmail extends Mailable
 
         return $this->subject("" . $vacancy->judul . ": Application List for " . $recruitmentDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
-            ->view('emails.agencies.applicantList')
-            ->attach(public_path('storage\users\agencies\reports\applications') . '/' . $filename);
+            ->view('emails.partners.applicantList')
+            ->attach(public_path('storage\users\partners\reports\applications') . '/' . $filename);
     }
 }

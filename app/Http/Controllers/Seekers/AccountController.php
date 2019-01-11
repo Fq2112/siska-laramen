@@ -13,6 +13,7 @@ use App\Jurusanpend;
 use App\Languages;
 use App\Nations;
 use App\Organization;
+use App\PartnerCredential;
 use App\Salaries;
 use App\Seekers;
 use App\Skills;
@@ -21,6 +22,7 @@ use App\Training;
 use App\User;
 use App\Provinces;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -136,14 +138,18 @@ class AccountController extends Controller
 
         if ($check == 'contact') {
             $this->updateContact($seeker, $input);
+            $data = array('email' => $user->email, 'input' => $input);
+            $this->updatePartners($data, 'contact');
 
         } elseif ($check == 'personal') {
             $this->updatePersonal($user, $seeker, $input);
+            $data = array('email' => $user->email, 'input' => $input);
+            $this->updatePartners($data, 'personal');
 
         } elseif ($check == 'summary') {
-            $seeker->update([
-                'summary' => $input['summary']
-            ]);
+            $seeker->update(['summary' => $input['summary']]);
+            $data = array('email' => $user->email, 'summary' => $seeker->summary);
+            $this->updatePartners($data, 'summary');
 
         } elseif ($check == 'video_summary') {
             $this->updateVideoSummary($seeker, $request);
@@ -188,8 +194,11 @@ class AccountController extends Controller
             } else {
                 if ($input['new_password'] != $input['password_confirmation']) {
                     return 1;
+
                 } else {
                     $user->update(['password' => bcrypt($input['new_password'])]);
+                    $data = array('email' => $user->email, 'password' => $user->password);
+                    $this->updatePartners($data, 'password');
                     return 2;
                 }
             }
@@ -206,6 +215,31 @@ class AccountController extends Controller
                 return asset('storage/users/' . $name);
             }
 
+        }
+    }
+
+    private function updatePartners($data, $check)
+    {
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+                $client->put($partner->uri . '/api/SISKA/seekers/update', [
+                    'form_params' => [
+                        'key' => $partner->api_key,
+                        'secret' => $partner->api_secret,
+                        'check_form' => $check,
+                        'seeker' => $data,
+                    ]
+                ]);
+            }
         }
     }
 

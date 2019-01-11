@@ -39,7 +39,7 @@
                                                            type="password" class="form-control"
                                                            name="password" minlength="6" required
                                                            autofocus>
-                                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                                    <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                                     <span class="help-block">
                                                                     <strong class="aj_pass"
                                                                             style="text-transform: none"></strong>
@@ -54,7 +54,7 @@
                                                            type="password" class="form-control"
                                                            name="new_password" minlength="6"
                                                            required>
-                                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                                    <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                                     @if ($errors->has('new_password'))
                                                         <span class="help-block">
                                                                         <strong>{{ $errors->first('new_password') }}</strong>
@@ -68,7 +68,7 @@
                                                            name="password_confirmation"
                                                            minlength="6" required
                                                            onkeyup="return checkPassword()">
-                                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                                    <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                                     <span class="help-block">
                                                                         <strong class="aj_new_pass"
                                                                                 style="text-transform: none"></strong>
