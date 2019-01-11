@@ -17,8 +17,8 @@ class LocationsAPIController extends Controller
 
     public function loadCities()
     {
-        $cities = Cities::all()->toArray();
-        return $cities;
+        $cities = Cities::all();
+        return response()->json($cities);
     }
 
     public function loadNations()

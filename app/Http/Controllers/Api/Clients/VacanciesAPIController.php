@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Clients;
 use App\Accepting;
 use App\Agencies;
 use App\Cities;
+use App\FavoriteAgency;
 use App\FungsiKerja;
 use App\Industri;
 use App\JobLevel;
@@ -19,6 +20,39 @@ use App\Http\Controllers\Controller;
 
 class VacanciesAPIController extends Controller
 {
+    public function favagency()
+    {
+        $favAgency = FavoriteAgency::select('agency_id')->where('isFavorite', true)
+            ->selectRaw('COUNT(*) AS count')
+            ->groupBy('agency_id')
+            ->orderByDesc('count')
+            ->limit(9)
+            ->get()->pluck('agency_id')->toArray();
+
+        $agency = Agencies::whereIn('id',$favAgency)->get()->toArray();
+        $array_agency = $this->array_agency($agency);
+        return $array_agency;
+
+    }
+
+    public function array_agency($agency)
+    {
+        $data = 0;
+        foreach ($agency as $item){
+            $user = User::findOrFail(Agencies::findOrFail($item['id'])->user_id);
+            if ($user->ava == "agency.png" || $user->ava == "") {
+                $filename = asset('images/agency.png');
+            } else {
+                $filename = asset('storage/users/' . $user->ava);
+            }
+            $ava['user'] = array('ava' => $filename, 'name' => $user->name);
+            $industry = array('industry' => Industri::findOrFail($item['industri_id'])->nama);
+            $arr[$data] = array_replace($ava, $agency[$data], $industry);
+            $data = $data + 1;
+        }
+        return $arr;
+    }
+    
     public function loadVacancies()
     {
         $vacancies = Vacancies::where('isPost', true)->get()->toArray();
@@ -114,7 +148,8 @@ class VacanciesAPIController extends Controller
             $cities = array('city' => substr(Cities::find($vacancies['cities_id'])->name, 10));
         }
 
-        $agency = Agencies::findOrFail($vacancies['agency_id'])->toArray();
+//        $agency = Agencies::findOrFail($vacancies['agency_id'])->toArray();
+
         $degrees = array('degrees' => Tingkatpend::findOrFail($vacancies['tingkatpend_id'])->name);
         $majors = array('majors' => Jurusanpend::findOrFail($vacancies['jurusanpend_id'])->name);
         $jobfunc = array('job_func' => FungsiKerja::findOrFail($vacancies['fungsikerja_id'])->nama);
@@ -130,8 +165,10 @@ class VacanciesAPIController extends Controller
         } else {
             $filename = asset('storage/users/' . $user->ava);
         }
+
         $ava['user'] = array('ava' => $filename, 'name' => $user->name);
-        $array = array_replace($vacancies,$agency,$salary,$degrees,$majors,$jobtype,$jobfunc,$industry,$joblevel,$update_at,$total,$ava,$cities);
+        $array = array_replace($vacancies,$salary,$degrees,$majors,$jobtype,$jobfunc,$industry,$joblevel,$update_at,$total,$ava,$cities);
+
         return $array;
     }
 

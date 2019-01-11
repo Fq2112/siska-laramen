@@ -41,8 +41,9 @@ class SearchAPICOntroller extends Controller
         })->get()->pluck('id')->toArray();
 
 //        dd($agency);
-        $city = Cities::where('name', 'like', '%' . $loc . '%')->get()->pluck('id')->toArray();
-
+//      $city = Cities::where('name', 'like', '%' . $loc . '%')->get()->pluck('id')->toArray();
+		$city = Cities::where('id', 'like',  $loc )->get()->pluck('id')->toArray();
+//		dd($city);
 //        $arr = Vacancies::where('judul', 'like', '%' . $q . '%')->whereIn('cities_id', $city)
 //            ->orwhereIn('agency_id', $agency)->whereIn('cities_id', $city)->where('isPost', true)->get()
 //            ->toArray();
@@ -64,10 +65,16 @@ class SearchAPICOntroller extends Controller
         })->where('judul', 'like', '%' . $q . '%')->where('isPost', true)->get()->toArray();
 
 
+
 //        if ($salary != '' || $job_func != '' || $industry != '' || $degree != '' || $major != '') {
 //
 //        }
-        dd($arr);
+       // dd($arr);
+
+        if(count($arr) < 1)
+    {
+        return response()->json([]);
+    }
 
         return app(Search::class)->array_vacancies($arr);
     }
