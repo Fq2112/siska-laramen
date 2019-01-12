@@ -2,20 +2,57 @@
 
 namespace App\Http\Controllers\Api\Partners;
 
-use App\PartnerCredential;
 use App\User;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class PartnerSeekerController extends Controller
 {
+    public function createSeekers(Request $request)
+    {
+        $data = $request->seeker;
+        $checkSeeker = User::where('email', $data['email'])->first();
+        if (!$checkSeeker) {
+            $user = User::firstOrCreate([
+                'ava' => 'seeker.png',
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'role' => 'seeker',
+                'status' => true
+            ]);
+
+            $user->seekers()->create(['user_id' => $user->id]);
+        }
+    }
+
+    public function seekersSocialite($provider, Request $request)
+    {
+        $data = $request->seeker;
+        $checkSeeker = User::where('email', $data['email'])->first();
+        if (!$checkSeeker) {
+            $user = User::firstOrCreate([
+                'ava' => 'seeker.png',
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'role' => 'seeker',
+                'status' => true
+            ]);
+
+            $user->seekers()->create(['user_id' => $user->id]);
+
+            $user->socialProviders()->create([
+                'provider_id' => $data['provider_id'],
+                'provider' => $provider
+            ]);
+        }
+    }
+
     public function updateSeekers(Request $request)
     {
         $data = $request->seeker;
         $user = User::where('email', $data['email'])->first();
-        $partners = PartnerCredential::where('status', true)->where('isSync', true)
-            ->whereDate('api_expiry', '>=', today())->where('id', '!=', $request->partner->id)->get();
 
         if ($user != null) {
             if ($request->check_form == 'password') {
@@ -43,30 +80,14 @@ class PartnerSeekerController extends Controller
             } elseif ($request->check_form == 'summary') {
                 $user->seekers->update(['summary' => $data['summary']]);
             }
-
-            $this->updatePartners($partners, $data, $request->check_form);
         }
     }
 
-    private function updatePartners($partners, $data, $check)
+    public function deleteSeekers(Request $request)
     {
-        if (count($partners) > 0) {
-            foreach ($partners as $partner) {
-                $client = new Client([
-                    'base_uri' => $partner->uri,
-                    'defaults' => [
-                        'exceptions' => false
-                    ]
-                ]);
-                $client->put($partner->uri . '/api/SISKA/seekers/update', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => $check,
-                        'seeker' => $data,
-                    ]
-                ]);
-            }
+        $user = User::where('email', $request->email)->first();
+        if ($user != null) {
+            $user->forceDelete();
         }
     }
 }

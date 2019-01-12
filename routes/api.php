@@ -61,8 +61,6 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         'uses' => 'PostController@feedback',
         'as' => 'get.vacancy'
     ]);
-    $router->get('user', 'MobileController@user');
-
 
     $router->group(['prefix' => 'auth'], function ($router) {
 
@@ -195,7 +193,10 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         });
 
         $router->group(['prefix' => 'seekers'], function ($router) {
+            $router->post('create', 'PartnerSeekerController@createSeekers');
+            $router->post('{provider}', 'PartnerSeekerController@seekersSocialite');
             $router->put('update', 'PartnerSeekerController@updateSeekers');
+            $router->delete('delete', 'PartnerSeekerController@deleteSeekers');
         });
     });
 

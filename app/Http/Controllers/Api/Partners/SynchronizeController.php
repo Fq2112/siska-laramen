@@ -39,21 +39,9 @@ class SynchronizeController extends Controller
     {
         $partner = $request->partner;
         $vacancies = $request->vacancies;
+        $seekers = $request->seekers;
 
         if ($partner->isSync == false) {
-            $seekers = Seekers::whereHas('user', function ($q) {
-                $q->where('status', true);
-            })->get()->toArray();
-            $x = 0;
-            foreach ($seekers as $seeker) {
-                $user = User::find($seeker['user_id']);
-                $ava['user'] = array('ava' => $user->ava, 'name' => $user->name, 'email' => $user->email,
-                    'password' => $user->password);
-
-                $seekers[$x] = array_replace($ava, $seekers[$x]);
-                $x = $x + 1;
-            }
-
             $siskaVacs = Vacancies::where('isPost', true)->get()->toArray();
             $i = 0;
             foreach ($siskaVacs as $row) {
@@ -143,13 +131,43 @@ class SynchronizeController extends Controller
                 ]);
             }
 
+            foreach ($seekers as $seeker) {
+                $checkUser = User::where('email', $seeker['email'])->first();
+                if (!$checkUser) {
+                    $user = User::firstOrCreate([
+                        'ava' => 'seeker.png',
+                        'name' => $seeker['name'],
+                        'email' => $seeker['email'],
+                        'password' => $seeker['password'],
+                        'role' => 'seeker',
+                        'status' => $seeker['status']
+                    ]);
+                } else {
+                    $user = $checkUser;
+                }
+
+                Seekers::create([
+                    'user_id' => $user->id,
+                    'phone' => $seeker['phone'],
+                    'address' => $seeker['address'],
+                    'zip_code' => $seeker['zip_code'],
+                    'birthday' => $seeker['birthday'],
+                    'gender' => $seeker['gender'],
+                    'relationship' => $seeker['relationship'],
+                    'nationality' => $seeker['nationality'],
+                    'website' => $seeker['website'],
+                    'lowest_salary' => $seeker['lowest_salary'],
+                    'highest_salary' => $seeker['highest_salary'],
+                    'summary' => $seeker['summary'],
+                ]);
+            }
+
             $partner->update(['isSync' => true]);
 
             return response()->json([
                 'status' => "200 OK",
                 'success' => true,
                 'message' => 'Successfully synchronized!',
-                'seekers' => $seekers,
                 'vacancies' => $siskaVacs,
             ], 200);
 

@@ -36,6 +36,5 @@ class AppServiceProvider extends ServiceProvider
         });
         $this->app->bind('GlobalAuth', 'App\Support\GlobalAuth');
         $this->app->bind('RomanConverter', 'App\Support\RomanConverter');
-        $this->app->bind('Chart', 'App\Support\Chart');
     }
 }
