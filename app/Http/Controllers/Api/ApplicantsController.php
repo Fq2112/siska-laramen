@@ -138,28 +138,28 @@ class ApplicantsController extends Controller
         $seeker = $this->seeker(Auth::user()->id);
 
         $check = Accepting::where('vacancy_id', $vacancy_id)
-            ->where('seeker_id', $seeker->id)->first();
-
-        if ($check->count() > 1) {
-            if ($check->isApply == true) {
-                $check->update([
+            ->where('seeker_id', $seeker->id)->get();
+//        dd($check[0]->id);
+        if ($check->count() == 1 ) {
+            if ($check[0]->isApply == true) {
+                $check[0]->update([
                     'isBookmark' => false
                 ]);
                 return response()->json([
                     'status' => 'success',
                     'success' => true,
-                    'error' => 'Bookmarks successfully remove!!'
+                    'message' => 'Bookmarks successfully remove!!'
                 ]);
-            } elseif ($check->isApply == false) {
-                $check->delete();
+            } elseif ($check[0]->isApply == false) {
+                $check[0]->delete();
                 return response()->json([
                     'status' => 'success',
                     'success' => true,
-                    'error' => 'Bookmarks successfully remove!!'
+                    'message' => 'Bookmarks successfully remove!!'
                 ]);
             }
 
-        } else {
+        } elseif($check->count() == 0) {
             Accepting::create([
                 'seeker_id' => $seeker->id,
                 'vacancy_id' => $vacancy_id,
@@ -169,7 +169,7 @@ class ApplicantsController extends Controller
             return response()->json([
                 'status' => 'success',
                 'success' => true,
-                'error' => 'Vacancy is successfully applied!!'
+                'message' => 'Vacancy is successfully Bookmarked!!'
             ]);
         }
     }

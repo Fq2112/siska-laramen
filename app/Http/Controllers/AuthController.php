@@ -158,17 +158,18 @@ class AuthController extends Controller
             ]);
         }
 
-        $credentials = $request->only('email', 'password');
+        $credentials['email'] = $email;
+        $credentials['password'] = $password;
 
-        $rules = [
-            'email' => 'required|email',
-            'password' => 'required',
-        ];
-
-        $validator = Validator::make($credentials, $rules);
-        if ($validator->fails()) {
-            return response()->json(['success' => false, 'error' => $validator->messages()], 401);
-        }
+//        $rules = [
+//            'email' => 'required|email',
+//            'password' => 'required',
+//        ];
+//
+//        $validator = Validator::make($credentials, $rules);
+//        if ($validator->fails()) {
+//            return response()->json(['success' => false, 'error' => $validator->messages()], 401);
+//        }
 
         $credentials['status'] = 1;
 
@@ -222,15 +223,50 @@ class AuthController extends Controller
      */
     public function recover(Request $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $email = $obj['email'];
+
+        $user = User::where('email', $email)->first();
+
+
         if (!$user) {
             $error_message = "Your email address was not found.";
-            return response()->json(['success' => false, 'error' => ['email' => $error_message]], 401);
+            return response()->json([
+                'success' => false,
+                'status' => 'Warning',
+                'message' => $error_message
+            ], 401);
         }
+        if (!$user->status) {
+            return response()->json([
+                'success' => false,
+                'status' => 'Warning',
+                'message' => 'Your email is not verified yet!!'
+            ]);
+        }
+
+        $reset['email'] = $email;
         try {
-            Password::sendResetLink($request->only('email'), function (Message $message) {
-                $message->subject('Your Password Reset Link');
-            });
+//            Password::sendResetLink($reset, function (Message $message) {
+//                $message->subject('Your Password Reset Link');
+//            });
+
+            $subject = "Reset Password.";
+            $name = $user->name;
+            $pass = Str::random(16);
+
+            $user->update([
+                'password' => bcrypt($pass)
+            ]);
+
+            Mail::send('emails.auth.reset', ['name' => $name, 'email' => $user->email, 'password' => $pass],
+                function ($mail) use ($email, $name , $subject) {
+                    $mail->from(getenv('Ilham Saputra'), "ilham.puji100@gmail.com");
+                    $mail->to($email, $name);
+                    $mail->subject($subject);
+                });
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
@@ -248,7 +284,15 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json($this->guard()->user());
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        if ($user['ava'] == "seeker.png" || $user['ava'] == "") {
+            $filename = asset('images/seeker.png');
+        } else {
+            $filename = asset('storage/users/' . $user['ava']);
+        }
+        $ava['user'] = array('ava' => $filename, 'name' => $user['name']);
+        $array = array_replace($user, $ava);
+        return response()->json($array);
     }
 
     /**
@@ -307,12 +351,12 @@ class AuthController extends Controller
     public function apiAbortApply()
     {
         $json = file_get_contents('php://input');
-        $obj = json_decode($json,false);
+        $obj = json_decode($json, false);
 
         $vacancy_id = $obj['vacancy_id'];
         $seeker = $this->seeker(Auth::user()->id);
 
-        $vacancy = Accepting::where('seeker_id',$seeker->id)->where('vacancy_id',$vacancy_id)->first();
+        $vacancy = Accepting::where('seeker_id', $seeker->id)->where('vacancy_id', $vacancy_id)->first();
         $vacancy->delete();
 
         return response()->json([
@@ -393,6 +437,7 @@ class AuthController extends Controller
     protected function respondWithToken($token)
     {
         return response()->json([
+            'success' => true,
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => $this->guard()->factory()->getTTL() * 60

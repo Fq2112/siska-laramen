@@ -20,7 +20,7 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
     $router->post('login', 'AuthController@login');
     $router->post('seeker', 'AuthController@seeker');
     $router->post('recover', 'AuthController@recover');
-    $router->post('me', 'AuthController@me');
+    $router->get('me', 'AuthController@me');
 
     $router->group(['prefix' => 'vacancy', 'namespace' => 'Api'], function ($router) {
         $router->post('apply', [
@@ -48,7 +48,7 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
 
 $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
 
-    $router->get('search', [
+    $router->post('search', [
         'uses' => 'SearchAPICOntroller@search'
     ]);
 
@@ -121,6 +121,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('vacancies/latest', [
             'uses' => 'VacanciesAPIController@loadLateVacancies',
             'as' => 'load.late.vacancies'
+        ]);
+
+        $router->get('favorite/agency', [
+            'uses' => 'VacanciesAPIController@favagency',
+            'as' => 'load.agency'
         ]);
 
         $router->get('agency/{agency_id}', [
