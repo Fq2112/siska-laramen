@@ -299,13 +299,29 @@ class UserSeeder extends Seeder
                 }
 
             } elseif ($role == Role::ADMIN) {
-                for ($c = 0; $c < (($role == Role::ADMIN) ? 10 : 2); $c++) {
+                Admin::create([
+                    'ava' => 'avatar.png',
+                    'name' => 'jQuinn',
+                    'email' => 'jquinn211215@gmail.com',
+                    'password' => bcrypt('secret'),
+                    'role' => 'root'
+                ]);
+
+                for ($c = 0; $c < 5; $c++) {
                     Admin::create([
                         'ava' => 'avatar.png',
                         'name' => $faker->firstName . ' ' . $faker->lastName,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
                         'role' => 'admin'
+                    ]);
+
+                    Admin::create([
+                        'ava' => 'avatar.png',
+                        'name' => $faker->name,
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => bcrypt('secret'),
+                        'role' => 'interviewer'
                     ]);
                 }
             }
@@ -319,12 +335,6 @@ class UserSeeder extends Seeder
         User::find(26)->update([
             'email' => 'fiqy_a@icloud.com',
             'name' => 'Fiqy Ainuzzaqy'
-        ]);
-
-        Admin::find(1)->update([
-            'email' => 'jquinn211215@gmail.com',
-            'name' => 'jQuinn',
-            'role' => 'root'
         ]);
     }
 }

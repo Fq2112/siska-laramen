@@ -15,10 +15,7 @@ function showResetPasswordForm() {
     $('.emailBox, .registerBox, .loginBox, .partnershipBox')
         .fadeOut('fast', function () {
             $('.passwordBox').fadeIn('fast');
-            $('.login-footer, .partnership-footer').fadeOut('fast', function () {
-                $('.register-footer').fadeIn('fast');
-            });
-
+            $('.login-footer, .partnership-footer, .register-footer').fadeOut('fast');
             $('.modal-title').html('Reset Password');
         });
     $('.error').removeClass('alert alert-danger').html('');

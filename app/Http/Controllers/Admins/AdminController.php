@@ -258,10 +258,12 @@ class AdminController extends Controller
         $it = new \MultipleIterator();
         $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
         $it->attachIterator(new \ArrayIterator($request->room_codes));
+        $it->attachIterator(new \ArrayIterator($request->admin_ids));
         foreach ($it as $value) {
             PsychoTestInfo::create([
                 'vacancy_id' => $value[0],
                 'room_codes' => $value[1],
+                'admin_id' => $value[2]
             ]);
         }
         $total = count($request->vacancy_ids);
@@ -276,6 +278,7 @@ class AdminController extends Controller
         $info->update([
             'vacancy_id' => $request->vacancy_id,
             'room_codes' => $request->room_codes,
+            'admin_id' => $request->admin_id
         ]);
 
         return redirect()->route('psychoTest.info')

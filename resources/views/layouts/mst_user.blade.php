@@ -391,7 +391,7 @@
                     <div class="content passwordBox" style="display:none;">
                         <div class="form">
                             <form method="post" accept-charset="UTF-8" class="form-horizontal"
-                                  action="{{ route('password.request') }}">
+                                  action="{{route('password.request',['token' => session('reset')['token']])}}">
                                 {{ csrf_field() }}
                                 <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">

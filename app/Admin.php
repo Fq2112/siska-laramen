@@ -45,6 +45,15 @@ class Admin extends Authenticatable
         return ($this->role == Role::ADMIN);
     }
 
+    /**
+     * Check whether this user is interviewer or not
+     * @return bool
+     */
+    public function isInterviewer()
+    {
+        return ($this->role == Role::INTERVIEWER);
+    }
+
     public function carousels()
     {
         return $this->hasMany(Carousel::class);

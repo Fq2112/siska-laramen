@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Seekers;
 use App\Provinces;
 use App\PsychoTestInfo;
 use App\PsychoTestResult;
-use App\Seekers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Twilio\Rest\Client;
@@ -66,7 +65,6 @@ class PsychoTestController extends Controller
     {
         $result = PsychoTestResult::create([
             'psychoTest_id' => $request->psychoTest_id,
-            'admin_id' => Auth::guard('admin')->user()->id,
             'seeker_id' => $request->seeker_id,
             'kompetensi' => $request->kompetensi,
             'karakter' => $request->karakter,

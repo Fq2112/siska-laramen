@@ -12,16 +12,16 @@ namespace App\Support;
 class Role
 {
     const ROOT = 'root';
-
     const ADMIN = 'admin';
+    const INTERVIEWER = 'interviewer';
 
     const SEEKER = 'seeker';
-
     const AGENCY = 'agency';
 
     const ALL = [
         Role::AGENCY,
         Role::SEEKER,
+        Role::INTERVIEWER,
         Role::ADMIN,
         Role::ROOT
     ];
