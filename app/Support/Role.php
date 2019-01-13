@@ -11,10 +11,14 @@ namespace App\Support;
 
 class Role
 {
+    //admin Privilege
     const ROOT = 'root';
     const ADMIN = 'admin';
     const INTERVIEWER = 'interviewer';
+    const QUIZ_STAFF = 'quiz_staff';
+    const SYNC_STAFF = 'sync_staff';
 
+    //other Privilege
     const SEEKER = 'seeker';
     const AGENCY = 'agency';
 
@@ -22,8 +26,10 @@ class Role
         Role::AGENCY,
         Role::SEEKER,
         Role::INTERVIEWER,
+        Role::QUIZ_STAFF,
+        Role::SYNC_STAFF,
         Role::ADMIN,
-        Role::ROOT
+        Role::ROOT,
     ];
 
     /**

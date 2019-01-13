@@ -304,16 +304,16 @@ class UserSeeder extends Seeder
                     'name' => 'jQuinn',
                     'email' => 'jquinn211215@gmail.com',
                     'password' => bcrypt('secret'),
-                    'role' => 'root'
+                    'role' => Role::ROOT
                 ]);
 
-                for ($c = 0; $c < 5; $c++) {
+                for ($c = 0; $c < 3; $c++) {
                     Admin::create([
                         'ava' => 'avatar.png',
                         'name' => $faker->firstName . ' ' . $faker->lastName,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
-                        'role' => 'admin'
+                        'role' => Role::ADMIN
                     ]);
 
                     Admin::create([
@@ -321,7 +321,23 @@ class UserSeeder extends Seeder
                         'name' => $faker->name,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
-                        'role' => 'interviewer'
+                        'role' => Role::INTERVIEWER
+                    ]);
+
+                    Admin::create([
+                        'ava' => 'avatar.png',
+                        'name' => $faker->name,
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => bcrypt('secret'),
+                        'role' => Role::SYNC_STAFF
+                    ]);
+
+                    Admin::create([
+                        'ava' => 'avatar.png',
+                        'name' => $faker->name,
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => bcrypt('secret'),
+                        'role' => Role::QUIZ_STAFF
                     ]);
                 }
             }
