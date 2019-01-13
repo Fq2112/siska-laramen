@@ -237,90 +237,19 @@
                     <div class="menu_section">
                         <h3>General</h3>
                         <ul class="nav side-menu">
-                            <li><a href="{{route('home-admin')}}"><i class="fa fa-home"></i> Dashboard</a></li>
-                            <li><a href="{{route('admin.inbox')}}"><i class="fa fa-envelope"></i> Inbox</a></li>
-                            <li><a href="{{route('quiz.info')}}"><i class="fa fa-smile"></i> Quiz</a></li>
-                            <li><a href="{{route('psychoTest.info')}}"><i class="fa fa-comments"></i> Psycho Test</a>
-                            </li>
-                            <li>
-                                <a><i class="fa fa-table"></i> Tables
-                                    <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a>Data Master <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a>Accounts <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('table.admins')}}">Admins</a></li>
-                                                    <li><a href="{{route('table.users')}}">Users</a></li>
-                                                    <li><a href="{{route('table.agencies')}}">Agencies</a></li>
-                                                    <li><a href="{{route('table.seekers')}}">Seekers</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a>Bank Soal <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('quiz.topics')}}">Topics</a></li>
-                                                    <li><a href="{{route('quiz.questions')}}">Questions</a></li>
-                                                    <li><a href="{{route('quiz.options')}}">Options</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a>Requirements <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('table.degrees')}}">Education Degrees</a></li>
-                                                    <li><a href="{{route('table.majors')}}">Education Majors</a></li>
-                                                    <li><a href="{{route('table.industries')}}">Industries</a></li>
-                                                    <li><a href="{{route('table.JobFunctions')}}">Job Functions</a></li>
-                                                    <li><a href="{{route('table.JobLevels')}}">Job Levels</a></li>
-                                                    <li><a href="{{route('table.JobTypes')}}">Job Types</a></li>
-                                                    <li><a href="{{route('table.salaries')}}">Salaries</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a>Web Contents <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('table.blog')}}">Blog</a></li>
-                                                    <li><a href="{{route('table.blogTypes')}}">Blog Types</a></li>
-                                                    <li><a href="{{route('table.carousels')}}">Carousels</a></li>
-                                                    <li><a href="{{route('table.PaymentCategories')}}">Payment
-                                                            Category</a></li>
-                                                    <li><a href="{{route('table.PaymentMethods')}}">Payment Method</a>
-                                                    </li>
-                                                    <li><a href="{{route('table.plans')}}">Plans</a></li>
-                                                    <li><a href="{{route('table.nations')}}">Nations</a></li>
-                                                    <li><a href="{{route('table.provinces')}}">Provinces</a></li>
-                                                    <li><a href="{{route('table.cities')}}">Cities</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a>Data Transaction <span class="fa fa-chevron-down"></span></a>
-                                        <ul class="nav child_menu">
-                                            <li><a>Agencies <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('table.vacancies')}}">Job Vacancies</a></li>
-                                                    <li><a href="{{route('table.jobPostings')}}">Job Postings</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a>Seekers <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('table.appliedInvitations')}}">
-                                                            Applied Invitations</a></li>
-                                                    <li><a href="{{route('table.applications')}}">Applications</a></li>
-                                                    <li><a href="{{route('table.quizResults')}}">Quiz Results</a></li>
-                                                    <li><a href="{{route('table.psychoTestResults')}}">
-                                                            Psycho Test Results</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a>Partners <span class="fa fa-chevron-down"></span></a>
-                                                <ul class="nav child_menu">
-                                                    <li><a href="{{route('partners.credentials.show')}}">Credentials</a>
-                                                    </li>
-                                                    <li><a href="{{route('partners.vacancies.show')}}">Job Vacancies</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
+                            @auth('admin')
+                                @if(Auth::guard('admin')->user()->isRoot())
+                                    @include('layouts.partials.sidemenu.root')
+                                @elseif(Auth::guard('admin')->user()->isAdmin())
+                                    @include('layouts.partials.sidemenu.admin')
+                                @elseif(Auth::guard('admin')->user()->isInterviewer())
+                                    @include('layouts.partials.sidemenu.interviewer')
+                                @elseif(Auth::guard('admin')->user()->isQuizStaff())
+                                    @include('layouts.partials.sidemenu.quiz')
+                                @elseif(Auth::guard('admin')->user()->isSyncStaff())
+                                    @include('layouts.partials.sidemenu.sync')
+                                @endif
+                            @endauth
                         </ul>
                     </div>
 
@@ -368,10 +297,14 @@
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                <li>
-                                    <a href="{{route('admin.inbox')}}">
-                                        <i class="fa fa-envelope pull-right"></i> Inbox</a>
-                                </li>
+                                @auth('admin')
+                                    @if(Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isRoot())
+                                        <li>
+                                            <a href="{{route('admin.inbox')}}">
+                                                <i class="fa fa-envelope pull-right"></i> Inbox</a>
+                                        </li>
+                                    @endif
+                                @endauth
                                 <li>
                                     <a class="btn_editProfile">
                                         <span class="badge {{$auth->ava == "" || $auth->ava == "avatar.png" ? 'bg-red' :
@@ -552,16 +485,16 @@
                                             style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
 
-                                        @if(count($invitations) > 0)
-                                            <li style="padding: 0">
-                                                <a style="text-decoration: none;cursor: text">
+                                    @if(count($invitations) > 0)
+                                        <li style="padding: 0">
+                                            <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-envelope"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Applied Invitations</strong></span>
-                                                </a>
-                                            </li>
-                                            @foreach($invitations as $vacancy)
-                                                <li>
-                                                    <a href="{{route('table.appliedInvitations').'?q='.$vacancy->judul}}">
+                                            </a>
+                                        </li>
+                                        @foreach($invitations as $vacancy)
+                                            <li>
+                                                <a href="{{route('table.appliedInvitations').'?q='.$vacancy->judul}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -570,20 +503,20 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                        <span>
+                                                    <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                        <span class="message">
+                                                    <span class="message">
                                                         Make sure the applied invitation list for this vacancy are sent today
                                                         to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                            <li class="divider"
-                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                        @endif
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @endif
 
                                     @if(count($acceptings) > 0)
                                         <li style="padding: 0">
@@ -646,21 +579,21 @@
                                                     </span>
                                                 </a>
                                             </li>
-                                            @endforeach
-                                            <li class="divider"
-                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                        @endif
+                                        @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @endif
 
-                                        @if(count($psychoTest_results) > 0)
-                                            <li style="padding: 0">
-                                                <a style="text-decoration: none;cursor: text">
+                                    @if(count($psychoTest_results) > 0)
+                                        <li style="padding: 0">
+                                            <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-comments"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Psycho Test Results</strong></span>
-                                                </a>
-                                            </li>
-                                            @foreach($psychoTest_results as $vacancy)
-                                                <li>
-                                                    <a href="{{route('table.psychoTestResults').'?q='.$vacancy->judul}}">
+                                            </a>
+                                        </li>
+                                        @foreach($psychoTest_results as $vacancy)
+                                            <li>
+                                                <a href="{{route('table.psychoTestResults').'?q='.$vacancy->judul}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -669,10 +602,10 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                        <span>
+                                                    <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                        <span class="message">
+                                                    <span class="message">
                                                         Make sure the psycho test result list for this vacancy are sent
                                                         today to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
@@ -684,57 +617,57 @@
                                             style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
                                     @endif
 
-                                        @if(count($partnerAPI) > 0)
-                                            <li style="padding: 0;">
-                                                <a style="text-decoration: none;cursor: text">
+                                    @if(count($partnerAPI) > 0)
+                                        <li style="padding: 0;">
+                                            <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-handshake"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Partnership Request</strong></span>
-                                                </a>
-                                            </li>
-                                            @foreach($partnerAPI as $partner)
-                                                <li>
-                                                    <a href="{{route('partners.credentials.show').'?q='.$partner->name}}">
+                                            </a>
+                                        </li>
+                                        @foreach($partnerAPI as $partner)
+                                            <li>
+                                                <a href="{{route('partners.credentials.show').'?q='.$partner->name}}">
                                                     <span class="image">
                                                         <img src="{{asset('images/mitra.jpg')}}">
                                                     </span>
-                                                        <span><span>{{$partner->email}}</span></span>
-                                                        <span class="message">
+                                                    <span><span>{{$partner->email}}</span></span>
+                                                    <span class="message">
                                                         Partnership request from
                                                         <strong style="text-transform: uppercase">{{$partner->name}}</strong>
                                                         hasn't been approve yet!
                                                     </span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                            <li class="divider"
-                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                        @endif
-
-                                        @if(count($partnerVacs) > 0)
-                                            <li style="padding: 0;">
-                                                <a style="text-decoration: none;cursor: text">
-                                                <span><i class="fa fa-handshake"></i>
-                                                    <strong style="margin-left: 5px;text-transform: uppercase">Partner Vacancies</strong></span>
                                                 </a>
                                             </li>
-                                            @foreach($partnerVacs as $partnerVac)
-                                                <li>
-                                                    <a href="{{route('partners.vacancies.show').'?q='.$partnerVac->name}}">
+                                        @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @endif
+
+                                    @if(count($partnerVacs) > 0)
+                                        <li style="padding: 0;">
+                                            <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-handshake"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Partner Vacancies</strong></span>
+                                            </a>
+                                        </li>
+                                        @foreach($partnerVacs as $partnerVac)
+                                            <li>
+                                                <a href="{{route('partners.vacancies.show').'?q='.$partnerVac->name}}">
                                                     <span class="image">
                                                         <img src="{{asset('images/mitra.jpg')}}">
                                                     </span>
-                                                        <span>
+                                                    <span>
                                                         <span>{{$partnerVac->name}}</span>
                                                     </span>
-                                                        <span class="message">
+                                                    <span class="message">
                                                         Vacancies from this partner hasn't been post yet!
                                                     </span>
-                                                    </a>
-                                                </li>
-                                            @endforeach
-                                            <li class="divider"
-                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                        @endif
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                        <li class="divider"
+                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                    @endif
                                 @else
                                     <li>
                                         <a style="text-decoration: none;cursor: text">
