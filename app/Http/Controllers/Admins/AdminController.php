@@ -15,6 +15,7 @@ use App\QuizInfo;
 use App\QuizResult;
 use App\QuizType;
 use App\Seekers;
+use App\Support\Role;
 use App\User;
 use App\Vacancies;
 use Illuminate\Http\Request;
@@ -36,6 +37,9 @@ class AdminController extends Controller
         $this->token = config('services.twilio.token');
         $this->key = config('services.twilio.key');
         $this->secret = config('services.twilio.secret');
+
+        $this->middleware('vacancy_staff')->except(['index', 'updateProfile', 'updateAccount']);
+        $this->middleware('admin.home')->only('index');
     }
 
     public function index()
@@ -225,6 +229,8 @@ class AdminController extends Controller
         })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
             ->whereDate('quizDate_end', '<=', today())->get();
 
+        $interviewers = Admin::where('role', Role::INTERVIEWER)->get();
+
         if ($request->has("vac_ids")) {
             $findVac = Vacancies::whereIn('id', explode(',', $request->vac_ids))
                 ->whereDoesntHave('getPsychoTestInfo')->get()->pluck('id');
@@ -232,7 +238,7 @@ class AdminController extends Controller
             $findVac = null;
         }
 
-        return view('_admins.psychoTest-setup', compact('infos', 'vacancies', 'findVac'));
+        return view('_admins.psychoTest-setup', compact('infos', 'vacancies', 'interviewers', 'findVac'));
     }
 
     public function getPsychoTestVacancyInfo($id)

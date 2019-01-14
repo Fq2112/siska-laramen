@@ -26,7 +26,8 @@ class PsychoTestMiddleware
                 return $next($request);
             }
 
-        } elseif (Auth::guard('admin')->check()) {
+        } elseif (Auth::guard('admin')->check() && (Auth::guard('admin')->user()->isRoot() ||
+                Auth::guard('admin')->user()->isInterviewer())) {
             $check = PsychoTestResult::where('psychoTest_id', decrypt($request->psychoTest_id))
                 ->where('seeker_id', $request->seeker_id)->count();
             if(!$check){

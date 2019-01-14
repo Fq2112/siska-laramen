@@ -157,62 +157,121 @@
 <body class="nav-md">
 @php
     $auth = Auth::guard('admin')->user();
-    $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
-    ->orderByDesc('id')->get();
 
-    $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
-    ->whereDate('created_at', '>=', now()->subDay())->get();
+    if($auth->isRoot()){
+        $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
+        ->orderByDesc('id')->get();
 
-    $quizSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
-        $plan->where('isQuiz', true);
-    })->where('isPost', true)->whereDoesntHave('getQuizInfo')->get();
+        $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
+        ->whereDate('created_at', '>=', now()->subDay())->get();
 
-    $psychoTestSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
-        $plan->where('isPsychoTest', true);
-    })->whereHas('getQuizInfo', function ($quiz){
-        $quiz->whereHas('getQuizResult');
-    })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
-    ->whereDate('quizDate_end','<=',today())->whereDoesntHave('getPsychoTestInfo')->get();
+        $quizSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
+            $plan->where('isQuiz', true);
+        })->where('isPost', true)->whereDoesntHave('getQuizInfo')->get();
 
-    $invitations = \App\Vacancies::whereHas('getInvitation', function ($inv){
-        $inv->where('isApply', true);
-    })->whereDate('recruitmentDate_end', today())->get();
+        $psychoTestSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
+            $plan->where('isPsychoTest', true);
+        })->whereHas('getQuizInfo', function ($quiz){
+            $quiz->whereHas('getQuizResult');
+        })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+        ->whereDate('quizDate_end','<=',today())->whereDoesntHave('getPsychoTestInfo')->get();
 
-    $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
-        $acc->where('isApply', true);
-    })->whereDate('recruitmentDate_end', today())->get();
+        $invitations = \App\Vacancies::whereHas('getInvitation', function ($inv){
+            $inv->where('isApply', true);
+        })->whereDate('recruitmentDate_end', today())->get();
 
-    $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
-        $acc->where('isApply', true);
-    })->whereHas('getQuizInfo', function ($info){
-        $info->whereHas('getQuizResult');
-    })->whereDate('quizDate_end', today())->get();
+        $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereDate('recruitmentDate_end', today())->get();
 
-    $psychoTest_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
-        $acc->where('isApply', true);
-    })->whereHas('getQuizInfo', function ($info){
-        $info->whereHas('getQuizResult');
-    })->whereHas('getPsychoTestInfo', function ($psycho){
-        $psycho->whereHas('getPsychoTestResult');
-    })->whereDate('psychoTestDate_end', today())->get();
+        $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereHas('getQuizInfo', function ($info){
+            $info->whereHas('getQuizResult');
+        })->whereDate('quizDate_end', today())->get();
 
-    $partnerAPI = \App\PartnerCredential::where('status', false)->get();
+        $psychoTest_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereHas('getQuizInfo', function ($info){
+            $info->whereHas('getQuizResult');
+        })->whereHas('getPsychoTestInfo', function ($psycho){
+            $psycho->whereHas('getPsychoTestResult');
+        })->whereDate('psychoTestDate_end', today())->get();
 
-    $partnerVacs = \App\PartnerCredential::whereHas('getPartnerVacancy', function($q){
-        $q->whereHas('getVacancy', function($vac){
-            $vac->where('isPost', false);
-        });
-    })->get();
+        $partnerAPI = \App\PartnerCredential::where('status', false)->get();
 
-    $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) + count($acceptings) + count($quiz_results) + count($psychoTest_results) + count($partnerAPI) + count($partnerVacs);
+        $partnerVacs = \App\PartnerCredential::whereHas('getPartnerVacancy', function($q){
+            $q->whereHas('getVacancy', function($vac){
+                $vac->where('isPost', false);
+            });
+        })->get();
+
+        $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) +
+        count($acceptings) + count($quiz_results) + count($psychoTest_results) + count($partnerAPI) + count($partnerVacs);
+
+    } elseif($auth->isAdmin()){
+        $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
+        ->orderByDesc('id')->get();
+
+        $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
+        ->whereDate('created_at', '>=', now()->subDay())->get();
+
+        $quizSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
+            $plan->where('isQuiz', true);
+        })->where('isPost', true)->whereDoesntHave('getQuizInfo')->get();
+
+        $psychoTestSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
+            $plan->where('isPsychoTest', true);
+        })->whereHas('getQuizInfo', function ($quiz){
+            $quiz->whereHas('getQuizResult');
+        })->wherenotnull('psychoTestDate_start')->wherenotnull('psychoTestDate_end')
+        ->whereDate('quizDate_end','<=',today())->whereDoesntHave('getPsychoTestInfo')->get();
+
+        $invitations = \App\Vacancies::whereHas('getInvitation', function ($inv){
+            $inv->where('isApply', true);
+        })->whereDate('recruitmentDate_end', today())->get();
+
+        $acceptings = \App\Vacancies::whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereDate('recruitmentDate_end', today())->get();
+
+        $quiz_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereHas('getQuizInfo', function ($info){
+            $info->whereHas('getQuizResult');
+        })->whereDate('quizDate_end', today())->get();
+
+        $psychoTest_results = \App\Vacancies::whereHas('getAccepting', function ($acc){
+            $acc->where('isApply', true);
+        })->whereHas('getQuizInfo', function ($info){
+            $info->whereHas('getQuizResult');
+        })->whereHas('getPsychoTestInfo', function ($psycho){
+            $psycho->whereHas('getPsychoTestResult');
+        })->whereDate('psychoTestDate_end', today())->get();
+
+        $notifications = count($postings) + count($quizSetup) + count($psychoTestSetup) + count($invitations) +
+        count($acceptings) + count($quiz_results) + count($psychoTest_results);
+
+    } elseif($auth->isSyncStaff()){
+        $partnerAPI = \App\PartnerCredential::where('status', false)->get();
+
+        $partnerVacs = \App\PartnerCredential::whereHas('getPartnerVacancy', function($q){
+            $q->whereHas('getVacancy', function($vac){
+                $vac->where('isPost', false);
+            });
+        })->get();
+
+        $notifications = count($partnerAPI) + count($partnerVacs);
+    }
 @endphp
 <div class="container body">
     <div class="main_container">
         <div class="col-md-3 left_col">
             <div class="left_col scroll-view">
                 <div class="navbar nav_title" style="border: 0;">
-                    <a href="{{route('home-admin')}}" class="site_title"><i class="fa fa-user-secret"></i>
-                        <span>SISKA Admins</span></a>
+                    <a href="{{$auth->isInterviewer() ? route('dashboard.interviewer') : route('home-admin')}}"
+                       class="site_title"><i class="fa fa-user-{{$auth->isInterviewer() ? 'tie' : 'secret'}}"></i>
+                        <span>SISKA {{$auth->isInterviewer() ? 'Interviewer' : 'Admins'}}</span></a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -237,19 +296,17 @@
                     <div class="menu_section">
                         <h3>General</h3>
                         <ul class="nav side-menu">
-                            @auth('admin')
-                                @if(Auth::guard('admin')->user()->isRoot())
-                                    @include('layouts.partials.sidemenu.root')
-                                @elseif(Auth::guard('admin')->user()->isAdmin())
-                                    @include('layouts.partials.sidemenu.admin')
-                                @elseif(Auth::guard('admin')->user()->isInterviewer())
-                                    @include('layouts.partials.sidemenu.interviewer')
-                                @elseif(Auth::guard('admin')->user()->isQuizStaff())
-                                    @include('layouts.partials.sidemenu.quiz')
-                                @elseif(Auth::guard('admin')->user()->isSyncStaff())
-                                    @include('layouts.partials.sidemenu.sync')
-                                @endif
-                            @endauth
+                            @if(Auth::guard('admin')->user()->isRoot())
+                                @include('layouts.partials.sidemenu.root')
+                            @elseif(Auth::guard('admin')->user()->isAdmin())
+                                @include('layouts.partials.sidemenu.admin')
+                            @elseif(Auth::guard('admin')->user()->isInterviewer())
+                                @include('layouts.partials.sidemenu.interviewer')
+                            @elseif(Auth::guard('admin')->user()->isQuizStaff())
+                                @include('layouts.partials.sidemenu.quiz')
+                            @elseif(Auth::guard('admin')->user()->isSyncStaff())
+                                @include('layouts.partials.sidemenu.sync')
+                            @endif
                         </ul>
                     </div>
 
@@ -297,14 +354,10 @@
                                 <span class=" fa fa-angle-down"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                @auth('admin')
-                                    @if(Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isRoot())
-                                        <li>
-                                            <a href="{{route('admin.inbox')}}">
-                                                <i class="fa fa-envelope pull-right"></i> Inbox</a>
-                                        </li>
-                                    @endif
-                                @endauth
+                                @if($auth->isRoot() || $auth->isAdmin())
+                                    <li><a href="{{route('admin.inbox')}}">
+                                            <i class="fa fa-envelope pull-right"></i> Inbox</a></li>
+                                @endif
                                 <li>
                                     <a class="btn_editProfile">
                                         <span class="badge {{$auth->ava == "" || $auth->ava == "avatar.png" ? 'bg-red' :
@@ -329,18 +382,19 @@
                             </ul>
                         </li>
 
-                        <li role="presentation" class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
-                               aria-expanded="false">
-                                <i class="fa fa-envelope"></i>
-                                <span class="badge bg-green">{{count($feedback)}}</span>
-                            </a>
-                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                @if(count($feedback) > 0)
-                                    @foreach($feedback as $row)
-                                        @php $user = \App\User::where('email',$row->email); @endphp
-                                        <li>
-                                            <a href="{{route('admin.inbox',['id' => $row->id])}}">
+                        @if($auth->isRoot() || $auth->isAdmin())
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
+                                   aria-expanded="false">
+                                    <i class="fa fa-envelope"></i>
+                                    <span class="badge bg-green">{{count($feedback)}}</span>
+                                </a>
+                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    @if(count($feedback) > 0)
+                                        @foreach($feedback as $row)
+                                            @php $user = \App\User::where('email',$row->email); @endphp
+                                            <li>
+                                                <a href="{{route('admin.inbox',['id' => $row->id])}}">
                                                 <span class="image">
                                                     @if($user->count())
                                                         @if($user->first()->ava == "" ||
@@ -355,50 +409,52 @@
                                                         <img src="{{asset('images/avatar.png')}}">
                                                     @endif
                                                 </span>
-                                                <span><span>{{$row->name}}</span>
+                                                    <span><span>{{$row->name}}</span>
                                                     <span class="time">{{$row->created_at->diffForHumans()}}</span>
                                                 </span>
-                                                <span class="message">{{\Illuminate\Support\Str::words
+                                                    <span class="message">{{\Illuminate\Support\Str::words
                                                 ($row->message,15,' ...')}}</span>
-                                            </a>
-                                        </li>
-                                    @endforeach
-                                @else
-                                    <li>
-                                        <a style="text-decoration: none;cursor: text">
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li>
+                                            <a style="text-decoration: none;cursor: text">
                                             <span class="message">There seems to be none of the feedback was found
                                                 this 3 days&hellip;</span>
-                                        </a>
-                                    </li>
-                                @endif
-                                <li>
-                                    <div class="text-center">
-                                        <a href="{{route('admin.inbox')}}">
-                                            <strong>More Messages</strong>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-
-                        <li role="presentation" class="dropdown">
-                            <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
-                               aria-expanded="false">
-                                <i class="fa fa-bell"></i>
-                                <span class="badge bg-orange">{{$notifications}}</span>
-                            </a>
-                            <ul id="menu2" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                @if($notifications > 0)
-                                    @if(count($postings) > 0)
-                                        <li style="padding: 0;">
-                                            <a style="text-decoration: none;cursor: text">
-                                                <span><i class="fa fa-briefcase"></i>
-                                                    <strong style="margin-left: 5px;text-transform: uppercase">Job Postings</strong></span>
                                             </a>
                                         </li>
-                                        @foreach($postings as $posting)
-                                            <li>
-                                                <a href="{{route('table.jobPostings').'?q='.$posting->GetAgency->user->name}}">
+                                    @endif
+                                    <li>
+                                        <div class="text-center">
+                                            <a href="{{route('admin.inbox')}}">
+                                                <strong>More Messages</strong>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+
+                        @if($auth->isRoot() || $auth->isAdmin() || $auth->isSyncStaff())
+                            <li role="presentation" class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle info-number" data-toggle="dropdown"
+                                   aria-expanded="false">
+                                    <i class="fa fa-bell"></i>
+                                    <span class="badge bg-orange">{{$notifications}}</span>
+                                </a>
+                                <ul id="menu2" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                    @if($notifications > 0)
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($postings) > 0)
+                                            <li style="padding: 0;">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-briefcase"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Job Postings</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($postings as $posting)
+                                                <li>
+                                                    <a href="{{route('table.jobPostings').'?q='.$posting->GetAgency->user->name}}">
                                                     <span class="image">
                                                         @if($posting->GetAgency->user->ava == "" ||
                                                         $posting->GetAgency->user->ava == "agency.png")
@@ -408,31 +464,31 @@
                                                             ->ava)}}">
                                                         @endif
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$posting->GetAgency->user->name}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
                                                         The job posting request with <strong
-                                                                style="text-transform: uppercase">{{$posting
+                                                                    style="text-transform: uppercase">{{$posting
                                                         ->getPlan->name}}</strong> from this agency hasn't been approve yet!
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($quizSetup) > 0)
-                                        <li style="padding: 0">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($quizSetup) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-grin-beam"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Quiz Setup</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($quizSetup as $vacancy)
-                                            <li>
-                                                <a href="{{route('quiz.info',['vac_ids' => $vacancy->id])}}">
+                                                </a>
+                                            </li>
+                                            @foreach($quizSetup as $vacancy)
+                                                <li>
+                                                    <a href="{{route('quiz.info',['vac_ids' => $vacancy->id])}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -441,60 +497,29 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
                                                         Quiz for this vacancy hasn't been set yet!
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($psychoTestSetup) > 0)
-                                        <li style="padding: 0">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($psychoTestSetup) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-comments"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Psycho Test Setup</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($psychoTestSetup as $vacancy)
-                                            <li>
-                                                <a href="{{route('psychoTest.info',['vac_ids' => $vacancy->id])}}">
-                                                    <span class="image">
-                                                        @if($vacancy->agencies->user->ava == "" ||
-                                                        $vacancy->agencies->user->ava == "agency.png")
-                                                            <img src="{{asset('images/agency.png')}}">
-                                                        @else
-                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
-                                                        @endif
-                                                    </span>
-                                                    <span>
-                                                        <span>{{$vacancy->judul}}</span>
-                                                    </span>
-                                                    <span class="message">
-                                                        Psycho test for this vacancy hasn't been set yet!
-                                                    </span>
                                                 </a>
                                             </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
-
-                                    @if(count($invitations) > 0)
-                                        <li style="padding: 0">
-                                            <a style="text-decoration: none;cursor: text">
-                                                <span><i class="fa fa-envelope"></i>
-                                                    <strong style="margin-left: 5px;text-transform: uppercase">Applied Invitations</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($invitations as $vacancy)
-                                            <li>
-                                                <a href="{{route('table.appliedInvitations').'?q='.$vacancy->judul}}">
+                                            @foreach($psychoTestSetup as $vacancy)
+                                                <li>
+                                                    <a href="{{route('psychoTest.info',['vac_ids' => $vacancy->id])}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -503,31 +528,62 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
+                                                        Psycho test for this vacancy hasn't been set yet!
+                                                    </span>
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
+
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($invitations) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
+                                                <span><i class="fa fa-envelope"></i>
+                                                    <strong style="margin-left: 5px;text-transform: uppercase">Applied Invitations</strong></span>
+                                                </a>
+                                            </li>
+                                            @foreach($invitations as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.appliedInvitations').'?q='.$vacancy->judul}}">
+                                                    <span class="image">
+                                                        @if($vacancy->agencies->user->ava == "" ||
+                                                        $vacancy->agencies->user->ava == "agency.png")
+                                                            <img src="{{asset('images/agency.png')}}">
+                                                        @else
+                                                            <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
+                                                        @endif
+                                                    </span>
+                                                        <span>
+                                                        <span>{{$vacancy->judul}}</span>
+                                                    </span>
+                                                        <span class="message">
                                                         Make sure the applied invitation list for this vacancy are sent today
                                                         to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($acceptings) > 0)
-                                        <li style="padding: 0">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($acceptings) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-paper-plane"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Job Applications</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($acceptings as $vacancy)
-                                            <li>
-                                                <a href="{{route('table.applications').'?q='.$vacancy->judul}}">
+                                                </a>
+                                            </li>
+                                            @foreach($acceptings as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.applications').'?q='.$vacancy->judul}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -536,31 +592,31 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
                                                         Make sure the application list for this vacancy are sent today
                                                         to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($quiz_results) > 0)
-                                        <li style="padding: 0">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($quiz_results) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-grin-beam"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Quiz Results</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($quiz_results as $vacancy)
-                                            <li>
-                                                <a href="{{route('table.quizResults').'?q='.$vacancy->judul}}">
+                                                </a>
+                                            </li>
+                                            @foreach($quiz_results as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.quizResults').'?q='.$vacancy->judul}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -569,31 +625,31 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
                                                         Make sure the quiz result list for this vacancy are sent today
                                                         to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($psychoTest_results) > 0)
-                                        <li style="padding: 0">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isAdmin()) && count($psychoTest_results) > 0)
+                                            <li style="padding: 0">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-comments"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Psycho Test Results</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($psychoTest_results as $vacancy)
-                                            <li>
-                                                <a href="{{route('table.psychoTestResults').'?q='.$vacancy->judul}}">
+                                                </a>
+                                            </li>
+                                            @foreach($psychoTest_results as $vacancy)
+                                                <li>
+                                                    <a href="{{route('table.psychoTestResults').'?q='.$vacancy->judul}}">
                                                     <span class="image">
                                                         @if($vacancy->agencies->user->ava == "" ||
                                                         $vacancy->agencies->user->ava == "agency.png")
@@ -602,82 +658,83 @@
                                                             <img src="{{asset('storage/users/'.$vacancy->agencies->user->ava)}}">
                                                         @endif
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$vacancy->judul}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
                                                         Make sure the psycho test result list for this vacancy are sent
                                                         today to <strong>{{$vacancy->agencies->user->name}}</strong>!
                                                         <span style="color: #fa5555">#This message only appears today.</span>
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($partnerAPI) > 0)
-                                        <li style="padding: 0;">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isSyncStaff()) && count($partnerAPI) > 0)
+                                            <li style="padding: 0;">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-handshake"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Partnership Request</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($partnerAPI as $partner)
-                                            <li>
-                                                <a href="{{route('partners.credentials.show').'?q='.$partner->name}}">
+                                                </a>
+                                            </li>
+                                            @foreach($partnerAPI as $partner)
+                                                <li>
+                                                    <a href="{{route('partners.credentials.show').'?q='.$partner->name}}">
                                                     <span class="image">
                                                         <img src="{{asset('images/mitra.jpg')}}">
                                                     </span>
-                                                    <span><span>{{$partner->email}}</span></span>
-                                                    <span class="message">
+                                                        <span><span>{{$partner->email}}</span></span>
+                                                        <span class="message">
                                                         Partnership request from
                                                         <strong style="text-transform: uppercase">{{$partner->name}}</strong>
                                                         hasn't been approve yet!
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
 
-                                    @if(count($partnerVacs) > 0)
-                                        <li style="padding: 0;">
-                                            <a style="text-decoration: none;cursor: text">
+                                        @if(($auth->isRoot() || $auth->isSyncStaff()) && count($partnerVacs) > 0)
+                                            <li style="padding: 0;">
+                                                <a style="text-decoration: none;cursor: text">
                                                 <span><i class="fa fa-handshake"></i>
                                                     <strong style="margin-left: 5px;text-transform: uppercase">Partner Vacancies</strong></span>
-                                            </a>
-                                        </li>
-                                        @foreach($partnerVacs as $partnerVac)
-                                            <li>
-                                                <a href="{{route('partners.vacancies.show').'?q='.$partnerVac->name}}">
+                                                </a>
+                                            </li>
+                                            @foreach($partnerVacs as $partnerVac)
+                                                <li>
+                                                    <a href="{{route('partners.vacancies.show').'?q='.$partnerVac->name}}">
                                                     <span class="image">
                                                         <img src="{{asset('images/mitra.jpg')}}">
                                                     </span>
-                                                    <span>
+                                                        <span>
                                                         <span>{{$partnerVac->name}}</span>
                                                     </span>
-                                                    <span class="message">
+                                                        <span class="message">
                                                         Vacancies from this partner hasn't been post yet!
                                                     </span>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                        <li class="divider"
-                                            style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
-                                    @endif
-                                @else
-                                    <li>
-                                        <a style="text-decoration: none;cursor: text">
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                            <li class="divider"
+                                                style="margin: 0 6px;padding: 3px;background: none;border-bottom: 2px solid #d8d8d845;"></li>
+                                        @endif
+                                    @else
+                                        <li>
+                                            <a style="text-decoration: none;cursor: text">
                                             <span class="message">There seems to be none of the notification was found&hellip;
                                             </span>
-                                        </a>
-                                    </li>
-                                @endif
-                            </ul>
-                        </li>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
+                            </li>
+                        @endunless
                     </ul>
                 </nav>
             </div>

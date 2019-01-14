@@ -22,6 +22,7 @@ class PsychoTestController extends Controller
     public function __construct()
     {
         $this->middleware('psychoTest')->except('submitPsychoTest');
+        $this->middleware('interviewer')->only('submitPsychoTest');
 
         $this->sid = config('services.twilio.sid');
         $this->token = config('services.twilio.token');

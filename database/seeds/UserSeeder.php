@@ -298,7 +298,7 @@ class UserSeeder extends Seeder
                     ]);
                 }
 
-            } elseif ($role == Role::ADMIN) {
+            } elseif ($role == Role::VACANCY_STAFF) {
                 Admin::create([
                     'ava' => 'avatar.png',
                     'name' => 'jQuinn',
@@ -313,7 +313,7 @@ class UserSeeder extends Seeder
                         'name' => $faker->firstName . ' ' . $faker->lastName,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
-                        'role' => Role::ADMIN
+                        'role' => Role::VACANCY_STAFF
                     ]);
 
                     Admin::create([

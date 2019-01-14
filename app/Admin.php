@@ -42,7 +42,7 @@ class Admin extends Authenticatable
      */
     public function isAdmin()
     {
-        return ($this->role == Role::ADMIN);
+        return ($this->role == Role::VACANCY_STAFF);
     }
 
     /**
@@ -72,9 +72,13 @@ class Admin extends Authenticatable
         return ($this->role == Role::SYNC_STAFF);
     }
 
-
     public function carousels()
     {
         return $this->hasMany(Carousel::class);
+    }
+
+    public function getPsychoTestInfo()
+    {
+        return $this->hasMany(PsychoTestInfo::class, 'admin_id');
     }
 }

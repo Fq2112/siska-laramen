@@ -13,10 +13,10 @@ class Role
 {
     //admin Privilege
     const ROOT = 'root';
-    const ADMIN = 'admin';
-    const INTERVIEWER = 'interviewer';
+    const VACANCY_STAFF = 'vacancy_staff';
     const QUIZ_STAFF = 'quiz_staff';
     const SYNC_STAFF = 'sync_staff';
+    const INTERVIEWER = 'interviewer';
 
     //other Privilege
     const SEEKER = 'seeker';
@@ -28,7 +28,7 @@ class Role
         Role::INTERVIEWER,
         Role::QUIZ_STAFF,
         Role::SYNC_STAFF,
-        Role::ADMIN,
+        Role::VACANCY_STAFF,
         Role::ROOT,
     ];
 

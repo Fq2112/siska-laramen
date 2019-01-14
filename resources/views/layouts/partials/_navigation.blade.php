@@ -88,8 +88,7 @@
                              @elseif(Auth::user()->ava == 'agency.png'){{asset('images/agency.png')}}
                              @elseif(Auth::user()->ava == 'seeker.png'){{asset('images/seeker.png')}}
                              @else{{asset('storage/users/'.Auth::user()->ava)}}@endif">
-                        <strong class="aj_name">{{Auth::user()->isSeeker() ?
-                        \Illuminate\Support\Str::words(Auth::user()->name, 2,"") : Auth::user()->name}}</strong>
+                        <strong class="aj_name">{{\Illuminate\Support\Str::words(Auth::user()->name, 1,"")}}</strong>
                     </span>
             </a>
             <ul class="dropdown-menu">
@@ -197,15 +196,18 @@
                          src="{{Auth::guard('admin')->user()->ava == "" ||
                          Auth::guard('admin')->user()->ava == "avatar.png" ? asset('images/avatar.png') :
                          asset('storage/admins/'.Auth::guard('admin')->user()->ava)}}">
-                        <strong class="aj_name">{{Auth::guard('admin')->user()->name}}</strong></span>
+                        <strong class="aj_name">{{\Illuminate\Support\Str::words(Auth::guard('admin')->user()
+                        ->name, 1,"")}}</strong></span>
             </a>
             <ul class="dropdown-menu">
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
-                       href="{{route('home-admin')}}"
-                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                       href="{{Auth::guard('admin')->user()->isInterviewer() ? route('dashboard.interviewer') :
+                       route('home-admin')}}" onmouseover="this.style.color='#fff'"
+                       onmouseout="this.style.color='#979797'">
                         <i class="fa fa-tachometer-alt" style="margin-right: 5px"></i>Dashboard</a></li>
+                @if(Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isAdmin())
                 <li><a id="external"
                        style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
                        target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
@@ -224,6 +226,27 @@
                        href="{{route('psychoTest.info')}}"
                        onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
                         <i class="fa fa-comments" style="margin-right: 6px"></i>Psycho Test</a></li>
+                @elseif(Auth::guard('admin')->user()->isQuizStaff())
+                    <li><a id="external"
+                           style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                           target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
+                           href="{{route('quiz.questions')}}"
+                           onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                            <i class="fa fa-university" style="margin-right: 6px"></i>Bank Soal</a></li>
+                @elseif(Auth::guard('admin')->user()->isSyncStaff())
+                    <li><a id="external"
+                           style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                           target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
+                           href="{{route('partners.credentials.show')}}"
+                           onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                            <i class="fa fa-shield-alt" style="margin-right: 6px"></i>Partner Credentials</a></li>
+                    <li><a id="external"
+                           style="color: #979797;border-radius: 0;-webkit-border-radius: 0;-moz-border-radius: 0;-ms-border-radius: 0;"
+                           target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ? '_blank' : ''}}"
+                           href="{{route('partners.vacancies.show')}}"
+                           onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#979797'">
+                            <i class="fa fa-briefcase" style="margin-right: 6px"></i>Partner Vacancies</a></li>
+                @endif
                 <li class="divider"></li>
                 <li>
                     <a class="btn_signOut" onmouseover="this.style.color='#fff'"

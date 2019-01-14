@@ -74,7 +74,7 @@
                                     <td style="vertical-align: middle">
                                         <i class="fa fa-shield-alt"></i> Room Code:
                                         <strong>{{$room}}</strong>&ensp;|&ensp;<i class="fa fa-user-tie"></i>
-                                        Interviewer: <strong>{{$admin->name}}</strong>
+                                        Interviewer: <strong>{{$info->getAdmin->name}}</strong>
                                         <hr style="margin: .5em auto">
                                         <table>
                                             <tr>

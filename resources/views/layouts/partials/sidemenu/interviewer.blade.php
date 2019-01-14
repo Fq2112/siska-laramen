@@ -1,1 +1,1 @@
-<li><a href="{{route('psychoTest.info')}}"><i class="fa fa-comments"></i> Psycho Test</a>
+<li><a href="{{route('dashboard.interviewer')}}"><i class="fa fa-home"></i> Dashboard</a></li>

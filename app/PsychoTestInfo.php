@@ -21,4 +21,9 @@ class PsychoTestInfo extends Model
     {
         return $this->hasMany(PsychoTestResult::class, 'psychoTest_id');
     }
+
+    public function getAdmin()
+    {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
 }
