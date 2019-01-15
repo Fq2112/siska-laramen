@@ -65,6 +65,12 @@ class Kernel extends HttpKernel
         'agency.home' => \App\Http\Middleware\Agencies\HomeAgencyMiddleware::class,
         'agency.invoice' => \App\Http\Middleware\Agencies\InvoiceAgencyMiddleware::class,
         'admin' => \App\Http\Middleware\Auth\AdminMiddleware::class,
+        'admin.home' => \App\Http\Middleware\Auth\HomeAdminMiddleware::class,
+        'root' => \App\Http\Middleware\Auth\Admins\RootMiddleware::class,
+        'interviewer' => \App\Http\Middleware\Auth\Admins\InterviewerMiddleware::class,
+        'quiz_staff' => \App\Http\Middleware\Auth\Admins\QuizStaffMiddleware::class,
+        'sync_staff' => \App\Http\Middleware\Auth\Admins\SyncStaffMiddleware::class,
+        'vacancy_staff' => \App\Http\Middleware\Auth\Admins\VacancyStaffMiddleware::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
     ];

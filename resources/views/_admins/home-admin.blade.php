@@ -5,7 +5,7 @@
         <div class="">
             <div class="row top_tiles">
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('table.users')}}" class="agency">
+                    <a href="javascript:void(0)" onclick="openTableUser()" class="agency">
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-users"></i></div>
                             <div class="count">{{$newUser}}</div>
@@ -15,7 +15,7 @@
                     </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('table.applications')}}" class="seeker">
+                    <a href="javascript:void(0)" onclick="openTableApp()" class="seeker">
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-paper-plane"></i></div>
                             <div class="count">{{$newApp}}</div>
@@ -26,7 +26,7 @@
                     </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('table.jobPostings')}}" class="agency">
+                    <a href="javascript:void(0)" onclick="openTableJobPost()" class="agency">
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-briefcase"></i></div>
                             <div class="count">{{$newJobPost}}</div>
@@ -37,7 +37,7 @@
                     </a>
                 </div>
                 <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
-                    <a href="{{route('partners.credentials.show')}}" class="seeker">
+                    <a href="javascript:void(0)" onclick="openTablePartner()" class="seeker">
                         <div class="tile-stats">
                             <div class="icon"><i class="fa fa-handshake"></i></div>
                             <div class="count">{{$newMitra}}</div>
@@ -470,5 +470,37 @@
                 }
             }]
         });
+
+        function openTableUser() {
+            @if(Auth::guard('admin')->user()->isRoot())
+                window.location.href = "{{route('table.users')}}";
+            @else
+            swal('ATTENTION!', 'This feature only for ROOT.', 'warning');
+            @endif
+        }
+
+        function openTableApp() {
+            @if(Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isAdmin())
+                window.location.href = "{{route('table.applications')}}";
+            @else
+            swal('ATTENTION!', 'This feature only for admins or ROOT.', 'warning');
+            @endif
+        }
+
+        function openTableJobPost() {
+            @if(Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isAdmin())
+                window.location.href = "{{route('table.jobPostings')}}";
+            @else
+            swal('ATTENTION!', 'This feature only for admins or ROOT.', 'warning');
+            @endif
+        }
+
+        function openTablePartner() {
+            @if(Auth::guard('admin')->user()->isRoot() || Auth::guard('admin')->user()->isSyncStaff())
+                window.location.href = "{{route('partners.credentials.show')}}";
+            @else
+            swal('ATTENTION!', 'This feature only for sync staff or ROOT.', 'warning');
+            @endif
+        }
     </script>
 @endpush

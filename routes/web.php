@@ -12,7 +12,7 @@
 */
 
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
+Route::post('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.request');
 Route::post('password/reset', 'Auth\ResetPasswordController@postReset')->name('password.reset');
 
 Auth::routes();
@@ -32,6 +32,11 @@ Route::group(['prefix' => '/'], function () {
     Route::post('partnership/join', [
         'uses' => 'UserController@joinPartnership',
         'as' => 'join.partnership'
+    ]);
+
+    Route::get('interviewer', [
+        'uses' => 'UserController@dashboardInterviewer',
+        'as' => 'dashboard.interviewer'
     ]);
 
 });
@@ -163,7 +168,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
         Route::group(['namespace' => 'DataMaster'], function () {
 
-            Route::group(['prefix' => 'accounts'], function () {
+            Route::group(['prefix' => 'accounts', 'middleware' => 'root'], function () {
 
                 Route::group(['prefix' => 'admins'], function () {
 
@@ -238,7 +243,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
             });
 
-            Route::group(['prefix' => 'bank_soal'], function () {
+            Route::group(['prefix' => 'bank_soal', 'middleware' => 'quiz_staff'], function () {
 
                 Route::group(['prefix' => 'topics'], function () {
 
@@ -314,7 +319,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
             });
 
-            Route::group(['prefix' => 'requirements'], function () {
+            Route::group(['prefix' => 'requirements', 'middleware' => 'root'], function () {
 
                 Route::group(['prefix' => 'degrees'], function () {
 
@@ -486,7 +491,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
             });
 
-            Route::group(['prefix' => 'web_contents'], function () {
+            Route::group(['prefix' => 'web_contents', 'middleware' => 'root'], function () {
 
                 Route::group(['prefix' => 'carousels'], function () {
 
@@ -706,7 +711,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
         Route::group(['namespace' => 'DataTransaction'], function () {
 
-            Route::group(['prefix' => 'agencies'], function () {
+            Route::group(['prefix' => 'agencies', 'middleware' => 'vacancy_staff'], function () {
 
                 Route::group(['prefix' => 'vacancies'], function () {
 
@@ -743,7 +748,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
             });
 
-            Route::group(['prefix' => 'seekers'], function () {
+            Route::group(['prefix' => 'seekers', 'middleware' => 'vacancy_staff'], function () {
 
                 Route::group(['prefix' => 'applied_invitations'], function () {
 
@@ -823,7 +828,7 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
 
             });
 
-            Route::group(['prefix' => 'partners'], function () {
+            Route::group(['prefix' => 'partners', 'middleware' => 'sync_staff'], function () {
 
                 Route::get('/', [
                     'uses' => 'TransactionPartnerController@showPartnersCredentials',

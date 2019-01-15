@@ -198,6 +198,14 @@
             }
         });
 
+        setInterval(function () {
+            if (check_candidate == false) {
+                swal("ATTENTION!", "The candidate, {{$seeker->user->name}}, hasn't been connected to this room yet! " +
+                    "Please, contact {{$seeker->gender == "female" ? 'her' : 'his'}} " +
+                    "phone: {{$seeker->phone}} or email: {{$seeker->user->email}}.", "warning");
+            }
+        }, 30000);
+
         $("#form-scoring").on("submit", function (e) {
             e.preventDefault();
             if (check_candidate == true) {

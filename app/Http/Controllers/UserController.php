@@ -6,11 +6,18 @@ use App\Carousel;
 use App\Feedback;
 use App\PartnerCredential;
 use App\Provinces;
+use App\PsychoTestInfo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('interviewer')->only('dashboardInterviewer');
+    }
+
     public function infoSISKA()
     {
         $provinces = Provinces::all();
@@ -74,5 +81,12 @@ class UserController extends Controller
             }
         }
         return 3;
+    }
+
+    public function dashboardInterviewer()
+    {
+        $infos = PsychoTestInfo::where('admin_id', Auth::guard('admin')->user()->id)->get();
+
+        return view('auth.interviewers.interviewer', compact('infos'));
     }
 }

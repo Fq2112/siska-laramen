@@ -18,9 +18,6 @@ class CreatePsychoTestResultsTable extends Migration
             $table->integer('psychoTest_id')->unsigned();
             $table->foreign('psychoTest_id')->references('id')->on('psycho_test_infos')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->integer('admin_id')->unsigned();
-            $table->foreign('admin_id')->references('id')->on('admins')
-                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->integer('seeker_id')->unsigned();
             $table->foreign('seeker_id')->references('id')->on('seekers')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');

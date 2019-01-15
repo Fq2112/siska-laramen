@@ -236,12 +236,12 @@
                                         <input id="log_password" class="form-control" type="password"
                                                placeholder="Password" name="password" minlength="6" required>
                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
-                                        @if (session('error'))
-                                            <span class="help-block">
+                                        <span class="help-block">
+                                            @if(session('error'))
                                                 <strong>{{ $errors->first('password') }}</strong>
+                                            @endif
                                                 <a href="javascript:openEmailModal()" style="text-decoration: none">Forgot password?</a>
-                                            </span>
-                                        @endif
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -391,7 +391,7 @@
                     <div class="content passwordBox" style="display:none;">
                         <div class="form">
                             <form method="post" accept-charset="UTF-8" class="form-horizontal"
-                                  action="{{ route('password.request') }}">
+                                  action="{{route('password.request',['token' => session('reset')['token']])}}">
                                 {{ csrf_field() }}
                                 <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">

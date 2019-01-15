@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\PartnerCredential;
 use App\User;
 use App\Http\Controllers\Controller;
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Storage;
@@ -55,8 +53,6 @@ class SocialAuthController extends Controller
                     'provider' => $provider
                 ]);
 
-                Auth::loginUsingId($user->id);
-
             } else {
                 $user = $checkUser;
             }
@@ -68,33 +64,14 @@ class SocialAuthController extends Controller
                 $user->update(['ava' => $userSocial->getId() . ".jpg"]);
             }
 
-            if ($user->isSeeker()) {
-                $data = array('name' => $user->name, 'email' => $user->email, 'password' => $user->password,
-                    'provider_id' => $userSocial->getId());
-                $partners = PartnerCredential::where('status', true)->where('isSync', true)
-                    ->whereDate('api_expiry', '>=', today())->get();
-                if (count($partners) > 0) {
-                    foreach ($partners as $partner) {
-                        $client = new Client([
-                            'base_uri' => $partner->uri,
-                            'defaults' => [
-                                'exceptions' => false
-                            ]
-                        ]);
-                        $client->post($partner->uri . '/api/SISKA/seekers/' . $provider, [
-                            'form_params' => [
-                                'key' => $partner->api_key,
-                                'secret' => $partner->api_secret,
-                                'seeker' => $data,
-                            ]
-                        ]);
-                    }
-                }
-            }
-
             Auth::loginUsingId($user->id);
 
-            return redirect()->route('home-seeker')->with('signed', 'You`re now signed in as a Job Seeker.');
+            if ($provider == 'twitter' || $provider == 'google') {
+                return redirect()->route('home-seeker')->with('signed', 'You`re now signed in as a Job Seeker.');
+
+            } else {
+                return back()->with('signed', 'You`re now signed in as a Job Seeker.');
+            }
 
         } catch (\Exception $e) {
             return back()->with('unknown', 'Please, login/register with SISKA account.');

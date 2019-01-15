@@ -1039,7 +1039,16 @@
             });
             @endif
             @else
+            @if(Auth::guard('admin')->check())
+            swal({
+                title: 'ATTENTION!',
+                text: 'This feature only works when you\'re signed in as a Job Seeker.',
+                type: 'warning',
+                timer: '3500'
+            });
+            @else
             openLoginModal();
+            @endif
             @endauth
         });
 

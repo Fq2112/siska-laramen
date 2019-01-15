@@ -37,7 +37,7 @@
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle">
-                                        <strong>{{\App\QuizQuestions::find($option->question_id)->question_text}}</strong>
+                                        <strong>{!!\App\QuizQuestions::find($option->question_id)->question_text!!}</strong>
                                     </td>
                                     <td style="vertical-align: middle">{{$option->option}}</td>
                                     <td style="vertical-align: middle;text-transform: uppercase" align="center">
@@ -86,7 +86,8 @@
                                     @foreach(\App\QuizType::all() as $type)
                                         <optgroup label="{{$type->name}}">
                                             @foreach(\App\QuizQuestions::all() as $question)
-                                                <option value="{{$question->id}}">{{$question->question_text}}
+                                                <option value="{{$question->id}}">
+                                                    {!! $question->question_text !!}
                                                 </option>
                                             @endforeach
                                         </optgroup>

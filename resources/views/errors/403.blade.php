@@ -444,10 +444,12 @@
             </script>
         @endif
     @else
-        @if(Auth::guard('admin')->check() && \Illuminate\Support\Facades\Request::is('psychoTest'))
-            <a href="{{route('psychoTest.info')}}" id="home">
-                <button class="denied__link">Go Back</button>
-            </a>
+        @if(Auth::guard('admin')->check())
+            @if(\Illuminate\Support\Facades\Request::is('psychoTest'))
+                <a href="{{Auth::guard('admin')->user()->isInterviewer() ? route('dashboard.interviewer') :
+            route('psychoTest.info')}}" id="home">
+                    <button class="denied__link">Go Back</button>
+                </a>
             <script>
                 swal({
                     title: 'ATTENTION!',
@@ -456,6 +458,47 @@
                     timer: '3500'
                 });
             </script>
+            @else
+                @php
+                    if(\Illuminate\Support\Facades\Request::is('interviewer') &&
+                        (!Auth::guard('admin')->user()->isRoot() || !Auth::guard('admin')->user()->isInterviewer())) {
+                        $role = 'an Interviewer or ROOT';
+
+                    } elseif(\Illuminate\Support\Facades\Request::is('admin/tables/partners*') &&
+                        (!Auth::guard('admin')->user()->isRoot() || !Auth::guard('admin')->user()->isSyncStaff())) {
+                        $role = 'a Sync Staff or ROOT';
+
+                    } elseif(\Illuminate\Support\Facades\Request::is(['admin/inbox*', 'admin/quiz*',
+                        'admin/psychoTest*', 'admin/tables/agencies*', 'admin/tables/seekers*']) &&
+                        (!Auth::guard('admin')->user()->isRoot() || !Auth::guard('admin')->user()->isAdmin())) {
+                        $role = 'a Vacancy Staff or ROOT';
+
+                    } elseif(\Illuminate\Support\Facades\Request::is('admin/tables/bank_soal*') &&
+                        (!Auth::guard('admin')->user()->isRoot() || !Auth::guard('admin')->user()->isQuizStaff())) {
+                        $role = 'a Quiz Staff or ROOT';
+
+                    } elseif(\Illuminate\Support\Facades\Request::is(['admin/tables/accounts*', 'admin/tables/requirements*',
+                        'admin/tables/web_contents*']) && !Auth::guard('admin')->user()->isRoot()) {
+                        $role = 'ROOT';
+
+                    } elseif(\Illuminate\Support\Facades\Request::is('admin*') &&
+                        Auth::guard('admin')->user()->isInterviewer()){
+                        $role = 'an Admin';
+                    }
+                @endphp
+                <a href="{{Auth::guard('admin')->user()->isInterviewer() ? route('dashboard.interviewer') :
+                route('home-admin')}}" id="home">
+                    <button class="denied__link">Go Home</button>
+                </a>
+                <script>
+                    swal({
+                        title: 'ATTENTION!',
+                        text: 'You\'re redirected here because you didn\'t signed in as {{$role}}.',
+                        type: 'warning',
+                        timer: '3500'
+                    });
+                </script>
+            @endif
         @else
             <a href="{{route('home-seeker')}}" id="home">
                 <button class="denied__link">Go Home</button>

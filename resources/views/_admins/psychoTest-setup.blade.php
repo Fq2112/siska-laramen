@@ -140,26 +140,25 @@
                                                 <td>&nbsp;:&nbsp;</td>
                                                 <td>{{$vacancy->psychoTest_applicant}} persons</td>
                                             </tr>
+                                            <tr style="font-weight: 600">
+                                                <td><i class="fa fa-user-tie"></i>&nbsp;</td>
+                                                <td>Interviewer</td>
+                                                <td>&nbsp;:&nbsp;</td>
+                                                <td>{{$info->getAdmin->name}}</td>
+                                            </tr>
                                         </table>
                                     </td>
                                     <td style="vertical-align: middle">
-                                        <ol style="margin-left: -1em">
+                                        <ol style="margin-left: -20px">
                                             @foreach($info->room_codes as $room)
                                                 @php strtok($room, "_"); $seeker_id = strtok(''); @endphp
-                                                <li>
-                                                    <a href="javascript:void(0)"
-                                                       onclick="accessPsychoTest('{{encrypt($info->id)}}','{{$room}}',
-                                                               '{{$vacancy->judul}}','{{$vacancy->id}}','{{$ava}}',
-                                                               '{{$userAgency->name}}','{{$psychoTestDate}}',
-                                                               '{{$seeker_id}}')">{{$room}}
-                                                    </a>
-                                                </li>
+                                                <li>{{$room}}</li>
                                             @endforeach
                                         </ol>
                                     </td>
                                     <td style="vertical-align: middle" align="center">
                                         <a onclick="editPsychoTest('{{$info->id}}','{{implode(",",$info->room_codes)}}',
-                                                '{{$vacancy->id}}')"
+                                                '{{$vacancy->id}}', '{{$info->admin_id}}')"
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
@@ -195,6 +194,29 @@
                                         been set yet and its quiz date has been ended (except when editing).</span>
                                 </div>
                             </div>
+                            <div class="row form-group" id="interviewer_input" style="display: none;">
+                                <div class="col-lg-12">
+                                    <label for="interviewer_id">Interviewer <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user-tie"></i></span>
+                                        <select id="interviewer_id" class="form-control selectpicker"
+                                                title="-- Select Interviewer --" data-live-search="true"
+                                                name="admin_id" disabled required>
+                                            @foreach($interviewers as $interviewer)
+                                                @php
+                                                    $total = \App\PsychoTestInfo::whereHas('getVacancy', function ($vac){
+                                                        $vac->where('psychoTestDate_end','>=',today());
+                                                    })->where('admin_id', $interviewer->id)->count();
+                                                @endphp
+                                                <option data-subtext="{{$total}} agency(s)"
+                                                        value="{{$interviewer->id}}" {{$total >= 10 ? 'disabled' : ''}}>
+                                                    {{$interviewer->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <span style="color: #fa5555">P.S.: You can only select interviewer who hasn't handled 10 agencies.</span>
+                                </div>
+                            </div>
                             <hr class="hr-divider" id="vacancySetupDivider" style="display:none">
                             <img src="{{asset('images/loading2.gif')}}" id="image"
                                  class="img-responsive ld ld-fade" style="display:none">
@@ -207,55 +229,6 @@
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="psychoTestModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
-                    </button>
-                    <h4 class="modal-title">Hi {{Auth::guard('admin')->user()->name}},</h4>
-                </div>
-                <div class="modal-body">
-                    <p style="font-size: 17px" align="justify">
-                        Before proceeding to the psycho test room with this following details, you have to click
-                        the "Enter Room" button below.
-                    </p>
-                    <hr class="hr-divider">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="media">
-                                <div class="media-left media-middle">
-                                    <img width="100" class="media-object" id="agencyAva">
-                                </div>
-                                <div class="media-body">
-                                    <small class="media-heading" style="font-size: 17px;">
-                                        <a style="color: #00ADB5" id="vacJudul"></a>
-                                        <sub style="color: #fa5555;text-transform: none" id="agencyName"></sub>
-                                    </small>
-                                    <blockquote style="font-size: 16px;color: #7f7f7f">
-                                        <ul class="list-inline">
-                                            <li><a class="myTag" id="psychoTestDate"></a></li>
-                                            <li><a class="myTag" id="psychoTestCode"></a></li>
-                                        </ul>
-                                    </blockquote>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <form id="form-access-psychoTest" method="post" action="{{route('join.psychoTest.room')}}">
-                        {{csrf_field()}}
-                        <input id="psychoTest_id" type="hidden" name="psychoTest_id">
-                        <input id="seeker_id" type="hidden" name="seeker_id">
-                        <input id="accessCode" type="hidden" name="accessCode">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Enter Room</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -276,21 +249,6 @@
             $("#vacancySetupDivider").css('display', 'block');
         });
         @endif
-
-        function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date, seeker_id) {
-            $("#agencyAva").attr('src', ava);
-            $("#agencyName").html('&ndash; ' + name);
-            $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
-            $("#psychoTestDate").html('<i class="fa fa-comments"></i>&ensp;Psycho Test Date: ' +
-                '<strong>' + date + '</strong>');
-            $("#psychoTestCode").html('<i class="fa fa-shield-alt"></i>&ensp;Room Code: ' +
-                '<strong>' + room + '</strong>');
-
-            $("#psychoTest_id").val(encryptID);
-            $("#seeker_id").val(seeker_id);
-            $("#accessCode").val(room);
-            $("#psychoTestModal").modal('show');
-        }
 
         $(".btn_psychoTest").on("click", function () {
             $("#content1").toggle(300);
@@ -322,6 +280,9 @@
                 .selectpicker({maxOptions: '{{count($vacancies)}}'}).selectpicker('refresh');
 
             $("#form-psychoTest-setup").attr('action', '{{route('psychoTest.create.info')}}');
+
+            $("#interviewer_input").hide();
+            $("#interviewer_id").val('default').prop('disabled', true).selectpicker('refresh');
         });
 
         $("#vacancy_id").on("change", function () {
@@ -352,6 +313,20 @@
                             '<div class="row form-group" style="margin-bottom: 0;margin-top: 1.5em">' +
                             '<div class="col-lg-12">' +
                             '<label style="font-size: 18px">' + val.judul + '</label></div></div>' +
+                            '<div class="row form-group">' +
+                            '<div class="col-lg-12">' +
+                            '<label for="admin_id">Interviewer <span class="required">*</span></label>' +
+                            '<div class="input-group">' +
+                            '<span class="input-group-addon"><i class="fa fa-user-tie"></i></span>' +
+                            '<select id="admin_id" class="form-control selectpicker" title="-- Select Interviewer --" ' +
+                            'data-live-search="true" name="admin_ids[]" required>' +
+                            '@foreach($interviewers as $interviewer)' +
+                            '@php $total = \App\PsychoTestInfo::whereHas('getVacancy', function ($vac){
+                                $vac->where('psychoTestDate_end','>=',today());
+                            })->where('admin_id', $interviewer->id)->count();@endphp' +
+                            '<option data-subtext="{{$total}} agency(s)" value="{{$interviewer->id}}" ' +
+                            '{{$total >= 10 ? 'disabled' : ''}}>{{$interviewer->name}}</option>@endforeach' +
+                            '</select></div></div></div>' +
                             '<div class="row form-group" id="input_roomCode' + val.id + '"></div>'
                         );
 
@@ -368,8 +343,7 @@
                                 '<i class="fa fa-sync"></i></button></span>' +
                                 '<input id="room_code' + val.id + '-' + nilai.seeker_id + '" ' +
                                 'name="room_codes[' + val.id + '][]" type="text" class="form-control" readonly required>' +
-                                '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span>' +
-                                '</div></div>';
+                                '<span class="input-group-addon"><i class="fa fa-shield-alt"></i></span></div></div>';
                         });
                         $("#input_roomCode" + val.id).html(input_roomCode);
                     });
@@ -388,7 +362,7 @@
             return false;
         }
 
-        function editPsychoTest(id, room_codes, vacID) {
+        function editPsychoTest(id, room_codes, vacID, adminID) {
             $(".btn_psychoTest i").toggleClass('fa-plus fa-th-list');
             $(".btn_psychoTest[data-toggle=tooltip]").attr('data-original-title', function (i, v) {
                 return v === "Create" ? "View" : "Create";
@@ -423,6 +397,8 @@
             });
             $("#input_roomCode" + id).html(input_roomCode);
 
+            $("#interviewer_input").show();
+            $("#interviewer_id").prop('disabled', false).val(adminID).selectpicker('refresh');
             $("#form-psychoTest-setup input[name='_method']").val('PUT');
             $("#btn_psychoTest_submit").html("<strong>SAVE CHANGES</strong>");
 

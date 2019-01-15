@@ -42,11 +42,43 @@ class Admin extends Authenticatable
      */
     public function isAdmin()
     {
-        return ($this->role == Role::ADMIN);
+        return ($this->role == Role::VACANCY_STAFF);
+    }
+
+    /**
+     * Check whether this user is interviewer or not
+     * @return bool
+     */
+    public function isInterviewer()
+    {
+        return ($this->role == Role::INTERVIEWER);
+    }
+
+    /**
+     * Check whether this user is Quiz_staff or not
+     * @return bool
+     */
+    public function isQuizStaff()
+    {
+        return ($this->role == Role::QUIZ_STAFF);
+    }
+
+    /**
+     * Check whether this user is Sync_staff or not
+     * @return bool
+     */
+    public function isSyncStaff()
+    {
+        return ($this->role == Role::SYNC_STAFF);
     }
 
     public function carousels()
     {
         return $this->hasMany(Carousel::class);
+    }
+
+    public function getPsychoTestInfo()
+    {
+        return $this->hasMany(PsychoTestInfo::class, 'admin_id');
     }
 }

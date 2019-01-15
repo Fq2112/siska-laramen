@@ -298,14 +298,46 @@ class UserSeeder extends Seeder
                     ]);
                 }
 
-            } elseif ($role == Role::ADMIN) {
-                for ($c = 0; $c < (($role == Role::ADMIN) ? 10 : 2); $c++) {
+            } elseif ($role == Role::VACANCY_STAFF) {
+                Admin::create([
+                    'ava' => 'avatar.png',
+                    'name' => 'jQuinn',
+                    'email' => 'jquinn211215@gmail.com',
+                    'password' => bcrypt('secret'),
+                    'role' => Role::ROOT
+                ]);
+
+                for ($c = 0; $c < 3; $c++) {
                     Admin::create([
                         'ava' => 'avatar.png',
                         'name' => $faker->firstName . ' ' . $faker->lastName,
                         'email' => $faker->unique()->safeEmail,
                         'password' => bcrypt('secret'),
-                        'role' => 'admin'
+                        'role' => Role::VACANCY_STAFF
+                    ]);
+
+                    Admin::create([
+                        'ava' => 'avatar.png',
+                        'name' => $faker->name,
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => bcrypt('secret'),
+                        'role' => Role::INTERVIEWER
+                    ]);
+
+                    Admin::create([
+                        'ava' => 'avatar.png',
+                        'name' => $faker->name,
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => bcrypt('secret'),
+                        'role' => Role::SYNC_STAFF
+                    ]);
+
+                    Admin::create([
+                        'ava' => 'avatar.png',
+                        'name' => $faker->name,
+                        'email' => $faker->unique()->safeEmail,
+                        'password' => bcrypt('secret'),
+                        'role' => Role::QUIZ_STAFF
                     ]);
                 }
             }
@@ -319,12 +351,6 @@ class UserSeeder extends Seeder
         User::find(26)->update([
             'email' => 'fiqy_a@icloud.com',
             'name' => 'Fiqy Ainuzzaqy'
-        ]);
-
-        Admin::find(1)->update([
-            'email' => 'jquinn211215@gmail.com',
-            'name' => 'jQuinn',
-            'role' => 'root'
         ]);
     }
 }

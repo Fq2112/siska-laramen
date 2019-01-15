@@ -19,6 +19,9 @@ class CreatePsychoTestInfosTable extends Migration
             $table->integer('vacancy_id')->unsigned();
             $table->foreign('vacancy_id')->references('id')->on('vacancy')
                 ->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->integer('admin_id')->unsigned();
+            $table->foreign('admin_id')->references('id')->on('admins')
+                ->onUpdate('CASCADE')->onDelete('CASCADE');
             $table->timestamps();
         });
     }
