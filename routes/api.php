@@ -37,6 +37,22 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
 
     });
 
+    $router->group(['prefix' => 'profile', 'namespace' => 'Api'], function ($router) {
+        $router->get('me', [
+            'uses' => 'ProfileAPIController@show'
+        ]);
+
+        $router->post('bookmark', [
+            'uses' => 'ApplicantsController@apiBookmark'
+        ]);
+
+        $router->post('abort', [
+            'uses' => 'ApplicantsController@apiAbortApply'
+        ]);
+
+    });
+
+
     $router->group(['middleware' => ['jwt.auth']], function ($router) {
         $router->get('logout', 'AuthController@logout');
         $router->get('test', function () {
