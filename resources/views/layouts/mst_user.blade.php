@@ -170,6 +170,7 @@
                 <h4 class="modal-title">Login with</h4>
             </div>
             <div class="modal-body">
+                <!-- Sign in form -->
                 <div class="box">
                     <div class="content">
                         @if(!\Illuminate\Support\Facades\Request::is('agency'))
@@ -201,20 +202,16 @@
                         @endif
                         <div class="error"></div>
                         <div class="form loginBox">
-                            @if(session('success'))
+                            @if(session('success') || session('recovered'))
                                 <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">
-                                        &times;
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
                                     </button>
                                     <h4><i class="icon fa fa-check"></i> Alert!</h4>
-                                    {{session('success')}}
+                                    {{session('success') ? session('success') : session('recovered')}}
                                 </div>
                             @elseif(session('error') || session('inactive'))
                                 <div class="alert alert-danger alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">
-                                        &times;
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
                                     </button>
                                     <h4><i class="icon fa fa-times"></i> Alert!</h4>
                                     {{session('error') ? session('error') : session('inactive')}}
@@ -267,6 +264,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Sign up form -->
                 <div class="box">
                     <div class="content registerBox" style="display:none;">
                         <div class="form">
@@ -350,14 +349,13 @@
                 <div class="box">
                     <div class="content emailBox" style="display:none;">
                         <div class="form">
-                            @if(session('status'))
-                                <div class="alert alert-success alert-dismissible">
-                                    <button type="button" class="close" data-dismiss="alert"
-                                            aria-hidden="true">
-                                        &times;
+                            @if(session('resetLink') || session('resetLink_failed'))
+                                <div class="alert alert-{{session('resetLink') ? 'success' : 'danger'}} alert-dismissible">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
                                     </button>
-                                    <h4><i class="icon fa fa-check"></i> Alert!</h4>
-                                    {{session('status')}}
+                                    <h4><i class="icon fa fa-{{session('resetLink') ? 'check' : 'times'}}"></i> Alert!
+                                    </h4>
+                                    {{session('resetLink') ? session('resetLink') : session('resetLink_failed')}}
                                 </div>
                             @endif
                             <form method="post" accept-charset="UTF-8" class="form-horizontal"
@@ -387,11 +385,22 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Recover password form -->
                 <div class="box">
+                    @if(session('recover_failed'))
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+                            </button>
+                            <h4><i class="icon fa fa-times"></i> Alert!</h4>
+                            {{ session('recover_failed') }}
+                        </div>
+                    @endif
                     <div class="content passwordBox" style="display:none;">
                         <div class="form">
                             <form method="post" accept-charset="UTF-8" class="form-horizontal"
-                                  action="{{route('password.request',['token' => session('reset')['token']])}}">
+                                  action="{{route('password.request',
+                                  ['token' => session('reset') ? session('reset')['token'] : old('token')])}}">
                                 {{ csrf_field() }}
                                 <div class="row {{ $errors->has('Email') ? ' has-error' : '' }} has-feedback">
                                     <div class="col-lg-12">

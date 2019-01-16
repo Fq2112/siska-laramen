@@ -136,9 +136,13 @@
     @endif
 @endauth
 @auth('admin')
-    @php $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
-    ->whereDate('created_at', '>=', now()->subDay())->count(); @endphp
-    @if($posting > 0)
+    @php
+        $role = Auth::guard('admin')->user();
+        $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
+        ->whereDate('created_at', '>=', now()->subDay())->count();
+        $partners = \App\PartnerCredential::where('status', false)->count();
+    @endphp
+    @if($posting > 0 && ($role->isRoot() || $role->isAdmin()))
         <div class="alert-banner">
             <div class="alert-banner-content">
                 <div class="alert-banner-text">
@@ -147,6 +151,19 @@
                 </div>
                 <a class="alert-banner-button" href="{{route('table.jobPostings')}}" style="text-decoration: none">
                     Redirect me to the Job Posting Table page</a>
+            </div>
+            <div class="alert-banner-close"></div>
+        </div>
+    @elseif($partners > 0 && ($role->isRoot() || $role->isSyncStaff()))
+        <div class="alert-banner">
+            <div class="alert-banner-content">
+                <div class="alert-banner-text">
+                    There seems to be <strong>{{$partners}}</strong> partnership request that
+                    {{$partners > 1 ? ' haven\'t' : ' hasn\'t'}} been approve yet!
+                </div>
+                <a class="alert-banner-button" href="{{route('partners.credentials.show')}}"
+                   style="text-decoration: none">
+                    Redirect me to the Partners Table page</a>
             </div>
             <div class="alert-banner-close"></div>
         </div>

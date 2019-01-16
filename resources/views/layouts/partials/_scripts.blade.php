@@ -80,13 +80,14 @@
         };
         tinymce.init(editor_config);
 
-        @if(session('success')||session('error')||session('logout')||session('expire')||session('inactive')||session('unknown'))
+        @if(session('success') || session('error') || session('logout') || session('expire') || session('inactive') ||
+        session('unknown') || session('recovered'))
         openLoginModal();
         @elseif($errors->has('email') || $errors->has('password') || $errors->has('name'))
         openRegisterModal();
-        @elseif(session('status'))
+        @elseif(session('resetLink') || session('resetLink_failed'))
         openEmailModal();
-        @elseif(session('reset'))
+        @elseif(session('reset') || session('recover_failed'))
         openPasswordModal();
         @endif
     });

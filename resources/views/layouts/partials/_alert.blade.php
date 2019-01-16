@@ -56,13 +56,13 @@
         type: 'warning',
         timer: '3500'
     });
-    @elseif(session('status'))
-    swal({
-        title: 'Reset Password Success!',
-        text: '{{ session('status') }}',
-        type: 'success',
-        timer: '3500'
-    });
+
+    @elseif(session('resetLink') || session('recovered'))
+    swal('Success!', '{{session('resetLink') ? session('resetLink') : session('recovered') }}', 'success');
+
+    @elseif(session('resetLink_failed') || session('recover_failed'))
+    swal('Error!', '{{session('resetLink_failed') ? session('resetLink_failed') : session('recover_failed') }}', 'error');
+
     @elseif(session('unknown'))
     swal({
         title: 'Social Provider Error!',
