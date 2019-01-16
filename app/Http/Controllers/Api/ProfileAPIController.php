@@ -346,6 +346,109 @@ class ProfileAPIController extends Controller
         ]);
     }
 
+    public function show_organization($id)
+    {
+        $or = Organization::findOrFail($id)->toArray();
+
+        return response()->json($or);
+
+    }
+
+    public function save_organization()
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $name = $obj['name'];
+        $start_period = $obj['start_period'];
+        $end_period = $obj['end_period'];
+        $title = $obj['title'];
+        $descript = $obj['descript'];
+
+
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        $seeker = Seekers::where('user_id', $user['id'])->first();
+        //dd($user);
+        if ($name == null || $start_period == null || $end_period == null || $title == null ||
+            $descript == null ) {
+            return response()->json([
+                'status' => 'Warning',
+                'success' => false,
+                'message' => 'Some data not filled yet!!'
+            ]);
+        }
+
+        Organization::create([
+            "seeker_id" => $seeker->id,
+            "name" => $name,
+            "start_period" => $start_period,
+            "end_period" => $end_period,
+            "title" => $title,
+            "descript" => $descript,
+
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'success' => true,
+            'message' => 'Organization data successfully added'
+        ]);
+    }
+
+    public function update_organization()
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $id = $obj['id'];
+        $name = $obj['name'];
+        $start_period = $obj['start_period'];
+        $end_period = $obj['end_period'];
+        $title = $obj['title'];
+        $descript = $obj['descript'];
+
+
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        $seeker = Seekers::where('user_id', $user['id'])->first();
+        //dd($user);
+        if ($name == null || $start_period == null || $end_period == null || $title == null ||
+            $descript == null ) {
+            return response()->json([
+                'status' => 'Warning',
+                'success' => false,
+                'message' => 'Some data not filled yet!!'
+            ]);
+        }
+        $or = Organization::findOrFail($id);
+
+        $or->update([
+            "seeker_id" => $seeker->id,
+            "name" => $name,
+            "start_period" => $start_period,
+            "end_period" => $end_period,
+            "title" => $title,
+            "descript" => $descript,
+
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'success' => true,
+            'message' => 'Organization data successfully updated'
+        ]);
+    }
+
+    public function delete_organization($id)
+    {
+        $or = Organization::findOrFail($id);
+        $or->delete();
+        return response()->json([
+            'status' => 'success',
+            'success' => true,
+            'message' => 'Organization data successfully remove'
+        ]);
+    }
+
     public function guard()
     {
         return Auth::guard('api');

@@ -80,7 +80,27 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
 
         });
 
+        $router->group(['prefix' => 'organization'], function ($router) {
+            $router->get('/{id}', [
+                'uses' => 'ProfileAPIController@show_organization'
+            ]);
+
+            $router->post('/save', [
+                'uses' => 'ProfileAPIController@save_organization'
+            ]);
+
+            $router->post('/update', [
+                'uses' => 'ProfileAPIController@update_organization'
+            ]);
+
+            $router->post('/delete/{id}', [
+                'uses' => 'ProfileAPIController@delete_organization'
+            ]);
+
+        });
+
     });
+
 
 
     $router->group(['middleware' => ['jwt.auth']], function ($router) {
