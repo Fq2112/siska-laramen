@@ -98,6 +98,59 @@ class ProfileAPIController extends Controller
         return response()->json($array);
     }
 
+    public function show_personal()
+    {
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        $seeker = Seekers::where('user_id', $user['id'])->first()->toArray();
+
+        return response()->json($seeker);
+    }
+
+    public function save_personal()
+    {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $background = $obj['background'];
+        $phone = $obj['phone'];
+        $address = $obj['address'];
+        $zip_code = $obj['zip_code'];
+        $birthday = $obj['birthday'];
+        $gender = $obj['gender'];
+        $relationship = $obj['relationship'];
+        $nationality = $obj['nationality'];
+        $website = $obj['website'];
+        $lowest_salary = $obj['lowest_salary'];
+        $highest_salary = $obj['highest_salary'];
+        $summary = $obj['summary'];
+        $video_summary = $obj['video_summary'];
+
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        $seeker = Seekers::where('user_id', $user['id'])->first();
+
+        $seeker->update([
+            "background" => $background,
+            "phone" => $phone,
+            "address" => $address,
+            "zip_code" => $zip_code,
+            "birthday" => $birthday,
+            "gender" => $gender,
+            "relationship" => $relationship,
+            "nationality"=> $nationality,
+            "website" => $website,
+            "lowest_salary" => $lowest_salary,
+            "highest_salary" => $highest_salary,
+            "summary" => $summary,
+            "video_summary" => $video_summary,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'success' => true,
+            'message' => 'Your personal data successfully added'
+        ]);
+    }
+
     public function show_education($id)
     {
         $edu = Education::findOrFail($id)->toArray();
@@ -370,7 +423,7 @@ class ProfileAPIController extends Controller
         $seeker = Seekers::where('user_id', $user['id'])->first();
         //dd($user);
         if ($name == null || $start_period == null || $end_period == null || $title == null ||
-            $descript == null ) {
+            $descript == null) {
             return response()->json([
                 'status' => 'Warning',
                 'success' => false,
@@ -412,7 +465,7 @@ class ProfileAPIController extends Controller
         $seeker = Seekers::where('user_id', $user['id'])->first();
         //dd($user);
         if ($name == null || $start_period == null || $end_period == null || $title == null ||
-            $descript == null ) {
+            $descript == null) {
             return response()->json([
                 'status' => 'Warning',
                 'success' => false,

@@ -42,6 +42,14 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
             'uses' => 'ProfileAPIController@show'
         ]);
 
+        $router->get('personal', [
+            'uses' => 'ProfileAPIController@show_personal'
+        ]);
+
+        $router->post('personal/save', [
+            'uses' => 'ProfileAPIController@save_personal'
+        ]);
+
         $router->group(['prefix' => 'edu'], function ($router) {
             $router->get('/{id}', [
                 'uses' => 'ProfileAPIController@show_education'
