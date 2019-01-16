@@ -194,10 +194,12 @@
 
     $("#form-recovery").on("submit", function (e) {
         if ($("#forg_password_confirm").val() != $("#forg_password").val()) {
+            $(".btn-password").attr('disabled', 'disabled');
             return false;
 
         } else {
             $("#forg_errorAlert").html('');
+            $(".btn-password").removeAttr('disabled');
             return true;
         }
     });
