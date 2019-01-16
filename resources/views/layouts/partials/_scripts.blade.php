@@ -163,7 +163,7 @@
         }
     });
 
-    $("#reg_password_confirm").on("change", function () {
+    $("#reg_password_confirm").on("keyup", function () {
         if ($(this).val() != $("#reg_password").val()) {
             $("#reg_errorAlert").html(
                 '<div class="alert alert-danger alert-dismissible">' +
@@ -172,6 +172,33 @@
             );
         } else {
             $("#reg_errorAlert").html('');
+        }
+    });
+
+    function checkForgotPassword() {
+        var new_pas = $("#forg_password").val(),
+            re_pas = $("#forg_password_confirm").val();
+        if (new_pas != re_pas) {
+            $("#forg_errorAlert").html(
+                '<div class="alert alert-danger alert-dismissible">' +
+                '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>' +
+                '<h4><i class="icon fa fa-times"></i> Alert!</h4>Your password confirmation doesn\'t match!</div>'
+            );
+            $(".btn-password").attr('disabled', 'disabled');
+
+        } else {
+            $("#forg_errorAlert").html('');
+            $(".btn-password").removeAttr('disabled');
+        }
+    }
+
+    $("#form-recovery").on("submit", function (e) {
+        if ($("#forg_password_confirm").val() != $("#forg_password").val()) {
+            return false;
+
+        } else {
+            $("#forg_errorAlert").html('');
+            return true;
         }
     });
 
