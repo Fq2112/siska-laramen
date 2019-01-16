@@ -42,13 +42,43 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
             'uses' => 'ProfileAPIController@show'
         ]);
 
-        $router->post('bookmark', [
-            'uses' => 'ApplicantsController@apiBookmark'
-        ]);
+        $router->group(['prefix' => 'edu'], function ($router) {
+            $router->get('/{id}', [
+                'uses' => 'ProfileAPIController@show_education'
+            ]);
 
-        $router->post('abort', [
-            'uses' => 'ApplicantsController@apiAbortApply'
-        ]);
+            $router->post('/save', [
+                'uses' => 'ProfileAPIController@save_education'
+            ]);
+
+            $router->post('/update', [
+                'uses' => 'ProfileAPIController@update_education'
+            ]);
+
+            $router->post('/delete/{id}', [
+                'uses' => 'ProfileAPIController@delete_education'
+            ]);
+
+        });
+
+        $router->group(['prefix' => 'exp'], function ($router) {
+            $router->get('/{id}', [
+                'uses' => 'ProfileAPIController@show_exp'
+            ]);
+
+            $router->post('/save', [
+                'uses' => 'ProfileAPIController@save_exp'
+            ]);
+
+            $router->post('/update', [
+                'uses' => 'ProfileAPIController@update_exp'
+            ]);
+
+            $router->post('/delete/{id}', [
+                'uses' => 'ProfileAPIController@delete_exp'
+            ]);
+
+        });
 
     });
 
