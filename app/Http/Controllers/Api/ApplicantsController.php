@@ -7,8 +7,10 @@ use App\Education;
 use App\Experience;
 use App\Http\Controllers\Controller;
 use App\Seekers;
+use App\User;
 use App\Vacancies;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Api\Clients\VacanciesAPIController as Search;
 
 class ApplicantsController extends Controller
 {
@@ -174,4 +176,58 @@ class ApplicantsController extends Controller
         }
     }
 
+    /**
+     * Show Bookmark
+     *
+     */
+    public function show_bookmark()
+    {
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        $seeker = Seekers::where('user_id', $user['id'])->first();
+
+        $acc = Accepting::where('seeker_id', $seeker['id'])
+            ->where('isBookmark',true)->get()->pluck('vacancy_id')->toArray();
+
+        $vacancy = Vacancies::whereIn('id',$acc)->get()->toArray();
+
+        if(count($vacancy) < 1){
+            return response()->json([
+                'message' => 'you don\'t have any Bookmarks vacancy!!'
+            ]);
+        }
+
+        return app(Search::class)->array_vacancies($vacancy);
+    }
+
+    /**
+     * Show Applied vacancies
+     *
+     */
+    public function show_vacancy()
+    {
+        $user = User::findOrFail($this->guard()->user()->id)->toArray();
+        $seeker = Seekers::where('user_id', $user['id'])->first();
+
+        $acc = Accepting::where('seeker_id', $seeker['id'])
+            ->where('isApply',true)->get()->pluck('vacancy_id')->toArray();
+
+        $vacancy = Vacancies::whereIn('id',$acc)->get()->toArray();
+        if(count($vacancy) < 1){
+            return response()->json([
+                'message' => 'you don\'t have any applied vacancy!!'
+            ]);
+        }
+
+        return app(Search::class)->array_vacancies($vacancy);
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\Guard
+     */
+    public function guard()
+    {
+        return Auth::guard('api');
+    }
 }
