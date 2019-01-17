@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Admin;
 use App\Http\Controllers\Controller;
 use App\PartnerCredential;
 use App\User;
@@ -57,7 +58,7 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        return back()->with('reset',[
+        return back()->with('reset', [
             'token' => $token,
             'email' => $request->email
         ]);
@@ -66,11 +67,84 @@ class ResetPasswordController extends Controller
     /**
      * Reset the given user's password.
      *
+     * @param string $resetter
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function reset(Request $request)
+    {
+        $this->validate($request, $this->rules(), $this->validationErrorMessages());
+
+        if ($this->isUser($request->email)) {
+            $guard = 'web';
+            $resetter = 'users';
+
+        } elseif ($this->isAdmin($request->email)) {
+            $guard = 'admin';
+            $resetter = 'admins';
+
+        } else {
+            return back()->withInput($request->all())
+                ->with('recover_failed', 'We can\'t find a user with that e-mail address.');
+        }
+
+        $response = $this->broker($resetter)->reset(
+            $this->credentials($request), function ($user, $password) use ($guard) {
+            $this->resetPassword($user, $password, $guard);
+        }
+        );
+
+        return $response == Password::PASSWORD_RESET
+            ? $this->sendResetResponse($response)
+            : $this->sendResetFailedResponse($request, $response);
+    }
+
+    /**
+     * Get the password reset validation rules.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:6',
+        ];
+    }
+
+    /**
+     * Get the password reset validation error messages.
+     *
+     * @return array
+     */
+    protected function validationErrorMessages()
+    {
+        return [];
+    }
+
+    /**
+     * Get the password reset credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return $request->only(
+            'email', 'password', 'password_confirmation', 'token'
+        );
+    }
+
+    /**
+     * Reset user's password.
+     *
      * @param  \Illuminate\Contracts\Auth\CanResetPassword $user
      * @param  string $password
+     * @param string $guard
      * @return void
      */
-    protected function resetPassword($user, $password)
+    protected function resetPassword($user, $password, $guard)
     {
         $user->forceFill([
             'password' => Hash::make($password),
@@ -79,13 +153,15 @@ class ResetPasswordController extends Controller
 
         event(new PasswordReset($user));
 
-        $findUser = User::find($user->id);
-        if ($findUser->isSeeker()) {
-            $data = array('email' => $findUser->email, 'password' => $findUser->password);
-            $this->updatePartners($data, 'password');
+        if ($guard == 'web') {
+            $findUser = User::find($user->id);
+            if ($findUser->isSeeker()) {
+                $data = array('email' => $findUser->email, 'password' => $findUser->password);
+                $this->updatePartners($data, 'password');
+            }
         }
 
-        $this->guard()->logout();
+        $this->guard($guard)->logout();
     }
 
     /**
@@ -146,22 +222,46 @@ class ResetPasswordController extends Controller
     }
 
     /**
+     * Check whether the intended email was found in the user table
+     *
+     * @param string $email
+     * @return boolean
+     */
+    private function isUser($email)
+    {
+        return !is_null(User::where('email', $email)->first());
+    }
+
+    /**
+     * Check whether the intended email was found in the admin table
+     *
+     * @param string $email
+     * @return boolean
+     */
+    private function isAdmin($email)
+    {
+        return !is_null(Admin::where('email', $email)->first());
+    }
+
+    /**
      * Get the broker to be used during password reset.
      *
+     * @param string $resetter
      * @return \Illuminate\Contracts\Auth\PasswordBroker
      */
-    public function broker()
+    public function broker($resetter)
     {
-        return Password::broker();
+        return Password::broker($resetter);
     }
 
     /**
      * Get the guard to be used during password reset.
      *
+     * @param string $guard
      * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
-    protected function guard()
+    protected function guard($guard)
     {
-        return Auth::guard();
+        return Auth::guard($guard);
     }
 }

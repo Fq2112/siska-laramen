@@ -386,7 +386,7 @@
                     </div>
                 </div>
 
-                <!-- Recover password form -->
+                <!-- Recovery password form -->
                 <div class="box">
                     @if(session('recover_failed'))
                         <div class="alert alert-danger alert-dismissible">
@@ -397,8 +397,9 @@
                         </div>
                     @endif
                     <div class="content passwordBox" style="display:none;">
+                        <div id="forg_errorAlert"></div>
                         <div class="form">
-                            <form method="post" accept-charset="UTF-8" class="form-horizontal"
+                            <form id="form-recovery" method="post" accept-charset="UTF-8" class="form-horizontal"
                                   action="{{route('password.request',
                                   ['token' => session('reset') ? session('reset')['token'] : old('token')])}}">
                                 {{ csrf_field() }}
@@ -430,13 +431,13 @@
                                     <div class="col-lg-12">
                                         <input id="forg_password_confirm" class="form-control" type="password"
                                                placeholder="Retype password" name="password_confirmation"
-                                               minlength="6" required>
+                                               minlength="6" onkeyup="return checkForgotPassword()" required>
                                         <span class="glyphicon glyphicon-eye-open form-control-feedback"></span>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-12">
-                                        <input class="btn btn-default btn-login" type="submit"
+                                        <input class="btn btn-default btn-login btn-password" type="submit"
                                                value="reset password" style="background: #FA5555;border-color: #FA5555">
                                     </div>
                                 </div>
