@@ -222,6 +222,32 @@ class ApplicantsController extends Controller
     }
 
     /**
+     * Show Invitation Seeker for agency
+     */
+    public function show_invitation()
+    {
+
+    }
+
+    /**
+     * Accept Selected invitation
+     *
+     */
+    public function accept_invitation()
+    {
+
+    }
+
+    /**
+     * Reject Selected Invitation
+     *
+     */
+    public function reject_invitation()
+    {
+
+    }
+
+    /**
      * Get the guard to be used during authentication.
      *
      * @return \Illuminate\Contracts\Auth\Guard
