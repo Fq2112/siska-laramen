@@ -20,8 +20,10 @@ use App\Tingkatpend;
 use App\User;
 use App\Vacancies;
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\Clients\VacanciesAPIController as Search;
+
 
 class ApplicantsController extends Controller
 {
@@ -294,6 +296,35 @@ class ApplicantsController extends Controller
      */
     public function accept_invitation()
     {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
+
+        $id = $obj['id'];
+
+        $invite = Invitation::findOrFail($id);
+        $datenow = new DateTime(Carbon::today()) ;
+        $datevacan = new DateTime(Vacancies::findOrFail($invite->vacancy_id)->pluck('recruitmentDate_end')->first()) ;
+        $interval = $datenow->diff($datevacan)->format("%d"); //check different between now and recruitment end
+
+        if ($interval < 1){
+            return response()->json([
+                'status' => 'Attention',
+                'success' => false,
+                'message' => 'Sorry you can\'t apply this invitation'
+            ]);
+        }else{
+            $invite->update([
+               'isApply' => false
+            ]);
+
+
+            return response()->json([
+                'status' => 'Success',
+                'success' => false,
+                'message' => 'You\'re successfully apply this invitation  '
+            ]);
+        }
+
 
     }
 
@@ -303,7 +334,33 @@ class ApplicantsController extends Controller
      */
     public function reject_invitation()
     {
+        $json = file_get_contents('php://input');
+        $obj = json_decode($json, true);
 
+        $id = $obj['id'];
+
+        $invite = Invitation::findOrFail($id);
+        $datenow = new DateTime(Carbon::today()) ;
+        $datevacan = new DateTime(Vacancies::findOrFail($invite->vacancy_id)->pluck('recruitmentDate_end')->first()) ;
+        $interval = $datenow->diff($datevacan)->format("%d"); //check different between now and recruitment end
+
+        if ($interval <= 1){
+            return response()->json([
+                'status' => 'Attention',
+                'success' => false,
+                'message' => 'Sorry you can\'t Abort this invitation'
+            ]);
+        }else{
+            $invite->update([
+                'isApply' => true
+            ]);
+
+            return response()->json([
+                'status' => 'Success',
+                'success' => false,
+                'message' => 'You\'re successfully aborted this invitation  '
+            ]);
+        }
     }
 
     /**

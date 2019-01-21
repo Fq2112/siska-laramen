@@ -31,8 +31,17 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
             'uses' => 'ApplicantsController@show_vacancy'
         ]);
 
+
         $router->get('invitation', [
             'uses' => 'ApplicantsController@show_invitation'
+        ]);
+
+        $router->post('invitation/accept', [
+            'uses' => 'ApplicantsController@accept_invitation'
+        ]);
+
+        $router->post('invitation/abort', [
+            'uses' => 'ApplicantsController@reject_invitation'
         ]);
 
         $router->post('bookmark', [
