@@ -44,53 +44,54 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="core">
-                                <i class="icon-cloud-download to-animate-2"></i>
+                                <i class="icon-dollar to-animate-2"></i>
                                 <div class="fh5co-post to-animate">
-                                    <h3>Free Download</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries
-                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <h3>Affordable Job Ads</h3>
+                                    <p>Terdapat 3 pilihan paket iklan (Basic, Plus, dan Enterprise) dengan fitur yang
+                                        beragam dan harga yang sangat terjangkau.</p>
                                 </div>
                             </div>
                             <div class="core">
-                                <i class="icon-laptop to-animate-2"></i>
+                                <i class="icon-smile-o to-animate-2"></i>
                                 <div class="fh5co-post to-animate">
-                                    <h3>Responsive Layout</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries
-                                        Vokalia and Consonantia, there live the blind texts.</p>
+                                    <h3>Online Quiz</h3>
+                                    <p>Quiz/tes yang diberikan adalah TPA dan TKD yang dibuat dan dikembangkan oleh
+                                        institusi terpercaya.</p>
                                 </div>
                             </div>
                             <div class="core">
                                 <i class="icon-hand-paper-o to-animate-2"></i>
                                 <div class="fh5co-post to-animate">
                                     <h3>24/7 Help &amp; Support</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                        Consonantia, there live the blind texts.</p>
+                                    <p>Untuk kepuasan Anda dapatkan Bantuan dan Dukungan secara GRATIS setiap hari
+                                        selama 24 jam. Percayakan lowongan Anda kepada SISKA bahkan sebelum, selama,
+                                        ataupun sesudah proses job posting.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="core">
-                                <i class="icon-lightbulb-o to-animate-2"></i>
+                                <i class="icon-calendar to-animate-2"></i>
                                 <div class="fh5co-post to-animate">
-                                    <h3>Free Update</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                        Consonantia, there live the blind texts.</p>
+                                    <h3>Customizable Timeline</h3>
+                                    <p>Dapat mengatur timeline (jadwal) lowongan, mulai dari tanggal rekruitmen, online
+                                        quiz, psycho test, hingga job interview. sesuai dengan paket yang dipilih.</p>
                                 </div>
                             </div>
                             <div class="core">
-                                <i class="icon-trophy to-animate-2"></i>
+                                <i class="icon-comments-o to-animate-2"></i>
                                 <div class="fh5co-post to-animate">
-                                    <h3>Featured Template</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                        Consonantia, there live the blind texts.</p>
+                                    <h3>Psycho Test</h3>
+                                    <p>Psiko tes ini berupa video conference (online interview) yang akan dilakukan oleh
+                                        psikolog terpercaya.</p>
                                 </div>
                             </div>
                             <div class="core">
-                                <i class="icon-columns2 to-animate-2"></i>
+                                <i class="icon-graduation-cap to-animate-2"></i>
                                 <div class="fh5co-post to-animate">
-                                    <h3>Lots of Elements</h3>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and
-                                        Consonantia, there live the blind texts.</p>
+                                    <h3>Recommended Seeker</h3>
+                                    <p>Dapat melihat daftar rekomendasi pelamar berdasarkan syarat pengalaman kerja dan
+                                        pendidikan minimal dari lowongan aktif yang dimiliki.</p>
                                 </div>
                             </div>
                         </div>
