@@ -547,7 +547,7 @@
                         Get in Touch</a><span> &middot; </span>
                     <a href="{{route('info.siska')}}#faqs" target="_blank">
                         FAQ</a><br>
-                    &copy; 2018 SISKA. All Rights Reserved.<br>Designed by
+                    &copy; {{now()->format('Y')}} SISKA. All Rights Reserved.<br>Designed by
                     <a href="http://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
@@ -559,8 +559,8 @@
                         &mdash; 60231
                     </li>
                     <li><i class="icon-phone"></i><a href="tel:+628563094333">+62-85-6309 4333</a></li>
-                    <li><i class="icon-envelope"></i><a href="mailto:info@karir.org">info@karir.org</a></li>
-                    <li><i class="icon-globe2"></i><a href="htpp://karir.org" target="_blank">www.karir.org</a></li>
+                    <li><i class="icon-envelope"></i><a href="mailto:info@siska.org">info@siska.org</a></li>
+                    <li><i class="icon-globe2"></i><a href="htpp://siska.org" target="_blank">www.siska.org</a></li>
                 </ul>
                 <h3 class="section-title">Ikuti Kami</h3>
                 <ul class="social-media">

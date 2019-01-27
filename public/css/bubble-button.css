@@ -16,7 +16,7 @@
     box-shadow: 0 2px 25px rgba(250, 85, 85, 0.5);
 }
 
-.mm-finish-btn .bubbly-button {
+.mm-finish-btn .bubbly-button, .mm-quizInv-btn .bubbly-button {
     background-color: #00adb5;
     box-shadow: 0 2px 25px rgba(0, 173, 181, 0.5);
 }
@@ -61,11 +61,11 @@
     background-image: radial-gradient(circle, #fa5555 20%, transparent 20%), radial-gradient(circle, #fa5555 20%, transparent 20%), radial-gradient(circle, transparent 10%, #fa5555 15%, transparent 20%), radial-gradient(circle, #fa5555 20%, transparent 20%), radial-gradient(circle, #fa5555 20%, transparent 20%), radial-gradient(circle, #fa5555 20%, transparent 20%), radial-gradient(circle, #fa5555 20%, transparent 20%);
 }
 
-.mm-finish-btn .bubbly-button:before {
+.mm-finish-btn .bubbly-button:before, .mm-quizInv-btn .bubbly-button:before {
     background-image: radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, transparent 20%, #00adb5 20%, transparent 30%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, transparent 10%, #00adb5 15%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%);
 }
 
-.mm-finish-btn .bubbly-button:after {
+.mm-finish-btn .bubbly-button:after, .mm-quizInv-btn .bubbly-button:after {
     background-image: radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, transparent 10%, #00adb5 15%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%), radial-gradient(circle, #00adb5 20%, transparent 20%);
 }
 
@@ -74,7 +74,7 @@
     box-shadow: 0 2px 25px rgba(177, 62, 62, 0.2);
 }
 
-.mm-finish-btn .bubbly-button:active {
+.mm-finish-btn .bubbly-button:active, .mm-quizInv-btn .bubbly-button:active {
     background-color: #006269;
     box-shadow: 0 2px 25px rgba(0, 98, 105, 0.2);
 }

@@ -4,6 +4,11 @@ $agency->user->name.' | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/quiz.css')}}">
     <link rel="stylesheet" href="{{asset('css/bubble-button.css')}}">
+    <style>
+        [data-scrollbar] {
+            max-height: 400px
+        }
+    </style>
 @endpush
 @section('content')
     <section id="fh5co-services" data-section="services" style="padding-top: 7em">
@@ -81,11 +86,21 @@ $agency->user->name.' | SISKA &mdash; Sistem Informasi Karier')
                                             </td>
                                         </tr>
                                     </table>
-                                    <ul class="mm-survey-results-list"></ul>
+                                    <div data-scrollbar>
+                                        <ul class="mm-survey-results-list"></ul>
+                                    </div>
                                 </div>
                                 <div class="mm-survey-results-controller">
                                     <div class="mm-back-btn">
                                         <button class="bubbly-button" style="padding: 3px 40px;">Back</button>
+                                    </div>
+                                    <div class="mm-quizInv-btn"
+                                         style="display: inline-block;position: relative;float: right;margin: 12px 15px;">
+                                        <button class="bubbly-button"
+                                                style="padding: 3px 40px;background-color: #00adb5;box-shadow: 0 2px 25px rgba(0, 173, 181, 0.5);"
+                                                onclick="window.open('{{route('seeker.invitation.quiz')}}')">Quiz
+                                            Invitation
+                                        </button>
                                     </div>
                                 </div>
                             </div>

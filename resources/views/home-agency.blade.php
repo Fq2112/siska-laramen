@@ -244,7 +244,7 @@
                                         </div>
                                         <div id="a2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pergi ke halaman utama <a href="http://karir.org">SISKA</a> dan
+                                                <p>Pergi ke halaman utama <a href="http://siska.org">SISKA</a> dan
                                                     mengisi kolom yang diperlukan dalam kotak sign up dan klik.
                                                     Setelah Anda telah mengirimkan informasi, silahkan cek email Anda
                                                     untuk mengaktifkan akun Anda. Pastikan untuk memeriksa spam mail
@@ -259,7 +259,7 @@
                                                     Pastikan resume Anda lengkap dan selalu diperbarui.</p>
 
                                                 <p>Cukup mencari jenis karir yang Anda inginkan dan pada setiap
-                                                    posting di <a href="http://karir.org">SISKA</a>, klik tombol
+                                                    posting di <a href="http://siska.org">SISKA</a>, klik tombol
                                                     "apply" untuk melamar. Setelah Anda menyelesaikan
                                                     langkah-langkah, resume Anda akan dikirim ke Perusahaan. Anda
                                                     akan melihat pada deskripsi karir, tombol "apply" akan berubah

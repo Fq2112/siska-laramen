@@ -748,7 +748,8 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                &copy; 2018 SISKA. All right reserved. Designed by <a href="http://rabbit-media.net">Rabbit Media</a>
+                &copy; {{now()->format('Y')}} SISKA. All right reserved. Designed by <a href="http://rabbit-media.net">Rabbit
+                    Media</a>
             </div>
             <div class="clearfix"></div>
         </footer>
