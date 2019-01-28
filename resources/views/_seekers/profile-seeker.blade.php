@@ -406,7 +406,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{--Test Result--}}
+                        {{--<div class="row">
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-content">
@@ -472,7 +473,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>--}}
                     </div>
                     <div class="col-lg-8">
                         <div class="row">
