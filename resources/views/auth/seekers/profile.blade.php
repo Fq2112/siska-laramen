@@ -1799,6 +1799,15 @@
                                                                                 <table style="font-size: 14px; margin-top: 0">
                                                                                     <tr>
                                                                                         <td>
+                                                                                            <i class="fa fa-briefcase"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Organization Title
+                                                                                        </td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->title}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
                                                                                             <i class="fa fa-hourglass-start"></i>
                                                                                         </td>
                                                                                         <td>&nbsp;Start Period</td>
