@@ -1339,7 +1339,7 @@
                                             <small id="show_edu_settings">
                                                 Education
                                                 <span class="pull-right" style="cursor: pointer; color: #FA5555">
-                                                    <i class="fa fa-graduation-cap"></i>&ensp;Add
+                                                    <i class="fa fa-school"></i>&ensp;Add
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
