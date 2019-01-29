@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Profile | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Vacancy Setup | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <style>
         .card-title a {
@@ -338,7 +338,8 @@
                                                 @endif
                                             </div>
 
-                                            <div id="vacancy_settings" style="display: none">
+                                            <div id="vacancy_settings" data-scrollbar
+                                                 style="display: none;max-height: 600px">
                                                 <div class="row form-group">
                                                     <div class="col-lg-8">
                                                         <small>Vacancy Name</small>

@@ -1,4 +1,4 @@
-@section('title', 'Edit Profile | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Account Settings &ndash; Edit Profile | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_agency')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
