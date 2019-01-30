@@ -412,6 +412,7 @@ class AccountController extends Controller
             $pc = array('pc' => $payment_method->paymentCategories->name);
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());
             $created_at1DayAdd = array('add_day' => Carbon::parse($row['created_at'])->addDay());
+            $status = array('expired' => now() >= Carbon::parse($row['created_at'])->addDay() ? true : false);
             $deadline = array('deadline' => Carbon::parse($row['created_at'])->addDay()->format('l, j F Y') .
                 ' at ' . Carbon::parse($row['created_at'])->addDay()->format('H:i'));
 
@@ -419,7 +420,7 @@ class AccountController extends Controller
             $paidDate = array('date_payment' => Carbon::parse($row['date_payment'])->format('l j F Y'));
 
             $result['data'][$i] = array_replace($paid, $id, $invoice, $result['data'][$i], $pl, $pm, $pc,
-                $created_at, $created_at1DayAdd, $orderDate, $paidDate, $deadline, $vacancies);
+                $created_at, $created_at1DayAdd, $orderDate, $paidDate, $deadline, $vacancies, $status);
             $i = $i + 1;
         }
 

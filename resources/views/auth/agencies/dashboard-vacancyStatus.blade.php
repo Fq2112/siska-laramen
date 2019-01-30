@@ -236,7 +236,7 @@
             $("#search-result").empty();
             $.each(data.data, function (i, val) {
                 $color = val.isPaid == 1 ? '#00adb5' : '#fa5555';
-                $display = val.isPaid == 0 && '{{now()}}' <= val.add_day ? '' : 'none';
+                $display = val.isPaid == 0 && val.expired == false ? '' : 'none';
                 $class = val.isPaid == 1 ? '' : 'ld ld-breath';
                 $label = val.isPaid == 1 ? "<strong>Paid</strong> on " + val.date_payment :
                     "<strong>Ordered</strong> on " + val.date_order;

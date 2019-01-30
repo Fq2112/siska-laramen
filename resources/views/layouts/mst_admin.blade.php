@@ -162,8 +162,7 @@
         $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
         ->orderByDesc('id')->get();
 
-        $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
-        ->whereDate('created_at', '>=', now()->subDay())->get();
+        $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')->get();
 
         $quizSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
             $plan->where('isQuiz', true);

@@ -138,8 +138,7 @@
 @auth('admin')
     @php
         $role = Auth::guard('admin')->user();
-        $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
-        ->whereDate('created_at', '>=', now()->subDay())->count();
+        $posting = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')->count();
         $partners = \App\PartnerCredential::where('status', false)->count();
     @endphp
     @if($posting > 0 && ($role->isRoot() || $role->isAdmin()))
