@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Psycho Test Room List &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; SISKA Interviewer | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <style>
         .dataTables_filter {
@@ -16,10 +16,6 @@
                         <h2 id="panel_title">Psycho Test Room
                             <small>List</small>
                         </h2>
-                        <ul class="nav navbar-right panel_toolbox">
-                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                            <li><a class="close-link"><i class="fa fa-times"></i></a></li>
-                        </ul>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
