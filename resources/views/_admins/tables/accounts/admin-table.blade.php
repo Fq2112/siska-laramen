@@ -42,6 +42,19 @@
                             <tbody>
                             @php $no = 1; @endphp
                             @foreach($admins as $admin)
+                                @php
+                                    if($admin->isRoot()){
+                                        $label = 'primary';
+                                    } elseif($admin->isAdmin()){
+                                        $label = 'info';
+                                    } elseif($admin->isQuizStaff()){
+                                        $label = 'success';
+                                    } elseif($admin->isSyncStaff()){
+                                        $label = 'warning';
+                                    } elseif($admin->isInterviewer()){
+                                        $label = 'danger';
+                                    }
+                                @endphp
                                 <tr>
                                     <td style="vertical-align: middle" align="center">{{$no++}}</td>
                                     <td style="vertical-align: middle" align="center">
@@ -57,8 +70,7 @@
                                         <strong>{{$admin->name}}</strong><br>
                                         <a href="mailto:{{$admin->email}}">{{$admin->email}}</a></td>
                                     <td style="vertical-align: middle;text-transform: uppercase" align="center">
-                                        <span class="label label-{{$admin->isRoot() ? 'primary' : 'info'}}">
-                                            {{$admin->isRoot() ? 'Root' : 'Admin'}}</span></td>
+                                        <span class="label label-{{$label}}">{{$admin->role}}</span></td>
                                     <td style="vertical-align: middle" align="center">
                                         {{\Carbon\Carbon::parse($admin->created_at)->format('j F Y')}}</td>
                                     <td style="vertical-align: middle"

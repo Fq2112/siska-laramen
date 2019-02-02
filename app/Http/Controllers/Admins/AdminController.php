@@ -53,11 +53,12 @@ class AdminController extends Controller
         $agencies = Agencies::all();
         $seekers = Seekers::all();
         $mitras = PartnerCredential::all();
+        $interviewers = Admin::where('role', Role::INTERVIEWER)->count();
 
         $blogs = Blog::all();
 
         return view('_admins.home-admin', compact('newUser', 'newApp', 'newJobPost', 'newMitra',
-            'users', 'agencies', 'seekers', 'mitras', 'blogs'));
+            'users', 'agencies', 'seekers', 'mitras', 'interviewers', 'blogs'));
     }
 
     public function showInbox(Request $request)
