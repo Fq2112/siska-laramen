@@ -1,5 +1,6 @@
 <li><a href="{{route('home-admin')}}"><i class="fa fa-home"></i> Dashboard</a></li>
 <li><a href="{{route('admin.inbox')}}"><i class="fa fa-envelope"></i> Inbox</a></li>
+<li><a href="{{route('quiz.info')}}"><i class="fa fa-smile"></i> Quiz</a></li>
 <li><a href="{{route('psychoTest.info')}}"><i class="fa fa-comments"></i> Psycho Test</a></li>
 <li><a><i class="fa fa-table"></i> Data Transaction<span class="fa fa-chevron-down"></span></a>
     <ul class="nav child_menu">
