@@ -23,6 +23,7 @@ use App\User;
 use App\Provinces;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -231,14 +232,19 @@ class AccountController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->put($partner->uri . '/api/SISKA/seekers/update', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => $check,
-                        'seeker' => $data,
-                    ]
-                ]);
+
+                try {
+                    $client->put($partner->uri . '/api/SISKA/seekers/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => $check,
+                            'seeker' => $data,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
     }

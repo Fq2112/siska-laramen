@@ -26,6 +26,6 @@ class AdminMiddleware
             }
         }
 
-        return response(view('errors.403'), 403);
+        return response()->view('errors.403');
     }
 }

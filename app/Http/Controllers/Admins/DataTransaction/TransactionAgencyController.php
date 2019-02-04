@@ -21,6 +21,7 @@ use App\Tingkatpend;
 use App\Vacancies;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -51,14 +52,19 @@ class TransactionAgencyController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => 'vacancy',
-                        'agencies' => $data,
-                    ]
-                ]);
+
+                try {
+                    $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'vacancy',
+                            'agencies' => $data,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
 
@@ -163,13 +169,18 @@ class TransactionAgencyController extends Controller
                             'exceptions' => false
                         ]
                     ]);
-                    $client->post($partner->uri . '/api/SISKA/vacancies/create', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'vacancies' => $result,
-                        ]
-                    ]);
+
+                    try {
+                        $client->post($partner->uri . '/api/SISKA/vacancies/create', [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'vacancies' => $result,
+                            ]
+                        ]);
+                    } catch (ConnectException $e) {
+                        //
+                    }
                 }
             }
         }

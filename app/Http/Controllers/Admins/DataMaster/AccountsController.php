@@ -8,6 +8,7 @@ use App\Seekers;
 use App\User;
 use App\Admin;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -164,14 +165,19 @@ class AccountsController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => 'agency',
-                        'agencies' => $data,
-                    ]
-                ]);
+
+                try {
+                    $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'agency',
+                            'agencies' => $data,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
 
         }
@@ -209,13 +215,18 @@ class AccountsController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->delete($partner->uri . '/api/SISKA/seekers/delete', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'email' => $user->email,
-                    ]
-                ]);
+
+                try {
+                    $client->delete($partner->uri . '/api/SISKA/seekers/delete', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'email' => $user->email,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
     }
