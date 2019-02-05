@@ -213,9 +213,11 @@ class AgencyController extends Controller
     {
         $user = Auth::user();
         $agency = Agencies::where('user_id', $user->id)->firstOrFail();
+        $vac_ids = $request->vacancy_ids;
+        sort($vac_ids);
 
         $it = new \MultipleIterator();
-        $it->attachIterator(new \ArrayIterator($request->vacancy_ids));
+        $it->attachIterator(new \ArrayIterator($vac_ids));
         $it->attachIterator(new \ArrayIterator($request->passing_grade));
         $it->attachIterator(new \ArrayIterator($request->quiz_applicant));
         $it->attachIterator(new \ArrayIterator($request->psychoTest_applicant));
