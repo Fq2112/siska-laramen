@@ -281,6 +281,11 @@ Route::group(['namespace' => 'Admins', 'prefix' => 'admin', 'middleware' => 'adm
                         'as' => 'quiz.create.questions'
                     ]);
 
+                    Route::get('{id}/edit', [
+                        'uses' => 'BankSoalController@editQuizQuestions',
+                        'as' => 'quiz.edit.questions'
+                    ]);
+
                     Route::put('{id}/update', [
                         'uses' => 'BankSoalController@updateQuizQuestions',
                         'as' => 'quiz.update.questions'
