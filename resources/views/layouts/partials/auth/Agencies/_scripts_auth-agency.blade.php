@@ -111,7 +111,7 @@
             scrollTop: $('#show_vacancy_settings').offset().top
         }, 500);
     });
-    $("#btn_save_vacancy").on('click', function (e) {
+    $("#form-vacancy").on('submit', function (e) {
         e.preventDefault();
         if (tinyMCE.get('syarat').getContent() == "") {
             swal({
@@ -130,7 +130,7 @@
             });
 
         } else {
-            $('#form-vacancy')[0].submit();
+            $(this)[0].submit();
         }
     });
 

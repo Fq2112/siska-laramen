@@ -338,8 +338,7 @@
                                                 @endif
                                             </div>
 
-                                            <div id="vacancy_settings" data-scrollbar
-                                                 style="display: none;max-height: 600px">
+                                            <div id="vacancy_settings" style="display: none">
                                                 <div class="row form-group">
                                                     <div class="col-lg-8">
                                                         <small>Vacancy Name</small>
@@ -547,7 +546,7 @@
                                         </div>
                                     </div>
                                     <div class="card-read-more">
-                                        <button class="btn btn-link btn-block" data-placement="top" type="button"
+                                        <button class="btn btn-link btn-block" data-placement="top" type="submit"
                                                 data-toggle="tooltip" title="Click here to submit your changes!"
                                                 id="btn_save_vacancy" disabled>
                                             <i class="fa fa-briefcase"></i>&nbsp;SAVE CHANGES
