@@ -1,0 +1,347 @@
+@import url('https://fonts.googleapis.com/css?family=Dosis:300,400,500,600,700&subset=latin-ext');
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+.wrapper {
+    width: 1%;
+    height: 100vh;
+    background: #ededed;
+    display: table-cell;
+    vertical-align: middle;
+    font-family: 'Dosis', sans-serif;
+}
+
+.sign-panels {
+    width: 650px;
+    background: #fff;
+    padding: 40px 80px;
+    margin: 40px auto;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.login, .signup, .recover-password {
+    position: relative;
+    background: rgba(255, 255, 255, .5);
+}
+
+.title {
+    color: #9f9f9f;
+}
+
+.title span {
+    display: block;
+    font-size: 46px;
+    font-weight: bold;
+}
+
+.title p {
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.btn-face, .btn-twitter {
+    color: #fff;
+    display: inline-block;
+    width: 200px;
+    font-size: 20px;
+    height: 50px;
+    border-radius: 50px;
+    text-decoration: none;
+    padding: 11px 0;
+    font-weight: 500;
+}
+
+.btn-face .fa, .btn-twitter .fa {
+    margin-right: 5px;
+}
+
+.btn-face {
+    background: #5397d7;
+    margin-right: 25px;
+}
+
+.btn-twitter {
+    background: #40b9e0;
+}
+
+.social {
+    float: none;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 27px;
+}
+
+.social .circle {
+    background-color: #EEEEEE;
+    color: #FFFFFF;
+    border-radius: 100%;
+    display: inline-block;
+    margin: 0 7px;
+    padding: 10px;
+    width: 60px;
+    height: 60px;
+}
+
+.social .circle .fa {
+    font-size: 24px;
+}
+
+.social .twitter {
+    background-color: #0099db;
+    color: #FFFFFF;
+}
+
+.social .facebook {
+    background-color: #455CA8;
+    color: #FFFFFF;
+}
+
+.social .google {
+    background-color: #F74933;
+}
+
+.social .github {
+    background-color: #403A3A;
+}
+
+.social .linkedin {
+    background-color: #0077b5;
+}
+
+.twitter:hover {
+    background-color: #00baff;
+}
+
+.facebook:hover {
+    background-color: #6E83CD;
+}
+
+.google:hover {
+    background-color: #FF7566;
+}
+
+.github:hover {
+    background-color: #4D4D4d;
+}
+
+.linkedin:hover {
+    background-color: #0089c9;
+}
+
+.or {
+    margin: 35px 0;
+    font-weight: 600;
+    color: #9f9f9f;
+}
+
+.or:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #cecece;
+    position: absolute;
+    margin-top: -10px;
+    z-index: 0;
+}
+
+.or span {
+    display: block;
+    background: #fff;
+    width: 50px;
+    margin: auto;
+    position: relative;
+    z-index: 2;
+}
+
+.sign-panels input {
+    width: 100%;
+    display: block;
+    margin-bottom: 15px;
+    /*height: 50px;*/
+    border-radius: 50px;
+    border: none;
+    background: #ededed;
+    text-align: center;
+    padding: 10px;
+    font-size: 15px;
+    color: #7c7c7c;
+    font-weight: 500;
+}
+
+.sign-panels input:focus {
+    outline: none;
+}
+
+.sign-panels input[type="checkbox"] {
+    display: none;
+}
+
+.sign-panels input[type="checkbox"] + label {
+    display: block;
+    text-align: left;
+    padding-left: 50px;
+    cursor: pointer;
+    color: #828282;
+    font-weight: 500;
+    margin-top: 10px;
+    float: left;
+    height: 50px;
+    padding-top: 15px;
+}
+
+.sign-panels input[type="checkbox"] + label:before {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 15px;
+    background: #dbdbdb;
+    position: absolute;
+    left: 30px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 0 5px #ededed;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+}
+
+.sign-panels input[type="checkbox"]:checked + label:before {
+    background: #00adb5;
+    box-shadow: 0 0 0 5px #00adb5;
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+}
+
+.btn-signin {
+    display: inline-block;
+    width: 50%;
+    margin-top: 10px;
+    height: 50px;
+    background: #00adb5;
+    border-radius: 50px;
+    padding: 11px;
+    font-size: 20px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    box-shadow: none;
+    transition: all .2s ease;
+}
+
+.btn-signup {
+    display: inline-block;
+    margin: 10px 0 0 50px;
+    height: 50px;
+    background: #fa5555;
+    border-radius: 50px;
+    padding: 11px 18px;
+    font-size: 20px;
+    color: #fff;
+    font-weight: 500;
+    border: none;
+    box-shadow: none;
+    transition: all .2s ease;
+}
+
+.btn-signin:hover, .btn-signup:hover {
+    background: #393D46;
+    color: #fff;
+    transition: all .2s ease;
+}
+
+.btn-password {
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.btn-reset, .btn-member, .btn-fade {
+    font-size: 19px;
+    font-weight: 500;
+    color: #9f9f9f;
+    display: block;
+    /*width: 210px;*/
+    margin: 30px auto 0;
+    text-decoration: none;
+
+}
+
+.btn-member {
+    margin-top: 15px;
+}
+
+.btn-reset .fa, .btn-member .fa {
+    margin-left: 6px;
+}
+
+.notification p {
+    font-size: 20px;
+    font-weight: 600;
+    color: #9f9f9f;
+}
+
+.notification span {
+    color: #fa5555;
+}
+
+.error {
+    display: block;
+    color: #fa5555;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 15px 0;
+}
+
+#particles-js canvas {
+    display: block;
+    vertical-align: bottom;
+}
+
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+
+@media screen and (max-width: 768px) {
+    .sign-panels {
+        width: 90%;
+        padding: 40px;
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .sign-panels {
+        padding: 40px 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .sign-panels input[type="checkbox"] + label {
+        width: 100%;
+    }
+
+    .btn-signin {
+        width: 80%;
+    }
+
+    .title span {
+        font-size: 36px;
+    }
+
+}
+
+#log_password + .glyphicon, #reg_password + .glyphicon, #reg_password_confirm + .glyphicon,
+#forg_password + .glyphicon, #forg_password_confirm + .glyphicon {
+    cursor: pointer;
+    pointer-events: all;
+}
