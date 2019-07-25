@@ -1,7 +1,8 @@
 @extends('layouts.mst_user')
 @section('title', 'Information | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
-    <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">@endpush
+    <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+@endpush
 @section('content')
     <section id="fh5co-home" data-section="home" data-stellar-background-ratio="0.5"
              style="background-color: #ffffff">
@@ -341,7 +342,7 @@
                                 <li><a href="mailto:salamunrn@gmail.com" class="email"><i
                                                 class="fa fa-envelope"></i></a></li>
                                 <li>
-                                    <a href="whatsapp://send?text=Assalamu`alaikum, Pak Salamun!&phone=+628121713320&abid=+628121713320"
+                                    <a href="https://web.whatsapp.com/send?text=Assalamu`alaikum, Pak Salamun!&phone=+628121713320&abid=+628121713320"
                                        class="whatsapp"><i class="fab fa-whatsapp"></i></a></li>
                                 <li><a href="#" class="github"><i class="fab fa-github-alt"></i></a></li>
                                 <li><a href="http://line.me/ti/p/~fqnkk" class="line"><i class="fab fa-line"></i></a>
@@ -367,7 +368,8 @@
                                                 class="fab fa-instagram"></i></a></li>
                                 <li><a target="_blank" href="https://github.com/Fq2124" class="github"><i
                                                 class="fab fa-github-alt"></i></a></li>
-                                <li><a href="whatsapp://send?text=Hello, fq!&phone=+628563094333&abid=+628563094333"
+                                <li>
+                                    <a href="https://web.whatsapp.com/send?text=Hello, fq!&phone=+628563094333&abid=+628563094333"
                                        class="whatsapp"><i class="fab fa-whatsapp"></i></a></li>
                                 <li><a href="http://line.me/ti/p/~fqnkk" class="line"><i class="fab fa-line"></i></a>
                                 </li>
@@ -392,7 +394,7 @@
                                 <li><a target="_blank" href="https://github.com/m1ku100" class="github"><i
                                                 class="fab fa-github-alt"></i></a></li>
                                 <li>
-                                    <a href="whatsapp://send?text=Hello, Ilham!&phone=+6282338434394&abid=+6282338434394"
+                                    <a href="https://web.whatsapp.com/send?text=Hello, Ilham!&phone=+6282338434394&abid=+6282338434394"
                                        class="whatsapp"><i class="fab fa-whatsapp"></i></a></li>
                                 <li><a href="http://line.me/ti/p/~ilhampuji" class="line"><i
                                                 class="fab fa-line"></i></a></li>

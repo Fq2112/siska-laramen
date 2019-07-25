@@ -6,6 +6,7 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>405 Error - Method not allowed!</title>
+    <link rel="icon" href="{{asset('favicon.ico')}}" type="image/ico"/>
 
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
@@ -401,6 +402,7 @@
     </a>
 </div>
 </body>
+<script src="{{asset('js/particles.min.js')}}"></script>
 <script>
     var title = document.getElementsByTagName("title")[0].innerHTML;
     (function titleScroller(text) {

@@ -1,281 +1,9 @@
-@php
-    $date = $data['confirmAgency']->created_at;
-    $romanDate = \App\Support\RomanConverter::numberToRoman($date->format('y')).'/'.
-    \App\Support\RomanConverter::numberToRoman($date->format('m'));
-    $invoice = '#INV/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
-    $reference = '#PYM/'.$data['confirmAgency']->created_at->format('Ymd').'/'.$romanDate.'/'.$data['confirmAgency']->id;
-    $total = number_format($data['confirmAgency']->total_payment,2,",",".");
-@endphp
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scaleable=no">
-    <title>Payment Success Details! ({{$invoice}})</title>
+    <title>Just one more step! (#926639)</title>
     <style type="text/css">
-        /*Bootstrap*/
-        .alert {
-            padding: 15px;
-            margin: 0 1.5em 1em 1.5em;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .alert h4 {
-            margin-top: 0;
-            color: inherit;
-        }
-
-        .alert .alert-link {
-            font-weight: bold;
-        }
-
-        .alert > p,
-        .alert > ul {
-            margin-bottom: 0;
-        }
-
-        .alert > p + p {
-            margin-top: 5px;
-        }
-
-        .alert-dismissable,
-        .alert-dismissible {
-            padding-right: 35px;
-        }
-
-        .alert-dismissable .close,
-        .alert-dismissible .close {
-            position: relative;
-            top: -2px;
-            right: -21px;
-            color: inherit;
-        }
-
-        .alert-success {
-            background-color: #dff0d8;
-            border-color: #d6e9c6;
-            color: #3c763d;
-        }
-
-        .alert-success hr {
-            border-top-color: #c9e2b3;
-        }
-
-        .alert-success .alert-link {
-            color: #2b542c;
-        }
-
-        .alert-info {
-            background-color: #d9edf7;
-            border-color: #bce8f1;
-            color: #31708f;
-        }
-
-        .alert-info hr {
-            border-top-color: #a6e1ec;
-        }
-
-        .alert-info .alert-link {
-            color: #245269;
-        }
-
-        .alert-warning {
-            background-color: #fcf8e3;
-            border-color: #faebcc;
-            color: #8a6d3b;
-        }
-
-        .alert-warning hr {
-            border-top-color: #f7e1b5;
-        }
-
-        .alert-warning .alert-link {
-            color: #66512c;
-        }
-
-        .alert-danger {
-            background-color: #f2dede;
-            border-color: #ebccd1;
-            color: #a94442;
-        }
-
-        .alert-danger hr {
-            border-top-color: #e4b9c0;
-        }
-
-        .alert-danger .alert-link {
-            color: #843534;
-        }
-
-        .text-left {
-            text-align: left;
-        }
-
-        .text-right {
-            text-align: right;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        blockquote {
-            padding: 10px 20px;
-            margin: 0 0 20px;
-            font-size: 17.5px;
-            border-left: 5px solid #eeeeee;
-        }
-
-        blockquote p:last-child,
-        blockquote ul:last-child,
-        blockquote ol:last-child {
-            margin-bottom: 0;
-        }
-
-        blockquote footer,
-        blockquote small,
-        blockquote .small {
-            display: block;
-            font-size: 80%;
-            line-height: 1.42857;
-            color: #777777;
-        }
-
-        blockquote footer:before,
-        blockquote small:before,
-        blockquote .small:before {
-            content: '\2014 \00A0';
-        }
-
-        .blockquote-reverse,
-        blockquote.pull-right {
-            padding-right: 15px;
-            padding-left: 0;
-            border-right: 5px solid #eeeeee;
-            border-left: 0;
-            text-align: right;
-        }
-
-        .blockquote-reverse footer:before,
-        .blockquote-reverse small:before,
-        .blockquote-reverse .small:before,
-        blockquote.pull-right footer:before,
-        blockquote.pull-right small:before,
-        blockquote.pull-right .small:before {
-            content: '';
-        }
-
-        .blockquote-reverse footer:after,
-        .blockquote-reverse small:after,
-        .blockquote-reverse .small:after,
-        blockquote.pull-right footer:after,
-        blockquote.pull-right small:after,
-        blockquote.pull-right .small:after {
-            content: '\00A0 \2014';
-        }
-
-        .list-inline {
-            padding-left: 0;
-            list-style: none;
-            margin-left: -5px;
-        }
-
-        .list-inline > li {
-            display: inline-block;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-
-        /*end:Bootstrap*/
-
-        .tags {
-            list-style: none;
-            margin: 0;
-            overflow: hidden;
-            padding: 0 0 0 .2em;
-        }
-
-        .tags li {
-            float: left;
-        }
-
-        .tags li a {
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .tag {
-            font-size: 12px;
-            background: #eee;
-            border-radius: 3px 0 0 3px;
-            color: #999;
-            display: inline-block;
-            height: 26px;
-            line-height: 26px;
-            padding: 0 20px 0 23px;
-            position: relative;
-            margin: 0 10px 10px 0;
-            -webkit-transition: color 0.2s;
-            text-transform: none;
-        }
-
-        .tag::before {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
-            content: '';
-            height: 6px;
-            left: 10px;
-            position: absolute;
-            width: 6px;
-            top: 10px;
-        }
-
-        .tag::after {
-            background: #fff;
-            border-bottom: 13px solid transparent;
-            border-left: 10px solid #eee;
-            border-top: 13px solid transparent;
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 0;
-        }
-
-        .tag:hover {
-            background-color: #fa5555;
-            color: white;
-        }
-
-        .tag:hover::after {
-            border-left-color: #fa5555;
-        }
-
-        .tag-plans:hover {
-            background-color: #00ADB5;
-            color: white;
-        }
-
-        .tag-plans:hover::after {
-            border-left-color: #00ADB5;
-        }
-
-        .tag:hover .tag-icon {
-            display: none;
-        }
-
-        .tag:hover .tag-close::before {
-            font-family: "Font Awesome 5 Free";
-            content: '\f057';
-            font-style: normal;
-        }
-
-        .hr-divider {
-            margin: 0 0 .5em 0;
-            border: 0;
-            height: 1px;
-            background-image: linear-gradient(to right, rgba(0, 0, 0, .4), rgba(0, 0, 0, .1), rgba(0, 0, 0, 0));
-        }
-
         #activate {
             color: #FFFFFF;
             background: #5bd3d1;
@@ -291,6 +19,7 @@
             line-height: 50px;
             text-align: center;
             text-decoration: none;
+            font-family: helvetica, arial;
         }
 
         .zoom {
@@ -298,17 +27,12 @@
         }
 
         .zoom:hover {
-            -ms-transform: scale(1.1);
-            -webkit-transform: scale(1.1);
-            transform: scale(1.1);
-        }
-
-        small {
-            font-size: 16px;
+            -ms-transform: scale(1.3); /* IE 9 */
+            -webkit-transform: scale(1.3); /* Safari 3-8 */
+            transform: scale(1.3);
         }
 
         div, p, a, li, td {
-            color: #666;
             -webkit-text-size-adjust: none;
         }
 
@@ -331,14 +55,13 @@
 
         table {
             border-collapse: collapse;
-            font-size: 16px;
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: helvetica, arial, sans-serif;
-            -webkit-text-size-adjust: none;
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
         }
 
         .appleLinksWhite a {
@@ -429,7 +152,7 @@
         }
     </style>
 </head>
-<body>
+<body style="-webkit-text-size-adjust:none;padding:0; margin:0;">
 <table width="100%" border="0" align="center" cellspacing="0" cellpadding="0" bgcolor="#FAFAFA" class="full-width">
     <tbody>
     <tr>
@@ -443,12 +166,12 @@
     <tbody>
     <tr>
         <td align="center">
-            <table width="700" border="0" align="center" cellspacing="0" cellpadding="0" class="full-width"
-                   style="margin:0 auto;">
+            <table width="700" border="0" align="center" cellspacing="0" cellpadding="0" bgcolor="#FFFFFF"
+                   class="full-width" style="margin:0 auto;">
                 <tbody>
                 <tr>
                     <td width="700" align="center">
-                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0"
+                        <table width="700" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF"
                                class="full-width" style="margin:0 auto;">
                             <tbody>
                             <tr>
@@ -456,9 +179,9 @@
                                 <td width="2" bgcolor="#f9f9f9"></td>
                                 <td width="2" bgcolor="#f7f7f7"></td>
                                 <td width="2" bgcolor="#f3f3f3"></td>
-                                <td width="660" valign="top" bgcolor="#fff">
-                                    <table bgcolor="#fff" border="0" cellspacing="0" cellpadding="0" class="full-width"
-                                           style="border-top: 2px solid #f3f3f3">
+                                <td width="660" valign="top" bgcolor="#FFFFFF">
+                                    <table width="660" border="0" cellspacing="0" cellpadding="0" class="full-width"
+                                           bgcolor="#FFFFFF" style="border-top: 2px solid #f3f3f3">
                                         <tbody>
                                         <tr>
                                             <td align="center" width="660">
@@ -470,28 +193,36 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <div style="border-top: 1px solid #e0e0e0; height: 2px"
+                                                <div style="border-top: 1px solid #e0e0e0; width: 660px; height: 2px"
                                                      class="full-width"></div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <table border="0" cellpadding="10" cellspacing="0"
-                                                       style="margin: .5em 1em">
-                                                    <tr>
-                                                        <td>
-                                                            <small style="line-height: 2em">
-                                                                <strong style="font-size: 22px">
-                                                                    We have approved the vacancies in your order
-                                                                </strong><br>
-                                                                Thank you for completing the transaction on SISKA
-                                                                with {{$data['payment_category']->name}}.
-                                                            </small>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                                <div style="font-size:30px;line-height:29px;">&nbsp;</div>
                                             </td>
                                         </tr>
+                                        {{--<tr>
+                                            <td align="center" width="660">
+                                                <img src="{{env('APP_URL')}}/images/mail.jpg"
+                                                     style="display: block;width: 70%" border="0"></td>
+                                        </tr>--}}
+                                        <tr>
+                                            <td>
+                                                <div style="font-size:30px;line-height:30px;">&nbsp;</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" valign="top"
+                                                style="font-family:helvetica,arial,sans-serif; color:#646464; font-size:14px; line-height:22px;">
+                                                <span style="font-size:22px; font-weight:bold; line-height:26px;">Hello!</span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="660" border="0" align="center" cellspacing="0" cellpadding="0"
+                                           bgcolor="#FFFFFF" class="full-width">
+                                        <tbody>
                                         <tr>
                                             <td>
                                                 <div style="font-size:20px;line-height:20px;">&nbsp;</div>
@@ -499,212 +230,124 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
-                                           align="center">
+
+                                    <!-- BEGIN Body Content -->
+
+                                    <table width="660" border="0" align="center" cellspacing="0" cellpadding="0"
+                                           bgcolor="#FFFFFF" class="full-width">
+                                        <tbody>
                                         <tr>
-                                            <td valign="top" width="50%">
-                                                <table border="0" cellpadding="10" cellspacing="0" width="100%"
-                                                       style="margin-left: 1em">
-                                                    <tr>
-                                                        <td>
-                                                            <small>
-                                                                <a href="{{route('invoice.job.posting', ['id' =>
-                                                                encrypt($data['confirmAgency']->id)])}}"
-                                                                   style="text-decoration: none;color: #00adb5">
-                                                                    <strong>{{$invoice}}</strong></a>
-                                                            </small>
-                                                            <hr class="hr-divider">
-                                                            <table>
-                                                                <tr>
-                                                                    <td>
-                                                                        <strong style="text-transform: uppercase">
-                                                                            {{$data['plans']->name}}</strong>
-                                                                    </td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="center"><strong>-</strong></td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="right">
-                                                                        <strong>Rp{{number_format
-                                                                        ($data['plan_price'],2,',','.')}}</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Total Job Ad</td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="center">
-                                                                        <strong>{{$data['totalVacancy']}}</strong>
-                                                                    </td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="right">
-                                                                        <strong>Rp{{number_format
-                                                                        ($data['price_totalVacancy'],2,',','.')}}</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr data-placement="left" data-toggle="tooltip"
-                                                                    title="Total Participant for">
-                                                                    <td>Quiz</td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="center">
-                                                                        <strong>{{$data['totalQuizApplicant']}}</strong>
-                                                                    </td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="right">
-                                                                        <strong>Rp{{number_format
-                                                                        ($data['price_totalQuiz'],2,',','.')}}</strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr data-placement="left" data-toggle="tooltip"
-                                                                    title="Total Participant for">
-                                                                    <td>Psycho Test</td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="center">
-                                                                        <strong>{{$data['totalPsychoTest']}}</strong>
-                                                                    </td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="right">
-                                                                        <strong>Rp{{number_format
-                                                                        ($data['price_totalPsychoTest'],2,',','.')}}
-                                                                        </strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>Unique Code</td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="center"><strong>-</strong></td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="right">
-                                                                        <strong>-Rp{{$data['payment_category']->id == 1
-                                                                        ? $data['confirmAgency']->payment_code : 0}},00
-                                                                        </strong>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr style="border-top: 1px solid #eee">
-                                                                    <td><strong>TOTAL</strong></td>
-                                                                    <td>&emsp;</td>
-                                                                    <td>&emsp;</td>
-                                                                    <td>&emsp;</td>
-                                                                    <td align="right">
-                                                                        <strong style="font-size: 18px;color: #00adb5">Rp{{$total}}</strong>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td valign="top" width="50%">
-                                                <table border="0" cellpadding="10" cellspacing="0" width="100%"
-                                                       style="margin-left: 1em">
-                                                    <tr>
-                                                        <td>
-                                                            <small><strong>Payment Reference</strong></small>
-                                                            <hr class="hr-divider">
-                                                            <span>{{$reference}}</span>
-                                                        </td>
-                                                    </tr>
-                                                </table>
+                                            <td align="center" valign="top" style="font-family:helvetica,arial,sans-serif;
+                color:#646464; font-size:16px; line-height:22px;
+                padding-left:20px; padding-right:20px" class="body">
+                                                We are sending this email because we received a forgot password request.
+                                                If you did not request a password reset, no further action is required.
+                                                Please contact us if you did not submit this request.
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td valign="top" width="50%">
-                                                <table border="0" cellpadding="10" cellspacing="0"
-                                                       style="margin-left: 1em" width="100%">
-                                                    <tr>
-                                                        <td>
-                                                            <small><strong>Payment Method</strong>
-                                                                <sub>{{$data['payment_category']->name}}</sub></small>
-                                                            <hr class="hr-divider">
-                                                            <table>
-                                                                <tr>
-                                                                    <td width="50%">
-                                                                        <img src="{{env('APP_URL')}}/images/paymentMethod/{{$data['payment_method']->logo}}"
-                                                                             style="width: 90%;"
-                                                                             alt="{{$data['payment_method']->name}}">
-                                                                    </td>
-                                                                    <td>
-                                                                        <small style="line-height: 1.5em;font-size: 14px">
-                                                                            @if($data['payment_category']->id == 1)
-                                                                                <strong style="font-size: 16px">{{number_format($data['payment_method']->account_number,0," "," ")}}</strong>
-                                                                                <br>
-                                                                                a/n {{$data['payment_method']->account_name}}
-                                                                            @elseif($data['payment_category']->id == 4)
-                                                                                <strong style="font-size: 16px">
-                                                                                    {{$data['confirmAgency']->payment_code}}
-                                                                                </strong><br>Payment Code
-                                                                            @endif
-                                                                        </small>
-                                                                    </td>
-                                                                </tr>
-                                                            </table>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                            <td valign="top" width="50%">
-                                                <table width="100%" border="0" cellpadding="10" cellspacing="0"
-                                                       style="margin-left: 1em">
-                                                    <tr>
-                                                        <td>
-                                                            <small><strong>Payment Status</strong></small>
-                                                            <hr class="hr-divider">
-                                                            <span>Verified</span>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
+                                        </tbody>
                                     </table>
-                                    <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
-                                           align="center">
+
+                                    <!-- Body Content END-->
+
+                                    <table width="660" border="0" align="center" cellspacing="0" cellpadding="0"
+                                           bgcolor="#FFFFFF" class="full-width">
+                                        <tbody>
                                         <tr>
                                             <td>
                                                 <div style="font-size:20px;line-height:20px;">&nbsp;</div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>
-                                                <div style="font-size:20px;line-height:20px;">&nbsp;</div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div style="font-size:20px;line-height:20px;">&nbsp;</div>
-                                            </td>
-                                        </tr>
+                                        </tbody>
                                     </table>
-                                    <table bgcolor="#fff" border="0" cellpadding="0" cellspacing="0" width="660"
-                                           align="center" style="border-top: 2px solid #f3f3f3">
+
+
+                                    <table width="660" border="0" align="center" cellspacing="0" cellpadding="0"
+                                           bgcolor="#FFFFFF" class="full-width">
+                                        <tbody>
+
+                                        <tr>
+                                            <td align="center" width="600" class="full-width"
+                                                style="padding-left: 20px; padding-right:20px" valign="top">
+                                                <a class="zoom" id="activate"
+                                                   href="{{url(route('password.reset', $data, false))}}"
+                                                   target="_blank">RESET PASSWORD</a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                    <table width="660" border="0" align="center" cellspacing="0" cellpadding="0"
+                                           bgcolor="#FFFFFF" class="full-width">
+
+                                        <tbody>
                                         <tr>
                                             <td>
-                                                <table border="0" cellpadding="10" cellspacing="0"
-                                                       style="margin: .5em 1em">
+                                                <div style="font-size:20px;line-height:19px;">&nbsp;</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td width="660">
+                                                <div style="border-bottom: 1px solid #e0e0e0; width: 660px; height:2px;"
+                                                     class="full-width"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div style="font-size:20px;line-height:40px;">&nbsp;</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <table width="660" border="0" align="center" cellspacing="0"
+                                                       cellpadding="0" bgcolor="#FFFFFF" class="full-width"
+                                                       style="color: #949494">
+                                                    <tbody>
+
+                                                    <tr>
+                                                        <td align="center">
+                       <span style="font-family : helvetica, arial; font-weight : bold; font-size: 16px; ">
+                            Where is my new password?
+                        </span>
+                                                        </td>
+                                                    </tr>
+
                                                     <tr>
                                                         <td>
-                                                            <small style="line-height: 2em">
-                                                                <strong style="font-size: 20px">
-                                                                    Keep an eye for your payment on the Vacancy Status
-                                                                    page</strong><br>To redirect you to the Vacancy
-                                                                Status page, click the Vacancy Status button below
-                                                            </small>
+                                                            <div style="font-size:15px;line-height:15px;">&nbsp;</div>
                                                         </td>
                                                     </tr>
+
                                                     <tr>
-                                                        <td align="center" width="600" class="full-width"
-                                                            style="padding-left: 20px; padding-right:20px" valign="top">
-                                                            <a class="zoom" id="activate"
-                                                               href="{{route('agency.vacancy.status')}}"
-                                                               target="_blank">VACANCY STATUS</a>
+                                                        <td align="center"><span class="pw-note" style="font-family: helvetica, arial;
+                                                         font-size: 15px;
+                                                         line-height: 22px;
+                                                         display: block;">SISKA doesn't make you remember yet another password or certain codes.<br>Just click the link and enter the new password that you want.</span>
                                                         </td>
                                                     </tr>
+
+                                                    <tr>
+                                                        <td class="show">
+                                                            <div style="font-size:20px;line-height:0px;" class="line40">
+                                                                &nbsp;
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    </tbody>
                                                 </table>
                                             </td>
                                         </tr>
+                                        </tbody>
                                     </table>
                                 </td>
                                 <td width="2" bgcolor="#f3f3f3"></td>
                                 <td width="2" bgcolor="#f7f7f7"></td>
                                 <td width="2" bgcolor="#f9f9f9"></td>
                                 <td width="14" bgcolor="#fafafa"></td>
+                            </tr>
+                            </tbody>
                         </table>
                     </td>
                 </tr>
@@ -714,6 +357,7 @@
     </tr>
     </tbody>
 </table>
+
 
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#ffffff">
     <tbody>
@@ -1059,4 +703,6 @@
     </tr>
     </tbody>
 </table>
+
+
 </body>

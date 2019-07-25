@@ -14,7 +14,6 @@ use App\Organization;
 use App\Seekers;
 use App\Tingkatpend;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -33,7 +32,7 @@ class ProfileAPIController extends Controller
         $ava['source'] = array('ava' => $filename, 'name' => $user['name']);
         $seeker = Seekers::where('user_id', $user['id'])->first()->toArray();
         //seeker Section
-        $seek['seeker'] = array('data' => $seeker, 'more'=> Carbon::parse($seeker['birthday'])->format('j F Y'));
+        $seek['seeker'] = array('data' => $seeker);
 
         $exp = Experience::where('seeker_id', $seeker['id'])->get()->toArray();
         $exp = $this->array_exp($exp);

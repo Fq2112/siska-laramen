@@ -28,7 +28,7 @@
     <meta name="twitter:card" content=""/>
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
+    <link rel="shortcut icon" href="{{asset('images/favicon.ico')}}">
 
     {{--<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>--}}
     <link href="https://fonts.googleapis.com/css?family=Oswald:400,700,400italic,700italic" rel="stylesheet">
@@ -179,10 +179,15 @@
                                    data-toggle="tooltip" data-title="Github" data-placement="left">
                                     <i class="fab fa-github fa-fw"></i>
                                 </a>
-                                <a id="facebook_login" class="circle facebook"
+                                {{--<a id="facebook_login" class="circle facebook"
                                    href="{{route('redirect', ['provider' => 'facebook'])}}"
                                    data-toggle="tooltip" data-title="Facebook" data-placement="top">
                                     <i class="fab fa-facebook-f fa-fw"></i>
+                                </a>--}}
+                                <a id="linkedin_login" class="circle linkedin"
+                                   href="{{route('redirect', ['provider' => 'linkedin'])}}"
+                                   data-toggle="tooltip" data-title="Linkedin" data-placement="top">
+                                    <i class="fab fa-linkedin-in fa-fw"></i>
                                 </a>
                                 <a class="circle twitter" href="{{route('redirect', ['provider' => 'twitter'])}}"
                                    data-toggle="tooltip" data-title="Twitter" data-placement="bottom">
@@ -237,17 +242,19 @@
                                             @if(session('error'))
                                                 <strong>{{ $errors->first('password') }}</strong>
                                             @endif
-                                                <a href="javascript:openEmailModal()" style="text-decoration: none">Forgot password?</a>
                                         </span>
                                     </div>
                                 </div>
-                                <div class="row form-group">
-                                    <div class="checkbox col-lg-12">
+                                <div class="row form-group" style="font-size: 15px">
+                                    <div class="col-lg-6 checkbox" style="margin: -10px 0">
                                         <label>
-                                            <input type="checkbox"
-                                                   name="remember" {{ old('remember') ? 'checked' : '' }}
+                                            <input type="checkbox" name="remember" {{old('remember') ? 'checked' : ''}}
                                                    style="position: relative"> Remember me
                                         </label>
+                                    </div>
+                                    <div class="col-lg-6 text-right">
+                                        <a href="javascript:openEmailModal()" style="text-decoration: none">Forgot
+                                            password?</a>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -560,7 +567,7 @@
                     </li>
                     <li><i class="icon-phone"></i><a href="tel:+628563094333">+62-85-6309 4333</a></li>
                     <li><i class="icon-envelope"></i><a href="mailto:info@siska.org">info@siska.org</a></li>
-                    <li><i class="icon-globe2"></i><a href="htpp://siska.org" target="_blank">www.siska.org</a></li>
+                    <li><i class="icon-globe2"></i><a href="http://siska.org" target="_blank">www.siska.org</a></li>
                 </ul>
                 <h3 class="section-title">Ikuti Kami</h3>
                 <ul class="social-media">

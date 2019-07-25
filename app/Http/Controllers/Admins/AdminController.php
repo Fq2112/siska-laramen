@@ -141,7 +141,7 @@ class AdminController extends Controller
             } else {
                 $admin->update([
                     'email' => $request->myEmail,
-                    'password' => bcrypt($request->myPassword)
+                    'password' => bcrypt($request->myNew_password)
                 ]);
                 return back()->with('success', 'Successfully update your account!');
             }

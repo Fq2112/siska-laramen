@@ -131,9 +131,13 @@
                                     Best Value
                                 </div>
                                 <h2 class="pricing-plan">{{$plan->name}}</h2>
-                                <div class="price-before-disc">Rp{{number_format($plan->price,2,',','.')}}</div>
-                                <div class="price-after-disc">Rp{{$price}}</div>
-                                <div class="discount">Save {{$plan->discount}}%</div>
+                                @if($plan->discount > 0)
+                                    <div class="price-before-disc">Rp{{number_format($plan->price,2,',','.')}}</div>
+                                    <div class="price-after-disc">Rp{{$price}}</div>
+                                    <div class="discount">Save {{$plan->discount}}%</div>
+                                @else
+                                    <div class="price-after-disc">Rp{{number_format($plan->price,2,',','.')}}</div>
+                                @endif
                                 <p>{{$plan->caption}}</p>
                                 <hr>
                                 <p align="justify"><strong>Yang bisa Anda dapatkan:</strong></p>
@@ -244,7 +248,7 @@
                                         </div>
                                         <div id="a2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pergi ke halaman utama <a href="http://siska.org">SISKA</a> dan
+                                                <p>Pergi ke halaman utama <a href="http://karir.org">SISKA</a> dan
                                                     mengisi kolom yang diperlukan dalam kotak sign up dan klik.
                                                     Setelah Anda telah mengirimkan informasi, silahkan cek email Anda
                                                     untuk mengaktifkan akun Anda. Pastikan untuk memeriksa spam mail
@@ -259,7 +263,7 @@
                                                     Pastikan resume Anda lengkap dan selalu diperbarui.</p>
 
                                                 <p>Cukup mencari jenis karir yang Anda inginkan dan pada setiap
-                                                    posting di <a href="http://siska.org">SISKA</a>, klik tombol
+                                                    posting di <a href="http://karir.org">SISKA</a>, klik tombol
                                                     "apply" untuk melamar. Setelah Anda menyelesaikan
                                                     langkah-langkah, resume Anda akan dikirim ke Perusahaan. Anda
                                                     akan melihat pada deskripsi karir, tombol "apply" akan berubah

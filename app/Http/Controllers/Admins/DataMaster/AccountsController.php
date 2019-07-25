@@ -89,7 +89,7 @@ class AccountsController extends Controller
             } else {
                 $admin->update([
                     'email' => $request->email,
-                    'password' => bcrypt($request->password),
+                    'password' => bcrypt($request->new_password),
                     'role' => $request->role == null ? 'root' : $request->role
                 ]);
                 return back()->with('success', 'Successfully update ' . $admin->name . '\'s account!');

@@ -212,7 +212,6 @@
                         $('#search-result, #vac-control, .myPagination').show();
                     },
                     success: function (data) {
-                        console.log(data.data);
                         successLoad(data, date, page);
                     },
                     error: function () {

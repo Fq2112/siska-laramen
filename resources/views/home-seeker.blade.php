@@ -281,7 +281,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 section-heading text-center">
-                        <h2 class="to-animate"><span>Most Sought Jobs in 2018</span></h2>
+                        <h2 class="to-animate"><span>Most Sought Jobs in {{now()->format('Y')}}</span></h2>
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
                                 <h3 class="to-animate">

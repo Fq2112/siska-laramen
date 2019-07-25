@@ -984,6 +984,10 @@
         $('.datepicker').datepicker({format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true});
 
         Scrollbar.initAll();
+
+        @if(session('signed'))
+        swal('Signed In!', 'Welcome {{Auth::guard('admin')->user()->name}}! You\'re now signed in.', 'success');
+        @endif
     });
 
     $(".btn_editProfile").on("click", function () {

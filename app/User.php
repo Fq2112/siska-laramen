@@ -135,11 +135,10 @@ class CustomPassword extends ResetPassword
 {
     public function toMail($notifiable)
     {
+        $data = $this->token;
         return (new MailMessage)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->subject('SISKA Account: Reset Password')
-            ->line('We are sending this email because we received a forgot password request.')
-            ->action('Reset Password', url(route('password.reset', $this->token, false)))
-            ->line('If you did not request a password reset, no further action is required. Please contact us if you did not submit this request.');
+            ->view('emails.auth.recovery', compact('data'));
     }
 }

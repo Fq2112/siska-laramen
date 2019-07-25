@@ -71,7 +71,7 @@
                         <div class="col-lg-12 to-animate">
                             <div class="card">
                                 <div class="img-card stats_gallery">
-                                    <div id="carousel-example" class="carousel slide carousel-fullscreen carousel-fade"
+                                    <div id="carousel-example" class="carousel slide carousel-fullscreen"
                                          data-ride="carousel">
                                         <ol class="carousel-indicators">
                                             @php $i = 0; @endphp

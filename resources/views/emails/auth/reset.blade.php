@@ -187,7 +187,7 @@
                                             <td align="center" width="660">
                                                 <a name="Logo" style="display:block" href="{{route('home-seeker')}}"
                                                    target="_blank">
-                                                    <img src="http://siska.org/images/siska.png" border="0"
+                                                    <img src="{{env('APP_URL')}}/images/siska.png" border="0"
                                                          style="display:block;width: 40%;" class="logo"></a>
                                             </td>
                                         </tr>
@@ -204,7 +204,7 @@
                                         </tr>
                                         {{--<tr>--}}
                                         {{--<td align="center" width="660">--}}
-                                        {{--<img src="http://siska.org/images/mail.jpg"--}}
+                                        {{--<img src="{{env('APP_URL')}}/images/mail.jpg"--}}
                                         {{--style="display: block;width: 70%" border="0"></td>--}}
                                         {{--</tr>--}}
                                         <tr>
@@ -386,7 +386,7 @@
                                             <td align="center" valign="top" width="660" bgcolor="#1a1c21"><a
                                                         name="Logo_1" style="display:block;"
                                                         href="{{route('home-seeker')}}" target="_blank"><img
-                                                            src="http://siska.org/images/siska_circleicon.png"
+                                                            src="{{env('APP_URL')}}/images/siska_circleicon.png"
                                                             alt="logo"
                                                             border="0"
                                                             style="display:block;width: 15%;"></a>
@@ -440,11 +440,11 @@
                                                                     <td align="center" bgcolor="#1a1c21">
                                                                         <a href="https://play.google.com/store/apps/details?id=com.siska.mobile"><img
                                                                                     class="zoom"
-                                                                                    src="http://siska.org/images/GooglePlay.png"
+                                                                                    src="{{env('APP_URL')}}/images/GooglePlay.png"
                                                                                     style="width: 15%"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         <a href="https://itunes.apple.com/id/app/siska.com/id1143444473?mt=8"><img
                                                                                     class="zoom"
-                                                                                    src="http://siska.org/images/AppStore.png"
+                                                                                    src="{{env('APP_URL')}}/images/AppStore.png"
                                                                                     style="width: 15%"></a>
                                                                     </td>
                                                                 </tr>
@@ -649,7 +649,8 @@
                                                                         registration initiated on the SISKA
                                                                         application; if you did not enter your email
                                                                         address in SISKA then you can either ignore
-                                                                        this message or contact info@siska.org for
+                                                                        this message or contact {{env('MAIL_USERNAME')}}
+                                                                        for
                                                                         more information. <br><br> SISKA is incorporated
                                                                         in
                                                                         Indonesia under company number
