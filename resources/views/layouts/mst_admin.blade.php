@@ -48,6 +48,11 @@
     <link href="{{asset('_admins/css/custom.css')}}" rel="stylesheet">
     @stack('styles')
     <style>
+        .main_menu .fa {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
         .dropdown-menu li:first-child a:before {
             border: none;
         }

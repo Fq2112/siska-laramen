@@ -64,6 +64,12 @@
     <link rel="stylesheet" href="{{asset('css/responsive-list.css')}}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('css/media-query.css') }}">
+    <style>
+        .dc-view-switcher > button, .anim-icon label {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+    </style>
 @stack('styles')
 <!-- Sweet Alert v2 -->
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
