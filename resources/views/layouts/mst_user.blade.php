@@ -65,7 +65,12 @@
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('css/media-query.css') }}">
     <style>
-        .dc-view-switcher > button, .anim-icon label {
+        .anim-icon label {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .dc-view-switcher > button {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
         }
@@ -561,7 +566,7 @@
                     <a href="{{route('info.siska')}}#faqs" target="_blank">
                         FAQ</a><br>
                     &copy; {{now()->format('Y')}} SISKA. All Rights Reserved.<br>Designed by
-                    <a href="http://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
+                    <a href="https://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
 

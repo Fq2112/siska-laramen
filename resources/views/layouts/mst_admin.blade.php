@@ -53,7 +53,12 @@
             font-weight: 900;
         }
 
-        .dc-view-switcher > button, .anim-icon label {
+        .anim-icon label {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .dc-view-switcher > button {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
         }
@@ -757,7 +762,7 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                &copy; {{now()->format('Y')}} SISKA. All right reserved. Designed by <a href="http://rabbit-media.net">Rabbit
+                &copy; {{now()->format('Y')}} SISKA. All right reserved. Designed by <a href="https://rabbit-media.net">Rabbit
                     Media</a>
             </div>
             <div class="clearfix"></div>
