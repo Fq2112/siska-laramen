@@ -68,9 +68,8 @@ class AccountController extends Controller
 
         return view('auth.seekers.profile', compact(
             'user', 'nations', 'provinces', 'job_functions', 'industries', 'job_levels', 'job_types',
-            'salaries', 'degrees', 'majors', 'seeker', 'seeker_degree', 'seeker_major', 'attachments',
-            'experiences', 'educations', 'trainings', 'organizations', 'languages', 'skills', 'job_title',
-            'last_edu'
+            'salaries', 'degrees', 'majors', 'seeker', 'attachments', 'experiences', 'educations', 'trainings',
+            'organizations', 'languages', 'skills', 'job_title', 'last_edu'
         ));
     }
 
