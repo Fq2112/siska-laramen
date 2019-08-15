@@ -14,6 +14,21 @@
     <style>
         @import url("https://fonts.googleapis.com/css?family=Dosis:300,400,700,800");
 
+        body::-webkit-scrollbar-track {
+            background: rgba(222, 222, 222, .75);
+        }
+
+        body::-webkit-scrollbar {
+            width: 8px;
+            background-color: #F5F5F5;
+        }
+
+        body::-webkit-scrollbar-thumb {
+            width: 8px;
+            background: rgba(0, 0, 0, .5);
+            border-radius: 4px;
+        }
+
         /** Styles for the 403 Page **/
 
         .particle-error,
@@ -261,7 +276,7 @@
         }
     </style>
 </head>
-<body class="permission_denied">
+<body class="permission_denied use-nicescroll">
 <div id="particles-js"></div>
 <div class="denied__wrapper">
     <h1>405</h1>
@@ -402,8 +417,26 @@
     </a>
 </div>
 </body>
+<!-- jQuery -->
+<script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('js/checkMobileDevice.js')}}"></script>
+<!-- Nicescroll -->
+<script src="{{asset('nicescroll/jquery.nicescroll.js')}}"></script>
 <script src="{{asset('js/particles.min.js')}}"></script>
 <script>
+    $(function () {
+        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
+        $(".use-nicescroll").niceScroll({
+            cursorcolor: "rgba(0, 0, 0, .5)",
+            cursorwidth: "8px",
+            background: "rgba(222, 222, 222, .75)",
+            cursorborder: 'none',
+            cursorborderradius: 0,
+            autohidemode: 'leave',
+            zindex: 99999999,
+        });
+    });
+    
     var title = document.getElementsByTagName("title")[0].innerHTML;
     (function titleScroller(text) {
         document.title = text;

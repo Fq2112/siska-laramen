@@ -169,7 +169,7 @@
     </style>
 </head>
 
-<body class="nav-md">
+<body class="nav-md use-nicescroll">
 @php
     $auth = Auth::guard('admin')->user();
 
@@ -956,9 +956,23 @@
 <script src="{{asset('js/smooth-scrollbar.js')}}"></script>
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>
+<script src="{{asset('js/checkMobileDevice.js')}}"></script>
+<!-- Nicescroll -->
+<script src="{{asset('nicescroll/jquery.nicescroll.js')}}"></script>
 <script>
     var editor_config;
     $(function () {
+        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
+        $(".use-nicescroll").niceScroll({
+            cursorcolor: "rgba(0, 0, 0, .5)",
+            cursorwidth: "8px",
+            background: "rgba(222, 222, 222, .75)",
+            cursorborder: 'none',
+            // cursorborderradius:0,
+            autohidemode: 'leave',
+            zindex: 99999999,
+        });
+
         editor_config = {
             branding: false,
             path_absolute: '{{url('/')}}',

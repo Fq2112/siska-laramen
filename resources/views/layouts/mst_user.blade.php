@@ -90,7 +90,7 @@
     <![endif]-->
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
 </head>
-<body>
+<body class="use-nicescroll">
 <a href="#" onclick="scrollToTop()" title="Go to top"><strong class="to-top" style="color: #fff">TOP</strong></a>
 
 <header role="banner" id="fh5co-header">
@@ -260,7 +260,7 @@
                                     <div class="col-lg-6 checkbox" style="margin: -10px 0">
                                         <label>
                                             <input type="checkbox" name="remember" {{old('remember') ? 'checked' : ''}}
-                                                   style="position: relative"> Remember me
+                                            style="position: relative"> Remember me
                                         </label>
                                     </div>
                                     <div class="col-lg-6 text-right">
@@ -823,7 +823,9 @@
 <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
 <!-- Main JS (Do not remove) -->
 <script src="{{asset('js/main.js')}}"></script>
-
+<script src="{{asset('js/checkMobileDevice.js')}}"></script>
+<!-- Nicescroll -->
+<script src="{{asset('nicescroll/jquery.nicescroll.js')}}"></script>
 <!-- Ajax Lumen -->
 @stack('lumen.ajax')
 
@@ -831,6 +833,20 @@
 @include('layouts.partials._alert')
 @include('layouts.partials._confirm')
 @include('layouts.partials.auth.notif_alert')
+<script>
+    $(function () {
+        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
+        $(".use-nicescroll").niceScroll({
+            cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+            cursorwidth: "8px",
+            background: "rgba(222, 222, 222, .75)",
+            cursorborder: 'none',
+            // cursorborderradius:0,
+            autohidemode: 'leave',
+            zindex: 99999999,
+        });
+    });
+</script>
 @stack('scripts')
 </body>
 </html>
