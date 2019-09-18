@@ -90,7 +90,7 @@
     <![endif]-->
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
 </head>
-<body class="use-nicescroll">
+<body>
 <a href="#" onclick="scrollToTop()" title="Go to top"><strong class="to-top" style="color: #fff">TOP</strong></a>
 
 <header role="banner" id="fh5co-header">

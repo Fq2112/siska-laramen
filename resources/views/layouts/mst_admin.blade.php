@@ -169,7 +169,7 @@
     </style>
 </head>
 
-<body class="nav-md use-nicescroll">
+<body class="nav-md">
 @php
     $auth = Auth::guard('admin')->user();
 
