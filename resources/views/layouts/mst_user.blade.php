@@ -190,20 +190,20 @@
                                    data-toggle="tooltip" data-title="Github" data-placement="left">
                                     <i class="fab fa-github fa-fw"></i>
                                 </a>
-                                {{--<a id="facebook_login" class="circle facebook"
+                                <a id="facebook_login" class="circle facebook"
                                    href="{{route('redirect', ['provider' => 'facebook'])}}"
                                    data-toggle="tooltip" data-title="Facebook" data-placement="top">
                                     <i class="fab fa-facebook-f fa-fw"></i>
-                                </a>--}}
+                                </a>
                                 <a id="linkedin_login" class="circle linkedin"
                                    href="{{route('redirect', ['provider' => 'linkedin'])}}"
-                                   data-toggle="tooltip" data-title="Linkedin" data-placement="top">
+                                   data-toggle="tooltip" data-title="Linkedin" data-placement="bottom">
                                     <i class="fab fa-linkedin-in fa-fw"></i>
                                 </a>
-                                <a class="circle twitter" href="{{route('redirect', ['provider' => 'twitter'])}}"
+                                {{--<a class="circle twitter" href="{{route('redirect', ['provider' => 'twitter'])}}"
                                    data-toggle="tooltip" data-title="Twitter" data-placement="bottom">
                                     <i class="fab fa-twitter fa-fw"></i>
-                                </a>
+                                </a>--}}
                                 <a id="google_login" class="circle google"
                                    href="{{route('redirect', ['provider' => 'google'])}}"
                                    data-toggle="tooltip" data-title="Google+" data-placement="right">
