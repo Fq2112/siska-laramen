@@ -97,7 +97,7 @@
     @endauth
 @endsection
 @push("scripts")
-    <script src="{{asset('js/twilio-video.min.js')}}"></script>
+    <script src="//media.twiliocdn.com/sdk/js/video/releases/1.14.1/twilio-video.min.js"></script>
     <script>
         var regExp = /\(([^)]+)\)/, check_candidate = false;
 
