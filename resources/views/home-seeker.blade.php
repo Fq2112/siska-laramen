@@ -736,6 +736,12 @@
 
             setTimeout(getFavVacancy, 200);
             setTimeout(getLateVacancy, 200);
+
+            @if($check != "")
+            $('html,body').animate({scrollTop: $("#fh5co-partner").offset().top}, 500);
+            $("#partnership_name").val('{{$check}}');
+            $("#btn_partner").click();
+            @endif
         });
 
         function getFavVacancy() {
@@ -875,9 +881,5 @@
             }
             return false;
         });
-
-        $('html, body').animate({
-            scrollTop: $('#' + window.location.hash).offset().top
-        }, 500);
     </script>
 @endpush

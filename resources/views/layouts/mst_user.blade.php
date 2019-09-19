@@ -474,7 +474,7 @@
                                     <div class="col-lg-12">
                                         <input id="partnership_name" type="text"
                                                placeholder="University/institution/instance name"
-                                               class="form-control" name="name" required>
+                                               class="form-control" name="name" autofocus required>
                                         <span class="glyphicon glyphicon-education form-control-feedback"></span>
                                     </div>
                                 </div>
