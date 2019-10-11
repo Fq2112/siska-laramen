@@ -286,22 +286,30 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $user = User::findOrFail($this->guard()->user()->id)->toArray();
-        if ($user['ava'] == "seeker.png" || $user['ava'] == "") {
-            $filename = asset('images/seeker.png');
-        } else {
-            $filename = asset('storage/users/' . $user['ava']);
+        try{
+            JWTAuth::parseToken()->authenticate();
+            $user = User::findOrFail($this->guard()->user()->id)->toArray();
+
+            if ($user['ava'] == "seeker.png" || $user['ava'] == "") {
+                $filename = asset('images/seeker.png');
+            } else {
+                $filename = asset('storage/users/' . $user['ava']);
+            }
+            $seeker = Seekers::where('user_id', $user['id'])->first();
+
+            $acc = Accepting::where('seeker_id', $seeker['id'])
+                ->where('isBookmark',true)->get()->toArray();
+            $invite = Invitation::where('seeker_id', $seeker['id'])->get()->toArray();
+
+            $notif['count'] = array('invite' => count($invite), 'bookmarks' => count($acc));
+            $ava['user'] = array('ava' => $filename, 'name' => $user['name']);
+            $array = array_replace($user, $ava,$notif);
+            return response()->json($array);
+        }catch (\Exception $e){
+            return response()->json([
+                "error"=>$e
+            ],500);
         }
-        $seeker = Seekers::where('user_id', $user['id'])->first();
-
-        $acc = Accepting::where('seeker_id', $seeker['id'])
-            ->where('isBookmark',true)->get()->toArray();
-        $invite = Invitation::where('seeker_id', $seeker['id'])->get()->toArray();
-
-        $notif['count'] = array('invite' => count($invite), 'bookmarks' => count($acc));
-        $ava['user'] = array('ava' => $filename, 'name' => $user['name']);
-        $array = array_replace($user, $ava,$notif);
-        return response()->json($array);
     }
 
     /**
