@@ -42,7 +42,7 @@ class SeekerController extends Controller
         $this->middleware('seeker.profile')->only('showProfile');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
@@ -65,7 +65,13 @@ class SeekerController extends Controller
             $agencies = Agencies::wherehas('vacancies')->orderByDesc('updated_at')->take(9)->get();
         }
 
-        return view('home-seeker', compact('provinces', 'carousels', 'blogs', 'favIndustries', 'agencies'));
+        if ($request->has('q')) {
+            $check = $request->q;
+        } else {
+            $check = null;
+        }
+
+        return view('home-seeker', compact('provinces', 'carousels', 'blogs', 'favIndustries', 'agencies', 'check'));
     }
 
     public function showProfile($id)

@@ -28,7 +28,7 @@
     <meta name="twitter:card" content=""/>
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="shortcut icon" href="{{asset('favicon.ico')}}">
+    <link rel="shortcut icon" href="{{asset('images/favicon.ico')}}">
 
     {{--<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>--}}
     <link href="https://fonts.googleapis.com/css?family=Oswald:400,700,400italic,700italic" rel="stylesheet">
@@ -64,6 +64,17 @@
     <link rel="stylesheet" href="{{asset('css/responsive-list.css')}}">
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('css/media-query.css') }}">
+    <style>
+        .anim-icon label {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .dc-view-switcher > button {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+    </style>
 @stack('styles')
 <!-- Sweet Alert v2 -->
     <link rel="stylesheet" href="{{ asset('sweetalert2/sweetalert2.min.css') }}">
@@ -184,10 +195,15 @@
                                    data-toggle="tooltip" data-title="Facebook" data-placement="top">
                                     <i class="fab fa-facebook-f fa-fw"></i>
                                 </a>
-                                <a class="circle twitter" href="{{route('redirect', ['provider' => 'twitter'])}}"
+                                <a id="linkedin_login" class="circle linkedin"
+                                   href="{{route('redirect', ['provider' => 'linkedin'])}}"
+                                   data-toggle="tooltip" data-title="Linkedin" data-placement="bottom">
+                                    <i class="fab fa-linkedin-in fa-fw"></i>
+                                </a>
+                                {{--<a class="circle twitter" href="{{route('redirect', ['provider' => 'twitter'])}}"
                                    data-toggle="tooltip" data-title="Twitter" data-placement="bottom">
                                     <i class="fab fa-twitter fa-fw"></i>
-                                </a>
+                                </a>--}}
                                 <a id="google_login" class="circle google"
                                    href="{{route('redirect', ['provider' => 'google'])}}"
                                    data-toggle="tooltip" data-title="Google+" data-placement="right">
@@ -237,17 +253,19 @@
                                             @if(session('error'))
                                                 <strong>{{ $errors->first('password') }}</strong>
                                             @endif
-                                                <a href="javascript:openEmailModal()" style="text-decoration: none">Forgot password?</a>
                                         </span>
                                     </div>
                                 </div>
-                                <div class="row form-group">
-                                    <div class="checkbox col-lg-12">
+                                <div class="row form-group" style="font-size: 15px">
+                                    <div class="col-lg-6 checkbox" style="margin: -10px 0">
                                         <label>
-                                            <input type="checkbox"
-                                                   name="remember" {{ old('remember') ? 'checked' : '' }}
-                                                   style="position: relative"> Remember me
+                                            <input type="checkbox" name="remember" {{old('remember') ? 'checked' : ''}}
+                                            style="position: relative"> Remember me
                                         </label>
+                                    </div>
+                                    <div class="col-lg-6 text-right">
+                                        <a href="javascript:openEmailModal()" style="text-decoration: none">Forgot
+                                            password?</a>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -456,7 +474,7 @@
                                     <div class="col-lg-12">
                                         <input id="partnership_name" type="text"
                                                placeholder="University/institution/instance name"
-                                               class="form-control" name="name" required>
+                                               class="form-control" name="name" autofocus required>
                                         <span class="glyphicon glyphicon-education form-control-feedback"></span>
                                     </div>
                                 </div>
@@ -547,8 +565,8 @@
                         Get in Touch</a><span> &middot; </span>
                     <a href="{{route('info.siska')}}#faqs" target="_blank">
                         FAQ</a><br>
-                    &copy; 2018 SISKA. All Rights Reserved.<br>Designed by
-                    <a href="http://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
+                    &copy; {{now()->format('Y')}} SISKA. All Rights Reserved.<br>Designed by
+                    <a href="https://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
 
@@ -559,8 +577,8 @@
                         &mdash; 60231
                     </li>
                     <li><i class="icon-phone"></i><a href="tel:+628563094333">+62-85-6309 4333</a></li>
-                    <li><i class="icon-envelope"></i><a href="mailto:info@karir.org">info@karir.org</a></li>
-                    <li><i class="icon-globe2"></i><a href="htpp://karir.org" target="_blank">www.karir.org</a></li>
+                    <li><i class="icon-envelope"></i><a href="mailto:info@siska.org">info@siska.org</a></li>
+                    <li><i class="icon-globe2"></i><a href="http://siska.org" target="_blank">www.siska.org</a></li>
                 </ul>
                 <h3 class="section-title">Ikuti Kami</h3>
                 <ul class="social-media">
@@ -805,7 +823,9 @@
 <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
 <!-- Main JS (Do not remove) -->
 <script src="{{asset('js/main.js')}}"></script>
-
+<script src="{{asset('js/checkMobileDevice.js')}}"></script>
+<!-- Nicescroll -->
+<script src="{{asset('nicescroll/jquery.nicescroll.js')}}"></script>
 <!-- Ajax Lumen -->
 @stack('lumen.ajax')
 
@@ -813,6 +833,20 @@
 @include('layouts.partials._alert')
 @include('layouts.partials._confirm')
 @include('layouts.partials.auth.notif_alert')
+<script>
+    $(function () {
+        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
+        $(".use-nicescroll").niceScroll({
+            cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+            cursorwidth: "8px",
+            background: "rgba(222, 222, 222, .75)",
+            cursorborder: 'none',
+            // cursorborderradius:0,
+            autohidemode: 'leave',
+            zindex: 99999999,
+        });
+    });
+</script>
 @stack('scripts')
 </body>
 </html>

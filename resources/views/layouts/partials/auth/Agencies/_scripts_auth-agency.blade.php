@@ -93,8 +93,9 @@
     });
 
     $("#show_vacancy_settings, #btn_cancel_vacancy input[type=reset]").click(function () {
+        var form = $("#form-vacancy");
         $("#btn_cancel_vacancy").hide();
-        $("#form-vacancy")[0].reset();
+        form[0].reset();
         $("#vacancy_settings .selectpicker").val('default').selectpicker("refresh");
         $("#vacancy_settings").toggle(300);
         $("#stats_vacancy").toggle(300);
@@ -103,13 +104,14 @@
         } else {
             $("#btn_save_vacancy").attr('disabled', 'disabled');
         }
+        form.attr('action', '{{route('agency.vacancy.create')}}');
         $("#form-vacancy input[name='_method']").val('POST');
 
         $('html, body').animate({
             scrollTop: $('#show_vacancy_settings').offset().top
         }, 500);
     });
-    $("#btn_save_vacancy").on('click', function (e) {
+    $("#form-vacancy").on('submit', function (e) {
         e.preventDefault();
         if (tinyMCE.get('syarat').getContent() == "") {
             swal({
@@ -128,7 +130,7 @@
             });
 
         } else {
-            $('#form-vacancy')[0].submit();
+            $(this)[0].submit();
         }
     });
 

@@ -27,16 +27,8 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
             'uses' => 'ApplicantsController@apiApply'
         ]);
 
-        $router->get('apply/show', [
-            'uses' => 'ApplicantsController@show_vacancy'
-        ]);
-
         $router->post('bookmark', [
             'uses' => 'ApplicantsController@apiBookmark'
-        ]);
-
-        $router->get('bookmark/show', [
-            'uses' => 'ApplicantsController@show_bookmark'
         ]);
 
         $router->post('abort', [
@@ -116,6 +108,7 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
         });
 
     });
+
 
     $router->group(['middleware' => ['jwt.auth']], function ($router) {
         $router->get('logout', 'AuthController@logout');

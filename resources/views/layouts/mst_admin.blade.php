@@ -48,6 +48,21 @@
     <link href="{{asset('_admins/css/custom.css')}}" rel="stylesheet">
     @stack('styles')
     <style>
+        .main_menu .fa {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .anim-icon label {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .dc-view-switcher > button {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
         .dropdown-menu li:first-child a:before {
             border: none;
         }
@@ -162,8 +177,7 @@
         $feedback = \App\Feedback::where('created_at', '>=', today()->subDays('3')->toDateTimeString())
         ->orderByDesc('id')->get();
 
-        $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')
-        ->whereDate('created_at', '>=', now()->subDay())->get();
+        $postings = \App\ConfirmAgency::where('isPaid',false)->wherenotnull('payment_proof')->get();
 
         $quizSetup = \App\Vacancies::whereHas('getPlan', function ($plan) {
             $plan->where('isQuiz', true);
@@ -748,7 +762,8 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                &copy; 2018 SISKA. All right reserved. Designed by <a href="http://rabbit-media.net">Rabbit Media</a>
+                &copy; {{now()->format('Y')}} SISKA. All right reserved. Designed by <a href="https://rabbit-media.net">Rabbit
+                    Media</a>
             </div>
             <div class="clearfix"></div>
         </footer>
@@ -941,9 +956,23 @@
 <script src="{{asset('js/smooth-scrollbar.js')}}"></script>
 <!-- Custom Theme Scripts -->
 <script src="{{asset('_admins/js/custom.min.js')}}"></script>
+<script src="{{asset('js/checkMobileDevice.js')}}"></script>
+<!-- Nicescroll -->
+<script src="{{asset('nicescroll/jquery.nicescroll.js')}}"></script>
 <script>
     var editor_config;
     $(function () {
+        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
+        $(".use-nicescroll").niceScroll({
+            cursorcolor: "rgba(0, 0, 0, .5)",
+            cursorwidth: "8px",
+            background: "rgba(222, 222, 222, .75)",
+            cursorborder: 'none',
+            // cursorborderradius:0,
+            autohidemode: 'leave',
+            zindex: 99999999,
+        });
+
         editor_config = {
             branding: false,
             path_absolute: '{{url('/')}}',
@@ -984,6 +1013,10 @@
         $('.datepicker').datepicker({format: "yyyy-mm-dd", autoclose: true, todayHighlight: true, todayBtn: true});
 
         Scrollbar.initAll();
+
+        @if(session('signed'))
+        swal('Signed In!', 'Welcome {{Auth::guard('admin')->user()->name}}! You\'re now signed in.', 'success');
+        @endif
     });
 
     $(".btn_editProfile").on("click", function () {

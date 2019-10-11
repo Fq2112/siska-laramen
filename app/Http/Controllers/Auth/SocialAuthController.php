@@ -66,7 +66,7 @@ class SocialAuthController extends Controller
 
             Auth::loginUsingId($user->id);
 
-            if ($provider == 'twitter' || $provider == 'google') {
+            if ($provider == 'twitter' || $provider == 'google' || $provider == 'linkedin') {
                 return redirect()->route('home-seeker')->with('signed', 'You`re now signed in as a Job Seeker.');
 
             } else {

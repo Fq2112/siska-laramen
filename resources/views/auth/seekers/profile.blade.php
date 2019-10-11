@@ -1339,7 +1339,7 @@
                                             <small id="show_edu_settings">
                                                 Education
                                                 <span class="pull-right" style="cursor: pointer; color: #FA5555">
-                                                    <i class="fa fa-graduation-cap"></i>&ensp;Add
+                                                    <i class="fa fa-school"></i>&ensp;Add
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
@@ -1651,7 +1651,7 @@
                                                                                         <td>
                                                                                             <i class="fa fa-comments"></i>
                                                                                         </td>
-                                                                                        <td>&nbsp;Job Description</td>
+                                                                                        <td>&nbsp;Description</td>
                                                                                         <td>&nbsp;:&nbsp;</td>
                                                                                         <td>&nbsp;</td>
                                                                                     </tr>
@@ -1799,6 +1799,15 @@
                                                                                 <table style="font-size: 14px; margin-top: 0">
                                                                                     <tr>
                                                                                         <td>
+                                                                                            <i class="fa fa-briefcase"></i>
+                                                                                        </td>
+                                                                                        <td>&nbsp;Organization Title
+                                                                                        </td>
+                                                                                        <td>&nbsp;:&nbsp;</td>
+                                                                                        <td>{{$row->title}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>
                                                                                             <i class="fa fa-hourglass-start"></i>
                                                                                         </td>
                                                                                         <td>&nbsp;Start Period</td>
@@ -1923,7 +1932,7 @@
                         </div>
                     </div>
                     {{--Test Result--}}
-                    <div class="row">
+                    {{--<div class="row">
                         <div class="col-lg-12">
                             <div class="card">
                                 <div class="card-content">
@@ -2023,7 +2032,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>--}}
                 </div>
             </div>
         </div>

@@ -52,7 +52,7 @@ class PaymentDetailsEmail extends Mailable
 
         } else {
             return $this->subject('Checkout Orders with ' . $data['payment_category']->name .
-                ' Payment Successful on ' . Carbon::parse($data['confirmAgency']->date_payment)->format('j F Y')
+                ' Payment Successfully Confirmed on ' . Carbon::parse($data['confirmAgency']->date_payment)->format('j F Y')
                 . ' at ' . Carbon::parse($data['confirmAgency']->date_payment)->format('H:i'))
                 ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
                 ->view('emails.agencies.paymentSuccessDetails')->with($data);

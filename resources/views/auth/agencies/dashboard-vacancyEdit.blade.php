@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Profile | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Vacancy Setup | SISKA &mdash; Sistem Informasi Karier')
 @push('styles')
     <style>
         .card-title a {
@@ -546,7 +546,7 @@
                                         </div>
                                     </div>
                                     <div class="card-read-more">
-                                        <button class="btn btn-link btn-block" data-placement="top" type="button"
+                                        <button class="btn btn-link btn-block" data-placement="top" type="submit"
                                                 data-toggle="tooltip" title="Click here to submit your changes!"
                                                 id="btn_save_vacancy" disabled>
                                             <i class="fa fa-briefcase"></i>&nbsp;SAVE CHANGES

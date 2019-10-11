@@ -54,20 +54,27 @@ class BankSoalController extends Controller
             'question_text' => $request->question_text
         ]);
 
-        foreach ($request->input() as $key => $value) {
-            if (strpos($key, 'option') !== false && $value != '') {
-                $status = $request->input('correct') == $key ? true : false;
-                QuizOptions::create([
-                    'question_id' => $question->id,
-                    'option' => $value,
-                    'correct' => $status,
-                ]);
-            }
+        $options = [];
+        foreach ($request->options as $option) {
+            $options[] = QuizOptions::create([
+                'question_id' => $question->id,
+                'option' => $option,
+                'correct' => false,
+            ]);
         }
+        QuizOptions::find($options[$request->correct - 1]->id)->update(['correct' => true]);
 
         $topic = QuizType::find($request->quiztype_id);
 
         return back()->with('success', '' . $topic->name . '\'s question (' . $request->question_text . ') is successfully created!');
+    }
+
+    public function editQuizQuestions($id)
+    {
+        $question = QuizQuestions::find($id);
+        $arr = array_replace($question->toArray(), array('options' => $question->getQuizOption));
+
+        return $arr;
     }
 
     public function updateQuizQuestions(Request $request)
@@ -77,6 +84,18 @@ class BankSoalController extends Controller
             'quiztype_id' => $request->quiztype_id,
             'question_text' => $request->question_text
         ]);
+
+        $ids = explode(",", $request->option_ids);
+        $it = new \MultipleIterator();
+        $it->attachIterator(new \ArrayIterator($ids));
+        $it->attachIterator(new \ArrayIterator($request->options));
+        foreach ($it as $value) {
+            QuizOptions::find($value[0])->update([
+                'option' => $value[1],
+                'correct' => false
+            ]);
+        }
+        QuizOptions::find($ids[$request->correct - 1])->update(['correct' => true]);
 
         $topic = QuizType::find($question->quiztype_id);
 

@@ -194,7 +194,6 @@
                         $('#search-result, #vac-control, .myPagination').show();
                     },
                     success: function (data) {
-                        console.log(data.data);
                         successLoad(data, date, page);
                     },
                     error: function () {
@@ -236,7 +235,7 @@
             $("#search-result").empty();
             $.each(data.data, function (i, val) {
                 $color = val.isPaid == 1 ? '#00adb5' : '#fa5555';
-                $display = val.isPaid == 0 && '{{now()}}' <= val.add_day ? '' : 'none';
+                $display = val.isPaid == 0 && val.expired == false ? '' : 'none';
                 $class = val.isPaid == 1 ? '' : 'ld ld-breath';
                 $label = val.isPaid == 1 ? "<strong>Paid</strong> on " + val.date_payment :
                     "<strong>Ordered</strong> on " + val.date_order;
@@ -264,7 +263,7 @@
                     '<label for="upload' + val.id + '"></label></div></form>' +
                     '<ul class="list-inline" id="vacancies' + val.id + '"></ul>' +
                     '<small>' + $label + '</small>' +
-                    '<a style="display: ' + $display + '" ' +
+                    '<a id="btnDel_jobPosting' + val.id + '" style="display: ' + $display + '" ' +
                     'href="{{route('delete.job.posting',['id'=>''])}}/' + val.encryptID + '" ' +
                     'onclick="deleteJobPosting(' + $param2 + ')">' +
                     '<div class="anim-icon anim-icon-md apply ld ld-heartbeat" data-toggle="tooltip" ' +
@@ -524,9 +523,10 @@
         }
 
         function deleteJobPosting(id, invoice) {
+            var linkURL = $("#btnDel_jobPosting" + id).attr("href");
             swal({
-                title: 'Are you sure to abort ' + invoice + '?',
-                text: "You won't be able to revert this action!",
+                title: 'Abort Job Posting',
+                text: "Are you sure to abort " + invoice + "? You won't be able to revert this action!",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#fa5555',

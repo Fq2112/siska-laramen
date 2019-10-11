@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\PartnerCredential;
 use App\User;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
@@ -184,14 +185,19 @@ class ResetPasswordController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->put($partner->uri . '/api/SISKA/seekers/update', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => $check,
-                        'seeker' => $data,
-                    ]
-                ]);
+
+                try {
+                    $client->put($partner->uri . '/api/SISKA/seekers/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => $check,
+                            'seeker' => $data,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
     }

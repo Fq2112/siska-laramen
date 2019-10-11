@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Clients\VacanciesAPIController as Search;
 use App\Http\Controllers\Controller;
 use App\Vacancies;
 
+;
 
 class SearchAPICOntroller extends Controller
 {

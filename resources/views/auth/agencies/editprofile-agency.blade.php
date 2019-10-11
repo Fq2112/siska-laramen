@@ -1,4 +1,4 @@
-@section('title', 'Edit Profile | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Account Settings &ndash; Edit Profile | SISKA &mdash; Sistem Informasi Karier')
 @extends('layouts.auth.mst_agency')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">
@@ -71,7 +71,7 @@
                         <div class="col-lg-12 to-animate">
                             <div class="card">
                                 <div class="img-card stats_gallery">
-                                    <div id="carousel-example" class="carousel slide carousel-fullscreen carousel-fade"
+                                    <div id="carousel-example" class="carousel slide carousel-fullscreen"
                                          data-ride="carousel">
                                         <ol class="carousel-indicators">
                                             @php $i = 0; @endphp

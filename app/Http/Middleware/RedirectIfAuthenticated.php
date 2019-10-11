@@ -27,10 +27,10 @@ class RedirectIfAuthenticated
                 }
 
             } elseif ($guard == 'admin') {
-                if (Auth::guard('admin')->user()->isRoot()) {
-                    return redirect()->route('home-admin');
+                if (Auth::guard('admin')->user()->isInterviewer()) {
+                    return redirect()->route('dashboard.interviewer');
 
-                } elseif (Auth::guard('admin')->user()->isAdmin()) {
+                } else {
                     return redirect()->route('home-admin');
                 }
             }

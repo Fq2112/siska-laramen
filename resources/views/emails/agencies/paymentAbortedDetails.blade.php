@@ -464,7 +464,7 @@
                                             <td align="center" width="660">
                                                 <a name="Logo" style="display:block" href="{{route('home-seeker')}}"
                                                    target="_blank">
-                                                    <img src="http://i66.tinypic.com/2iux5ph.png" border="0"
+                                                    <img src="{{env('APP_URL')}}/images/siska.png" border="0"
                                                          style="display:block;width: 40%;" class="logo"></a>
                                             </td>
                                         </tr>
@@ -627,7 +627,7 @@
                                                             <table>
                                                                 <tr>
                                                                     <td width="50%">
-                                                                        <img src="{{ $message->embed(public_path() . '/images/paymentMethod/' . $data['payment_method']->logo) }}"
+                                                                        <img src="{{env('APP_URL')}}/images/paymentMethod/{{$data['payment_method']->logo}}"
                                                                              style="width: 90%;"
                                                                              alt="{{$data['payment_method']->name}}">
                                                                     </td>
@@ -766,7 +766,8 @@
                                             <td align="center" valign="top" width="660" bgcolor="#1a1c21"><a
                                                         name="Logo_1" style="display:block;"
                                                         href="{{route('home-seeker')}}" target="_blank"><img
-                                                            src="http://i64.tinypic.com/2qn8tfp.png" alt="logo"
+                                                            src="{{env('APP_URL')}}/images/siska_circleicon.png"
+                                                            alt="logo"
                                                             border="0"
                                                             style="display:block;width: 15%;"></a>
                                             </td>
@@ -819,11 +820,11 @@
                                                                     <td align="center" bgcolor="#1a1c21">
                                                                         <a href="https://play.google.com/store/apps/details?id=com.siska.mobile"><img
                                                                                     class="zoom"
-                                                                                    src="http://i67.tinypic.com/2n8nadu.png"
+                                                                                    src="{{env('APP_URL')}}/images/GooglePlay.png"
                                                                                     style="width: 15%"></a>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                         <a href="https://itunes.apple.com/id/app/siska.com/id1143444473?mt=8"><img
                                                                                     class="zoom"
-                                                                                    src="http://i67.tinypic.com/34sfhg7.png"
+                                                                                    src="{{env('APP_URL')}}/images/AppStore.png"
                                                                                     style="width: 15%"></a>
                                                                     </td>
                                                                 </tr>
@@ -1028,22 +1029,14 @@
                                                                         registration initiated on the SISKA
                                                                         application; if you did not enter your email
                                                                         address in SISKA then you can either ignore
-                                                                        this message or contact info@karir.org for
+                                                                        this message or contact {{env("MAIL_USERNAME")}}
+                                                                        for
                                                                         more information. <br><br> SISKA is incorporated
                                                                         in
                                                                         Indonesia under company number
                                                                         <span class="appleLinksWhite">+62318672552</span>.
-                                                                        <span class="appleLinksWhite">Copyright © 2018 SISKA - Sistem Informasi Karier. All rights reserved. Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur — 60231.</span>
+                                                                        <span class="appleLinksWhite">Copyright © {{now()->format('Y')}} SISKA - Sistem Informasi Karier. All rights reserved. Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur — 60231.</span>
                                                                         <br>
-                                                                        <div id="stat-div"
-                                                                             style="visibility:hidden !important;"
-                                                                             height="0px">
-                                                                            <img id="stat-link"
-                                                                                 src="https://www.shazam.com/validate-email/email-view?email=matt@reallygoodemails.com"
-                                                                                 alt="" border="0" width="0px"
-                                                                                 height="0px"
-                                                                                 style="visibility:hidden !important;">
-                                                                        </div>
                                                                         <br>
                                                                         <br>
                                                                         <br></td>

@@ -488,12 +488,14 @@
                                                                            style="font-size: 15px">
                                                                             @if($pc->id == 1)
                                                                                 <strong data-toggle="tooltip"
+                                                                                        data-placement="left"
                                                                                         title="Account Number">
                                                                                     {{number_format($pm
                                                                                     ->account_number,0," "," ")}}
                                                                                 </strong>
                                                                             @elseif($pc->id == 4)
                                                                                 <strong data-toggle="tooltip"
+                                                                                        data-placement="left"
                                                                                         title="Payment Code">
                                                                                     {{session('confirmAgency')
                                                                                     ->payment_code}}
@@ -505,11 +507,13 @@
                                                                         <a class="tag tag-plans">
                                                                             @if($pc->id == 1)
                                                                                 <strong data-toggle="tooltip"
+                                                                                        data-placement="left"
                                                                                         title="Account Name">
                                                                                     a/n {{$pm->account_name}}
                                                                                 </strong>
                                                                             @elseif($pc->id == 4)
                                                                                 <strong data-toggle="tooltip"
+                                                                                        data-placement="left"
                                                                                         title="Payment Method">
                                                                                     {{$pm->name}}
                                                                                 </strong>

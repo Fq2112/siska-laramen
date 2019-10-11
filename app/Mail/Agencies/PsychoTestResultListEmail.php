@@ -38,6 +38,6 @@ class PsychoTestResultListEmail extends Mailable
         return $this->subject("" . $vacancy->judul . ": Psycho Test Result List for " . $psychoTestDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->view('emails.agencies.psychoTestResultList')->with(["vacancy" => $vacancy])
-            ->attach(public_path('storage\users\agencies\reports\psychoTestResults') . '/' . $filename);
+            ->attach(env('APP_URL') . '/local/storage/app/public/users/agencies/reports/psychoTestResults/' . $filename);
     }
 }

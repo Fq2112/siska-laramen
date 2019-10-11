@@ -70,7 +70,7 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
             'as' => 'invoice.job.posting'
         ]);
 
-        Route::get('{id}/delete', [
+        Route::get('delete/{id}', [
             'uses' => 'AgencyController@deleteJobPosting',
             'as' => 'delete.job.posting'
         ]);

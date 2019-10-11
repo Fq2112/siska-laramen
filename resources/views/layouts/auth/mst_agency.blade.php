@@ -131,8 +131,7 @@
             $q->where('agency_id', $agency->id)->where('isPost', true);
         })->count();
 
-        $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->where('isPaid',false)
-        ->whereDate('created_at','>=',now()->subDay())->count();
+        $confirm = \App\ConfirmAgency::where('agency_id',$agency->id)->count();
         $vac = \App\Vacancies::where('agency_id',$agency->id)->where('isPost',true)
         ->whereNotNull('active_period')->whereNotNull('plan_id')
         ->whereNull('interview_date')->whereNull('recruitmentDate_start')->whereNull('recruitmentDate_end')->count();

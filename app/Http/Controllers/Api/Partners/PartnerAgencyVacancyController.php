@@ -8,6 +8,7 @@ use App\PartnerVacancy;
 use App\User;
 use App\Vacancies;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -254,49 +255,53 @@ class PartnerAgencyVacancyController extends Controller
                     ]
                 ]);
 
-                if ($check == 'vacancies') {
-                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'check_form' => 'vacancy',
-                            'agencies' => $arr,
-                        ]
-                    ]);
-                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'check_form' => 'schedule',
-                            'agencies' => $arr,
-                        ]
-                    ]);
+                try {
+                    if ($check == 'vacancies') {
+                        $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'check_form' => 'vacancy',
+                                'agencies' => $arr,
+                            ]
+                        ]);
+                        $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'check_form' => 'schedule',
+                                'agencies' => $arr,
+                            ]
+                        ]);
 
-                } elseif ($check == 'agencies') {
-                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'check_form' => 'personal_data',
-                            'agencies' => $arr,
-                        ]
-                    ]);
-                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'check_form' => 'address',
-                            'agencies' => $arr,
-                        ]
-                    ]);
-                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
-                        'form_params' => [
-                            'key' => $partner->api_key,
-                            'secret' => $partner->api_secret,
-                            'check_form' => 'about',
-                            'agencies' => $arr,
-                        ]
-                    ]);
+                    } elseif ($check == 'agencies') {
+                        $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'check_form' => 'personal_data',
+                                'agencies' => $arr,
+                            ]
+                        ]);
+                        $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'check_form' => 'address',
+                                'agencies' => $arr,
+                            ]
+                        ]);
+                        $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                            'form_params' => [
+                                'key' => $partner->api_key,
+                                'secret' => $partner->api_secret,
+                                'check_form' => 'about',
+                                'agencies' => $arr,
+                            ]
+                        ]);
+                    }
+                } catch (ConnectException $e) {
+                    //
                 }
             }
         }
@@ -347,14 +352,19 @@ class PartnerAgencyVacancyController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => $check,
-                        'agencies' => $arr,
-                    ]
-                ]);
+
+                try {
+                    $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => $check,
+                            'agencies' => $arr,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
     }

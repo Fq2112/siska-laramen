@@ -53,9 +53,9 @@ class Laravel extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof NotFoundHttpException) {
-            return response(view('errors.404'), 404);
+            return response()->view('errors.404');
         } elseif ($exception instanceof MethodNotAllowedHttpException) {
-            return response(view('errors.405'), 405);
+            return response()->view('errors.405');
         } elseif ($exception instanceof TokenMismatchException) {
             return back()->with('token', 'The page has expired due to inactivity, please try again.');
         }

@@ -26,6 +26,7 @@ use App\User;
 use App\Vacancies;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -412,6 +413,7 @@ class AccountController extends Controller
             $pc = array('pc' => $payment_method->paymentCategories->name);
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());
             $created_at1DayAdd = array('add_day' => Carbon::parse($row['created_at'])->addDay());
+            $status = array('expired' => now() >= Carbon::parse($row['created_at'])->addDay() ? true : false);
             $deadline = array('deadline' => Carbon::parse($row['created_at'])->addDay()->format('l, j F Y') .
                 ' at ' . Carbon::parse($row['created_at'])->addDay()->format('H:i'));
 
@@ -419,7 +421,7 @@ class AccountController extends Controller
             $paidDate = array('date_payment' => Carbon::parse($row['date_payment'])->format('l j F Y'));
 
             $result['data'][$i] = array_replace($paid, $id, $invoice, $result['data'][$i], $pl, $pm, $pc,
-                $created_at, $created_at1DayAdd, $orderDate, $paidDate, $deadline, $vacancies);
+                $created_at, $created_at1DayAdd, $orderDate, $paidDate, $deadline, $vacancies, $status);
             $i = $i + 1;
         }
 
@@ -557,14 +559,19 @@ class AccountController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->put($partner->uri . '/api/SISKA/vacancies/update', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => $check,
-                        'agencies' => $data,
-                    ]
-                ]);
+
+                try {
+                    $client->put($partner->uri . '/api/SISKA/vacancies/update', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => $check,
+                            'agencies' => $data,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
     }
@@ -586,14 +593,19 @@ class AccountController extends Controller
                         'exceptions' => false
                     ]
                 ]);
-                $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
-                    'form_params' => [
-                        'key' => $partner->api_key,
-                        'secret' => $partner->api_secret,
-                        'check_form' => 'vacancy',
-                        'agencies' => $data,
-                    ]
-                ]);
+
+                try {
+                    $client->delete($partner->uri . '/api/SISKA/vacancies/delete', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'check_form' => 'vacancy',
+                            'agencies' => $data,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
             }
         }
 

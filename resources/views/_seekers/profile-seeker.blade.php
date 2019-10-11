@@ -406,7 +406,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        {{--Test Result--}}
+                        {{--<div class="row">
                             <div class="col-lg-12">
                                 <div class="card">
                                     <div class="card-content">
@@ -472,7 +473,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>--}}
                     </div>
                     <div class="col-lg-8">
                         <div class="row">
@@ -842,7 +843,7 @@
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
-                                                                                    <td>&nbsp;Job Description</td>
+                                                                                    <td>&nbsp;Description</td>
                                                                                     <td>&nbsp;:&nbsp;</td>
                                                                                     <td>&nbsp;</td>
                                                                                 </tr>
@@ -893,6 +894,14 @@
                                                                         <blockquote
                                                                                 style="font-size: 14px;text-transform: none">
                                                                             <table style="font-size: 14px; margin-top: 0">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <i class="fa fa-briefcase"></i>
+                                                                                    </td>
+                                                                                    <td>&nbsp;Organization Title</td>
+                                                                                    <td>&nbsp;:&nbsp;</td>
+                                                                                    <td>{{$row->title}}</td>
+                                                                                </tr>
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-hourglass-start"></i>

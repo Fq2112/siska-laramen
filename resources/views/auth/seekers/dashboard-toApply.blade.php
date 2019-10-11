@@ -65,9 +65,8 @@
                     <div class="box">
                         <div class="content">
                             <p style="font-size: 17px" align="justify">
-                                Complete data will make you a lot easier to apply for any jobs and the agency (HRD)
-                                is interested with. You will register for this vacancy with the
-                                following details:</p>
+                                By applying this invitation, you do not need to follow the entire vacancy schedule,
+                                but only need to wait for further notification from the agency.</p>
                             <hr class="hr-divider">
                             <div class="row">
                                 <div class="col-lg-12">
@@ -229,7 +228,6 @@
                         $('#search-result, #vac-control, .myPagination').show();
                     },
                     success: function (data) {
-                        console.log(data.data);
                         successLoad(data, date, page);
                     },
                     error: function () {

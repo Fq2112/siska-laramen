@@ -49,7 +49,7 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="col-md-5 col-sm-5 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
                             <h2>Users
@@ -67,7 +67,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-8 col-sm-8 col-xs-12">
+                <div class="col-md-7 col-sm-7 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
                             <h2>Monthly Income
@@ -99,7 +99,7 @@
                             </ul>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="x_content" data-scrollbar>
+                        <div class="x_content" data-scrollbar style="max-height: 500px">
                             @if(count($blogs) > 0)
                                 <ul class="list-unstyled timeline">
                                     @foreach($blogs as $blog)
@@ -362,10 +362,10 @@
                     fontFamily: 'Arial, Verdana, sans-serif'
                 }
             },
-            echartPieCollapse = echarts.init(document.getElementById('users_chart'), theme),
-            echartBar = echarts.init(document.getElementById('income_graph'), theme);
+            usersChart = echarts.init(document.getElementById('users_chart'), theme),
+            incomeGraph = echarts.init(document.getElementById('income_graph'), theme);
 
-        echartPieCollapse.setOption({
+        usersChart.setOption({
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -373,7 +373,7 @@
             legend: {
                 x: 'center',
                 y: 'bottom',
-                data: ['Agencies', 'Seekers', 'Partners']
+                data: ['Agencies', 'Seekers', 'Interviewers', 'Partners']
             },
             toolbox: {
                 show: true,
@@ -394,7 +394,7 @@
             },
             calculable: true,
             series: [{
-                name: 'Total: {{count($users) + count($mitras)}} users',
+                name: 'Total: {{count($users) + $interviewers + count($mitras)}} users',
                 type: 'pie',
                 radius: [25, 90],
                 center: ['50%', 170],
@@ -409,13 +409,16 @@
                     value: '{{count($seekers)}}',
                     name: 'Seekers'
                 }, {
+                    value: '{{$interviewers}}',
+                    name: 'Interviewers'
+                }, {
                     value: '{{count($mitras)}}',
                     name: 'Partners'
                 }]
             }]
         });
 
-        echartBar.setOption({
+        incomeGraph.setOption({
             title: {
                 text: 'Vacancy Advertising',
                 subtext: 'Monthly Income (in millions)'

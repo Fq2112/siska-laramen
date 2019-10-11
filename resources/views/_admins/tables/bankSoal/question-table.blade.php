@@ -42,8 +42,7 @@
                                     <td style="vertical-align: middle">{{\Carbon\Carbon::parse($question->created_at)->format('j F Y')}}</td>
                                     <td style="vertical-align: middle">{{$question->updated_at->diffForHumans()}}</td>
                                     <td style="vertical-align: middle" align="center">
-                                        <a onclick='editQuestion("{{$question->id}}","{{$question->quiztype_id}}",
-                                                "{{$question->question_text}}")'
+                                        <a onclick='editQuestion("{{$question->id}}")'
                                            class="btn btn-warning btn-sm" style="font-size: 16px" data-toggle="tooltip"
                                            title="Edit" data-placement="left">
                                             <i class="fa fa-edit"></i></a>
@@ -94,7 +93,34 @@
                                 <textarea id="question_text" name="question_text" class="use-tinymce"></textarea>
                             </div>
                         </div>
-                        <div id="input_quiz_options"></div>
+                        @for($c=1;$c<=5;$c++)
+                            <div class="row form-group">
+                                <div class="col-lg-12">
+                                    <label for="option{{$c}}">Option #{{$c}} <span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <input id="option{{$c}}" name="options[]" class="form-control input-options"
+                                               placeholder="Option #{{$c}}" required>
+                                        <span class="input-group-addon"><i class="fa fa-list-ul"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endfor
+                        <div class="row form-group">
+                            <div class="col-lg-12">
+                                <label for="correct">Correct Answer <span class="required">*</span></label>
+                                <div class="input-group">
+                                    <select id="correct" class="form-control selectpicker"
+                                            title="-- Select Correct Answer --" data-live-search="true"
+                                            name="correct" required>
+                                        @for($c=1;$c<=5;$c++)
+                                            <option value="{{$c}}">Option #{{$c}}</option>
+                                        @endfor
+                                    </select>
+                                    <span class="input-group-addon"><i class="fa fa-check-circle"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <input id="option_ids" type="hidden" name="option_ids">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -108,40 +134,10 @@
 @push("scripts")
     <script>
         function createQuestion() {
-            var $result = '', i;
-
             $('#quiztype_id').val('default').selectpicker('refresh');
             tinyMCE.get('question_text').setContent('');
 
-            for (i = 1; i <= 5; i++) {
-                $result +=
-                    '<div class="row form-group">' +
-                    '<div class="col-lg-12">' +
-                    '<label for="option' + i + '">Option #' + i + ' <span class="required">*</span></label>' +
-                    '<div class="input-group">' +
-                    '<input id="option' + i + '" name="option' + i + '" class="form-control" ' +
-                    'placeholder="Option #' + i + '" required>' +
-                    '<span class="input-group-addon"><i class="fa fa-list-ul"></i></span>' +
-                    '</div></div></div>';
-            }
-            $result +=
-                '<div class="row form-group">' +
-                '<div class="col-lg-12">' +
-                '<label for="correct">Correct Answer <span class="required">*</span></label>' +
-                '<div class="input-group">' +
-                '<select id="correct" class="form-control selectpicker" title="-- Select Correct Answer --" ' +
-                'data-live-search="true" name="correct" required>' +
-                '<option value="option1">Option #1</option>' +
-                '<option value="option2">Option #2</option>' +
-                '<option value="option3">Option #3</option>' +
-                '<option value="option4">Option #4</option>' +
-                '<option value="option5">Option #5</option>' +
-                '</select>' +
-                '<span class="input-group-addon"><i class="fa fa-check-circle"></i></span>' +
-                '</div></div></div>';
-
-            $('#input_quiz_options').html($result);
-
+            $(".input-options").val('');
             $('#correct').val('default').selectpicker('refresh');
 
             $("#form-quiz-question").prop('action', '{{route('quiz.create.questions')}}');
@@ -152,17 +148,47 @@
             $("#createModal").modal('show');
         }
 
-        function editQuestion(id, topic, question) {
-            $('#quiztype_id').val(topic).selectpicker('refresh');
-            tinyMCE.get('question_text').setContent(question);
-            $('#input_quiz_options').html('');
+        function editQuestion(id) {
+            var option_ids = [];
+            $.ajax({
+                url: "{{ url('admin/tables/bank_soal/questions') }}" + '/' + id + '/edit',
+                type: "GET",
+                dataType: "JSON",
+                success: function (data) {
+                    $('#quiztype_id').val(data.quiztype_id).selectpicker('refresh');
+                    tinyMCE.get('question_text').setContent(data.question_text);
 
-            $("#form-quiz-question").prop('action', '{{url('admin/tables/bank_soal/questions')}}/' + id + '/update');
-            $("#form-quiz-question input[name=_method]").val('PUT');
-            $("#createModal .modal-title").text('Edit Form');
-            $("#btn_quiz_question").text('Save Changes');
+                    $.each(data.options, function (i, val) {
+                        i = i + 1;
+                        $("#option" + i).val(val.option);
+                        option_ids[i - 1] = val.id;
+                    });
+                    $("#option_ids").val(option_ids);
 
-            $("#createModal").modal('show');
+                    var findIndex = $.map(data.options, function (obj, index) {
+                        if (obj.correct == true) {
+                            return index;
+                        }
+                    }), correct = parseInt(findIndex) + 1;
+
+                    $('#correct').val(correct).selectpicker('refresh');
+
+                    $("#form-quiz-question").prop('action', '{{url('admin/tables/bank_soal/questions')}}/' + id + '/update');
+                    $("#form-quiz-question input[name=_method]").val('PUT');
+                    $("#createModal .modal-title").text('Edit Form');
+                    $("#btn_quiz_question").text('Save Changes');
+
+                    $("#createModal").modal('show');
+                },
+                error: function () {
+                    swal({
+                        title: 'Bank Soal',
+                        text: 'Data not found!',
+                        type: 'error',
+                        timer: '1500'
+                    })
+                }
+            });
         }
 
         $("#form-quiz-question").on('submit', function (e) {

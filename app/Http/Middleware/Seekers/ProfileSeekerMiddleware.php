@@ -36,6 +36,6 @@ class ProfileSeekerMiddleware
             return redirect()->guest(route('home-seeker'))
                 ->with('expire', 'The page you requested requires authentication, please login to your account.');
         }
-        return response(view('errors.403'), 403);
+        return response()->view('errors.403');
     }
 }

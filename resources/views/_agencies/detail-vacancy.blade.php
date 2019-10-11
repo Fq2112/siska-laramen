@@ -373,8 +373,7 @@
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
                                             <div data-scrollbar>
-                                                @foreach(\App\Vacancies::where('agency_id',$agency->id)
-                                                ->where('isPost',true)->orderByDesc('updated_at')->get() as $row)
+                                                @foreach(\App\Vacancies::where('agency_id',$agency->id)->where('id','!=',$vacancy->id)->where('isPost',true)->orderByDesc('updated_at')->get() as $row)
                                                     @php
                                                         $agency_list = \App\Agencies::find($row->agency_id);
                                                         $user_list = \App\User::find(\App\Agencies::find($row->agency_id)
