@@ -181,6 +181,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'as' => 'load.vacancies'
         ]);
 
+        $router->get('vacancies/get/{limit}', [
+            'uses' => 'VacanciesAPIController@loadVacanciesMobile',
+            'as' => 'load.vacancies.mobile'
+        ]);
+
         $router->get('vacancies/favorite', [
             'uses' => 'VacanciesAPIController@loadFavVacancies',
             'as' => 'load.fav.vacancies'

@@ -61,6 +61,15 @@ class VacanciesAPIController extends Controller
         return $vacancies;
     }
 
+    public function loadVacanciesMobile($limit)
+    {
+//        dd($limit);
+        $vacancies = Vacancies::where('isPost', true)->get()->take($limit)->toArray();
+        $vacancies = $this->array_vacancies($vacancies);
+
+        return $vacancies;
+    }
+
     public function loadFavVacancies()
     {
         $favVacancy = Accepting::select('vacancy_id')->where('isApply', true)
