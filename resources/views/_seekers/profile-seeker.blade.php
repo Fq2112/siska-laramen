@@ -316,11 +316,13 @@
                                                                     <div class="media-body">
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-language">&nbsp;</i>
-                                                                            <small style="text-transform: uppercase">{{$row->name}}</small>
+                                                                            <small
+                                                                                    style="text-transform: uppercase">{{$row->name}}</small>
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 12px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
+                                                                            <table
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
@@ -377,11 +379,13 @@
                                                                     <div class="media-body">
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-user-secret">&nbsp;</i>
-                                                                            <small style="text-transform: uppercase">{{$row->name}}</small>
+                                                                            <small
+                                                                                    style="text-transform: uppercase">{{$row->name}}</small>
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 12px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
+                                                                            <table
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-chart-line"></i>
                                                                                     </td>
@@ -519,23 +523,15 @@
                                                             </div>
                                                             <div class="media-body">
                                                                 @if(Auth::check() && Auth::user()->isAgency())
-                                                                    <form class="pull-right to-animate-2"
-                                                                          id="form-download-attachments{{$row->id}}"
-                                                                          action="{{route('download.seeker.attachments',
-                                                                          ['files' => $row->files])}}"
-                                                                          data-toggle="tooltip" data-placement="left"
-                                                                          title="Download {{$row->files}}">
-                                                                        {{csrf_field()}}
-                                                                        <div class="anim-icon anim-icon-md download ld ld-breath"
-                                                                             id="{{$row->id}}"
-                                                                             onclick="downloadAttachments(id)"
-                                                                             style="font-size: 25px">
-                                                                            <input type="hidden" name="attachments_id"
-                                                                                   value="{{$row->id}}">
-                                                                            <input type="checkbox">
-                                                                            <label for="download"></label>
-                                                                        </div>
-                                                                    </form>
+                                                                    <div class="pull-right anim-icon anim-icon-md download ld ld-breath"
+                                                                         id="{{$row->id}}"
+                                                                         data-toggle="tooltip" data-placement="left"
+                                                                         title="Download {{$row->files}}"
+                                                                         onclick="downloadAttachments(id, '{{asset('storage/users/seekers/attachments/'.$row->files)}}')"
+                                                                         style="font-size: 25px">
+                                                                        <input type="checkbox">
+                                                                        <label for="download"></label>
+                                                                    </div>
                                                                 @endif
                                                                 <blockquote
                                                                         style="font-size: 12px;text-transform: none">
@@ -582,7 +578,8 @@
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
+                                                                            <table
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-building"></i>
                                                                                     </td>
@@ -726,7 +723,8 @@
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
+                                                                            <table
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-graduation-cap"></i>
@@ -823,7 +821,8 @@
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
+                                                                            <table
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-university"></i>
                                                                                     </td>
@@ -893,7 +892,8 @@
                                                                         </p>
                                                                         <blockquote
                                                                                 style="font-size: 14px;text-transform: none">
-                                                                            <table style="font-size: 14px; margin-top: 0">
+                                                                            <table
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-briefcase"></i>
@@ -1103,7 +1103,8 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
-                                                                <small style="font-size: 10px;color: #00ADB5;float: left">
+                                                                <small
+                                                                        style="font-size: 10px;color: #00ADB5;float: left">
                                                                     P.S.: You're only permitted to select your
                                                                     vacancy that has been posted.
                                                                 </small>
@@ -1163,10 +1164,10 @@
 
         @endif
 
-        function downloadAttachments(id) {
+        function downloadAttachments(id, href) {
             $("#" + id).removeClass('ld ld-breath');
             $("#" + id + ' input[type=checkbox]').prop('checked', true);
-            $("#form-download-attachments" + id)[0].submit();
+            window.open(href, '_blank');
         }
 
         $(document).on('show.bs.modal', '.modal', function (event) {

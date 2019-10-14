@@ -62,12 +62,6 @@ class AgencyController extends Controller
             'vacancies', 'likes'));
     }
 
-    public function downloadSeekerAttachments($files)
-    {
-        $file_path = public_path('storage/users/seekers/attachments/' . $files);
-        return response()->download($file_path);
-    }
-
     public function inviteSeeker(Request $request)
     {
         $user = Auth::user();

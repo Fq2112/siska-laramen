@@ -18,11 +18,6 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
         'as' => 'home-agency'
     ]);
 
-    Route::get('download/seeker-attachments/{files}', [
-        'uses' => 'AgencyController@downloadSeekerAttachments',
-        'as' => 'download.seeker.attachments'
-    ]);
-
     Route::post('invite/seeker', [
         'uses' => 'AgencyController@inviteSeeker',
         'as' => 'invite.seeker'
