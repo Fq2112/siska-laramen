@@ -27,11 +27,11 @@ class VacancyController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('seeker')->except(['showVacancy', 'detailVacancy']);
+        $this->middleware('seeker')->except(['getTitleVacancy', 'showVacancy', 'detailVacancy']);
 
-        $this->middleware('guest')->only(['showVacancy', 'detailVacancy']);
+        $this->middleware('guest')->only(['getTitleVacancy', 'showVacancy', 'detailVacancy']);
     }
-
+    
     public function showVacancy(Request $request)
     {
         $provinces = Provinces::all();

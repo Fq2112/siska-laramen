@@ -169,7 +169,7 @@
     </style>
 </head>
 
-<body class="nav-md">
+<body class="nav-md use-nicescroll">
 @php
     $auth = Auth::guard('admin')->user();
 
@@ -1100,6 +1100,10 @@
             titleScroller(text.substr(1) + text.substr(0, 1));
         }, 500);
     }(title + " ~ "));
+
+    $(document).on('mouseover', '.use-nicescroll', function () {
+        $(this).getNiceScroll().resize();
+    });
 </script>
 @include('layouts.partials._confirm')
 @include('layouts.partials.auth.Admins._pnotify')

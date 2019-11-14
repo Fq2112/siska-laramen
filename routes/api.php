@@ -15,7 +15,7 @@
  *
  * JWT Auth
  */
-$router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
+$router->group(['prefix' => 'jwt'], function ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
     $router->post('seeker', 'AuthController@seeker');
@@ -23,11 +23,20 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
     $router->get('me', 'AuthController@me');
 
     $router->group(['prefix' => 'vacancy', 'namespace' => 'Api'], function ($router) {
-        $router->post('apply', [
+        $router->get('{id}/detail', [
+            'uses' => 'ApplicantsController@getDetail',
+            'as' => 'load.vacancies.selected'
+        ]);
+
+        $router->post('update/password', [
+            'uses' => 'ApplicantsController@update_pass'
+        ]);
+
+        $router->post('applying', [
             'uses' => 'ApplicantsController@apiApply'
         ]);
 
-        $router->post('bookmark', [
+        $router->post('bookmarking', [
             'uses' => 'ApplicantsController@apiBookmark'
         ]);
 
@@ -35,11 +44,51 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
             'uses' => 'ApplicantsController@apiAbortApply'
         ]);
 
+        $router->post('apply', [
+            'uses' => 'ApplicantsController@show_apply'
+        ]);
+
+        $router->post('bookmark', [
+            'uses' => 'ApplicantsController@show_bookmark'
+        ]);
+
+        $router->post('invitation', [
+            'uses' => 'ApplicantsController@show_invitation'
+        ]);
+
+        $router->post('invitation/accept', [
+            'uses' => 'ApplicantsController@accept_invitation'
+        ]);
     });
 
     $router->group(['prefix' => 'profile', 'namespace' => 'Api'], function ($router) {
+
         $router->get('me', [
             'uses' => 'ProfileAPIController@show'
+        ]);
+
+        $router->get('show/edu', [
+            'uses' => 'ProfileAPIController@get_edu'
+        ]);
+
+        $router->get('show/exp', [
+            'uses' => 'ProfileAPIController@get_exp'
+        ]);
+
+        $router->get('show/org', [
+            'uses' => 'ProfileAPIController@get_org'
+        ]);
+
+        $router->get('show/training', [
+            'uses' => 'ProfileAPIController@get_training'
+        ]);
+
+        $router->get('show/skill', [
+            'uses' => 'ProfileAPIController@get_skill'
+        ]);
+
+        $router->get('show/lang', [
+            'uses' => 'ProfileAPIController@get_lang'
         ]);
 
         $router->get('personal', [
@@ -48,6 +97,14 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
 
         $router->post('personal/save', [
             'uses' => 'ProfileAPIController@save_personal'
+        ]);
+
+        $router->post('contact/save', [
+            'uses' => 'ProfileAPIController@save_contact'
+        ]);
+
+        $router->post('upload/ava', [
+            'uses' => 'ProfileAPIController@uploadAva'
         ]);
 
         $router->group(['prefix' => 'edu'], function ($router) {
@@ -65,6 +122,63 @@ $router->group(['prefix' => 'jwt', 'middleware' => 'api'], function ($router) {
 
             $router->post('/delete/{id}', [
                 'uses' => 'ProfileAPIController@delete_education'
+            ]);
+
+        });
+
+        $router->group(['prefix' => 'training'], function ($router) {
+            $router->get('/{id}', [
+                'uses' => 'ProfileAPIController@show_training'
+            ]);
+
+            $router->post('/save', [
+                'uses' => 'ProfileAPIController@save_training'
+            ]);
+
+            $router->post('/update', [
+                'uses' => 'ProfileAPIController@update_training'
+            ]);
+
+            $router->post('/delete/{id}', [
+                'uses' => 'ProfileAPIController@delete_training'
+            ]);
+
+        });
+
+        $router->group(['prefix' => 'lang'], function ($router) {
+            $router->get('/{id}', [
+                'uses' => 'ProfileAPIController@show_lang'
+            ]);
+
+            $router->post('/save', [
+                'uses' => 'ProfileAPIController@save_lang'
+            ]);
+
+            $router->post('/update', [
+                'uses' => 'ProfileAPIController@update_lang'
+            ]);
+
+            $router->post('/delete/{id}', [
+                'uses' => 'ProfileAPIController@delete_lang'
+            ]);
+
+        });
+
+        $router->group(['prefix' => 'skill'], function ($router) {
+            $router->get('/{id}', [
+                'uses' => 'ProfileAPIController@show_skill'
+            ]);
+
+            $router->post('/save', [
+                'uses' => 'ProfileAPIController@save_skill'
+            ]);
+
+            $router->post('/update', [
+                'uses' => 'ProfileAPIController@update_skill'
+            ]);
+
+            $router->post('/delete/{id}', [
+                'uses' => 'ProfileAPIController@delete_skill'
             ]);
 
         });
@@ -128,6 +242,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
     $router->get('vacancies/search', [
         'uses' => 'SearchVacancyController@getSearchResult',
         'as' => 'get.search.vacancy'
+    ]);
+
+    $router->get('vacancies/search/{keyword}', [
+        'uses' => 'SearchVacancyController@getKeywordVacancy',
+        'as' => 'get.keyword.vacancy'
     ]);
 
     $router->post('feed', [
@@ -211,7 +330,7 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
             'as' => 'load.agency'
         ]);
 
-        $router->get('vacancies/{id}', [
+        $router->get('vacancies/{id}/detail', [
             'uses' => 'VacanciesAPIController@getVacancyAgency',
             'as' => 'load.vacancies.selected'
         ]);
@@ -234,6 +353,11 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         $router->get('industries', [
             'uses' => 'JobAPIController@loadIndustry',
             'as' => 'load.industries'
+        ]);
+
+        $router->get('salaries', [
+            'uses' => 'JobAPIController@loadSalaries',
+            'as' => 'load.salaries'
         ]);
 
         $router->get('paymentmethod', [

@@ -17,6 +17,7 @@ class SearchAPICOntroller extends Controller
         $json = file_get_contents('php://input');
         $obj = json_decode($json, true);
 
+        $limit = $obj['limit'];
         $q = $obj['q'];
         $agen = $obj['agen'];
         $loc = $obj['loc'];
@@ -62,7 +63,7 @@ class SearchAPICOntroller extends Controller
             $query->wherein('tingkatpend_id', $array_deg);
         })->when($major, function ($query) use ($array_major) {
             $query->wherein('jurusanpend_id', $array_major);
-        })->where('judul', 'like', '%' . $q . '%')->where('isPost', true)->get()->toArray();
+        })->where('judul', 'like', '%' . $q . '%')->where('isPost', true)->get()->take($limit)->toArray();
 
 
 

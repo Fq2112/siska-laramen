@@ -53,7 +53,7 @@ class BlogController extends Controller
         ]);
 
         $name = $request->file('dir')->getClientOriginalName();
-        $request->file('dir')->move(public_path('images\blog'), $name);
+        $request->file('dir')->move(public_path('images/blog'), $name);
 
         Blog::create([
             'dir' => $name,
@@ -78,9 +78,9 @@ class BlogController extends Controller
         if ($request->hasfile('dir')) {
             $name = $request->file('dir')->getClientOriginalName();
             if ($Blog->dir != '') {
-                unlink(public_path('images\blog/' . $Blog->dir));
+                unlink(public_path('images/blog/' . $Blog->dir));
             }
-            $request->file('dir')->move(public_path('images\blog'), $name);
+            $request->file('dir')->move(public_path('images/blog'), $name);
 
         } else {
             $name = $Blog->dir;
@@ -102,7 +102,7 @@ class BlogController extends Controller
     {
         $Blog = Blog::find(decrypt($id));
         if ($Blog->dir != '') {
-            unlink(public_path('images\blog/' . $Blog->dir));
+            unlink(public_path('images/blog/' . $Blog->dir));
         }
         $Blog->delete();
 

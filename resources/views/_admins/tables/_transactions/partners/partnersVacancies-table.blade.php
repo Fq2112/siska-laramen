@@ -565,7 +565,7 @@
                     return item[1]
                 });
                 $("#partnerVac_ids").val(ids);
-                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massPost')}}");
+                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massPost')}}").removeAttr('target');
 
                 if (ids.length > 0) {
                     swal({
@@ -596,7 +596,7 @@
                     return item[1]
                 });
                 $("#partnerVac_ids").val(ids);
-                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massPDF')}}");
+                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massPDF')}}").attr('target', '_blank');
 
                 if (ids.length > 0) {
                     swal({
@@ -611,24 +611,8 @@
 
                         preConfirm: function () {
                             return new Promise(function (resolve) {
-                                $.ajax({
-                                    type: "POST",
-                                    url: "{{route('partners.vacancies.massPDF')}}",
-                                    data: new FormData($("#form-partnerVac")[0]),
-                                    contentType: false,
-                                    processData: false,
-                                    success: function (data) {
-                                        if (data == 0) {
-                                            swal("Error!", "Couldn't zip the file! Please try again.", "error");
-                                        } else {
-                                            swal("Success!", "Pdf file(s) is successfully generated and " +
-                                                "zipped into PDFs.zip file!", "success");
-                                        }
-                                    },
-                                    error: function () {
-                                        swal("Error!", "Something went wrong, please refresh the page.", "error");
-                                    }
-                                });
+                                $("#form-partnerVac")[0].submit();
+                                swal('Success', 'Pdf file(s) is successfully generated and zipped into PDFs.zip file!', 'success');
                             });
                         },
                         allowOutsideClick: false
@@ -644,7 +628,7 @@
                     return item[1]
                 });
                 $("#partnerVac_ids").val(ids);
-                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massDelete')}}");
+                $("#form-partnerVac").attr("action", "{{route('partners.vacancies.massDelete')}}").removeAttr('target');
 
                 if (ids.length > 0) {
                     swal({

@@ -19,6 +19,34 @@ use Illuminate\Support\Carbon;
 
 class SearchVacancyController extends Controller
 {
+    public function getKeywordVacancy($keyword)
+    {
+        $vacancies = Vacancies::where('judul', 'like', '%' . $keyword . '%')->where('isPost', true)->get();
+
+        if(count($vacancies) > 0){
+            foreach ($vacancies as $vacancy) {
+                $vacancy->label = $vacancy->judul . ' - ' . $vacancy->agencies->user->name;
+                $vacancy->keyword = $vacancy->judul;
+            }
+
+            return $vacancies;
+
+        } else {
+            $agencies = Agencies::whereHas('user', function ($query) use ($keyword) {
+                $query->where('name', 'like', '%' . $keyword . '%');
+            })->whereHas('vacancies', function($query){
+                $query->where('isPost', true);
+            })->get();
+
+            foreach($agencies as $agency){
+                $agency->label = $agency->user->name;
+                $agency->keyword = $agency->user->name;
+            }
+
+            return $agencies;
+        }
+    }
+
     public function getSearchResult(Request $request)
     {
         $input = $request->all();

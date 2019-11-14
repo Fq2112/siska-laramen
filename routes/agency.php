@@ -7,6 +7,7 @@
  */
 
 Route::get('agencies/{id}', [
+    'middleware' => 'visitor',
     'uses' => 'Agencies\AgencyController@showProfile',
     'as' => 'agency.profile'
 ]);
@@ -14,6 +15,7 @@ Route::get('agencies/{id}', [
 Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
 
     Route::get('/', [
+        'middleware' => 'visitor',
         'uses' => 'AgencyController@index',
         'as' => 'home-agency'
     ]);
@@ -26,6 +28,7 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
     Route::group(['prefix' => 'job_posting'], function () {
 
         Route::get('{id}', [
+            'middleware' => 'visitor',
             'uses' => 'AgencyController@showJobPosting',
             'as' => 'show.job.posting'
         ]);
@@ -61,6 +64,7 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
         ]);
 
         Route::get('invoice/{id}', [
+            'middleware' => 'visitor',
             'uses' => 'AgencyController@invoiceJobPosting',
             'as' => 'invoice.job.posting'
         ]);
@@ -77,6 +81,7 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
 Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function () {
 
     Route::get('profile', [
+        'middleware' => 'visitor',
         'uses' => 'AccountController@editProfile',
         'as' => 'agency.edit.profile'
     ]);
@@ -97,6 +102,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
     ]);
 
     Route::get('settings', [
+        'middleware' => 'visitor',
         'uses' => 'AccountController@accountSettings',
         'as' => 'agency.settings'
     ]);
@@ -109,6 +115,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
     Route::group(['prefix' => 'vacancy'], function () {
 
         Route::get('status', [
+            'middleware' => 'visitor',
             'uses' => 'AccountController@showVacancyStatus',
             'as' => 'agency.vacancy.status'
         ]);
@@ -119,6 +126,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
         ]);
 
         Route::get('/', [
+            'middleware' => 'visitor',
             'uses' => 'AccountController@showVacancy',
             'as' => 'agency.vacancy.show'
         ]);
@@ -148,6 +156,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
     Route::group(['prefix' => 'dashboard'], function () {
 
         Route::get('application_received', [
+            'middleware' => 'visitor',
             'uses' => 'AccountController@showDashboard',
             'as' => 'agency.dashboard'
         ]);
@@ -158,6 +167,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
         ]);
 
         Route::get('recommended_seeker', [
+            'middleware' => 'visitor',
             'uses' => 'AccountController@recommendedSeeker',
             'as' => 'agency.recommended.seeker'
         ]);
@@ -173,6 +183,7 @@ Route::group(['prefix' => 'account/agency', 'namespace' => 'Agencies'], function
         ]);
 
         Route::get('invited_seeker', [
+            'middleware' => 'visitor',
             'uses' => 'AccountController@invitedSeeker',
             'as' => 'agency.invited.seeker'
         ]);

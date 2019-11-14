@@ -6,6 +6,7 @@ use App\FungsiKerja;
 use App\Industri;
 use App\JobLevel;
 use App\JobType;
+use App\Salaries;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -33,5 +34,11 @@ class JobAPIController extends Controller
     {
         $industry = Industri::all()->toArray();
         return $industry;
+    }
+
+    public function loadSalaries()
+    {
+        $salaries = Salaries::all()->toArray();
+        return $salaries;
     }
 }

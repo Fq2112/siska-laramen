@@ -414,14 +414,14 @@
     $(document).on('scroll', progress);
 
     <!-- WhatsHelp.io widget -->
-    (function () {
+    window.onload = function() {
         var options = {
             whatsapp: "+628563094333",
-            line: "//line.me/ti/p/~fqnkk",
+            telegram: "fq2112",
             call_to_action: "Message us",
             button_color: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? '#00ADB5' : '#FA5555'}}",
             position: "left",
-            order: "line,whatsapp",
+            order: "whatsapp, telegram",
         };
         var proto = document.location.protocol, host = "whatshelp.io", url = proto + "//static." + host;
         var s = document.createElement('script');
@@ -433,5 +433,5 @@
         };
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
-    })();
+    };
 </script>

@@ -31,7 +31,7 @@ class TransactionAgencyController extends Controller
 {
     public function showVacanciesTable()
     {
-        $vacancies = Vacancies::orderByDesc('id')->get();
+        $vacancies = Vacancies::orderByDesc('id')->doesntHave('getPartnerVacancy')->get();
 
         return view('_admins.tables._transactions.agencies.vacancy-table', compact('vacancies'));
     }

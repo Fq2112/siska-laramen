@@ -49,6 +49,30 @@
             </div>
 
             <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Visitors Traffic</h2>
+                            <form class="navbar-right panel_toolbox" id="form-filter" action="{{route('home-admin')}}">
+                                <div class="row">
+                                    <div class="col">
+                                        <input id="period" type="text" class="form-control yearpicker"
+                                               placeholder="Period Filter (yyyy)" name="period"
+                                               autocomplete="off" readonly>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <canvas id="visitor_graph" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
                 <div class="col-md-5 col-sm-5 col-xs-12">
                     <div class="x_panel">
                         <div class="x_title">
@@ -150,7 +174,90 @@
     </div>
 @endsection
 @push("scripts")
+    <script src="{{asset('_admins/js/chart.min.js')}}"></script>
     <script>
+        $(function () {
+            $("#period").datepicker({
+                format: "yyyy",
+                viewMode: "years",
+                minViewMode: "years",
+                todayBtn: false,
+            });
+
+            @if($period != "")
+            $("#period").val('{{$period}}');
+            @endif
+        });
+
+        var incomeGraph = document.getElementById("visitor_graph").getContext('2d');
+
+        new Chart(incomeGraph, {
+            type: 'line',
+            data: {
+                labels: [
+                    'January', 'February', 'March', 'April', 'May', 'June', 'July',
+                    'August', 'September', 'October', 'November', 'December'
+                ],
+                datasets: [{
+                    label: 'Visits',
+                    data: [
+                        @php $total = 0; @endphp
+                        @for($i=1;$i<=12;$i++)
+                        @php
+                            $total = 0;
+                            $visitors = \App\Visitor::when($period, function ($query) use ($period) {
+                                $query->whereYear('date', $period);
+                            })->whereMonth('date',$i)->get();
+                            foreach ($visitors as $row){
+                                $total += $row->hits;
+                            }
+                        @endphp
+                        {{$total}},
+                        @endfor
+                    ],
+                    borderWidth: 2,
+                    backgroundColor: 'rgba(250,85,85,0.8)',
+                    borderWidth: 0,
+                    borderColor: 'transparent',
+                    pointBorderWidth: 0,
+                    pointRadius: 3.5,
+                    pointBackgroundColor: 'transparent',
+                    pointHoverBackgroundColor: 'rgba(250,85,85,0.8)',
+                }]
+            },
+            options: {
+                legend: {
+                    display: false
+                },
+                scales: {
+                    yAxes: [{
+                        gridLines: {
+                            display: true,
+                            drawBorder: false,
+                            color: '#f2f2f2',
+                        },
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 100,
+                            callback: function (value, index, values) {
+                                return value;
+                            }
+                        }
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                            tickMarkLength: 15,
+                        }
+                    }]
+                },
+            }
+        });
+
+        $("#period").on('change', function () {
+            $("#form-filter")[0].submit();
+        });
+
         var theme = {
                 color: [
                     '#00adb5', '#fa5555', '#FFC12D', '#3498DB',

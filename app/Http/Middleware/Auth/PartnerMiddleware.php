@@ -18,7 +18,7 @@ class PartnerMiddleware
     {
         $partner = PartnerCredential::where('api_key', $request->key)->where('api_secret', $request->secret)
             ->where('status', true)->first();
-
+        
         if ($partner != null) {
             if (today() > $partner->api_expiry) {
                 return response()->json([

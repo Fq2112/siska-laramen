@@ -20,6 +20,7 @@ Auth::routes();
 Route::group(['prefix' => '/'], function () {
 
     Route::get('info', [
+        'middleware' => 'visitor',
         'uses' => 'UserController@infoSISKA',
         'as' => 'info.siska'
     ]);

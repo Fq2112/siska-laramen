@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Free HTML5 Template by FreeHTML5.co"/>
+    <meta name="description" content="SISKA (Sistem Informasi Karier)"/>
     <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive"/>
     <meta name="author" content="FreeHTML5.co"/>
 
@@ -53,6 +53,7 @@
     <link rel="stylesheet" type="text/css" href="{{asset('fonts/fontawesome-free/css/all.css')}}">
     <script src="{{asset('fonts/fontawesome-free/js/all.js')}}"></script>
     <!-- Style -->
+    <link rel="stylesheet" href="{{asset('jquery-ui/jquery-ui.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/myBtn-myInput.css')}}">
     <link rel="stylesheet" href="{{asset('css/additional.css')}}">
@@ -74,6 +75,59 @@
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
         }
+
+        #list-lokasi input {
+            width: 340px;
+            z-index: 2;
+            position: fixed;
+            margin-top: -5px;
+            background-color: rgba(255, 255, 255, .1);
+        }
+
+        #list-lokasi input {
+            width: 325px;
+            background: transparent url('../images/map.png') 98% 50% no-repeat;
+            background-size: 8%;
+            -webkit-transition: .5s all ease-out;
+            transition: .5s all ease-out;
+        }
+
+        #list-lokasi:hover input, #list-lokasi:focus input {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        #list-lokasi input:hover, #list-lokasi input:focus {
+            width: 325px;
+            background: transparent url('../images/map.png') 2% 50% no-repeat;
+            background-size: 8%;
+            padding-left: 2.25em;
+            -webkit-transition: .5s all ease-out;
+            transition: .5s all ease-out;
+        }
+
+        ul.ui-autocomplete {
+            color: #fa5555;
+            border-color: #e4e4e4 !important;
+            border-radius: 0 0 6px 6px;
+        }
+
+        ul.ui-autocomplete .ui-menu-item .ui-state-active,
+        ul.ui-autocomplete .ui-menu-item .ui-state-active:hover,
+        ul.ui-autocomplete .ui-menu-item .ui-state-active:focus {
+            background: #fa5555;
+            color: #fff;
+            border: 1px solid #fa5555;
+        }
+
+        ul.ui-autocomplete .ui-menu-item:last-child .ui-state-active,
+        ul.ui-autocomplete .ui-menu-item:last-child .ui-state-active:hover,
+        ul.ui-autocomplete .ui-menu-item:last-child .ui-state-active:focus {
+            border-radius: 0 0 6px 6px;
+        }
+
+        #custom-search-input input {
+            padding: 10px;
+        }
     </style>
 @stack('styles')
 <!-- Sweet Alert v2 -->
@@ -90,7 +144,7 @@
     <![endif]-->
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
 </head>
-<body>
+<body class="use-nicescroll">
 <a href="#" onclick="scrollToTop()" title="Go to top"><strong class="to-top" style="color: #fff">TOP</strong></a>
 
 <header role="banner" id="fh5co-header">
@@ -118,13 +172,8 @@
                                         <span class="fa fa-caret-down"></span>
                                     </button>
                                     <ul class="dropdown-menu scrollable-menu" id="list-lokasi">
-                                        <div class="row form-group has-feedback">
-                                            <div class="col-lg-12">
-                                                <input class="form-control" type="text"
-                                                       placeholder="Search location&hellip;"
-                                                       id="txt_filter" onkeyup="filterFunction()" autofocus>
-                                            </div>
-                                        </div>
+                                        <input class="form-control" type="text" placeholder="Search location&hellip;"
+                                               id="txt_filter" onkeyup="filterFunction()" autofocus>
                                         <li id="divider" class="divider"></li>
                                         @foreach($provinces as $province)
                                             <li class="province{{$province->id}} dropdown-header">
@@ -142,7 +191,7 @@
                                     </ul>
                                 </div>
                                 <input id="txt_keyword" type="text" name="q" class="form-control myInput input-lg"
-                                       onkeyup="showResetBtn(this.value)"
+                                       onkeyup="showResetBtn(this.value)" autocomplete="off"
                                        placeholder="Job Title or Agency's Name&hellip;"
                                        value="{{!empty($keyword) ? $keyword : ''}}">
                                 <input type="hidden" name="loc" id="txt_location"
@@ -795,6 +844,7 @@
 
 <!-- jQuery -->
 <script src="{{asset('js/jquery.min.js')}}"></script>
+<script src="{{asset('jquery-ui/jquery-ui.min.js')}}"></script>
 <script src="{{asset('js/jquery.maskMoney.js')}}"></script>
 <script src="{{asset('js/simple.gpa.format.js')}}"></script>
 <script src="{{asset('js/filesize.min.js')}}"></script>
@@ -845,6 +895,32 @@
             autohidemode: 'leave',
             zindex: 99999999,
         });
+    });
+
+    $("#txt_keyword").autocomplete({
+        source: function (request, response) {
+            $.getJSON('{{route('get.keyword.vacancy', ['keyword' => ''])}}/' + $("#txt_keyword").val(), {
+                name: request.term,
+            }, function (data) {
+                response(data);
+            });
+        },
+        focus: function (event, ui) {
+            event.preventDefault();
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            @if(\Illuminate\Support\Facades\Request::is('search*'))
+            $("#txt_keyword").val(ui.item.keyword).trigger('keyup');
+            @else
+            $("#txt_keyword").val(ui.item.keyword);
+            $("form[role='search']")[0].submit();
+            @endif
+        }
+    });
+
+    $(document).on('mouseover', '.use-nicescroll', function () {
+        $(this).getNiceScroll().resize();
     });
 </script>
 @stack('scripts')

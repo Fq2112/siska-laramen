@@ -84,7 +84,7 @@ class AuthController extends Controller
                     $subject = "Please verify your email address.";
                     Mail::send('emails.auth.verify', ['name' => $name, 'email' => $user->email, 'verification_code' => $user->verifyToken],
                         function ($mail) use ($email, $name, $subject) {
-                            $mail->from(getenv('Ilham Saputra'), "ilham.puji100@gmail.com");
+                            $mail->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier');
                             $mail->to($email, $name);
                             $mail->subject($subject);
                         });

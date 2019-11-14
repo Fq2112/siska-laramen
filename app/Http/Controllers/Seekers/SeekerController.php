@@ -64,8 +64,8 @@ class SeekerController extends Controller
         } else {
             $agencies = Agencies::wherehas('vacancies')->orderByDesc('updated_at')->take(9)->get();
         }
-
-        if ($request->has('q')) {
+        
+        if($request->has('q')){
             $check = $request->q;
         } else {
             $check = null;

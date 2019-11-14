@@ -89,7 +89,7 @@ class RequirementsController extends Controller
         ]);
 
         $name = $request->file('icon')->getClientOriginalName();
-        $request->file('icon')->move(public_path('images\industries'), $name);
+        $request->file('icon')->move(public_path('images/industries'), $name);
 
         Industri::create([
             'icon' => $name,
@@ -111,9 +111,9 @@ class RequirementsController extends Controller
         if ($request->hasfile('icon')) {
             $name = $request->file('icon')->getClientOriginalName();
             if ($industry->icon != '') {
-                unlink(public_path('images\industries/' . $industry->icon));
+                unlink(public_path('images/industries/' . $industry->icon));
             }
-            $request->file('icon')->move(public_path('images\industries'), $name);
+            $request->file('icon')->move(public_path('images/industries'), $name);
 
         } else {
             $name = $industry->icon;
@@ -131,7 +131,7 @@ class RequirementsController extends Controller
     {
         $industry = Industri::find(decrypt($id));
         if ($industry->icon != '') {
-            unlink(public_path('images\industries/' . $industry->icon));
+            unlink(public_path('images/industries/' . $industry->icon));
         }
         $industry->delete();
 

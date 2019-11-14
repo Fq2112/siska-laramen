@@ -673,31 +673,31 @@
         <style>
             @media (min-width: 1440px) {
                 #custom-search-input input {
-                    width: 464px;
+                    width: 374px;
                 }
             }
 
             @media (min-width: 1281px) and (max-width: 1439px) {
                 #custom-search-input input {
-                    width: 324px;
+                    width: 294px;
                 }
             }
 
             @media (min-width: 1025px) and (max-width: 1280px) {
                 #custom-search-input input {
-                    width: 189px;
+                    width: 294px;
                 }
             }
 
             @media (min-width: 768px) and (max-width: 1024px) {
                 #custom-search-input input {
-                    width: 324px;
+                    width: 294px;
                 }
             }
 
             @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
                 #custom-search-input input {
-                    width: 68px;
+                    width: 294px;
                 }
             }
         </style>
@@ -719,7 +719,7 @@
                         </ul>
                     </div>
                 </div>
-                <a href="javascript:void(0)" onclick="openPartnershipModal();" class="getting-grid2">
+                <a id="btn_partner" href="javascript:void(0)" onclick="openPartnershipModal();" class="getting-grid2">
                     <div class="call-to-action text-center">
                         <p class="sign-up">Bermitra Sekarang <i class="fa fa-handshake"></i></p>
                     </div>
@@ -738,12 +738,13 @@
             setTimeout(getLateVacancy, 200);
 
             @if($check != "")
-            $('html,body').animate({scrollTop: $("#fh5co-partner").offset().top}, 500);
-            $("#partnership_name").val('{{$check}}');
-            $("#btn_partner").click();
+                $('html,body').animate({scrollTop: $("#fh5co-partner").offset().top},500);
+                $("#partnership_name").val('{{$check}}');
+                $("#btn_partner").click();
             @endif
         });
 
+         
         function getFavVacancy() {
             $.ajax({
                 url: "{{route('load.fav.vacancies')}}",

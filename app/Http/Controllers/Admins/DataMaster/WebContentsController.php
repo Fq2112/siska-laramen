@@ -30,7 +30,7 @@ class WebContentsController extends Controller
         ]);
 
         $name = $request->file('image')->getClientOriginalName();
-        $request->file('image')->move(public_path('images\carousel'), $name);
+        $request->file('image')->move(public_path('images/carousel'), $name);
 
         Carousel::create([
             'image' => $name,
@@ -54,9 +54,9 @@ class WebContentsController extends Controller
         if ($request->hasfile('image')) {
             $name = $request->file('image')->getClientOriginalName();
             if ($carousel->image != '') {
-                unlink(public_path('images\carousel/' . $carousel->image));
+                unlink(public_path('images/carousel/' . $carousel->image));
             }
-            $request->file('image')->move(public_path('images\carousel'), $name);
+            $request->file('image')->move(public_path('images/carousel'), $name);
 
         } else {
             $name = $carousel->image;
@@ -75,7 +75,7 @@ class WebContentsController extends Controller
     {
         $carousel = Carousel::find(decrypt($id));
         if ($carousel->image != '') {
-            unlink(public_path('images\carousel/' . $carousel->image));
+            unlink(public_path('images/carousel/' . $carousel->image));
         }
         $carousel->delete();
 
@@ -132,7 +132,7 @@ class WebContentsController extends Controller
         ]);
 
         $name = $request->file('logo')->getClientOriginalName();
-        $request->file('logo')->move(public_path('images\paymentMethod'), $name);
+        $request->file('logo')->move(public_path('images/paymentMethod'), $name);
 
         PaymentMethod::create([
             'logo' => $name,
@@ -156,9 +156,9 @@ class WebContentsController extends Controller
         if ($request->hasfile('logo')) {
             $name = $request->file('logo')->getClientOriginalName();
             if ($method->logo != '') {
-                unlink(public_path('images\paymentMethod/' . $method->logo));
+                unlink(public_path('images/paymentMethod/' . $method->logo));
             }
-            $request->file('logo')->move(public_path('images\paymentMethod'), $name);
+            $request->file('logo')->move(public_path('images/paymentMethod'), $name);
 
         } else {
             $name = $method->logo;
@@ -179,7 +179,7 @@ class WebContentsController extends Controller
     {
         $method = PaymentMethod::find(decrypt($id));
         if ($method->logo != '') {
-            unlink(public_path('images\paymentMethod/' . $method->logo));
+            unlink(public_path('images/paymentMethod/' . $method->logo));
         }
         $method->delete();
 

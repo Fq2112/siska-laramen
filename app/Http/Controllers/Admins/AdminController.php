@@ -42,7 +42,7 @@ class AdminController extends Controller
         $this->middleware('admin.home')->only('index');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $newUser = User::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
         $newApp = Accepting::where('created_at', '>=', today()->subDays('3')->toDateTimeString())->count();
@@ -57,8 +57,14 @@ class AdminController extends Controller
 
         $blogs = Blog::all();
 
+        if($request->has('period')){
+            $period = $request->period;
+        } else {
+            $period = null;
+        }
+
         return view('_admins.home-admin', compact('newUser', 'newApp', 'newJobPost', 'newMitra',
-            'users', 'agencies', 'seekers', 'mitras', 'interviewers', 'blogs'));
+            'users', 'agencies', 'seekers', 'mitras', 'interviewers', 'blogs', 'period'));
     }
 
     public function showInbox(Request $request)

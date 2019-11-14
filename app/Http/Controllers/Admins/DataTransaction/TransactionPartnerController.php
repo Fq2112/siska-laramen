@@ -254,7 +254,7 @@ class TransactionPartnerController extends Controller
         $headers = array('Content-Type' => 'application/octet-stream');
         $filetopath = $public_dir . '/' . $zipFileName;
         if (!file_exists($filetopath)) {
-            return 0;
+            return back()->with('error', 'Couldn\'t zip the file! Please try again.');
         } else {
             return response()->download($filetopath, $zipFileName, $headers)->deleteFileAfterSend(true);
         }
