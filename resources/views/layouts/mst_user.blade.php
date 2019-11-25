@@ -86,7 +86,7 @@
 
         #list-lokasi input {
             width: 325px;
-            background: transparent url('../images/map.png') 98% 50% no-repeat;
+            background: transparent url({{asset('images/map.png')}}) 98% 50% no-repeat;
             background-size: 8%;
             -webkit-transition: .5s all ease-out;
             transition: .5s all ease-out;
@@ -98,7 +98,7 @@
 
         #list-lokasi input:hover, #list-lokasi input:focus {
             width: 325px;
-            background: transparent url('../images/map.png') 2% 50% no-repeat;
+            background: transparent url({{asset('images/map.png')}}) 2% 50% no-repeat;
             background-size: 8%;
             padding-left: 2.25em;
             -webkit-transition: .5s all ease-out;
@@ -128,6 +128,94 @@
         #custom-search-input input {
             padding: 10px;
         }
+
+        .images-preloader {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            z-index: 10000000;
+            background-color: #fff;
+        }
+
+        .images-preloader .preloader {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 50px;
+            width: 50px;
+            margin: -25px 0 0 -25px;
+            border-radius: 50%;
+        }
+
+        .images-preloader .preloader:before,
+        .images-preloader .preloader:after {
+            content: "";
+            border: 3px solid {{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? '#00ADB5' : '#FA5555'}};
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            position: absolute;
+            left: 0;
+        }
+
+        .images-preloader .preloader:before {
+            transform: scale(1, 1);
+            opacity: 1;
+            -webkit-animation: outside .6s infinite linear;
+            animation: outside .6s infinite linear
+        }
+
+        .images-preloader .preloader:after {
+            transform: scale(0, 0);
+            opacity: 0;
+            -webkit-animation: inside .6s infinite linear;
+            animation: inside .6s infinite linear
+        }
+
+        @-webkit-keyframes inside {
+            from {
+                -webkit-transform: scale(.5, .5);
+                opacity: 0
+            }
+            to {
+                -webkit-transform: scale(1, 1);
+                opacity: 1
+            }
+        }
+
+        @keyframes inside {
+            from {
+                transform: scale(.5, .5);
+                opacity: 0
+            }
+            to {
+                transform: scale(1, 1);
+                opacity: 1
+            }
+        }
+
+        @-webkit-keyframes outside {
+            from {
+                -webkit-transform: scale(1, 1);
+                opacity: 1
+            }
+            to {
+                -webkit-transform: scale(1.5, 1.5);
+                opacity: 0
+            }
+        }
+
+        @keyframes outside {
+            from {
+                -webkit-transform: scale(1, 1);
+                opacity: 1
+            }
+            to {
+                -webkit-transform: scale(1.5, 1.5);
+                opacity: 0
+            }
+        }
     </style>
 @stack('styles')
 <!-- Sweet Alert v2 -->
@@ -145,6 +233,9 @@
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
 </head>
 <body class="use-nicescroll">
+<div class="images-preloader">
+    <div class="preloader"></div>
+</div>
 <a href="#" onclick="scrollToTop()" title="Go to top"><strong class="to-top" style="color: #fff">TOP</strong></a>
 
 <header role="banner" id="fh5co-header">
@@ -884,19 +975,6 @@
 @include('layouts.partials._confirm')
 @include('layouts.partials.auth.notif_alert')
 <script>
-    $(function () {
-        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
-        $(".use-nicescroll").niceScroll({
-            cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
-            cursorwidth: "8px",
-            background: "rgba(222, 222, 222, .75)",
-            cursorborder: 'none',
-            // cursorborderradius:0,
-            autohidemode: 'leave',
-            zindex: 99999999,
-        });
-    });
-
     $("#txt_keyword").autocomplete({
         source: function (request, response) {
             $.getJSON('{{route('get.keyword.vacancy', ['keyword' => ''])}}/' + $("#txt_keyword").val(), {

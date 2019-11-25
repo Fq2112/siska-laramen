@@ -415,8 +415,21 @@
 
     <!-- WhatsHelp.io widget -->
     window.onload = function() {
+        $('.images-preloader').fadeOut();
+
+        window.mobilecheck() ? $("body").removeClass('use-nicescroll') : '';
+        $(".use-nicescroll").niceScroll({
+            cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+            cursorwidth: "8px",
+            background: "rgba(222, 222, 222, .75)",
+            cursorborder: 'none',
+            // cursorborderradius:0,
+            autohidemode: 'leave',
+            zindex: 99999999,
+        });
+        
         var options = {
-            whatsapp: "+628563094333",
+            whatsapp: "+6281356598237",
             telegram: "fq2112",
             call_to_action: "Message us",
             button_color: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? '#00ADB5' : '#FA5555'}}",
