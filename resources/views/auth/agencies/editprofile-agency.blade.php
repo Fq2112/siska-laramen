@@ -27,7 +27,7 @@
                                                     <tr>
                                                         <td><i class="fa fa-map-marker-alt"></i></td>
                                                         <td>
-                                                            &nbsp;{{$agency->alamat != "" ? $agency->alamat : ''}}
+                                                            &nbsp;{{$agency->alamat != "" ? $agency->alamat : '(empty)'}}
                                                         </td>
                                                     </tr>
                                                 </table>
@@ -128,14 +128,14 @@
                                                                'Select '.count($galleries).' files' :
                                                                'Select '.count($galleries).' file'}}</li>
                                                     <div data-scrollbar style="max-height: 124px">
-                                                    @foreach($galleries as $row)
-                                                        <li><input type="checkbox" name="gallery_cbs[]"
-                                                                   class="gallery_cb" value="{{$row->id}}">
-                                                            {{\Illuminate\Support\Str::limit($row->image,25,'...')}}
-                                                        </li>
-                                                        <input type="hidden" name="gallery_image[]"
-                                                               value="{{$row->image}}">
-                                                    @endforeach
+                                                        @foreach($galleries as $row)
+                                                            <li><input type="checkbox" name="gallery_cbs[]"
+                                                                       class="gallery_cb" value="{{$row->id}}">
+                                                                {{\Illuminate\Support\Str::limit($row->image,25,'...')}}
+                                                            </li>
+                                                            <input type="hidden" name="gallery_image[]"
+                                                                   value="{{$row->image}}">
+                                                        @endforeach
                                                     </div>
                                                 </ul>
                                             </form>

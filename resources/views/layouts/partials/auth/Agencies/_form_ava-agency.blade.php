@@ -64,7 +64,7 @@
                     <tr>
                         <td><i class="fa fa-calendar-alt"></i></td>
                         <td>&nbsp;</td>
-                        <td style="text-transform: none">{{$agency->hari_kerja != "" ? $agency->hari_kerja : '(empty)'}}</td>
+                        <td style="text-transform: none">{{$agency->hari_kerja != "" ? $agency->hari_kerja : '(Empty)'}}</td>
                     </tr>
                     <tr>
                         <td><i class="fa fa-clock"></i></td>
@@ -79,7 +79,7 @@
                     <tr>
                         <td><i class="fa fa-map-marker-alt"></i></td>
                         <td>&nbsp;</td>
-                        <td>{{$agency->alamat != "" ? $agency->alamat : ''}}</td>
+                        <td>{{$agency->alamat != "" ? $agency->alamat : '(empty)'}}</td>
                     </tr>
                 </table>
                 <hr class="stats_personal_data">
