@@ -38,6 +38,6 @@ class ApplicantListEmail extends Mailable
         return $this->subject("" . $vacancy->judul . ": Application List for " . $recruitmentDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->view('emails.partners.applicantList')
-            ->attach(env('APP_URL') . '/local/storage/app/public/users/partners/reports/applications/' . $filename);
+            ->attach(public_path('storage/users/partners/reports/applications/' . $filename));
     }
 }

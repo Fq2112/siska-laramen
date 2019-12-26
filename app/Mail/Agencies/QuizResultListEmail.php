@@ -38,6 +38,6 @@ class QuizResultListEmail extends Mailable
         return $this->subject("" . $vacancy->judul . ": Quiz Result List for " . $quizDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->view('emails.agencies.quizResultList')->with(["vacancy" => $vacancy])
-            ->attach(env('APP_URL') . '/local/storage/app/public/users/agencies/reports/quizResults/' . $filename);
+            ->attach(public_path('storage/users/agencies/reports/quizResults/' . $filename));
     }
 }

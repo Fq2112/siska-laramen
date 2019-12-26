@@ -34,6 +34,6 @@ class PartnershipEmail extends Mailable
         return $this->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->subject('SISKA Partnership Credentials: API Key & API Secret')
             ->view('emails.partnership')
-            ->attach(env('APP_URL') . '/local/storage/app/public/users/partners/' . $filename);
+            ->attach(public_path('storage/users/partners/' . $filename));
     }
 }

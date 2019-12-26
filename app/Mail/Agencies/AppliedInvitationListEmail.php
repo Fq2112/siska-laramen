@@ -38,6 +38,6 @@ class AppliedInvitationListEmail extends Mailable
         return $this->subject("" . $vacancy->judul . ": Applied Invitation List for " . $recruitmentDate)
             ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
             ->view('emails.agencies.appliedInvitationList')
-            ->attach(env('APP_URL') . '/local/storage/app/public/users/agencies/reports/appliedInvitations/' . $filename);
+            ->attach(public_path('storage/users/agencies/reports/appliedInvitations/' . $filename));
     }
 }
