@@ -1,6 +1,6 @@
 @extends('layouts.mst_user')
 @section('title', 'Online Quiz (TPA and TKD): Quiz Code #'.$quiz->unique_code.' &mdash; '.$vacancy->judul.' - '.
-$agency->user->name.' | SISKA &mdash; Sistem Informasi Karier')
+$agency->user->name.' | '.env('APP_NAME'))
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/quiz.css')}}">
     <link rel="stylesheet" href="{{asset('css/bubble-button.css')}}">

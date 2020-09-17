@@ -12,7 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>@yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="SISKA (Sistem Informasi Karier)"/>
+    <meta name="description" content="{{env('APP_NAME')}}"/>
     <meta name="keywords" content="free html5, free template, free bootstrap, html5, css3, mobile first, responsive"/>
     <meta name="author" content="FreeHTML5.co"/>
 
@@ -227,7 +227,7 @@
     <!-- Modernizr JS -->
     <script src="{{asset('js/modernizr-2.6.2.min.js')}}"></script>
     <!-- FOR IE9 below -->
-    <!--[if lt IE 9]>
+<!--[if lt IE 9]>
     <script src="{{asset('js/respond.min.js')}}"></script>
     <![endif]-->
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
@@ -247,7 +247,7 @@
                    data-target="#navbar" aria-expanded="false" aria-controls="navbar"><i></i></a>
                 <a class="navbar-brand" target="{{\Illuminate\Support\Facades\Request::is(['quiz','psychoTest']) ?
                 '_blank' : ''}}" href="{{Auth::check() && Auth::user()->isAgency() ? route('home-agency') :
-                route('home-seeker')}}">SISKA</a>
+                route('home-seeker')}}">{{env('APP_NAME')}}</a>
                 @if(Auth::guest() || Auth::user()->isAgency() && \Illuminate\Support\Facades\Request::is('search*') ||
                 Auth::user()->isSeeker() && !\Illuminate\Support\Facades\Request::is
                 (['account/job_vacancy/recommended_vacancy','quiz','psychoTest']))
@@ -409,13 +409,9 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-12" id="recaptcha-login"></div>
-                                </div>
-                                <div class="row">
                                     <div class="col-lg-12">
                                         <input id="btn_login" class="btn btn-default btn-login" type="submit"
-                                               value="SIGN IN" style="background: #FA5555;border-color: #FA5555"
-                                               disabled>
+                                               value="SIGN IN" style="background: #FA5555;border-color: #FA5555">
                                     </div>
                                 </div>
                             </form>
@@ -480,7 +476,7 @@
                                 <div class="row">
                                     <div class="col-lg-12" style="font-size: 14px;text-align: justify">
                                         <small>
-                                            By continuing this, you acknowledge that you accept on SISKA
+                                            By continuing this, you acknowledge that you accept on {{env('APP_NAME')}}
                                             <a href="{{route('info.siska')}}#privacy-policy" target="_blank"
                                                style="text-decoration: none">Privacy Policies</a> and
                                             <a href="{{route('info.siska')}}#terms-conditions" target="_blank"
@@ -686,11 +682,11 @@
                     <div class="col-lg-12 to-animate">
                         <img class="download-phone-ico" src="{{asset('images/phone.png')}}">
                         <div class="download-apps-ico">
-                            <a href="https://play.google.com/store/apps/details?id=com.siska.mobile">
+                            <a href="https://play.google.com/store/apps/details?id=com.kariernesia.mobile">
                                 <img class="zoom img-responsive" src="{{asset('images/GooglePlay.png')}}">
                             </a>
                             <hr>
-                            <a href="https://itunes.apple.com/id/app/siska.com/id1143444473?mt=8">
+                            <a href="https://itunes.apple.com/id/app/kariernesia.com/id1143444473?mt=8">
                                 <img class="zoom img-responsive" src="{{asset('images/AppStore.png')}}">
                             </a>
                         </div>
@@ -705,7 +701,7 @@
                         Get in Touch</a><span> &middot; </span>
                     <a href="{{route('info.siska')}}#faqs" target="_blank">
                         FAQ</a><br>
-                    &copy; {{now()->format('Y')}} SISKA. All Rights Reserved.<br>Designed by
+                    &copy; {{now()->format('Y').' '.env('APP_NAME')}}. All Rights Reserved.<br>Designed by
                     <a href="https://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
@@ -716,19 +712,19 @@
                     <li><i class="icon-map-marker"></i>Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur
                         &mdash; 60231
                     </li>
-                    <li><i class="icon-phone"></i><a href="tel:+628563094333">+62-85-6309 4333</a></li>
-                    <li><i class="icon-envelope"></i><a href="mailto:info@siska.org">info@siska.org</a></li>
-                    <li><i class="icon-globe2"></i><a href="http://siska.org" target="_blank">www.siska.org</a></li>
+                    <li><i class="icon-phone"></i><a href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a></li>
+                    <li><i class="icon-envelope"></i><a href="mailto:{{env('MAIL_USERNAME')}}">{{env('MAIL_USERNAME')}}</a></li>
+                    <li><i class="icon-globe2"></i><a href="{{env('APP_URL')}}" target="_blank">{{str_replace('https://', 'www.', env('APP_URL'))}}</a></li>
                 </ul>
                 <h3 class="section-title">Ikuti Kami</h3>
                 <ul class="social-media">
-                    <li><a href="https://fb.com/siskaku" class="facebook" target="_blank"><i class="icon-facebook"></i></a>
+                    <li><a href="https://fb.com/kariernesia" class="facebook" target="_blank"><i class="icon-facebook"></i></a>
                     </li>
-                    <li><a href="https://twitter.com/siskaku" class="twitter" target="_blank"><i
+                    <li><a href="https://twitter.com/kariernesia" class="twitter" target="_blank"><i
                                     class="icon-twitter"></i></a></li>
-                    <li><a href="https://instagram.com/siskaku" class="instagram" target="_blank"><i
+                    <li><a href="https://instagram.com/kariernesia" class="instagram" target="_blank"><i
                                     class="icon-instagram"></i></a></li>
-                    <li><a href="https://github.com/Fq2124/siska-laramen" class="github" target="_blank"><i
+                    <li><a href="https://github.com/Fq2112/siska-laramen" class="github" target="_blank"><i
                                     class="icon-github"></i></a></li>
                 </ul>
             </div>

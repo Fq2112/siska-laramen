@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Payment Methods Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Payment Methods Table &ndash; '.env('APP_NAME').' Admins | '.env('APP_NAME'))
 @section('content')
     <div class="right_col" role="main">
         <div class="row">

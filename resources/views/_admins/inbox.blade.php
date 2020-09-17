@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Inbox &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Inbox &ndash; '.env('APP_NAME').' Admins | '.env('APP_NAME'))
 @section('content')
     <div class="right_col" role="main" id="inbox">
         <div class="row">

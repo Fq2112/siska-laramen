@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Recommended Vacancy | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Recommended Vacancy | '.env('APP_NAME'))
 @extends('layouts.auth.mst_seeker')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">

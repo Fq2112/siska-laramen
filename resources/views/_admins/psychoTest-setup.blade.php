@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Psycho Test List &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Psycho Test List &ndash; '.env('APP_NAME').' Admins | '.env('APP_NAME'))
 @section('content')
     <div class="right_col" role="main">
         <div class="row">

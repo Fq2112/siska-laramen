@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Recommended Seeker | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Recommended Seeker | '.env('APP_NAME'))
 @extends('layouts.auth.mst_agency')
 @push('styles')
     <style>

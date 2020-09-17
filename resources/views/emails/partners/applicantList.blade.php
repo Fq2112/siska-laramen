@@ -625,11 +625,11 @@
                                                                 <tbody>
                                                                 <tr>
                                                                     <td align="center" bgcolor="#1a1c21">
-                                                                        <a href="https://play.google.com/store/apps/details?id=com.siska.mobile"><img
+                                                                        <a href="https://play.google.com/store/apps/details?id=com.kariernesia.mobile"><img
                                                                                     class="zoom"
                                                                                     src="{{env('APP_URL')}}/images/GooglePlay.png"
                                                                                     style="width: 15%"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        <a href="https://itunes.apple.com/id/app/siska.com/id1143444473?mt=8"><img
+                                                                        <a href="https://itunes.apple.com/id/app/kariernesia.com/id1143444473?mt=8"><img
                                                                                     class="zoom"
                                                                                     src="{{env('APP_URL')}}/images/AppStore.png"
                                                                                     style="width: 15%"></a>
@@ -677,7 +677,7 @@
                                                                 <tbody>
                                                                 <tr>
                                                                     <td align="center"><a
-                                                                                href="https://www.facebook.com/siskaku"
+                                                                                href="https://www.facebook.com/kariernesia"
                                                                                 name="Facebook" target="_blank"><img
                                                                                     class="social-icons"
                                                                                     src="https://cdn.shazam.com/shazamauth/facebook.jpg"
@@ -686,7 +686,7 @@
                                                                                     alt="Facebook"></a>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="https://twitter.com/siskaku"
+                                                                        <a href="https://twitter.com/kariernesia"
                                                                            name="Twitter" target="_blank"><img
                                                                                     class="social-icons"
                                                                                     src="https://cdn.shazam.com/shazamauth/twitter.jpg"
@@ -695,7 +695,7 @@
                                                                                     alt="Twitter"></a>
                                                                     </td>
                                                                     <td>
-                                                                        <a href="https://www.instagram.com/siskaku/"
+                                                                        <a href="https://www.instagram.com/kariernesia/"
                                                                            name="Instagram" target="_blank"><img
                                                                                     class="social-icons"
                                                                                     src="https://cdn.shazam.com/shazamauth/instagram.jpg"
@@ -833,16 +833,16 @@
                                                                         This is an automatically generated notification
                                                                         - please do not reply to this message. You are
                                                                         receiving this email to complete the
-                                                                        registration initiated on the SISKA
+                                                                        registration initiated on the {{env('APP_NAME')}}
                                                                         application; if you did not enter your email
-                                                                        address in SISKA then you can either ignore
+                                                                        address in {{env('APP_NAME')}} then you can either ignore
                                                                         this message or contact {{env('MAIL_USERNAME')}}
                                                                         for
-                                                                        more information. <br><br> SISKA is incorporated
+                                                                        more information. <br><br> {{env('APP_NAME')}} is incorporated
                                                                         in
                                                                         Indonesia under company number
-                                                                        <span class="appleLinksWhite">+62318672552</span>.
-                                                                        <span class="appleLinksWhite">Copyright © {{now()->format('Y')}} SISKA - Sistem Informasi Karier. All rights reserved. Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur — 60231.</span>
+                                                                        <span class="appleLinksWhite">{{env('APP_PHONE')}}</span>.
+                                                                        <span class="appleLinksWhite">&copy; {{now()->format('Y').' '.env('APP_NAME')}}. All rights reserved. Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur — 60231.</span>
                                                                         <br>
                                                                         <br>
                                                                         <br>

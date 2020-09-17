@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; SISKA Interviewer | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; '.env('APP_NAME').' Interviewer | '.env('APP_NAME'))
 @push('styles')
     <style>
         .dataTables_filter {

@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Vacancy Setup | SISKA &mdash; Sistem Informasi Karier')
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Vacancy Setup | '.env('APP_NAME'))
 @push('styles')
     <style>
         .card-title a {

@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Information | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Information | '.env('APP_NAME'))
 @push('styles')
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
 @endpush
@@ -44,7 +44,7 @@
                         <div class="row to-animate">
                             <div class="col-md-8 col-md-offset-2 subtext">
                                 <p>
-                                    SISKA tidak hanya berusaha untuk memberikan pelayanan berkualitas yang sesuai
+                                    {{env('APP_NAME')}} tidak hanya berusaha untuk memberikan pelayanan berkualitas yang sesuai
                                     harapan pengguna, tapi kami juga memberikan pengalaman yang aman dan terjamin.
                                 </p>
                                 <hr>
@@ -74,9 +74,9 @@
                                 <blockquote style="font-size: 16px">
                                     <ol style="margin-left: -1em;text-align: justify;">
                                         <li>Informasi yang dimasukkan untuk iklan lowongan dan resume akan ditampilkan
-                                            sebagaimana adanya, dan tidak di-edit oleh SISKA. Harap kaji informasi
+                                            sebagaimana adanya, dan tidak di-edit oleh {{env('APP_NAME')}}. Harap kaji informasi
                                             yang dibutuhkan dan pastikan informasi mana yang dapat dilihat oleh
-                                            pengunjung SISKA.
+                                            pengunjung {{env('APP_NAME')}}.
                                         </li>
                                         <li>Kecuali Anda menggunakan fasilitas bloking Agency tertentu untuk
                                             melihat resume Anda, resume akan dapat dilihat oleh seluruh Agency
@@ -94,11 +94,11 @@
                                             menanyakan password Anda melalui telpon ataupun email dan tidak akan
                                             memberikan password Anda ke Agency.
                                         </li>
-                                        <li>Account Anda di SISKA dilindungi dengan password. Artinya, hanya Anda
+                                        <li>Account Anda di {{env('APP_NAME')}} dilindungi dengan password. Artinya, hanya Anda
                                             yang mempunyai akses ke account Anda dan hanya Anda yang bisa mengubah
                                             segala informasi yang dimasukkan melalui account Anda.
                                         </li>
-                                        <li>Setelah Anda selesai menggunakan SISKA, jangan lupa untuk logout. Hal
+                                        <li>Setelah Anda selesai menggunakan {{env('APP_NAME')}}, jangan lupa untuk logout. Hal
                                             ini untuk memastikan bahwa tidak ada pihak lain yang mengakses account
                                             Anda, khususnya bila komputer digunakan bersama-sama atau bila Anda
                                             menggunakan komputer di tempat umum seperti perpustakaan atau kafe/warung
@@ -122,8 +122,8 @@
                                             informasi tersebut. Data pribadi Anda akan digunakan sesuai dengan polis
                                             kerahasiaan kami. Apabila, sewaktu-waktu Anda ingin mengajukan pertanyaan
                                             ataupun memberikan komentar tentang Polis Kerahasiaan kami, maka Anda dapat
-                                            menghubungi kami lewat email cs@SISKA atau menghubungi telepon +62 21
-                                            5020 2010 dan langsung berbicara dengan salah satu staf kami
+                                            menghubungi kami lewat email {{env('MAIL_USERNAME')}} atau menghubungi
+                                            telepon {{env('APP_PHONE')}} dan langsung berbicara dengan salah satu staf kami
                                         </li>
                                     </ol>
                                 </blockquote>
@@ -169,22 +169,22 @@
                                             <small class="media-heading" style="color: #fa5555">DEFINISI</small>
                                             <blockquote style="font-size: 16px">
                                                 <ul style="margin-left: -1em;text-align: justify;">
-                                                    <li><strong>Perusahaan</strong> adalah SISKA dan/atau
-                                                        karir.org.
+                                                    <li><strong>Perusahaan</strong> adalah {{env('APP_NAME')}} dan/atau
+                                                        {{str_replace('https://', 'www.', env('APP_URL'))}}.
                                                     </li>
                                                     <li><strong>Seeker</strong> adalah pihak atau individu yang
-                                                        menggunakan SISKA untuk melamar pekerjaan atau peluang karir
-                                                        dan untuk mendapatkan informasi yang tersedia di SISKA atau
+                                                        menggunakan {{env('APP_NAME')}} untuk melamar pekerjaan atau peluang karir
+                                                        dan untuk mendapatkan informasi yang tersedia di {{env('APP_NAME')}} atau
                                                         tautan lain yang terkait.
                                                     </li>
                                                     <li><strong>Agency</strong> adalah organisasi atau individu yang
-                                                        menggunakan SISKA untuk keperluan rekrutmen, memasang iklan
+                                                        menggunakan {{env('APP_NAME')}} untuk keperluan rekrutmen, memasang iklan
                                                         atau kepentingan lainnya.
                                                     </li>
                                                     <li><strong>Premium Service</strong> adalah layanan Perusahaan bagi
                                                         Seeker yang membayar sejumlah biaya tertentu agar resumenya
                                                         terkirim melalui email kepada Agency yang memasang iklan
-                                                        lowongan di SISKA yang sesuai dengan kriteria dari Seeker.
+                                                        lowongan di {{env('APP_NAME')}} yang sesuai dengan kriteria dari Seeker.
                                                     </li>
                                                 </ul>
                                             </blockquote>
@@ -193,7 +193,7 @@
                                             <blockquote style="font-size: 16px">
                                                 <ol style="margin-left: -1em;text-align: justify;">
                                                     <li>Perusahaan tidak bertanggung-jawab atas isi iklan atau
-                                                        informasi apapun yang dipasang oleh Agency di SISKA.
+                                                        informasi apapun yang dipasang oleh Agency di {{env('APP_NAME')}}.
                                                     </li>
                                                     <li>Perusahaan berhak untuk mengedit resume, memblokir account dan
                                                         menolak memberikan layanan kepada Seeker yang dianggap
@@ -220,10 +220,10 @@
                                                     </li>
                                                     <li>Seeker setuju untuk tidak menuntut Perusahaan dan/atau
                                                         seluruh karyawannya atas kerugian apapun yang terjadi akibat
-                                                        Seekeran SISKA atau link-link lain yang terkait.
+                                                        Seekeran {{env('APP_NAME')}} atau link-link lain yang terkait.
                                                     </li>
                                                     <li>Seeker tidak diperkenankan untuk menggunakan informasi yang
-                                                        diperoleh dari SISKA atau link-link lain yang terkait untuk
+                                                        diperoleh dari {{env('APP_NAME')}} atau link-link lain yang terkait untuk
                                                         tujuan yang melanggar hukum, atau melanggar undang-undang hak
                                                         cipta dan hak intelektual. Pelanggaran terhadap ketentuan ini
                                                         dapat diperkarakan ke pengadilan oleh Perusahaan dan/atau
@@ -253,11 +253,11 @@
                                             <small class="media-heading" style="color: #00ADB5">DEFINISI</small>
                                             <blockquote style="font-size: 16px">
                                                 <ul style="margin-left: -1em;text-align: justify;">
-                                                    <li><strong>Perusahaan</strong> adalah SISKA dan/atau
-                                                        karir.org.
+                                                    <li><strong>Perusahaan</strong> adalah {{env('APP_NAME')}} dan/atau
+                                                        {{str_replace('https://', 'www.', env('APP_URL'))}}.
                                                     </li>
                                                     <li><strong>Agency</strong> adalah organisasi
-                                                        atau individu yang menggunakan SISKA untuk keperluan rekrutmen,
+                                                        atau individu yang menggunakan {{env('APP_NAME')}} untuk keperluan rekrutmen,
                                                         memasang iklan atau kepentingan lainnya.
                                                     </li>
                                                 </ul>
@@ -282,7 +282,7 @@
                                                         dan ras tertentu (SARA) ataupun menyinggung prinsip keagamaan.
                                                     </li>
                                                     <li>Agency merupakan satu-satunya pihak yang bertanggung-jawab
-                                                        penuh atas informasi yang dipasang di SISKA.
+                                                        penuh atas informasi yang dipasang di {{env('APP_NAME')}}.
                                                     </li>
                                                     <li>Agency setuju untuk membebaskan Perusahaan dan/atau seluruh
                                                         karyawannya dari tuntutan yang timbul akibat kerugian,
@@ -291,7 +291,7 @@
                                                         situs-situs dan link lain yang terkait.
                                                     </li>
                                                     <li>Agency tidak diperkenankan menggunakan data yang diperoleh
-                                                        dari SISKA untuk tujuan lain di luar tujuan untuk mengisi
+                                                        dari {{env('APP_NAME')}} untuk tujuan lain di luar tujuan untuk mengisi
                                                         lowongan pekerjaan atau peluang karir yang dimiliki Agency.
                                                         Pelanggaran terhadap ketentuan ini dapat diperkarakan ke
                                                         pengadilan oleh Perusahaan dan/atau pihak-pihak yang dirugikan.
@@ -335,7 +335,7 @@
                             <span class="position">Founder, Lead Developer</span>
                             <p>36-year-old Lecturer, an Informatics
                                 Engineer from UNESA (State University of Surabaya). His course focuses on
-                                e-learning and AI (Artificial Intelligence). Now, he leads the developing of SISKA, as
+                                e-learning and AI (Artificial Intelligence). Now, he leads the developing of {{env('APP_NAME')}}, as
                                 its <em>founder</em>.</p>
                             <ul class="social-media">
                                 <li><a href="#" class="facebook"><i class="fab fa-facebook-square"></i></a></li>
@@ -353,14 +353,14 @@
 
                     <div class="col-md-4">
                         <div class="team-box text-center to-animate-2">
-                            <div class="user"><img class="img-reponsive" src="{{asset('images/fq.jpg')}}"
+                            <div class="user"><img class="img-reponsive" src="{{asset('images/fq.JPG')}}"
                                                    alt="Roger Garfield"></div>
                             <h3>Fiqy Ainuzzaqy</h3>
                             <span class="position">Co-Founder, Product Designer</span>
                             <p>21-year-old Student, an Informatics
                                 Engineer from UNESA (State University of Surabaya). He
                                 starts his debut as a <em>front-end developer</em> since 2015. Now, he plays role as a
-                                <em>full stack developer</em> of SISKA apps (web version).</p>
+                                <em>full stack developer</em> of {{env('APP_NAME')}} apps (web version).</p>
                             <ul class="social-media">
                                 <li><a target="_blank" href="https://facebook.com/fqnkk" class="facebook"><i
                                                 class="fab fa-facebook-square"></i></a></li>
@@ -369,7 +369,7 @@
                                 <li><a target="_blank" href="https://github.com/Fq2124" class="github"><i
                                                 class="fab fa-github-alt"></i></a></li>
                                 <li>
-                                    <a href="https://web.whatsapp.com/send?text=Hello, fq!&phone=+628563094333&abid=+628563094333"
+                                    <a href="https://web.whatsapp.com/send?text=Hello, fq!&phone={{env('APP_PHONE')}}&abid={{env('APP_PHONE')}}"
                                        class="whatsapp"><i class="fab fa-whatsapp"></i></a></li>
                                 <li><a href="http://line.me/ti/p/~fqnkk" class="line"><i class="fab fa-line"></i></a>
                                 </li>
@@ -386,7 +386,7 @@
                             <p>21-year-old Student, an Informatics
                                 Engineer from UNESA (State University of Surabaya). He
                                 starts his debut as a <em>back-end developer</em> since 2016. Now, he plays role as a
-                                <em>full stack developer</em> of SISKA apps (mobile version).</p>
+                                <em>full stack developer</em> of {{env('APP_NAME')}} apps (mobile version).</p>
                             <ul class="social-media">
                                 <li><a target="_blank" href="https://facebook.com/ilham.m1ku100" class="facebook"><i
                                                 class="fab fa-facebook-square"></i></a></li>
@@ -415,7 +415,7 @@
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
                                 <h3 class="to-animate">Segala sesuatu yang Anda harus ketahui sebelum menggunakan
-                                    aplikasi SISKA dan kami disini untuk membantu Anda!</h3>
+                                    aplikasi {{env('APP_NAME')}} dan kami disini untuk membantu Anda!</h3>
                             </div>
                             <div class="col-md-12 to-animate-2">
                                 <ul class="nav nav-tabs" id="faq-nav-tabs">
@@ -443,7 +443,7 @@
                                             <div class="panel-body">
                                                 <p>Jangan khawatir, ini terjadi pada semua orang. Jika Anda lupa
                                                     password Anda, klik "Lupa?" di atas kotak sign in, kemudian
-                                                    masukkan alamat email yang Anda gunakan untuk akun SISKA Anda.
+                                                    masukkan alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda.
                                                     Klik "Kirim" dan kami akan mengirimkan password Anda ke email
                                                     Anda. Pastikan untuk memeriksa spam mail / junk Anda jika Anda
                                                     tidak dapat menemukan email di kotak masuk Anda.</p>
@@ -458,7 +458,7 @@
                                         </div>
                                         <div id="a2-a02" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pertama, masuk ke akun SISKA Anda. Pergi ke ikon profil Anda di
+                                                <p>Pertama, masuk ke akun {{env('APP_NAME')}} Anda. Pergi ke ikon profil Anda di
                                                     bagian kanan atas halaman. Klik "Manage Account" yang berbentuk
                                                     seperti simbol gerigi. Isi kolom dan simpang data Anda.</p>
                                             </div>
@@ -467,12 +467,12 @@
                                     <div class="panel panel-danger">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#a2-a03">
-                                            <h4 class="panel-title">Bagaimana caranya untuk membuat akun SISKA?
+                                            <h4 class="panel-title">Bagaimana caranya untuk membuat akun {{env('APP_NAME')}}?
                                                 <i class="fa fa-chevron-down pull-right"></i></h4>
                                         </div>
                                         <div id="a2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pergi ke halaman utama <a href="http://karir.org">SISKA</a> dan
+                                                <p>Pergi ke halaman utama <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a> dan
                                                     mengisi kolom yang diperlukan dalam kotak sign up dan klik.
                                                     Setelah Anda telah mengirimkan informasi, silahkan cek email Anda
                                                     untuk mengaktifkan akun Anda. Pastikan untuk memeriksa spam mail
@@ -487,7 +487,7 @@
                                                     Pastikan resume Anda lengkap dan selalu diperbarui.</p>
 
                                                 <p>Cukup mencari jenis karir yang Anda inginkan dan pada setiap
-                                                    posting di <a href="http://karir.org">SISKA</a>, klik tombol
+                                                    posting di <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a>, klik tombol
                                                     "apply" untuk melamar. Setelah Anda menyelesaikan
                                                     langkah-langkah, resume Anda akan dikirim ke Perusahaan. Anda
                                                     akan melihat pada deskripsi karir, tombol "apply" akan berubah
@@ -566,7 +566,7 @@
                                             <div class="panel-body">
                                                 <p>Jangan khawatir, ini terjadi pada semua orang. Jika Anda lupa
                                                     password Anda, klik 'Lupa?' di atas kotak sign in, kemudian masukkan
-                                                    alamat email yang Anda gunakan untuk akun SISKA Anda. Klik 'Kirim'
+                                                    alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda. Klik 'Kirim'
                                                     dan kami akan mengirimkan password Anda ke email Anda. Pastikan
                                                     untuk memeriksa spam mail / junk Anda jika Anda tidak dapat
                                                     menemukan email di kotak masuk Anda.</p>
@@ -586,7 +586,7 @@
                                                     kami saat ini sedang dalam proses untuk meningkatkan produk dan
                                                     layanan kami, Konsultan Bisnis kami akan membantu Anda dalam posting
                                                     peluang karir di website kami. Silahkan hubungi <a
-                                                            href="tel:+628563094333">+62-85-6309 4333</a> untuk
+                                                            href="tel:{{env('APP_PHONE')}}">+62-85-6309 4333</a> untuk
                                                     berbicara dengan Business Consultant kami.</p>
                                             </div>
                                         </div>
@@ -600,7 +600,7 @@
                                         </div>
                                         <div id="b2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Silahkan hubungi <a href="tel:+628563094333">+62-85-6309 4333</a>
+                                                <p>Silahkan hubungi <a href="tel:{{env('APP_PHONE')}}">+62-85-6309 4333</a>
                                                     untuk berbicara dengan Business Consultant kami mengenai harga jasa
                                                     kami.</p>
                                             </div>

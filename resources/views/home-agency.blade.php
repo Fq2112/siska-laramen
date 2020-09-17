@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Agency\'s Home | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Agency\'s Home | '.env('APP_NAME'))
 @push('styles')
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">@endpush
 @section('content')
@@ -64,7 +64,7 @@
                                 <div class="fh5co-post to-animate">
                                     <h3>24/7 Help &amp; Support</h3>
                                     <p>Untuk kepuasan Anda dapatkan Bantuan dan Dukungan secara GRATIS setiap hari
-                                        selama 24 jam. Percayakan lowongan Anda kepada SISKA bahkan sebelum, selama,
+                                        selama 24 jam. Percayakan lowongan Anda kepada {{env('APP_NAME')}} bahkan sebelum, selama,
                                         ataupun sesudah proses job posting.</p>
                                 </div>
                             </div>
@@ -186,7 +186,7 @@
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
                                 <h3 class="to-animate">Segala sesuatu yang Anda harus ketahui sebelum menggunakan
-                                    aplikasi SISKA dan kami disini untuk membantu Anda!</h3>
+                                    aplikasi {{env('APP_NAME')}} dan kami disini untuk membantu Anda!</h3>
                             </div>
                             <div class="col-md-12">
                                 <ul class="nav nav-tabs" id="faq-nav-tabs">
@@ -219,7 +219,7 @@
                                             <div class="panel-body">
                                                 <p>Jangan khawatir, ini terjadi pada semua orang. Jika Anda lupa
                                                     password Anda, klik "Lupa?" di atas kotak sign in, kemudian
-                                                    masukkan alamat email yang Anda gunakan untuk akun SISKA Anda.
+                                                    masukkan alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda.
                                                     Klik "Kirim" dan kami akan mengirimkan password Anda ke email
                                                     Anda. Pastikan untuk memeriksa spam mail / junk Anda jika Anda
                                                     tidak dapat menemukan email di kotak masuk Anda.</p>
@@ -234,7 +234,7 @@
                                         </div>
                                         <div id="a2-a02" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pertama, masuk ke akun SISKA Anda. Pergi ke ikon profil Anda di
+                                                <p>Pertama, masuk ke akun {{env('APP_NAME')}} Anda. Pergi ke ikon profil Anda di
                                                     bagian kanan atas halaman. Klik "Manage Account" yang berbentuk
                                                     seperti simbol gerigi. Isi kolom dan simpang data Anda.</p>
                                             </div>
@@ -243,12 +243,12 @@
                                     <div class="panel panel-danger">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#a2-a03">
-                                            <h4 class="panel-title">Bagaimana caranya untuk membuat akun SISKA?
+                                            <h4 class="panel-title">Bagaimana caranya untuk membuat akun {{env('APP_NAME')}}?
                                                 <i class="fa fa-chevron-down pull-right"></i></h4>
                                         </div>
                                         <div id="a2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pergi ke halaman utama <a href="http://karir.org">SISKA</a> dan
+                                                <p>Pergi ke halaman utama <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a> dan
                                                     mengisi kolom yang diperlukan dalam kotak sign up dan klik.
                                                     Setelah Anda telah mengirimkan informasi, silahkan cek email Anda
                                                     untuk mengaktifkan akun Anda. Pastikan untuk memeriksa spam mail
@@ -263,7 +263,7 @@
                                                     Pastikan resume Anda lengkap dan selalu diperbarui.</p>
 
                                                 <p>Cukup mencari jenis karir yang Anda inginkan dan pada setiap
-                                                    posting di <a href="http://karir.org">SISKA</a>, klik tombol
+                                                    posting di <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a>, klik tombol
                                                     "apply" untuk melamar. Setelah Anda menyelesaikan
                                                     langkah-langkah, resume Anda akan dikirim ke Perusahaan. Anda
                                                     akan melihat pada deskripsi karir, tombol "apply" akan berubah
@@ -343,7 +343,7 @@
                                             <div class="panel-body">
                                                 <p>Jangan khawatir, ini terjadi pada semua orang. Jika Anda lupa
                                                     password Anda, klik 'Lupa?' di atas kotak sign in, kemudian masukkan
-                                                    alamat email yang Anda gunakan untuk akun SISKA Anda. Klik 'Kirim'
+                                                    alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda. Klik 'Kirim'
                                                     dan kami akan mengirimkan password Anda ke email Anda. Pastikan
                                                     untuk memeriksa spam mail / junk Anda jika Anda tidak dapat
                                                     menemukan email di kotak masuk Anda.</p>
@@ -363,7 +363,7 @@
                                                     kami saat ini sedang dalam proses untuk meningkatkan produk dan
                                                     layanan kami, Konsultan Bisnis kami akan membantu Anda dalam posting
                                                     peluang karir di website kami. Silahkan hubungi <a
-                                                            href="tel:+628563094333">+62-85-6309 4333</a> untuk
+                                                            href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a> untuk
                                                     berbicara dengan Business Consultant kami.</p>
                                             </div>
                                         </div>
@@ -377,7 +377,7 @@
                                         </div>
                                         <div id="b2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Silahkan hubungi <a href="tel:+628563094333">+62-85-6309 4333</a>
+                                                <p>Silahkan hubungi <a href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a>
                                                     untuk berbicara dengan Business Consultant kami mengenai harga jasa
                                                     kami.</p>
                                             </div>
@@ -433,7 +433,7 @@
     <div class="getting-started getting-started-1">
         <div class="getting-grid" style="background-image: url({{asset('images/full_image_3.jpg')}});">
             <div class="desc" id="list-ads">
-                <h2>Mengapa beriklan di <span>SISKA</span> ?</h2>
+                <h2>Mengapa beriklan di <span>{{env('APP_NAME')}}</span> ?</h2>
                 <ul>
                     <li>Iklan lowongan paling terjangkau dengan fitur yang beragam.</li>
                     <li>Kostumisasi jadwal rekruitmen.</li>

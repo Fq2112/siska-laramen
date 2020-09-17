@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Job Posting Process | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Job Posting Process | '.env('APP_NAME'))
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMultiStepForm.css') }}" rel="stylesheet">
@@ -468,7 +468,7 @@
                                                 <div class="col-lg-12 alert alert-warning text-center"
                                                      style="font-size: 16px">
                                                     Make sure not to inform payment details and proof
-                                                    <strong>to any party</strong> except SISKA.
+                                                    <strong>to any party</strong> except {{env('APP_NAME')}}.
                                                 </div>
                                             </div>
                                             <div class="row">

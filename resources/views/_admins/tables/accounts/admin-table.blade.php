@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Admins Table &ndash; SISKA Admins | SISKA &mdash; Sistem Informasi Karier')
+@section('title', 'Admins Table &ndash; '.env('APP_NAME').' Admins | '.env('APP_NAME'))
 @push('styles')
     <style>
         #password + .glyphicon, #new_password + .glyphicon, #confirm + .glyphicon {

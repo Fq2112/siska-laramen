@@ -49,7 +49,7 @@
                     <tbody>
                     <tr style="margin-top: 8px; margin-bottom: 8px;">
                         <td>
-                            <img src="http://i66.tinypic.com/2iux5ph.png" alt="SISKA" width="200">
+                            <img src="http://i66.tinypic.com/2iux5ph.png" alt="{{env('APP_NAME')}}" width="200">
                         </td>
                         <td style="text-align: right; padding-right: 15px;">
                             <a href="javascript:window.print()"

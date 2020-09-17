@@ -285,7 +285,7 @@
                 <div class="navbar nav_title" style="border: 0;">
                     <a href="{{$auth->isInterviewer() ? route('dashboard.interviewer') : route('home-admin')}}"
                        class="site_title"><i class="fa fa-user-{{$auth->isInterviewer() ? 'tie' : 'secret'}}"></i>
-                        <span>SISKA {{$auth->isInterviewer() ? 'Interviewer' : 'Admins'}}</span></a>
+                        <span>{{env('APP_NAME')}} {{$auth->isInterviewer() ? 'Interviewer' : 'Admins'}}</span></a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -332,7 +332,7 @@
                     <a data-toggle="tooltip" title="Fullscreen" onclick="fullScreen()">
                         <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
                     </a>
-                    <a href="{{route('home-seeker')}}" data-toggle="tooltip" title="SISKA">
+                    <a href="{{route('home-seeker')}}" data-toggle="tooltip" title="{{env('APP_NAME')}}">
                         <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
                     </a>
                     <a data-toggle="tooltip" title="Account Settings" class="btn_settings">
@@ -762,7 +762,7 @@
         <!-- footer content -->
         <footer>
             <div class="pull-right">
-                &copy; {{now()->format('Y')}} SISKA. All right reserved. Designed by <a href="https://rabbit-media.net">Rabbit
+                &copy; {{now()->format('Y')}} {{env('APP_NAME')}}. All right reserved. Designed by <a href="https://rabbit-media.net">Rabbit
                     Media</a>
             </div>
             <div class="clearfix"></div>
