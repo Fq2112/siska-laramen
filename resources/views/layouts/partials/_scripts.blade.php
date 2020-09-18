@@ -92,12 +92,7 @@
         @endif
     });
 
-    var recaptcha_login, recaptcha_register, recaptcha_partnership, recaptchaCallback = function () {
-        recaptcha_login = grecaptcha.render(document.getElementById('recaptcha-login'), {
-            'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
-            'callback': 'enable_btnLogin',
-            'expired-callback': 'disabled_btnLogin'
-        });
+    var recaptcha_register, recaptcha_partnership, recaptchaCallback = function () {
         recaptcha_register = grecaptcha.render(document.getElementById('recaptcha-register'), {
             'sitekey': '{{env('reCAPTCHA_v2_SITEKEY')}}',
             'callback': 'enable_btnRegister',
@@ -447,4 +442,14 @@
         var x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
     };
+
+    $(document).on('mouseover', '.use-nicescroll', function () {
+        $(this).getNiceScroll().resize();
+    });
+
+    if($(".nicescrolls").length > 0) {
+        $(document).on('mouseover', '.nicescrolls', function () {
+            $(this).getNiceScroll().resize();
+        });
+    }
 </script>

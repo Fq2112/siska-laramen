@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12" data-scrollbar style="max-height: 400px;margin-bottom: 1em">
+                            <div class="col-lg-12 nicescrolls" style="max-height: 400px;margin-bottom: 1em">
                                 <img src="{{asset('images/loading3.gif')}}" id="image"
                                      class="img-responsive ld ld-fade">
                                 <div id="search-result"></div>

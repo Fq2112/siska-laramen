@@ -48,7 +48,7 @@
                                             <hr class="hr-divider">
                                             <div id="stats_vacancy">
                                                 @if(count($vacancies) != 0)
-                                                    <div data-scrollbar style="max-height: 700px">
+                                                    <div class="nicescrolls" style="max-height: 700px">
                                                         @foreach($vacancies as $row)
                                                             @php
                                                                 if($row->plan_id != null){

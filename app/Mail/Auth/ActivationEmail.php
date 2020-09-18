@@ -30,8 +30,8 @@ class ActivationEmail extends Mailable
      */
     public function build()
     {
-        return $this->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
-            ->subject('SISKA Account: Activation Email')
+        return $this->from(env('MAIL_USERNAME'), env('APP_NAME'))
+            ->subject(env('APP_NAME').' Account: Activation Email')
             ->markdown('emails.auth.activation');
     }
 }

@@ -230,6 +230,19 @@
 @push('scripts')
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
     <script>
+        $(function () {
+            if($(".nicescrolls").length > 0) {
+                $(".nicescrolls").niceScroll({
+                    cursorcolor: "{{Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                    cursorwidth: "8px",
+                    background: "rgba(222, 222, 222, .75)",
+                    cursorborder: 'none',
+                    // cursorborderradius:0,
+                    autohidemode: 'leave',
+                });
+            }
+        });
+
         var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
             $SIDEBAR_MENU = $('#sidebar-menu'), $TREE_TOGGLE = $('.nav-header');
 

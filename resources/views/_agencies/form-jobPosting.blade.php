@@ -7,7 +7,7 @@
     <link href="{{ asset('css/fileUploader.css') }}" rel="stylesheet">
     <link href="{{ asset('css/cc.css') }}" rel="stylesheet">
     <style>
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 400px
         }
     </style>
@@ -236,7 +236,7 @@
                                                 <i class="fa fa-edit"></i>&nbsp;EDIT</span>
                                                     </small>
                                                     <hr class="hr-divider">
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         <div id="vacancy_data"></div>
                                                     </div>
                                                 </div>
@@ -670,6 +670,17 @@
     <script src="{{asset('js/jquery.cc.js')}}"></script>
     <script src="{{asset('js/TweenMax.min.js')}}"></script>
     <script>
+        $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+        });
+
         var isQuiz = '{{$plan->isQuiz}}', isPsychoTest = '{{$plan->isPsychoTest}}', plan_price = '{{$price}}',
             subtotal = parseInt(plan_price), payment_code_value = 0,
 

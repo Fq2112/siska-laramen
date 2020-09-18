@@ -5,7 +5,7 @@ $agency->user->name.' | '.env('APP_NAME'))
     <link rel="stylesheet" href="{{asset('css/quiz.css')}}">
     <link rel="stylesheet" href="{{asset('css/bubble-button.css')}}">
     <style>
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 400px
         }
     </style>
@@ -86,7 +86,7 @@ $agency->user->name.' | '.env('APP_NAME'))
                                             </td>
                                         </tr>
                                     </table>
-                                    <div data-scrollbar>
+                                    <div class="nicescrolls">
                                         <ul class="mm-survey-results-list"></ul>
                                     </div>
                                 </div>
@@ -159,6 +159,17 @@ $agency->user->name.' | '.env('APP_NAME'))
 @push("scripts")
     <script src="{{asset('js/bubble-button.js')}}"></script>
     <script>
+        $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+        });
+
         $('.mm-prev-btn').hide();
 
         var x, count, current, percent, quiz_time_limit, timeRemaining, timeInterval, results;

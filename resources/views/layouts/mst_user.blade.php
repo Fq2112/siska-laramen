@@ -676,10 +676,10 @@
 <div id="fh5co-footer" role="contentinfo">
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 to-animate">
+            <div class="col-lg-4">
                 <h3 class="section-title">Unduh Aplikasi Kami, Gratis!</h3>
                 <div class="row" style="border-bottom: 1px solid #eee">
-                    <div class="col-lg-12 to-animate">
+                    <div class="col-lg-12">
                         <img class="download-phone-ico" src="{{asset('images/phone.png')}}">
                         <div class="download-apps-ico">
                             <a href="https://play.google.com/store/apps/details?id=com.kariernesia.mobile">
@@ -706,7 +706,7 @@
                 </p>
             </div>
 
-            <div class="col-lg-4 to-animate">
+            <div class="col-lg-4">
                 <h3 class="section-title">Lokasi Kami</h3>
                 <ul class="contact-info">
                     <li><i class="icon-map-marker"></i>Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur
@@ -729,7 +729,7 @@
                 </ul>
             </div>
 
-            <div class="col-lg-4 to-animate">
+            <div class="col-lg-4">
                 <h3 class="section-title">Tinggalkan Kami Pesan</h3>
                 <form class="contact-form" method="post" action="{{route('contact.submit')}}">
                     {{csrf_field()}}

@@ -3,7 +3,7 @@
 @push('styles')
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
     <style>
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 550px;
         }
     </style>
@@ -41,9 +41,9 @@
     </section>
 
     <section id="fh5co-services" data-section="services">
-        {{--job vacancies--}}
-        <div class="fh5co-services">
+        <div class="fh5co-services" style="padding-bottom: 0">
             <div class="container">
+                <!--job vacancies-->
                 <div class="row">
                     <div class="col-lg-12 section-heading text-center">
                         <h2 class="to-animate"><span>Job Vacancies</span></h2>
@@ -75,19 +75,20 @@
                     <div class="tab-content">
                         <div id="popular" class="tab-pane to-animate active row">
                             <div class="row">
-                                <div class="col-lg-12" data-scrollbar>
+                                <div class="col-lg-12">
                                     <img src="{{asset('images/loading3.gif')}}" id="image"
                                          class="img-responsive ld ld-breath">
-                                    <div data-view="list-view" class="download-cards" id="fav-list-vacancy">
-                                    </div>
+                                    <div data-view="list-view" class="download-cards nicescrolls"
+                                         id="fav-list-vacancy"></div>
                                 </div>
                             </div>
                         </div>
 
                         <div id="latest" class="tab-pane to-animate row">
                             <div class="row">
-                                <div class="col-lg-12" data-scrollbar>
-                                    <div data-view="list-view" class="download-cards" id="late-list-vacancy"></div>
+                                <div class="col-lg-12">
+                                    <div data-view="list-view" class="download-cards nicescrolls"
+                                         id="late-list-vacancy"></div>
                                 </div>
                             </div>
                         </div>
@@ -101,13 +102,9 @@
                         </a>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        {{--favorite agencies--}}
-        <div class="fh5co-services">
-            <div class="container">
-                <div class="row">
+                <!--favorite agencies-->
+                <div class="row" style="padding: 3em 0 1.5em">
                     <div class="col-md-12 section-heading text-center">
                         <h2 class="to-animate"><span>Most Favorite Agencies</span></h2>
                         <div class="row">
@@ -117,7 +114,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12 to-animate" data-scrollbar>
+                            <div class="col-lg-12 to-animate nicescrolls">
                                 @foreach($agencies as $agency)
                                     <div class="col-lg-4">
                                         <article class="download-card Card">
@@ -149,12 +146,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        {{--best vacancies--}}
-        <div class="fh5co-services">
-            <div class="container">
+                <!--best vacancies-->
                 <div class="row">
                     <div class="col-md-12 section-heading text-center">
                         <h2 class="to-animate"><span>Best Vacancies in your city</span></h2>
@@ -230,12 +223,12 @@
         </div>
     </section>
 
-    <section id="fh5co-explore" data-section="explore">
-        {{--industries--}}
+    <section id="fh5co-explore" data-section="explore" style="padding: 5em 0">
         <div class="fh5co-explore">
             <div class="container">
+                <!--industries-->
                 <div class="row">
-                    <div class="col-md-12 section-heading text-center">
+                    <div class="col-md-12 section-heading text-center" style="padding-bottom: 4em">
                         <h2 class="to-animate"><span>Favorite Industries</span></h2>
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
@@ -273,12 +266,8 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        {{--most sought job--}}
-        <div class="fh5co-explore">
-            <div class="container">
+                <!--most sought job-->
                 <div class="row">
                     <div class="col-md-12 section-heading text-center">
                         <h2 class="to-animate"><span>Most Sought Jobs in {{now()->format('Y')}}</span></h2>
@@ -362,7 +351,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row" data-scrollbar>
+                <div class="row nicescrolls">
                     @foreach($blogs as $blog)
                         <div class="col-md-6 to-animate blog">
                             <div class="blog-grid" style="background-image: url({{asset('images/blog/'.$blog->dir)}});">
@@ -396,38 +385,18 @@
         </div>
     </section>
 
-    @if(Auth::guest() || Auth::user()->role != 'seeker')
-        <div class="getting-started getting-started-1">
-            <div class="getting-grid" style="background-image: url({{asset('images/full_image_3.jpg')}});">
-                <div class="desc" id="list-ads">
-                    <h2>Mengapa beriklan di <span>{{env('APP_NAME')}}</span> ?</h2>
-                    <ul>
-                        <li>Iklan lowongan paling terjangkau dengan fitur yang beragam.</li>
-                        <li>Kostumisasi jadwal rekruitmen.</li>
-                        <li>Online assessment yang dikembangkan institusi terpercaya.</li>
-                    </ul>
-                </div>
-            </div>
-            <a href="{{route('home-agency')}}#pricing" class="getting-grid2">
-                <div class="call-to-action text-center">
-                    <p class="sign-up">Pasang Iklan Sekarang <i class="fa fa-hand-point-right"></i></p>
-                </div>
-            </a>
-        </div>
-    @endif
-
     <section id="fh5co-faq" class="fh5co-bg-color" data-section="faq">
         <div class="fh5co-faq">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 section-heading text-center">
-                        <h2 class="to-animate"><span>Common Questions</span></h2>
+                        <h2 class=""><span>Common Questions</span></h2>
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
-                                <h3 class="to-animate">Segala sesuatu yang Anda harus ketahui sebelum menggunakan
+                                <h3 class="">Segala sesuatu yang Anda harus ketahui sebelum menggunakan
                                     aplikasi {{env('APP_NAME')}} dan kami disini untuk membantu Anda!</h3>
                             </div>
-                            <div class="col-md-12 to-animate-2">
+                            <div class="col-md-12 ">
                                 <ul class="nav nav-tabs" id="faq-nav-tabs">
                                     <li class="{{ \Illuminate\Support\Facades\Request::is('/*') ? 'active' : '' }}"
                                         id="faq-s">
@@ -442,7 +411,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row to-animate">
+                <div class="row">
                     <div class="tab-content">
                         <div id="seeker"
                              class="tab-pane fade in {{\Illuminate\Support\Facades\Request::is('/*') ? 'active' : ''}}">
@@ -571,7 +540,7 @@
                              class="tab-pane fade in {{\Illuminate\Support\Facades\Request::is('agency*') ? 'active' : ''}}">
                             <div class="col-md-6">
                                 <div class="panel-group" id="accordion-2c">
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info ">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#b2-a01">
                                             <h4 class="panel-title">Memiliki masalah untuk login?
@@ -589,7 +558,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info ">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#b2-a02">
                                             <h4 class="panel-title">Bagaimana caranya saya untuk mengirimkan
@@ -607,7 +576,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info ">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2b"
                                              href="#b2-a03">
                                             <h4 class="panel-title">Berapa harga untuk mengirimkan lowongan
@@ -626,7 +595,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="panel-group" id="accordion-2d">
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info ">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2b"
                                              href="#b2-b01">
                                             <h4 class="panel-title">Bagaimana caranya untuk membayar?
@@ -642,7 +611,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info ">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2b"
                                              href="#b2-b02">
                                             <h4 class="panel-title">
@@ -669,7 +638,27 @@
         </div>
     </section>
 
-    @guest
+    @if(Auth::guest() || Auth::user()->role != 'seeker')
+        <div class="getting-started getting-started-1">
+            <div class="getting-grid" style="background-image: url({{asset('images/full_image_3.jpg')}});">
+                <div class="desc" id="list-ads">
+                    <h2>Mengapa beriklan di <span>{{env('APP_NAME')}}</span> ?</h2>
+                    <ul>
+                        <li>Iklan lowongan paling terjangkau dengan fitur yang beragam.</li>
+                        <li>Kostumisasi jadwal rekruitmen.</li>
+                        <li>Online assessment yang dikembangkan institusi terpercaya.</li>
+                    </ul>
+                </div>
+            </div>
+            <a href="{{route('home-agency')}}#pricing" class="getting-grid2">
+                <div class="call-to-action text-center">
+                    <p class="sign-up">Pasang Iklan Sekarang <i class="fa fa-hand-point-right"></i></p>
+                </div>
+            </a>
+        </div>
+    @endif
+
+    {{--@guest
         <style>
             @media (min-width: 1440px) {
                 #custom-search-input input {
@@ -726,7 +715,7 @@
                 </a>
             </div>
         </section>
-    @endguest
+    @endguest--}}
 @endsection
 @push("lumen.ajax")
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
@@ -881,6 +870,24 @@
                 });
             }
             return false;
+        });
+    </script>
+@endpush
+@push("scripts")
+    <script>
+        $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+        });
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            $(".nicescrolls").getNiceScroll().resize();
         });
     </script>
 @endpush

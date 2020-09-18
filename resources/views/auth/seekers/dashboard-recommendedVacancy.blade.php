@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-12" data-scrollbar style="max-height: 400px;margin: .5em 0">
+                        <div class="col-lg-12 nicescrolls" style="max-height: 400px;margin: .5em 0">
                             <img src="{{asset('images/loading.gif')}}" id="image" class="img-responsive ld ld-fade">
                             <div id="search-result"></div>
                         </div>

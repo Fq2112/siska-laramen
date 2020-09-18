@@ -165,7 +165,7 @@
             }
         }
 
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 575px;
         }
     </style>
@@ -327,10 +327,10 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-12 to-animate" data-scrollbar>
+                            <div class="col-lg-12 to-animate">
                                 <img src="{{asset('images/loading.gif')}}" id="image"
                                      class="img-responsive ld ld-fade">
-                                <div data-view="list-view" class="download-cards" style="margin-left: -.5em"
+                                <div data-view="list-view" class="download-cards nicescrolls" style="margin-left: -.5em"
                                      id="search-result">
                                 </div>
                             </div>
@@ -352,6 +352,15 @@
         var last_page;
 
         $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+
             $('.dc-view-switcher button[data-trigger="grid-view"]').click();
 
             $('#image').hide();
@@ -833,6 +842,8 @@
                 }
             }
             $('.myPagination ul').html(pagination);
+
+            $(".nicescrolls").getNiceScroll().resize();
 
             generateUrl(keyword, location, sort, salary, jobfunc, industry, degrees, majors, page);
             return false;

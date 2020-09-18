@@ -1,7 +1,7 @@
 @section('title', ''.$user->name.'\'s Account Settings &ndash; Edit Profile | '.env('APP_NAME'))
 @push("styles")
     <style>
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 350px;
         }
     </style>
@@ -178,7 +178,7 @@
                                                                    id="selectAll">{{count($attachments) > 1 ?
                                                                'Select '.count($attachments).' files' :
                                                                'Select '.count($attachments).' file'}}</li>
-                                                        <div data-scrollbar>
+                                                        <div class="nicescrolls">
                                                             @foreach($attachments as $row)
                                                                 <li><input type="checkbox" name="attachments_cbs[]"
                                                                            class="attachments_cb" value="{{$row->id}}">
@@ -271,7 +271,7 @@
                                                 @if(count($languages) == 0)
                                                     <p>Your language skill, local or foreign language.<br><br></p>
                                                 @else
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         @foreach($languages as $row)
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -439,7 +439,7 @@
                                                         Analysis, Accounting, App Developing, Time
                                                         Management, Creativity, etc.</p>
                                                 @else
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         @foreach($skills as $row)
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -907,7 +907,7 @@
                                                 </span>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote id="stats_summary" data-scrollbar>
+                                            <blockquote id="stats_summary" class="nicescrolls">
                                                 {!!$seeker->summary != "" ? $seeker->summary :
                                                 '<p align="justify">A Resume summary is a short, snappy introduction '.
                                                 'highlighting your career progress and skill set. '.
@@ -958,7 +958,7 @@
                                                         Please fill your current and previous work
                                                         experience and responsibilities.</p>
                                                 @else
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         @foreach($experiences as $row)
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -1349,7 +1349,7 @@
                                                         Please fill your educational background details.
                                                     </p>
                                                 @else
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         @foreach($educations as $row)
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -1594,7 +1594,7 @@
                                                         Professional Certification, Organizational
                                                         Training, etc that you have taken.</p>
                                                 @else
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         @foreach($trainings as $row)
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -1762,7 +1762,7 @@
                                                         experience)
                                                     </p>
                                                 @else
-                                                    <div data-scrollbar>
+                                                    <div class="nicescrolls">
                                                         @foreach($organizations as $row)
                                                             <div class="row">
                                                                 <div class="col-lg-12">
@@ -1939,7 +1939,7 @@
                                     <div class="card-title">
                                         <small>Test Result</small>
                                         <hr class="hr-divider">
-                                        <div data-scrollbar>
+                                        <div class="nicescrolls">
                                             <div class="row">
                                                 <div class="col-lg-12">
                                                     <div class="media">

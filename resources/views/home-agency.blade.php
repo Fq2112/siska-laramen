@@ -1,7 +1,16 @@
 @extends('layouts.mst_user')
 @section('title', 'Agency\'s Home | '.env('APP_NAME'))
 @push('styles')
-    <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">@endpush
+    <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+    <style>
+        .price-box button {
+            margin-left: -65px;
+            position: absolute;
+            left: 50%;
+            bottom: 2em;
+        }
+    </style>
+@endpush
 @section('content')
     <section id="fh5co-home" data-section="home" data-stellar-background-ratio="0.5"
              style="background-color: #ffffff">
@@ -35,9 +44,8 @@
     </section>
 
     <section id="fh5co-services" data-section="services">
-        <div class="core-features">
-            <div class="grid2 to-animate" style="background-image: url({{asset('images/features.jpeg')}});">
-            </div>
+        <div class="fh5co-services core-features">
+            <div class="grid2 to-animate" style="background-image: url({{asset('images/features.jpeg')}});"></div>
             <div class="grid2 fh5co-bg-color">
                 <div class="core-f">
                     <h2 class="to-animate">Our Programs and Features</h2>
@@ -140,7 +148,6 @@
                                 @endif
                                 <p>{{$plan->caption}}</p>
                                 <hr>
-                                <p align="justify"><strong>Yang bisa Anda dapatkan:</strong></p>
                                 <ul style="margin-bottom: 0">
                                     <li><strong>{{$plan->job_ads}}</strong></li>
                                     @if($plan->id == 2)
@@ -182,10 +189,10 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-12 section-heading text-center">
-                        <h2 class="to-animate"><span>Common Questions</span></h2>
+                        <h2 class=""><span>Common Questions</span></h2>
                         <div class="row">
                             <div class="col-md-8 col-md-offset-2 subtext">
-                                <h3 class="to-animate">Segala sesuatu yang Anda harus ketahui sebelum menggunakan
+                                <h3 class="">Segala sesuatu yang Anda harus ketahui sebelum menggunakan
                                     aplikasi {{env('APP_NAME')}} dan kami disini untuk membantu Anda!</h3>
                             </div>
                             <div class="col-md-12">
@@ -332,7 +339,7 @@
                              class="tab-pane fade in {{\Illuminate\Support\Facades\Request::is('agency*') ? 'active' : ''}}">
                             <div class="col-md-6">
                                 <div class="panel-group" id="accordion-2c">
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#b2-a01">
                                             <h4 class="panel-title">Memiliki masalah untuk login?
@@ -350,7 +357,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#b2-a02">
                                             <h4 class="panel-title">Bagaimana caranya saya untuk mengirimkan
@@ -368,7 +375,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2b"
                                              href="#b2-a03">
                                             <h4 class="panel-title">Berapa harga untuk mengirimkan lowongan
@@ -387,7 +394,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="panel-group" id="accordion-2d">
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2b"
                                              href="#b2-b01">
                                             <h4 class="panel-title">Bagaimana caranya untuk membayar?
@@ -403,7 +410,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="panel panel-info to-animate-2">
+                                    <div class="panel panel-info">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2b"
                                              href="#b2-b02">
                                             <h4 class="panel-title">
@@ -450,9 +457,18 @@
 @endsection
 @push('scripts')
     <script>
-        $('html, body').animate({
-            scrollTop: $('#' + window.location.hash).offset().top
-        }, 500);
+        $(function () {
+            var price_div = $(".price-box"),
+                heights = price_div.map(function() { return $(this).height(); }).get(),
+                maxHeight = Math.max.apply(null, heights);
+            price_div.height(maxHeight + 21);
+        });
+
+        if (window.location.hash) {
+            $('html, body').animate({
+                scrollTop: $('#' + window.location.hash).offset().top
+            }, 500);
+        }
 
         $(".getting-grid2").click(function () {
             $('html, body').animate({

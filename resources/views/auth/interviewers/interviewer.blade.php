@@ -176,9 +176,10 @@
                                                             data-placement="left" data-toggle="tooltip"
                                                             title="{{!$result->count() ? 'Start Interview' : 'Check Result'}}"
                                                             onclick="accessPsychoTest('{{encrypt($info->id)}}','{{$room}}',
-                                                                    '{{$vacancy->judul}}','{{$vacancy->id}}','{{$ava}}',
-                                                                    '{{$userAgency->name}}','{{$psychoTestDate}}',
-                                                                    '{{$seeker_id}}','{{$seeker->user->name}}','{{$result->count()}}',
+                                                                    '{{$vacancy->judul}}','{{$vacancy->psychoTestDate_start}}',
+                                                                    '{{$vacancy->id}}','{{$ava}}','{{$userAgency->name}}',
+                                                                    '{{$psychoTestDate}}','{{$seeker_id}}',
+                                                                    '{{$seeker->user->name}}','{{$result->count()}}',
                                                                     '{{$kompetensi}}','{{$karakter}}','{{$attitude}}',
                                                                     '{{$grooming}}','{{$komunikasi}}',
                                                                     '{{$anthusiasme}}','{{$note}}')">
@@ -264,7 +265,7 @@
 @endsection
 @push("scripts")
     <script>
-        function accessPsychoTest(encryptID, room, judul, vacID, ava, name, date, seeker_id, seeker_name, check, kompetensi, karakter, attitude, grooming, komunikasi, anthusiasme, note) {
+        function accessPsychoTest(encryptID, room, judul, start, vacID, ava, name, date, seeker_id, seeker_name, check, kompetensi, karakter, attitude, grooming, komunikasi, anthusiasme, note) {
             $("#agencyAva").attr('src', ava);
             $("#agencyName").html('&ndash; ' + name);
             $("#vacJudul").attr('href', '{{route('detail.vacancy',['id'=> ''])}}/' + vacID).text(judul);
@@ -301,7 +302,20 @@
             }
 
             $("#psychoTestModal").modal('show');
+
+            $("#form-access-psychoTest").on("submit", function (e) {
+                e.preventDefault();
+                if (start == null || '{{today()}}' < start) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: 'The psycho test date of ' + judul + ' hasn\'t started yet.',
+                        type: 'warning',
+                        timer: '5500'
+                    });
+                } else {
+                    $(this)[0].submit();
+                }
+            });
         }
     </script>
 @endpush
-

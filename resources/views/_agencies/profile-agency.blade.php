@@ -152,7 +152,7 @@
                                                         Last Update: {{$agency->updated_at->diffForHumans()}}</span>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote data-scrollbar style="max-height: 350px">
+                                            <blockquote class="nicescrolls" style="max-height: 350px">
                                                 {!! $agency->tentang != "" ? $agency->tentang : '' !!}
                                                 <small>{{$agency->alasan != "" ? 'Why Choose Us?' : ''}}</small>
                                                 {!! $agency->alasan != "" ? $agency->alasan : '' !!}
@@ -174,7 +174,7 @@
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
                                             @if(count($vacancies) > 0)
-                                                <div data-scrollbar style="max-height: 500px">
+                                                <div class="nicescrolls" style="max-height: 500px">
                                                     @foreach($vacancies as $row)
                                                         @php
                                                             $city = \App\Cities::find($row->cities_id)->name;
@@ -384,6 +384,17 @@
     <!-- Google Map -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIljHbKjgtTrpZhEiHum734tF1tolxI68"></script>
     <script>
+        $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+        });
+
         // gmaps address agency
         var google;
 

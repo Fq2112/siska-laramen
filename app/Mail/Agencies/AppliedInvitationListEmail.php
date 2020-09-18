@@ -36,7 +36,7 @@ class AppliedInvitationListEmail extends Mailable
             Carbon::parse($vacancy->recruitmentDate_end)->format('j F Y');
 
         return $this->subject("" . $vacancy->judul . ": Applied Invitation List for " . $recruitmentDate)
-            ->from(env('MAIL_USERNAME'), 'SISKA - Sistem Informasi Karier')
+            ->from(env('MAIL_USERNAME'), env('APP_NAME'))
             ->view('emails.agencies.appliedInvitationList')
             ->attach(public_path('storage/users/agencies/reports/appliedInvitations/' . $filename));
     }

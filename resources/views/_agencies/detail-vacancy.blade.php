@@ -5,7 +5,7 @@
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
     <style>
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 350px;
         }
     </style>
@@ -319,7 +319,7 @@
                                         <div class="card-title">
                                             <small>Requirements</small>
                                             <hr class="hr-divider">
-                                            <blockquote style="font-size: 14px" class="ulTinyMCE" data-scrollbar>
+                                            <blockquote style="font-size: 14px" class="ulTinyMCE nicescrolls">
                                                 {!! $vacancy->syarat !!}
                                             </blockquote>
                                         </div>
@@ -334,7 +334,7 @@
                                         <div class="card-title">
                                             <small>Responsibilities</small>
                                             <hr class="hr-divider">
-                                            <blockquote style="font-size: 14px" class="ulTinyMCE" data-scrollbar>
+                                            <blockquote style="font-size: 14px" class="ulTinyMCE nicescrolls">
                                                 {!! $vacancy->syarat !!}
                                             </blockquote>
                                         </div>
@@ -355,7 +355,7 @@
                                                           style="color: #FA5555">{{$agency->link}}</span></a>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote data-scrollbar>
+                                            <blockquote class="nicescrolls">
                                                 {!! $agency->tentang != "" ? $agency->tentang : '' !!}
                                                 <small>{{$agency->alasan != "" ? 'Why Choose Us?' : ''}}</small>
                                                 {!! $agency->alasan != "" ? $agency->alasan : '' !!}
@@ -372,7 +372,7 @@
                                         <div class="card-title">
                                             <small>Vacancies in {{$user->name}}</small>
                                             <hr class="hr-divider">
-                                            <div data-scrollbar>
+                                            <div class="nicescrolls">
                                                 @foreach(\App\Vacancies::where('agency_id',$agency->id)->where('id','!=',$vacancy->id)->where('isPost',true)->orderByDesc('updated_at')->get() as $row)
                                                     @php
                                                         $agency_list = \App\Agencies::find($row->agency_id);
@@ -781,6 +781,17 @@
     <!-- Google Map -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIljHbKjgtTrpZhEiHum734tF1tolxI68"></script>
     <script>
+        $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+        });
+
         // gmaps address agency
         var google;
 

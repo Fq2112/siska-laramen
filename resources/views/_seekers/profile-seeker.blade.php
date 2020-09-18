@@ -24,7 +24,7 @@
             margin-top: -40px;
         }
 
-        [data-scrollbar] {
+        [data-scrollbar], .nicescrolls {
             max-height: 350px;
         }
     </style>
@@ -303,7 +303,7 @@
                                             @if(count($languages) == 0)
                                                 <blockquote><p>(empty)</p></blockquote>
                                             @else
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($languages as $row)
                                                         <div class="row">
                                                             <div class="col-lg-12">
@@ -317,12 +317,12 @@
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-language">&nbsp;</i>
                                                                             <small
-                                                                                style="text-transform: uppercase">{{$row->name}}</small>
+                                                                                    style="text-transform: uppercase">{{$row->name}}</small>
                                                                         </p>
                                                                         <blockquote
-                                                                            style="font-size: 12px;text-transform: none">
+                                                                                style="font-size: 12px;text-transform: none">
                                                                             <table
-                                                                                style="font-size: 14px; margin-top: 0">
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
@@ -366,7 +366,7 @@
                                             @if(count($skills) == 0)
                                                 <blockquote><p>(empty)</p></blockquote>
                                             @else
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($skills as $row)
                                                         <div class="row">
                                                             <div class="col-lg-12">
@@ -380,12 +380,12 @@
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-user-secret">&nbsp;</i>
                                                                             <small
-                                                                                style="text-transform: uppercase">{{$row->name}}</small>
+                                                                                    style="text-transform: uppercase">{{$row->name}}</small>
                                                                         </p>
                                                                         <blockquote
-                                                                            style="font-size: 12px;text-transform: none">
+                                                                                style="font-size: 12px;text-transform: none">
                                                                             <table
-                                                                                style="font-size: 14px; margin-top: 0">
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-chart-line"></i>
                                                                                     </td>
@@ -418,7 +418,7 @@
                                         <div class="card-title">
                                             <small>Test Result</small>
                                             <hr class="hr-divider">
-                                            <div data-scrollbar>
+                                            <div class="nicescrolls">
                                                 <div class="row">
                                                     <div class="col-lg-12">
                                                         <div class="media">
@@ -490,7 +490,7 @@
                                                     Last Update: {{$seeker->updated_at->diffForHumans()}}</span>
                                             </small>
                                             <hr class="hr-divider">
-                                            <blockquote data-scrollbar>
+                                            <blockquote class="nicescrolls">
                                                 {!!$seeker->summary != "" ? $seeker->summary : '<p>(empty)</p>'!!}
                                             </blockquote>
                                         </div>
@@ -506,7 +506,7 @@
                                             <small>Attachments</small>
                                             <hr class="hr-divider">
                                             @if(count($attachments) != 0)
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($attachments as $row)
                                                         <div class="media">
                                                             <div class="media-left media-middle">
@@ -524,18 +524,18 @@
                                                             <div class="media-body">
                                                                 @if(Auth::check() && (Auth::user()->isAgency() || Auth::id() == $user->id))
                                                                     <div
-                                                                        class="pull-right anim-icon anim-icon-md download ld ld-breath"
-                                                                        id="{{$row->id}}"
-                                                                        data-toggle="tooltip" data-placement="left"
-                                                                        title="Download {{$row->files}}"
-                                                                        onclick="downloadAttachments(id, '{{asset('storage/users/seekers/attachments/'.$row->files)}}')"
-                                                                        style="font-size: 25px">
+                                                                            class="pull-right anim-icon anim-icon-md download ld ld-breath"
+                                                                            id="{{$row->id}}"
+                                                                            data-toggle="tooltip" data-placement="left"
+                                                                            title="Download {{$row->files}}"
+                                                                            onclick="downloadAttachments(id, '{{asset('storage/users/seekers/attachments/'.$row->files)}}')"
+                                                                            style="font-size: 25px">
                                                                         <input type="checkbox">
                                                                         <label for="download"></label>
                                                                     </div>
                                                                 @endif
                                                                 <blockquote
-                                                                    style="font-size: 12px;text-transform: none">
+                                                                        style="font-size: 12px;text-transform: none">
                                                                     {{$row->files}}
                                                                 </blockquote>
                                                             </div>
@@ -560,7 +560,7 @@
                                             @if(count($experiences) == 0)
                                                 <blockquote><p>(empty)</p></blockquote>
                                             @else
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($experiences as $row)
                                                         <div class="row">
                                                             <div class="col-lg-12">
@@ -578,9 +578,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                            style="font-size: 14px;text-transform: none">
+                                                                                style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                style="font-size: 14px; margin-top: 0">
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-building"></i>
                                                                                     </td>
@@ -705,7 +705,7 @@
                                             @if(count($educations) == 0)
                                                 <blockquote><p>(empty)</p></blockquote>
                                             @else
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($educations as $row)
                                                         <div class="row">
                                                             <div class="col-lg-12">
@@ -723,9 +723,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                            style="font-size: 14px;text-transform: none">
+                                                                                style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                style="font-size: 14px; margin-top: 0">
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-graduation-cap"></i>
@@ -803,7 +803,7 @@
                                             @if(count($trainings) == 0)
                                                 <blockquote><p>(empty)</p></blockquote>
                                             @else
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($trainings as $row)
                                                         <div class="row">
                                                             <div class="col-lg-12">
@@ -821,9 +821,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                            style="font-size: 14px;text-transform: none">
+                                                                                style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                style="font-size: 14px; margin-top: 0">
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-university"></i>
                                                                                     </td>
@@ -874,7 +874,7 @@
                                             @if(count($organizations) == 0)
                                                 <blockquote><p>(empty)</p></blockquote>
                                             @else
-                                                <div data-scrollbar>
+                                                <div class="nicescrolls">
                                                     @foreach($organizations as $row)
                                                         <div class="row">
                                                             <div class="col-lg-12">
@@ -892,9 +892,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                            style="font-size: 14px;text-transform: none">
+                                                                                style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                style="font-size: 14px; margin-top: 0">
+                                                                                    style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-briefcase"></i>
@@ -1098,14 +1098,14 @@
                                                                         ('user_id',Auth::user()->id)->first()->id)
                                                                         ->get() as $vacancy)
                                                                             <option value="{{$vacancy->id}}"
-                                                                                {{$vacancy->isPost == false ?
-                                                                                'disabled' : ''}}>
+                                                                                    {{$vacancy->isPost == false ?
+                                                                                    'disabled' : ''}}>
                                                                                 {{$vacancy->judul}}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
                                                                 <small
-                                                                    style="font-size: 10px;color: #00ADB5;float: left">
+                                                                        style="font-size: 10px;color: #00ADB5;float: left">
                                                                     P.S.: You're only permitted to select your
                                                                     vacancy that has been posted.
                                                                 </small>
@@ -1135,6 +1135,17 @@
 @endsection
 @push("scripts")
     <script>
+        $(function () {
+            $(".nicescrolls").niceScroll({
+                cursorcolor: "{{Auth::guard('admin')->check() || Auth::check() && Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
+                cursorwidth: "8px",
+                background: "rgba(222, 222, 222, .75)",
+                cursorborder: 'none',
+                // cursorborderradius:0,
+                autohidemode: 'leave',
+            });
+        });
+
         var $btnInvite = $("#invite button");
 
         $btnInvite.on("click", function () {
