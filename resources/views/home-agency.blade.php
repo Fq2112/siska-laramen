@@ -39,7 +39,8 @@
             width: 230px;
             display: inline-block;
             font-size: 20px;
-            padding: 15px 0;
+            font-weight: 500;
+            padding: 10px 0;
             margin-right: 10px;
             -webkit-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
             -moz-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
