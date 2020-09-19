@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             PaymentMethodSeeder::class,
             QuizSeeder::class,
             BlogSeeder::class,
+            PromoCodeSeeder::class,
         ]);
     }
 }

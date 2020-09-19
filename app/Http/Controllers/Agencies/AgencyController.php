@@ -17,6 +17,7 @@ use App\Jurusanpend;
 use App\PaymentCategory;
 use App\PaymentMethod;
 use App\Plan;
+use App\PromoCode;
 use App\Provinces;
 use App\Salaries;
 use App\Seekers;
@@ -201,6 +202,37 @@ class AgencyController extends Controller
         return $plans;
     }
 
+    public function getPromo(Request $request)
+    {
+        $agency = Agencies::where('user_id', Auth::id())->first();
+        $promo = PromoCode::where('promo_code', $request->kode)->first();
+        $confirmAgency = ConfirmAgency::where('promo_code', $request->kode)->where('agency_id', $agency->id)->first();
+        $amount = ceil($request->subtotal);
+
+        if ($promo) {
+            if ($confirmAgency) {
+                return 1;
+            } else {
+                if (now() > $promo->end) {
+                    return 2;
+                } else {
+                    $discount_price = ceil($amount * $promo->discount / 100);
+                    $total = ceil($amount - $discount_price);
+                    return [
+                        'caption' => $promo->description,
+                        'discount' => $promo->discount,
+                        'total' => $total,
+                        'discount_price' => $discount_price,
+                        'str_discount' => '-Rp' . number_format($discount_price, 2, ',', '.'),
+                        'str_total' => 'Rp' . number_format($total, 2, ',', '.')
+                    ];
+                }
+            }
+        } else {
+            return 0;
+        }
+    }
+
     public function getPaymentMethod($id)
     {
         return PaymentMethod::find($id);
@@ -241,6 +273,9 @@ class AgencyController extends Controller
             'cc_name' => $request->name,
             'cc_expiry' => $request->expiry,
             'cc_cvc' => $request->cvc,
+            'promo_code' => $request->promo_code,
+            'is_discount' => !is_null($request->discount_price) ? 1 : 0,
+            'discount' => $request->discount_price,
             'total_payment' => $request->total_payment,
         ]);
 

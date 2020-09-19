@@ -48,6 +48,11 @@ Route::group(['prefix' => 'agency', 'namespace' => 'Agencies'], function () {
             'as' => 'get.plansReviewData'
         ]);
 
+        Route::get('promo/{kode}', [
+            'uses' => 'AgencyController@getPromo',
+            'as' => 'get.promo'
+        ]);
+
         Route::get('paymentMethod/{id}', [
             'uses' => 'AgencyController@getPaymentMethod',
             'as' => 'get.paymentMethod'

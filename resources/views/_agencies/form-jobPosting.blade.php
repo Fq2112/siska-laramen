@@ -10,6 +10,21 @@
         [data-scrollbar], .nicescrolls {
             max-height: 400px
         }
+
+        .accordion .panel-heading .accordion-toggle::before,
+        .accordion .panel-heading .accordion-toggle.collapsed::before {
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .list-group {
+            font-size: 16px;
+        }
+
+        .list-group-item {
+            padding: 5px 0;
+            border: 0;
+        }
     </style>
 @endpush
 @section('content')
@@ -159,73 +174,70 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-5 col-md-6 col-sm-6">
-                                                    <small>Billing Details</small>
-                                                    <hr class="hr-divider">
-                                                    <table id="stats-billing" style="font-size: 16px">
-                                                        <tr>
-                                                            <td>
-                                                                <strong style="text-transform: uppercase"
-                                                                        class="plans_name">
-                                                                    {{$plan->name}}</strong>
-                                                            </td>
-                                                            <td>&emsp;</td>
-                                                            <td align="center"><strong>-</strong></td>
-                                                            <td>&emsp;</td>
-                                                            <td align="right">
-                                                                <strong class="plan_price">
-                                                                    Rp{{number_format($price,2,',','.')}}</strong>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>Total Job Ad</td>
-                                                            <td>&emsp;</td>
-                                                            <td align="center">
-                                                                <strong class="total_vacancy">{{$totalAds}}</strong>
-                                                            </td>
-                                                            <td>&emsp;</td>
-                                                            <td align="right">
-                                                                <strong class="total_price_vacancy">
-                                                                    Rp{{number_format(0,2,',','.')}}</strong>
-                                                            </td>
-                                                        </tr>
-                                                        <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Participant for">
-                                                            <td>Quiz</td>
-                                                            <td>&emsp;</td>
-                                                            <td align="center">
-                                                                <strong class="bill_quiz_applicant">
-                                                                    {{$plan->quiz_applicant}}</strong></td>
-                                                            <td>&emsp;</td>
-                                                            <td align="right">
-                                                                <strong class="total_price_quiz">
-                                                                    Rp{{number_format(0,2,',','.')}}</strong>
-                                                            </td>
-                                                        </tr>
-                                                        <tr data-placement="left" data-toggle="tooltip"
-                                                            title="Total Participant for"
-                                                            style="border-bottom: 1px solid #eee">
-                                                            <td>Psycho Test</td>
-                                                            <td>&emsp;</td>
-                                                            <td align="center">
-                                                                <strong class="bill_psychoTest_applicant">
-                                                                    {{$plan->psychoTest_applicant}}</strong></td>
-                                                            <td>&emsp;</td>
-                                                            <td align="right">
-                                                                <strong class="total_price_psychoTest">
-                                                                    Rp{{number_format(0,2,',','.')}}</strong>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><strong>SUBTOTAL</strong></td>
-                                                            <td>&emsp;</td>
-                                                            <td>&emsp;</td>
-                                                            <td>&emsp;</td>
-                                                            <td align="right">
-                                                                <strong class="subtotal"
-                                                                        style="font-size: 18px;color: #00adb5"></strong>
-                                                            </td>
-                                                        </tr>
-                                                    </table>
+                                                    <small>Billing Details
+                                                        <span id="show_billing_settings" class="pull-right"
+                                                              style="color: #00ADB5;cursor: pointer; font-size: 15px">
+                                                            <i class="fa fa-ticket-alt"></i>&nbsp;VOUCHER</span>
+                                                    </small>
+                                                    <hr class="hr-divider mb-0">
+                                                    <ul class="stats-billing list-group list-group-flush mb-0">
+                                                        <li class="list-group-item border-none">
+                                                            <strong class="plans_name text-uppercase">
+                                                                {{$plan->name}}</strong>
+                                                            <b class="float-right plan_price">
+                                                                Rp{{number_format($price,2,',','.')}}</b>
+                                                        </li>
+                                                        <li class="list-group-item border-none">
+                                                            Total Job Ads (<strong class="total_vacancy">{{$totalAds}}</strong>)
+                                                            <b class="float-right total_price_vacancy">
+                                                                Rp{{number_format(0,2,',','.')}}</b>
+                                                        </li>
+                                                        <li class="list-group-item border-none" data-placement="left"
+                                                            data-toggle="tooltip" title="Total Participant for">
+                                                            Quiz (<strong class="bill_quiz_applicant">{{$plan->quiz_applicant}}</strong>)
+                                                            <b class="float-right total_price_quiz">
+                                                                Rp{{number_format(0,2,',','.')}}</b>
+                                                        </li>
+                                                        <li class="list-group-item border-none" data-placement="left"
+                                                            data-toggle="tooltip" title="Total Participant for">
+                                                            Psycho Test (<strong class="bill_psychoTest_applicant">{{$plan->psychoTest_applicant}}</strong>)
+                                                            <b class="float-right total_price_psychoTest">
+                                                                Rp{{number_format(0,2,',','.')}}</b>
+                                                        </li>
+                                                        <li id="discount" class="list-group-item border-none" style="display: none">
+                                                            Diskon <strong></strong>
+                                                            <i class="icon-trash-o ml-1" data-toggle="tooltip"
+                                                               data-placement="right" title="HAPUS"
+                                                               style="cursor:pointer;float:none"></i>
+                                                            <b class="float-right">-Rp{{number_format($price,2,',','.')}}</b>
+                                                        </li>
+                                                    </ul>
+                                                    <hr class="stats-billing hr-divider my-0" style="border: 1px solid #eee">
+                                                    <ul class="stats-billing list-group list-group-flush mb-0">
+                                                        <li class="list-group-item border-none">
+                                                            TOTAL<b class="float-right subtotal"
+                                                                    style="font-size: large;color: #00adb5"></b>
+                                                        </li>
+                                                    </ul>
+                                                    <div id="billing_settings" style="display: none;margin-top: 20px">
+                                                        <div class="row form-group">
+                                                            <div class="col-lg-12">
+                                                                <div class="input-group">
+                                                                    <input id="promo_code" type="text"
+                                                                           class="form-control" name="promo_code"
+                                                                           placeholder="Masukkan kode promo Anda...">
+                                                                    <span class="input-group-btn">
+                                                                        <button id="btn_set" class="btn btn-primary"
+                                                                                type="button" style="font-size: 13px"
+                                                                                disabled>SET</button>
+                                                                    </span>
+                                                                </div>
+                                                                <span id="error_promo" class="help-block">
+                                                                    <b style="text-transform: none"></b>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="row" style="margin-top: 1em;">
@@ -365,6 +377,8 @@
                                         <input type="hidden" id="payment_code" name="payment_code">
                                         <input type="hidden" id="total_quiz" name="total_quiz">
                                         <input type="hidden" id="total_psychoTest" name="total_psychoTest">
+                                        <input type="hidden" name="discount">
+                                        <input type="hidden" name="discount_price">
                                         <input type="hidden" name="total_payment" id="total_payment">
                                     </form>
                                     @if(session('confirmAgency'))
@@ -682,7 +696,7 @@
         });
 
         var isQuiz = '{{$plan->isQuiz}}', isPsychoTest = '{{$plan->isPsychoTest}}', plan_price = '{{$price}}',
-            subtotal = parseInt(plan_price), payment_code_value = 0,
+            subtotal = parseInt(plan_price), payment_code_value = 0, harga_diskon = 0,
 
             $attr_passingGrade = '{{$plan->isQuiz == false ? 'readonly' : ''}}',
             $attr_quiz = '{{$plan->isQuiz == false ? 'readonly' : ''}}',
@@ -700,12 +714,146 @@
             old_total_psychoTest = '{{$plan->psychoTest_applicant}}',
             price_per_psychoTest = '{{$plan->price_psychoTest_applicant}}';
 
-        $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
+        $(".subtotal").text("Rp" + number_format(subtotal,2,',','.'));
 
         $("#show_plans_settings").click(function () {
             $(".stats_plans").toggle(300);
             $("#plans_settings").toggle(300);
         });
+
+        $("#show_billing_settings").click(function () {
+            $(".stats-billing").toggle(300);
+            $("#billing_settings").toggle(300);
+        });
+
+        $("#promo_code").on('keyup', function (e) {
+            if (!$(this).val()) {
+                $("#btn_set").attr('disabled', 'disabled');
+            } else {
+                $("#btn_set").removeAttr('disabled');
+                if (e.keyCode === 13) {
+                    $("#btn_set").click();
+                }
+            }
+
+            $("#promo_code").css('border-color', '#ced4da');
+            $("#error_promo").hide().find('b').text(null);
+        });
+
+        $("#btn_set").on('click', function () {
+            clearTimeout(this.delay);
+            this.delay = setTimeout(function () {
+                $.ajax({
+                    url: '{{route('get.promo',['kode'=>''])}}/' +$("#promo_code").val() + '?subtotal=' + subtotal,
+                    type: "GET",
+                    success: function (data) {
+                        if (data == 0) {
+                            swal({
+                                title: 'Kode Promo',
+                                text: 'Kode promo yang Anda masukkan tidak ditemukan.',
+                                type: 'error',
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
+                            });
+                            $("#promo_code").css('border-color', '#dc3545');
+                            $("#error_promo").show().find('b').text("Kode promo yang Anda masukkan tidak ditemukan.").css('color', '#dc3545');
+                            $("#btn_set").attr('disabled', 'disabled');
+                            resetter();
+
+                        } else if (data == 1) {
+                            swal({
+                                title: 'Kode Promo',
+                                text: 'Anda telah menggunakan kode promo itu!',
+                                type: 'error',
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
+                            });
+                            $("#promo_code").css('border-color', '#dc3545');
+                            $("#error_promo").show().find('b').text("Anda telah menggunakan kode promo itu!").css('color', '#dc3545');
+                            $("#btn_set").attr('disabled', 'disabled');
+                            resetter();
+
+                        } else if (data == 2) {
+                            swal({
+                                title: 'Kode Promo',
+                                text: 'Kode promo yang Anda masukkan telah kedaluwarsa.',
+                                type: 'error',
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
+                            });
+                            $("#promo_code").css('border-color', '#dc3545');
+                            $("#error_promo").show().find('b').text("Kode promo yang Anda masukkan telah kedaluwarsa.").css('color', '#dc3545');
+                            $("#btn_set").attr('disabled', 'disabled');
+                            resetter();
+
+                        } else {
+                            swal({
+                                title: 'Kode Promo',
+                                text: data.caption,
+                                type: 'success',
+                                confirmButtonColor: '#00adb5',
+                                timer: '3500'
+                            });
+
+                            harga_diskon = data.discount_price;
+                            $("#promo_code").css('border-color', '#ced4da');
+                            $("#error_promo").show().find('b').text(data.caption).css('color', '#00adb5');
+                            $("#btn_set").removeAttr('disabled');
+
+                            $("#discount").show().find('strong').text(data.discount + '%');
+                            $("#discount b").text(data.str_discount);
+                            $(".subtotal").text(data.str_total);
+                            $("#pm-form input[name=discount]").val(data.discount);
+                            $("#pm-form input[name=discount_price]").val(harga_diskon);
+                            $("#pm-form input[name=total_payment]").val(data.total);
+
+                            $("#show_billing_settings").click();
+                        }
+                    },
+                    error: function () {
+                        swal({
+                            title: 'Oops..',
+                            text: 'Terjadi kesalahan! Silahkan, segarkan browser Anda.',
+                            type: 'error',
+                            timer: '3500',
+                            confirmButtonColor: '#fa5555',
+                        });
+                    }
+                });
+            }.bind(this), 800);
+        });
+
+        $("#discount i").on("click", function () {
+            swal({
+                title: "Apakah Anda yakin?",
+                text: "Anda tidak dapat mengembalikannya!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#fa5555',
+                confirmButtonText: 'Ya',
+                showLoaderOnConfirm: true,
+
+                preConfirm: function () {
+                    return new Promise(function (resolve) {
+                        swal({
+                            type: 'success',
+                            timer: '3500',
+                            showConfirmButton: false,
+                        });
+                        resetter();
+                    });
+                },
+                allowOutsideClick: false
+            });
+        });
+
+        function resetter() {
+            harga_diskon = 0;
+            $("#discount").hide().find('b').text(null);
+            $(".subtotal").text('Rp' + number_format(subtotal));
+            $("#pm-form input[name=discount], #pm-form input[name=discount_price]").val(null);
+            $("#pm-form input[name=total_payment]").val(subtotal);
+        }
 
         $(".show_vacancy_setup").click(function () {
             $("#order_summary .previous").click();
@@ -733,7 +881,7 @@
             if (parseInt(new_total_ads - old_total_ads) > 0) {
                 $(".total_vacancy").text(old_total_ads + '(+' + parseInt(new_total_ads - old_total_ads) + ')');
                 $(".total_price_vacancy").text('Rp' +
-                    thousandSeparator(parseInt((new_total_ads - old_total_ads) * price_per_ads)) + ',00');
+                    number_format(parseInt((new_total_ads - old_total_ads) * price_per_ads),2,',','.'));
             } else {
                 $(".total_vacancy").text(old_total_ads);
                 $(".total_price_vacancy").text('Rp0,00');
@@ -867,7 +1015,8 @@
                         title: 'Oops...',
                         text: 'Something went wrong! Please refresh the page.',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -907,7 +1056,7 @@
             if (parseInt(total_quiz_applicant - old_total_quiz) > 0) {
                 $(".bill_quiz_applicant").text(old_total_quiz + '(+' + parseInt(total_quiz_applicant - old_total_quiz) + ')');
                 $(".total_price_quiz").text('Rp' +
-                    thousandSeparator(parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz)) + ',00');
+                    number_format(parseInt((total_quiz_applicant - old_total_quiz) * price_per_quiz),2,',','.'));
             } else {
                 $(".bill_quiz_applicant").text(old_total_quiz);
                 $(".total_price_quiz").text('Rp0,00');
@@ -927,7 +1076,7 @@
                 $(".bill_psychoTest_applicant").text(old_total_psychoTest + '(+' +
                     parseInt(total_psychoTest_applicant - old_total_psychoTest) + ')');
                 $(".total_price_psychoTest").text('Rp' +
-                    thousandSeparator(parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest)) + ',00');
+                    number_format(parseInt((total_psychoTest_applicant - old_total_psychoTest) * price_per_psychoTest),2,',','.'));
             } else {
                 $(".bill_psychoTest_applicant").text(old_total_psychoTest);
                 $(".total_price_psychoTest").text('Rp0,00');
@@ -947,7 +1096,7 @@
             subtotal = parseInt(plan_price);
             subtotal += price_total_ads + price_total_quiz + price_total_psychoTest;
 
-            $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
+            $(".subtotal").text("Rp" + number_format(subtotal,2,',','.'));
         }
 
         $("#vacancy_setup .next").on("click", function () {
@@ -1069,7 +1218,7 @@
                     $(".total_price_quiz").text('Rp0,00');
                     $(".total_price_psychoTest").text('Rp0,00');
                     $(".plan_price").text('Rp' + data.rp_price);
-                    $(".subtotal").text("Rp" + thousandSeparator(subtotal) + ",00");
+                    $(".subtotal").text("Rp" + number_format(subtotal,2,',','.'));
 
                     if (data.id == 1) {
                         swal({
@@ -1077,7 +1226,8 @@
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
                                 'select at least ' + data.job_ads + ' vacancy!',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         });
 
                     } else if (data.id == 2) {
@@ -1086,7 +1236,8 @@
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
                                 'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         });
 
                     } else if (data.id == 3) {
@@ -1095,7 +1246,8 @@
                             text: 'You\'ve just select ' + data.name + ' Package, it means you have to ' +
                                 'select at least ' + data.job_ads + ' vacancies!',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         });
                     }
                     $("#total_ads").val(data.job_ads).prop('min', data.job_ads);
@@ -1277,7 +1429,8 @@
                     title: 'ATTENTION!',
                     text: 'You\'re not selecting any payment method!',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
             }
         });
@@ -1457,7 +1610,8 @@
                         title: 'Attention!',
                         text: "Your browser does not support new File API! Please upgrade.",
                         type: 'warning',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
 
                 } else {
@@ -1466,7 +1620,8 @@
                             title: 'Payment Proof',
                             text: file_name + " with total size " + filesize(files_size) + ", Allowed size is " + filesize(max_file_size) + ", Try smaller file!",
                             type: 'error',
-                            timer: '3500'
+                            timer: '3500',
+                            confirmButtonColor: '#fa5555',
                         });
                         output('Please upload a smaller file (< ' + filesize(max_file_size) + ').');
                         document.getElementById('file-image').classList.add("hidden");
@@ -1479,7 +1634,8 @@
                                 title: 'Payment Proof',
                                 text: file.name + " is unsupported file type!",
                                 type: 'error',
-                                timer: '3500'
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
                             });
                             document.getElementById('file-image').classList.add("hidden");
                             document.getElementById('notimage').classList.remove("hidden");
@@ -1527,7 +1683,8 @@
                                             'your vacancy is already posted or not, please check ' +
                                             'Vacancy Status in your dashboard.',
                                         type: 'success',
-                                        timer: '7000'
+                                        timer: '7000',
+                                        confirmButtonColor: '#00adb5',
                                     });
 
                                     output('<strong>' + data + '</strong>');
@@ -1543,7 +1700,8 @@
                                         title: 'Oops...',
                                         text: 'Something went wrong!',
                                         type: 'error',
-                                        timer: '1500'
+                                        timer: '1500',
+                                        confirmButtonColor: '#fa5555',
                                     })
                                 }
                             });
