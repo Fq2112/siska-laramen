@@ -1,26 +1,113 @@
 @extends('layouts.mst_user')
-@section('title', 'Seeker\'s Home | '.env('APP_NAME'))
+@section('title', 'Seeker\'s Home | '.env('APP_TITLE'))
 @push('styles')
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
     <style>
         [data-scrollbar], .nicescrolls {
             max-height: 550px;
         }
+
+        .carousel-caption h1 {
+            font-size: 40px;
+            text-transform: uppercase;
+        }
+
+        .carousel-caption h2 {
+            font-size: 24px;
+        }
+
+        .carousel-caption h1 span, .carousel-caption h2 span {
+            color: #FFC12D;
+        }
+
+        .carousel-caption .call-to-action a.demo {
+            border: 2px solid #FA5555;
+            background: #FA5555;
+            text-decoration: none !important;
+        }
+
+        .carousel-caption .call-to-action a.download {
+            border: 2px solid #00ADB5;
+            background: #00ADB5;
+            text-decoration: none !important;
+        }
+
+        .carousel-caption .call-to-action a {
+            width: 230px;
+            display: inline-block;
+            font-size: 20px;
+            padding: 15px 0;
+            margin-right: 10px;
+            -webkit-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -moz-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -ms-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -o-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        #fh5co-home .carousel-caption a {
+            color: #fff !important;
+            text-decoration: underline;
+        }
     </style>
 @endpush
 @section('content')
     <section id="fh5co-home" data-section="home" data-stellar-background-ratio="0.5"
              style="background-color: #ffffff">
-        <div id="carousel-example" class="carousel slide carousel-fullscreen carousel-fade"
-             data-ride="carousel">
+        <div id="carousel-example" class="carousel slide carousel-fullscreen" data-ride="carousel">
             <ol class="carousel-indicators">
-                @php $i = 0; @endphp
+                <li class="active" data-target="#carousel-example" data-slide-to="0"></li>
+                <li data-target="#carousel-example" data-slide-to="1"></li>
+                <li data-target="#carousel-example" data-slide-to="2"></li>
+
+                {{--@php $i = 3; @endphp
                 @foreach($carousels as $row)
                     <li data-target="#carousel-example" data-slide-to="{{$i++}}"></li>
-                @endforeach
+                @endforeach--}}
             </ol>
             <div class="carousel-inner">
-                @foreach($carousels as $row)
+                <div class="item active" style="background-image: url({{asset('images/carousel/kariernesia-seeker.jpg')}});">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-caption">
+                        <h1 class="to-animate">{!! str_replace('KARIERNESIA – CAREER', '<span>CAREER</span>',env('APP_TITLE')) !!}</h1>
+                        <h2 class="to-animate"><span>{{env('APP_NAME')}}</span> hadir untuk menjembatani para
+                            <span>seekers</span> dengan lowongan pekerjaan terbaik secara cepat dan cerdas.
+                            Start now to hire or get hired with us!</h2>
+                        <div class="call-to-action">
+                            <a href="javascript:void(0)" onclick="getStarted()" class="demo to-animate">GET STARTED</a>
+                            <a href="{{route('home-agency')}}" class="download to-animate">JOB AGENCIES</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="item" style="background-image: url({{asset('images/carousel/agencies.jpg')}});">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-caption">
+                        <h1 class="to-animate"><span>{{number_format($active_vacancies)}}</span> Lowongan Menantimu!</h1>
+                        <h2 class="to-animate">Halo <span>seekers</span>! Ayo gabung, lengkapi profilmu (CV), dan kirimkan lamaranmu sekarang.</h2>
+                        <div class="call-to-action">
+                            <a data-toggle="modal" href="javascript:void(0)" onclick="openRegisterModal();"
+                               class="demo to-animate">JOIN NOW</a>
+                            <a href="{{route('search.vacancy')}}" class="download to-animate">SEARCH VACANCY</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="item" style="background-image: url({{asset('images/carousel/candidates.jpg')}});">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-caption">
+                        <h1 class="to-animate"><span>{{number_format($active_seekers)}}</span> Kandidat Menantimu!</h1>
+                        <h2 class="to-animate">Halo <span>agencies</span>! Ayo gabung, lengkapi data perusahaanmu, buat lowongan, dan posting lowonganmu sekarang.</h2>
+                        <div class="call-to-action">
+                            <a href="{{route('home-agency')}}#join" class="download to-animate">JOIN NOW</a>
+                            <a href="{{route('home-agency')}}#pricing" class="demo to-animate">POST VACANCY</a>
+                        </div>
+                    </div>
+                </div>
+
+                {{--@foreach($carousels as $row)
                     <div class="item" style="background-image: url({{asset('images/carousel/'.$row->image)}});">
                         <div class="carousel-overlay"></div>
                         <div class="carousel-caption">
@@ -28,7 +115,7 @@
                             <h2 class="to-animate">{{$row->captions}}</h2>
                         </div>
                     </div>
-                @endforeach
+                @endforeach--}}
             </div>
 
             <a class="left carousel-control" href="#carousel-example" data-slide="prev">
@@ -427,7 +514,8 @@
                                             <div class="panel-body">
                                                 <p>Jangan khawatir, ini terjadi pada semua orang. Jika Anda lupa
                                                     password Anda, klik "Lupa?" di atas kotak sign in, kemudian
-                                                    masukkan alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda.
+                                                    masukkan alamat email yang Anda gunakan untuk
+                                                    akun {{env('APP_NAME')}} Anda.
                                                     Klik "Kirim" dan kami akan mengirimkan password Anda ke email
                                                     Anda. Pastikan untuk memeriksa spam mail / junk Anda jika Anda
                                                     tidak dapat menemukan email di kotak masuk Anda.</p>
@@ -442,7 +530,8 @@
                                         </div>
                                         <div id="a2-a02" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pertama, masuk ke akun {{env('APP_NAME')}} Anda. Pergi ke ikon profil Anda di
+                                                <p>Pertama, masuk ke akun {{env('APP_NAME')}} Anda. Pergi ke ikon profil
+                                                    Anda di
                                                     bagian kanan atas halaman. Klik "Manage Account" yang berbentuk
                                                     seperti simbol gerigi. Isi kolom dan simpang data Anda.</p>
                                             </div>
@@ -451,12 +540,14 @@
                                     <div class="panel panel-danger">
                                         <div class="panel-heading" data-toggle="collapse" data-parent=".accordion-2a"
                                              href="#a2-a03">
-                                            <h4 class="panel-title">Bagaimana caranya untuk membuat akun {{env('APP_NAME')}}?
+                                            <h4 class="panel-title">Bagaimana caranya untuk membuat
+                                                akun {{env('APP_NAME')}}?
                                                 <i class="fa fa-chevron-down pull-right"></i></h4>
                                         </div>
                                         <div id="a2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Pergi ke halaman utama <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a> dan
+                                                <p>Pergi ke halaman utama <a
+                                                            href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a> dan
                                                     mengisi kolom yang diperlukan dalam kotak sign up dan klik.
                                                     Setelah Anda telah mengirimkan informasi, silahkan cek email Anda
                                                     untuk mengaktifkan akun Anda. Pastikan untuk memeriksa spam mail
@@ -471,7 +562,8 @@
                                                     Pastikan resume Anda lengkap dan selalu diperbarui.</p>
 
                                                 <p>Cukup mencari jenis karir yang Anda inginkan dan pada setiap
-                                                    posting di <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a>, klik tombol
+                                                    posting di <a href="{{env('APP_URL')}}">{{env('APP_NAME')}}</a>,
+                                                    klik tombol
                                                     "apply" untuk melamar. Setelah Anda menyelesaikan
                                                     langkah-langkah, resume Anda akan dikirim ke Perusahaan. Anda
                                                     akan melihat pada deskripsi karir, tombol "apply" akan berubah
@@ -551,7 +643,8 @@
                                             <div class="panel-body">
                                                 <p>Jangan khawatir, ini terjadi pada semua orang. Jika Anda lupa
                                                     password Anda, klik 'Lupa?' di atas kotak sign in, kemudian masukkan
-                                                    alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda. Klik 'Kirim'
+                                                    alamat email yang Anda gunakan untuk akun {{env('APP_NAME')}} Anda.
+                                                    Klik 'Kirim'
                                                     dan kami akan mengirimkan password Anda ke email Anda. Pastikan
                                                     untuk memeriksa spam mail / junk Anda jika Anda tidak dapat
                                                     menemukan email di kotak masuk Anda.</p>
@@ -571,7 +664,8 @@
                                                     kami saat ini sedang dalam proses untuk meningkatkan produk dan
                                                     layanan kami, Konsultan Bisnis kami akan membantu Anda dalam posting
                                                     peluang karir di website kami. Silahkan hubungi <a
-                                                            href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a> untuk
+                                                            href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a>
+                                                    untuk
                                                     berbicara dengan Business Consultant kami.</p>
                                             </div>
                                         </div>
@@ -585,7 +679,8 @@
                                         </div>
                                         <div id="b2-a03" class="panel-collapse collapse">
                                             <div class="panel-body">
-                                                <p>Silahkan hubungi <a href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a>
+                                                <p>Silahkan hubungi <a
+                                                            href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a>
                                                     untuk berbicara dengan Business Consultant kami mengenai harga jasa
                                                     kami.</p>
                                             </div>
@@ -727,7 +822,7 @@
             setTimeout(getLateVacancy, 200);
 
             @if($check != "")
-            $('html,body').animate({scrollTop: $("#fh5co-partner").offset().top},500);
+            $('html,body').animate({scrollTop: $("#fh5co-partner").offset().top}, 500);
             $("#partnership_name").val('{{$check}}');
             $("#btn_partner").click();
             @endif
@@ -889,5 +984,21 @@
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             $(".nicescrolls").getNiceScroll().resize();
         });
+
+        if (window.location.hash) {
+            if(window.location.hash == '#join') {
+                openRegisterModal();
+            } else {
+                $('html, body').animate({
+                    scrollTop: $('#' + window.location.hash).offset().top
+                }, 500);
+            }
+        }
+
+        function getStarted() {
+            $('html, body').animate({
+                scrollTop: $('[data-section="services"]').offset().top + 100
+            }, 500);
+        }
     </script>
 @endpush

@@ -36,7 +36,7 @@ class PsychoTestResultListEmail extends Mailable
             Carbon::parse($vacancy->psychoTestDate_end)->format('j F Y');
 
         return $this->subject("" . $vacancy->judul . ": Psycho Test Result List for " . $psychoTestDate)
-            ->from(env('MAIL_USERNAME'), env('APP_NAME'))
+            ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
             ->view('emails.agencies.psychoTestResultList')->with(["vacancy" => $vacancy])
             ->attach(public_path('storage/users/agencies/reports/psychoTestResults/' . $filename));
     }

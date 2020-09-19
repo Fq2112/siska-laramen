@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', ''.$user->name.'\'s Profile | '.env('APP_NAME'))
+@section('title', ''.$user->name.'\'s Profile | '.env('APP_TITLE'))
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
@@ -317,12 +317,12 @@
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-language">&nbsp;</i>
                                                                             <small
-                                                                                    style="text-transform: uppercase">{{$row->name}}</small>
+                                                                                style="text-transform: uppercase">{{$row->name}}</small>
                                                                         </p>
                                                                         <blockquote
-                                                                                style="font-size: 12px;text-transform: none">
+                                                                            style="font-size: 12px;text-transform: none">
                                                                             <table
-                                                                                    style="font-size: 14px; margin-top: 0">
+                                                                                style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-comments"></i>
                                                                                     </td>
@@ -380,12 +380,12 @@
                                                                         <p class="media-heading">
                                                                             <i class="fa fa-user-secret">&nbsp;</i>
                                                                             <small
-                                                                                    style="text-transform: uppercase">{{$row->name}}</small>
+                                                                                style="text-transform: uppercase">{{$row->name}}</small>
                                                                         </p>
                                                                         <blockquote
-                                                                                style="font-size: 12px;text-transform: none">
+                                                                            style="font-size: 12px;text-transform: none">
                                                                             <table
-                                                                                    style="font-size: 14px; margin-top: 0">
+                                                                                style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-chart-line"></i>
                                                                                     </td>
@@ -524,18 +524,18 @@
                                                             <div class="media-body">
                                                                 @if(Auth::check() && (Auth::user()->isAgency() || Auth::id() == $user->id))
                                                                     <div
-                                                                            class="pull-right anim-icon anim-icon-md download ld ld-breath"
-                                                                            id="{{$row->id}}"
-                                                                            data-toggle="tooltip" data-placement="left"
-                                                                            title="Download {{$row->files}}"
-                                                                            onclick="downloadAttachments(id, '{{asset('storage/users/seekers/attachments/'.$row->files)}}')"
-                                                                            style="font-size: 25px">
+                                                                        class="pull-right anim-icon anim-icon-md download ld ld-breath"
+                                                                        id="{{$row->id}}"
+                                                                        data-toggle="tooltip" data-placement="left"
+                                                                        title="Download {{$row->files}}"
+                                                                        onclick="downloadAttachments(id, '{{asset('storage/users/seekers/attachments/'.$row->files)}}')"
+                                                                        style="font-size: 25px">
                                                                         <input type="checkbox">
                                                                         <label for="download"></label>
                                                                     </div>
                                                                 @endif
                                                                 <blockquote
-                                                                        style="font-size: 12px;text-transform: none">
+                                                                    style="font-size: 12px;text-transform: none">
                                                                     {{$row->files}}
                                                                 </blockquote>
                                                             </div>
@@ -578,9 +578,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
+                                                                            style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                    style="font-size: 14px; margin-top: 0">
+                                                                                style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-building"></i>
                                                                                     </td>
@@ -723,9 +723,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
+                                                                            style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                    style="font-size: 14px; margin-top: 0">
+                                                                                style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-graduation-cap"></i>
@@ -821,9 +821,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
+                                                                            style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                    style="font-size: 14px; margin-top: 0">
+                                                                                style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td><i class="fa fa-university"></i>
                                                                                     </td>
@@ -892,9 +892,9 @@
                                                                             </small>
                                                                         </p>
                                                                         <blockquote
-                                                                                style="font-size: 14px;text-transform: none">
+                                                                            style="font-size: 14px;text-transform: none">
                                                                             <table
-                                                                                    style="font-size: 14px; margin-top: 0">
+                                                                                style="font-size: 14px; margin-top: 0">
                                                                                 <tr>
                                                                                     <td>
                                                                                         <i class="fa fa-briefcase"></i>
@@ -1098,14 +1098,14 @@
                                                                         ('user_id',Auth::user()->id)->first()->id)
                                                                         ->get() as $vacancy)
                                                                             <option value="{{$vacancy->id}}"
-                                                                                    {{$vacancy->isPost == false ?
-                                                                                    'disabled' : ''}}>
+                                                                                {{$vacancy->isPost == false ?
+                                                                                'disabled' : ''}}>
                                                                                 {{$vacancy->judul}}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
                                                                 <small
-                                                                        style="font-size: 10px;color: #00ADB5;float: left">
+                                                                    style="font-size: 10px;color: #00ADB5;float: left">
                                                                     P.S.: You're only permitted to select your
                                                                     vacancy that has been posted.
                                                                 </small>

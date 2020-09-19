@@ -46,6 +46,8 @@ class SeekerController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
+        $active_vacancies = Vacancies::where('isPost', true)->count();
+        $active_seekers = Seekers::count();
         $blogs = Blog::orderByDesc('id')->get();
 
         $id = [4, 9, 13, 26, 29, 30, 38, 40, 41, 45, 47, 49, 52, 58, 59, 61, 62, 63];
@@ -64,14 +66,15 @@ class SeekerController extends Controller
         } else {
             $agencies = Agencies::wherehas('vacancies')->orderByDesc('updated_at')->take(9)->get();
         }
-        
+
         if($request->has('q')){
             $check = $request->q;
         } else {
             $check = null;
         }
 
-        return view('home-seeker', compact('provinces', 'carousels', 'blogs', 'favIndustries', 'agencies', 'check'));
+        return view('home-seeker', compact('provinces', 'carousels', 'blogs', 'favIndustries', 'agencies',
+            'check', 'active_vacancies', 'active_seekers'));
     }
 
     public function showProfile($id)

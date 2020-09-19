@@ -66,6 +66,72 @@
     <link rel="stylesheet" href="{{ asset('css/loading.css') }}">
     <link rel="stylesheet" href="{{ asset('css/media-query.css') }}">
     <style>
+        #fh5co-header .navbar-brand {
+            padding-left: 3rem;
+            letter-spacing: 1px;
+            background: -webkit-linear-gradient(left, #00adb5 ,#fa5555);
+            background: -o-linear-gradient(right, #00adb5, #fa5555);
+            background: -moz-linear-gradient(right, #00adb5, #fa5555);
+            background: linear-gradient(to right, #00adb5 ,#fa5555);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            z-index: 15;
+            width: 60%;
+            margin-left: -30%;
+            padding-left: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .carousel-indicators li, .carousel-indicators li.active {
+            display: inline-block;
+            width: 30px;
+            height: 3px;
+            margin: 0 3px;
+            text-indent: -999px;
+            border: unset;
+            border-radius: unset;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, .5);
+        }
+
+        .carousel-indicators li.active {
+            background-color: #fff !important;
+        }
+
+        .carousel-indicators li::after {
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            content: "";
+        }
+
+        .carousel-indicators li::before {
+            position: absolute;
+            top: -10px;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            height: 10px;
+            content: "";
+        }
+
+        .carousel-indicators .active {
+            margin: unset;
+            width: 12px;
+            height: 12px;
+            background-color: #fff;
+        }
+
         .anim-icon label {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;

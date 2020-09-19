@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Job Posting Process | '.env('APP_NAME'))
+@section('title', 'Job Posting Process | '.env('APP_TITLE'))
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myMultiStepForm.css') }}" rel="stylesheet">

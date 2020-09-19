@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>405 Error - Method not allowed!</title>
+    <title>405 Error - Method not allowed! | {{env('APP_TITLE')}}</title>
     <link rel="icon" href="{{asset('favicon.ico')}}" type="image/ico"/>
 
     <script src="{{ asset('sweetalert2/sweetalert2.min.js') }}"></script>

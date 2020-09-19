@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', ''.$user->name.'\'s Profile | '.env('APP_NAME'))
+@section('title', ''.$user->name.'\'s Profile | '.env('APP_TITLE'))
 @push('styles')
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">
     <link href="{{ asset('css/myProfile.css') }}" rel="stylesheet">
@@ -394,7 +394,7 @@
                 autohidemode: 'leave',
             });
         });
-
+        
         // gmaps address agency
         var google;
 

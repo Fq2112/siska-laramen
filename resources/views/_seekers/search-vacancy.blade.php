@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Search Vacancy\'s Result | '.env('APP_NAME'))
+@section('title', 'Search Vacancy\'s Result | '.env('APP_TITLE'))
 @push('styles')
     <link href="{{ asset('css/myPagination.css') }}" rel="stylesheet">
     <link href="{{ asset('css/mySearchFilter.css') }}" rel="stylesheet">

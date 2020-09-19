@@ -7,6 +7,8 @@ use App\Feedback;
 use App\PartnerCredential;
 use App\Provinces;
 use App\PsychoTestInfo;
+use App\Seekers;
+use App\Vacancies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -22,8 +24,10 @@ class UserController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
+        $active_vacancies = Vacancies::where('isPost', true)->count();
+        $active_seekers = Seekers::count();
 
-        return view('info-siska', compact('provinces', 'carousels'));
+        return view('info-siska', compact('provinces', 'carousels', 'active_vacancies', 'active_seekers'));
     }
 
     public function postContact(Request $request)

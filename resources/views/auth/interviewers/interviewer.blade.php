@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; '.env('APP_NAME').' Interviewer | '.env('APP_NAME'))
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; '.env('APP_NAME').' Interviewer | '.env('APP_TITLE'))
 @push('styles')
     <style>
         .dataTables_filter {
@@ -319,3 +319,4 @@
         }
     </script>
 @endpush
+

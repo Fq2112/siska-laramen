@@ -4,7 +4,7 @@
 
 
 
-	// iPad and iPod detection	
+	// iPad and iPod detection
 	var isiPad = function(){
 		return (navigator.platform.indexOf("iPad") != -1);
 	};
@@ -106,7 +106,7 @@
 				navActive($(this.element).data('section'));
 			}
 		}, {
-			offset: function() { return -$(this.element).height() + 80; }
+			offset: 0
 		});
 
 		$section.waypoint(function(direction) {
@@ -127,9 +127,9 @@
 
 			var header = $('#first-navbar'), scrlTop = $(this).scrollTop();
 
-			if ( scrlTop > 750 && scrlTop <= 2000 ) {
+			if ( scrlTop > 600 && scrlTop <= 2000 ) {
 				header.addClass('navbar-fixed-top fh5co-animated slideInDown');
-			} else if ( scrlTop <= 750) {
+			} else if ( scrlTop <= 600) {
 				if ( header.hasClass('navbar-fixed-top') ) {
 					header.addClass('navbar-fixed-top fh5co-animated slideOutUp');
 					setTimeout(function(){

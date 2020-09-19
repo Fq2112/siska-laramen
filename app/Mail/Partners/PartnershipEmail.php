@@ -31,7 +31,7 @@ class PartnershipEmail extends Mailable
     public function build()
     {
         $filename = $this->filename;
-        return $this->from(env('MAIL_USERNAME'), env('APP_NAME'))
+        return $this->from(env('MAIL_USERNAME'), env('APP_TITLE'))
             ->subject(env('APP_NAME').' Partnership Credentials: API Key & API Secret')
             ->view('emails.partnership')
             ->attach(public_path('storage/users/partners/' . $filename));

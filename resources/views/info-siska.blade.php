@@ -1,21 +1,109 @@
 @extends('layouts.mst_user')
-@section('title', 'Information | '.env('APP_NAME'))
+@section('title', 'Information | '.env('APP_TITLE'))
 @push('styles')
     <link href="{{ asset('css/myMaps.css') }}" rel="stylesheet">
+    <style>
+        .carousel-caption h1 {
+            font-size: 40px;
+            text-transform: uppercase;
+        }
+
+        .carousel-caption h2 {
+            font-size: 24px;
+        }
+
+        .carousel-caption h1 span, .carousel-caption h2 span {
+            color: #FFC12D;
+        }
+
+        .carousel-caption .call-to-action a.demo {
+            border: 2px solid #FA5555;
+            background: #FA5555;
+            text-decoration: none !important;
+        }
+
+        .carousel-caption .call-to-action a.download {
+            border: 2px solid #00ADB5;
+            background: #00ADB5;
+            text-decoration: none !important;
+        }
+
+        .carousel-caption .call-to-action a {
+            width: 230px;
+            display: inline-block;
+            font-size: 20px;
+            padding: 15px 0;
+            margin-right: 10px;
+            -webkit-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -moz-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -ms-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -o-box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            box-shadow: 0px 3px 6px -1px rgba(0, 0, 0, 0.19);
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            -ms-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        #fh5co-home .carousel-caption a {
+            color: #fff !important;
+            text-decoration: underline;
+        }
+    </style>
 @endpush
 @section('content')
     <section id="fh5co-home" data-section="home" data-stellar-background-ratio="0.5"
              style="background-color: #ffffff">
-        <div id="carousel-example" class="carousel slide carousel-fullscreen carousel-fade"
-             data-ride="carousel">
+        <div id="carousel-example" class="carousel slide carousel-fullscreen" data-ride="carousel">
             <ol class="carousel-indicators">
-                @php $i = 0; @endphp
+                <li class="active" data-target="#carousel-example" data-slide-to="0"></li>
+                <li data-target="#carousel-example" data-slide-to="1"></li>
+                <li data-target="#carousel-example" data-slide-to="2"></li>
+
+                {{--@php $i = 3; @endphp
                 @foreach($carousels as $row)
                     <li data-target="#carousel-example" data-slide-to="{{$i++}}"></li>
-                @endforeach
+                @endforeach--}}
             </ol>
             <div class="carousel-inner">
-                @foreach($carousels as $row)
+                <div class="item active" style="background-image: url({{asset('images/carousel/kariernesia-seeker.jpg')}});">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-caption">
+                        <h1 class="to-animate">{!! str_replace('KARIERNESIA – CAREER', '<span>CAREER</span>',env('APP_TITLE')) !!}</h1>
+                        <h2 class="to-animate"><span>{{env('APP_NAME')}}</span> hadir untuk menjembatani para
+                            <span>seekers</span> dengan lowongan pekerjaan terbaik secara cepat dan cerdas.
+                            Start now to hire or get hired with us!</h2>
+                        <div class="call-to-action">
+                            <a href="{{route('home-seeker')}}" class="demo to-animate">JOB SEEKERS</a>
+                            <a href="{{route('home-agency')}}" class="download to-animate">JOB AGENCIES</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="item" style="background-image: url({{asset('images/carousel/agencies.jpg')}});">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-caption">
+                        <h1 class="to-animate"><span>{{number_format($active_vacancies)}}</span> Lowongan Menantimu!</h1>
+                        <h2 class="to-animate">Halo <span>seekers</span>! Ayo gabung, lengkapi profilmu (CV), dan kirimkan lamaranmu sekarang.</h2>
+                        <div class="call-to-action">
+                            <a data-toggle="modal" href="javascript:void(0)" onclick="openRegisterModal();"
+                               class="demo to-animate">JOIN NOW</a>
+                            <a href="{{route('search.vacancy')}}" class="download to-animate">SEARCH VACANCY</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="item" style="background-image: url({{asset('images/carousel/candidates.jpg')}});">
+                    <div class="carousel-overlay"></div>
+                    <div class="carousel-caption">
+                        <h1 class="to-animate"><span>{{number_format($active_seekers)}}</span> Kandidat Menantimu!</h1>
+                        <h2 class="to-animate">Halo <span>agencies</span>! Ayo gabung, lengkapi data perusahaanmu, buat lowongan, dan posting lowonganmu sekarang.</h2>
+                        <div class="call-to-action">
+                            <a href="{{route('home-agency')}}#join" class="download to-animate">JOIN NOW</a>
+                            <a href="{{route('home-agency')}}#pricing" class="demo to-animate">POST VACANCY</a>
+                        </div>
+                    </div>
+                </div>
+
+                {{--@foreach($carousels as $row)
                     <div class="item" style="background-image: url({{asset('images/carousel/'.$row->image)}});">
                         <div class="carousel-overlay"></div>
                         <div class="carousel-caption">
@@ -23,7 +111,7 @@
                             <h2 class="to-animate">{{$row->captions}}</h2>
                         </div>
                     </div>
-                @endforeach
+                @endforeach--}}
             </div>
 
             <a class="left carousel-control" href="#carousel-example" data-slide="prev">
@@ -122,7 +210,7 @@
                                             informasi tersebut. Data pribadi Anda akan digunakan sesuai dengan polis
                                             kerahasiaan kami. Apabila, sewaktu-waktu Anda ingin mengajukan pertanyaan
                                             ataupun memberikan komentar tentang Polis Kerahasiaan kami, maka Anda dapat
-                                            menghubungi kami lewat email {{env('MAIL_USERNAME')}} atau menghubungi
+                                            menghubungi kami lewat email {{env('MAIL_USERNAME')}} atau menghubungi 
                                             telepon {{env('APP_PHONE')}} dan langsung berbicara dengan salah satu staf kami
                                         </li>
                                     </ol>

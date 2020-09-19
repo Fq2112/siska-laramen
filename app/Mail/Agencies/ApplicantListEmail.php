@@ -36,7 +36,7 @@ class ApplicantListEmail extends Mailable
             Carbon::parse($vacancy->recruitmentDate_end)->format('j F Y');
 
         return $this->subject("" . $vacancy->judul . ": Application List for " . $recruitmentDate)
-            ->from(env('MAIL_USERNAME'), env('APP_NAME'))
+            ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
             ->view('emails.agencies.applicantList')
             ->attach(public_path('storage/users/agencies/reports/applications/' . $filename));
     }

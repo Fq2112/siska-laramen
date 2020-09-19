@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Account Settings &ndash; Edit Profile | '.env('APP_NAME'))
+@section('title', ''.$user->name.'\'s Account Settings &ndash; Edit Profile | '.env('APP_TITLE'))
 @push("styles")
     <style>
         [data-scrollbar], .nicescrolls {

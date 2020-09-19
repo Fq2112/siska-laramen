@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; '.env('APP_NAME').' Admins | '.env('APP_NAME'))
+@section('title', ''.Auth::guard('admin')->user()->name.'\'s Dashboard &ndash; '.env('APP_NAME').' Admins | '.env('APP_TITLE'))
 @section('content')
     <div class="right_col" role="main">
         <div class="">

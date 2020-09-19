@@ -44,9 +44,12 @@ class AgencyController extends Controller
     {
         $provinces = Provinces::all();
         $carousels = Carousel::all();
+        $active_vacancies = Vacancies::where('isPost', true)->count();
+        $active_seekers = Seekers::count();
         $plans = Plan::all();
 
-        return view('home-agency', compact('provinces', 'carousels', 'plans'));
+        return view('home-agency', compact('provinces', 'carousels', 'plans',
+            'active_vacancies', 'active_seekers'));
     }
 
     public function showProfile($id)

@@ -36,7 +36,7 @@ class QuizResultListEmail extends Mailable
             Carbon::parse($vacancy->quizDate_end)->format('j F Y');
 
         return $this->subject("" . $vacancy->judul . ": Quiz Result List for " . $quizDate)
-            ->from(env('MAIL_USERNAME'), env('APP_NAME'))
+            ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
             ->view('emails.agencies.quizResultList')->with(["vacancy" => $vacancy])
             ->attach(public_path('storage/users/agencies/reports/quizResults/' . $filename));
     }

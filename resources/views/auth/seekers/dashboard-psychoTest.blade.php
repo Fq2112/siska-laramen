@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Psycho Test (Online Interview) Invitation | '.env('APP_NAME'))
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Psycho Test (Online Interview) Invitation | '.env('APP_TITLE'))
 @extends('layouts.auth.mst_seeker')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">

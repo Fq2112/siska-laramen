@@ -1,5 +1,5 @@
 @extends('layouts.mst_user')
-@section('title', 'Psycho Test (Online Interview): Room Code #'.$roomCode.' &mdash; '.$vacancy->judul.' - '.$userAgency->name.' | '.env('APP_NAME'))
+@section('title', 'Psycho Test (Online Interview): Room Code #'.$roomCode.' &mdash; '.$vacancy->judul.' - '.$userAgency->name.' | '.env('APP_TITLE'))
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/twilio.video-conf.custom.css')}}">
     <link rel="stylesheet" href="{{asset('css/stickyForm.css')}}">

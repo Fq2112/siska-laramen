@@ -1,6 +1,6 @@
 @extends('layouts.mst_user')
 @section('title', 'Online Quiz (TPA and TKD): Quiz Code #'.$quiz->unique_code.' &mdash; '.$vacancy->judul.' - '.
-$agency->user->name.' | '.env('APP_NAME'))
+$agency->user->name.' | '.env('APP_TITLE'))
 @push('styles')
     <link rel="stylesheet" href="{{asset('css/quiz.css')}}">
     <link rel="stylesheet" href="{{asset('css/bubble-button.css')}}">
@@ -555,7 +555,7 @@ $agency->user->name.' | '.env('APP_NAME'))
                 getCurrentSlide();
                 $('.mm-survey-bottom').slideDown();
                 $('.mm-survey-results').slideUp();
-
+                
                 $('html, body').animate({
                     scrollTop: $('#online_quiz').offset().top
                 }, 500);

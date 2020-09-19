@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Provinces Table &ndash; '.env('APP_NAME').' Admins | '.env('APP_NAME'))
+@section('title', 'Provinces Table &ndash; '.env('APP_NAME').' Admins | '.env('APP_TITLE'))
 @section('content')
     <div class="right_col" role="main">
         <div class="row">

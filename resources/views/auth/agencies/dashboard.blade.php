@@ -1,4 +1,4 @@
-@section('title', ''.$user->name.'\'s Dashboard &ndash; Application Received | '.env('APP_NAME'))
+@section('title', ''.$user->name.'\'s Dashboard &ndash; Application Received | '.env('APP_TITLE'))
 @extends('layouts.auth.mst_agency')
 @section('inner-content')
     <div class="row" style="font-family: 'PT Sans', Arial, serif">

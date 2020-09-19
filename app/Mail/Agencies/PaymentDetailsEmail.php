@@ -40,13 +40,13 @@ class PaymentDetailsEmail extends Mailable
             if ($data['confirmAgency']->isAbort == false) {
                 return $this->subject('Waiting for ' . $data['payment_category']->name . ' Payment #PYM/' .
                     $date->format('Ymd') . '/' . $romanDate . '/' . $data['confirmAgency']->id)
-                    ->from(env('MAIL_USERNAME'), env('APP_NAME'))
+                    ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
                     ->view('emails.agencies.paymentDetails')->with($data);
 
             } else {
                 return $this->subject('Your ' . $data['payment_category']->name . ' Payment on ' .
                     Carbon::parse($date)->format('l, j F Y') . ' has been Aborted')
-                    ->from(env('MAIL_USERNAME'), env('APP_NAME'))
+                    ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
                     ->view('emails.agencies.paymentAbortedDetails')->with($data);
             }
 
@@ -54,7 +54,7 @@ class PaymentDetailsEmail extends Mailable
             return $this->subject('Checkout Orders with ' . $data['payment_category']->name .
                 ' Payment Successfully Confirmed on ' . Carbon::parse($data['confirmAgency']->date_payment)->format('j F Y')
                 . ' at ' . Carbon::parse($data['confirmAgency']->date_payment)->format('H:i'))
-                ->from(env('MAIL_USERNAME'), env('APP_NAME'))
+                ->from(env('MAIL_USERNAME'), env('APP_TITLE'))
                 ->view('emails.agencies.paymentSuccessDetails')->with($data);
         }
     }
