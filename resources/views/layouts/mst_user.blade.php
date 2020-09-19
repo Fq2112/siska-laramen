@@ -69,12 +69,17 @@
         #fh5co-header .navbar-brand {
             padding-left: 3rem;
             letter-spacing: 1px;
-            background: -webkit-linear-gradient(left, #00adb5 ,#fa5555);
-            background: -o-linear-gradient(right, #00adb5, #fa5555);
-            background: -moz-linear-gradient(right, #00adb5, #fa5555);
-            background: linear-gradient(to right, #00adb5 ,#fa5555);
+            background: -webkit-linear-gradient(left, #fa5555, #00adb5);
+            background: -o-linear-gradient(right, #fa5555, #00adb5);
+            background: -moz-linear-gradient(right, #fa5555, #00adb5);
+            background: linear-gradient(to right, #fa5555, #00adb5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        #fh5co-header #navbar li.active a,
+        #fh5co-header #first-navbar #navbar li.active a {
+            color: {{Auth::check() && Auth::user()->isAgency() || Auth::guard('admin')->check() ? '#00ADB5' : '#FA5555'}} !important;
         }
 
         .carousel-indicators {
@@ -131,7 +136,7 @@
             height: 12px;
             background-color: #fff;
         }
-        
+
         .anim-icon label {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;

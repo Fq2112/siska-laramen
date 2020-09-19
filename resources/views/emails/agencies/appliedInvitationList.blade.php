@@ -431,6 +431,7 @@
     </tr>
     </tbody>
 </table>
+
 <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FAFAFA">
     <tbody>
     <tr>
@@ -456,8 +457,9 @@
                                             <td align="center" width="660">
                                                 <a name="Logo" style="display:block" href="{{route('home-seeker')}}"
                                                    target="_blank">
-                                                    <img src="{{env('APP_URL')}}/images/siska.png" border="0"
-                                                         style="display:block;width: 40%;" class="logo"></a>
+                                                    <img src="{{asset('images/logo/logotype.png')}}" border="0"
+                                                         style="display:block;width:40%;padding: 1.5rem 0" class="logo">
+                                                </a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -600,13 +602,11 @@
                                         <tbody>
                                         <tr>
                                             <td valign="top" width="20" class="hide">&nbsp;</td>
-                                            <td align="center" valign="top" width="660" bgcolor="#1a1c21"><a
-                                                        name="Logo_1" style="display:block;"
-                                                        href="{{route('home-seeker')}}" target="_blank"><img
-                                                            src="{{env('APP_URL')}}/images/siska_circleicon.png"
-                                                            alt="logo"
-                                                            border="0"
-                                                            style="display:block;width: 15%;"></a>
+                                            <td align="center" valign="top" width="660" bgcolor="#1a1c21">
+                                                <a name="Logo_1" style="display:block;" href="{{route('home-seeker')}}"
+                                                   target="_blank">
+                                                    <img src="{{asset('images/logo/icon-bw.png')}}"
+                                                         alt="logo" border="0" style="display:block;width: 15%;"></a>
                                             </td>
                                             <td valign="top" width="20" class="hide">&nbsp;</td>
                                         </tr>
@@ -655,14 +655,10 @@
                                                                 <tbody>
                                                                 <tr>
                                                                     <td align="center" bgcolor="#1a1c21">
-                                                                        <a href="https://play.google.com/store/apps/details?id=com.kariernesia.mobile"><img
-                                                                                    class="zoom"
-                                                                                    src="{{env('APP_URL')}}/images/GooglePlay.png"
-                                                                                    style="width: 15%"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                        <a href="https://itunes.apple.com/id/app/kariernesia.com/id1143444473?mt=8"><img
-                                                                                    class="zoom"
-                                                                                    src="{{env('APP_URL')}}/images/AppStore.png"
-                                                                                    style="width: 15%"></a>
+                                                                        <a href="https://play.google.com/store/apps/details?id=com.kariernesia.mobile">
+                                                                            <img class="zoom" src="{{asset('images/GooglePlay.png')}}" style="width: 15%"></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                                                                        <a href="https://itunes.apple.com/id/app/kariernesia.com/id1143444473?mt=8">
+                                                                            <img class="zoom" src="{{asset('images/AppStore.png')}}" style="width: 15%"></a>
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>
@@ -706,32 +702,21 @@
                                                                    cellspacing="0" bgcolor="#1a1c21">
                                                                 <tbody>
                                                                 <tr>
-                                                                    <td align="center"><a
-                                                                                href="https://www.facebook.com/kariernesia"
-                                                                                name="Facebook" target="_blank"><img
-                                                                                    class="social-icons"
-                                                                                    src="https://cdn.shazam.com/shazamauth/facebook.jpg"
-                                                                                    width="34" height="50"
-                                                                                    style="display:block" border="0"
-                                                                                    alt="Facebook"></a>
-                                                                    </td>
-                                                                    <td>
-                                                                        <a href="https://twitter.com/kariernesia"
-                                                                           name="Twitter" target="_blank"><img
-                                                                                    class="social-icons"
-                                                                                    src="https://cdn.shazam.com/shazamauth/twitter.jpg"
-                                                                                    width="36" height="50"
-                                                                                    style="display:block" border="0"
-                                                                                    alt="Twitter"></a>
+                                                                    <td align="center">
+                                                                        <a href="https://www.facebook.com/kariernesia"
+                                                                           name="Facebook" target="_blank">
+                                                                            <img class="social-icons" alt="Facebook"
+                                                                                 src="https://cdn.shazam.com/shazamauth/facebook.jpg"
+                                                                                 width="34" height="50"
+                                                                                 style="display:block" border="0"></a>
                                                                     </td>
                                                                     <td>
                                                                         <a href="https://www.instagram.com/kariernesia/"
-                                                                           name="Instagram" target="_blank"><img
-                                                                                    class="social-icons"
-                                                                                    src="https://cdn.shazam.com/shazamauth/instagram.jpg"
-                                                                                    width="39" height="50"
-                                                                                    style="display:block" border="0"
-                                                                                    alt="Instagram"></a>
+                                                                           name="Instagram" target="_blank">
+                                                                            <img class="social-icons" alt="Instagram"
+                                                                                 src="https://cdn.shazam.com/shazamauth/instagram.jpg"
+                                                                                 width="39" height="50"
+                                                                                 style="display:block" border="0"></a>
                                                                     </td>
                                                                 </tr>
                                                                 </tbody>
@@ -859,22 +844,8 @@
                                                                 <tr>
                                                                     <td align="center" class="footer-padding"
                                                                         style="font-family:Helvetica, arial,helv,sans-serif;font-size:10px; color:#949494; font-weight:bold; padding-left:20px; padding-right:20px"
-                                                                        bgcolor="#1a1c21">
-                                                                        This is an automatically generated notification
-                                                                        - please do not reply to this message. You are
-                                                                        receiving this email to complete the
-                                                                        registration initiated on the {{env('APP_NAME')}}
-                                                                        application; if you did not enter your email
-                                                                        address in {{env('APP_NAME')}} then you can either ignore
-                                                                        this message or contact {{env('MAIL_USERNAME')}}
-                                                                        for more information. <br><br> {{env('APP_NAME')}} is
-                                                                        incorporated in Indonesia under company number
-                                                                        <span class="appleLinksWhite">{{env('APP_PHONE')}}</span>.
-                                                                        <span class="appleLinksWhite">&copy; {{now()->format('Y').' '.env('APP_NAME')}}. All rights reserved. Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur — 60231.</span>
-                                                                        <br>
-                                                                        <br>
-                                                                        <br>
-                                                                        <br></td>
+                                                                        bgcolor="#1a1c21">&copy; {{now()->format('Y').' '.env('APP_NAME')}}. All rights reserved. Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur — 60231.<br><br><br>
+                                                                    </td>
                                                                 </tr>
                                                                 </tbody>
                                                             </table>
