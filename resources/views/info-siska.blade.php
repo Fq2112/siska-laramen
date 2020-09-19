@@ -69,7 +69,7 @@
                 <div class="item active" style="background-image: url({{asset('images/carousel/kariernesia-seeker.jpg')}});">
                     <div class="carousel-overlay"></div>
                     <div class="carousel-caption">
-                        <h1 class="to-animate">{!! str_replace('KARIERNESIA – CAREER', '<span>CAREER</span>',env('APP_TITLE')) !!}</h1>
+                        <h1 class="to-animate">YOUR FAST FORWARD <span>CAREER</span> SOLUTION PROVIDER</h1>
                         <h2 class="to-animate"><span>{{env('APP_NAME')}}</span> hadir untuk menjembatani para
                             <span>seekers</span> dengan lowongan pekerjaan terbaik secara cepat dan cerdas.
                             Start now to hire or get hired with us!</h2>
@@ -123,7 +123,7 @@
         </div>
     </section>
 
-    <section id="fh5co-services" data-section="services">
+    <section id="fh5co-services" data-id="#privacy-policy" data-section="services">
         <div class="fh5co-services">
             <div class="container">
                 <div class="row" id="privacy-policy">
@@ -223,7 +223,7 @@
         </div>
     </section>
 
-    <section id="fh5co-explore" data-section="explore">
+    <section id="fh5co-explore" data-id="#terms-conditions" data-section="explore">
         <div class="fh5co-explore">
             <div class="container">
                 <div class="row" id="terms-conditions">
@@ -401,7 +401,7 @@
         </div>
     </section>
 
-    <section id="fh5co-team" class="fh5co-bg-color" data-section="team">
+    <section id="fh5co-team" class="fh5co-bg-color" data-id="#team" data-section="team">
         <div class="fh5co-team">
             <div class="container">
                 <div class="row" id="team">
@@ -494,7 +494,7 @@
         </div>
     </section>
 
-    <section id="fh5co-faq" class="fh5co-bg-color" data-section="faq">
+    <section id="fh5co-faq" class="fh5co-bg-color" data-id="#faqs" data-section="faq">
         <div class="fh5co-faq">
             <div class="container">
                 <div class="row" id="faqs">
@@ -743,8 +743,18 @@
 @endsection
 @push("scripts")
     <script>
-        $('html, body').animate({
-            scrollTop: $("#" + window.location.hash).offset().top
-        }, 500);
+        if(window.location.hash) {
+            $('#first-navbar').addClass('navbar-fixed-top fh5co-animated slideInDown');
+
+            $('html, body').animate({
+                scrollTop: $('[data-id="'+window.location.href+'"]').offset().top + 100
+            }, 500);
+        }
+
+        function goToAnchor(selector) {
+            $('html, body').animate({
+                scrollTop: $('[data-id="'+selector+'"]').offset().top + 100
+            }, 500);
+        }
     </script>
 @endpush

@@ -131,7 +131,7 @@
             height: 12px;
             background-color: #fff;
         }
-
+        
         .anim-icon label {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
@@ -293,7 +293,7 @@
     <!-- Modernizr JS -->
     <script src="{{asset('js/modernizr-2.6.2.min.js')}}"></script>
     <!-- FOR IE9 below -->
-<!--[if lt IE 9]>
+    <!--[if lt IE 9]>
     <script src="{{asset('js/respond.min.js')}}"></script>
     <![endif]-->
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
@@ -743,7 +743,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <h3 class="section-title">Unduh Aplikasi Kami, Gratis!</h3>
+                <h3 class="section-title">Download our apps, FREE!</h3>
                 <div class="row" style="border-bottom: 1px solid #eee">
                     <div class="col-lg-12">
                         <img class="download-phone-ico" src="{{asset('images/phone.png')}}">
@@ -759,44 +759,39 @@
                     </div>
                 </div>
                 <p style="margin-top: 0;" class="copy-right">
-                    <a href="{{route('info.siska')}}#privacy-policy" target="_blank">
-                        Privacy Policy</a><span> &middot; </span>
-                    <a href="{{route('info.siska')}}#terms-conditions" target="_blank">
-                        Terms & Conditions</a><span> &middot; </span>
-                    <a href="{{route('info.siska')}}#team" target="_blank">
-                        Get in Touch</a><span> &middot; </span>
-                    <a href="{{route('info.siska')}}#faqs" target="_blank">
-                        FAQ</a><br>
+                    @if(Request::is('info*'))
+                        <a href="javascript:void(0)" onclick="goToAnchor('#privacy-policy')">Privacy Policy</a><span> &middot; </span>
+                        <a href="javascript:void(0)" onclick="goToAnchor('#terms-conditions')">Terms & Conditions</a><span> &middot; </span>
+                        <a href="javascript:void(0)" onclick="goToAnchor('#team')">Meet The Team</a><span> &middot; </span>
+                        <a href="javascript:void(0)" onclick="goToAnchor('#faqs')">FAQ</a><br>
+                    @else
+                        <a href="{{route('info.siska')}}#privacy-policy" target="_blank">Privacy Policy</a><span> &middot; </span>
+                        <a href="{{route('info.siska')}}#terms-conditions" target="_blank">Terms & Conditions</a><span> &middot; </span>
+                        <a href="{{route('info.siska')}}#team" target="_blank">Meet The Team</a><span> &middot; </span>
+                        <a href="{{route('info.siska')}}#faqs" target="_blank">FAQ</a><br>
+                    @endif
                     &copy; {{now()->format('Y').' '.env('APP_NAME')}}. All Rights Reserved.<br>Designed by
                     <a href="https://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
 
             <div class="col-lg-4">
-                <h3 class="section-title">Lokasi Kami</h3>
+                <h3 class="section-title">Get in Touch</h3>
                 <ul class="contact-info">
                     <li><i class="icon-map-marker"></i>Ketintang, Gayungan, Ketintang, Gayungan, Surabaya, Jawa Timur
                         &mdash; 60231
                     </li>
                     <li><i class="icon-phone"></i><a href="tel:{{env('APP_PHONE')}}">{{env('APP_PHONE')}}</a></li>
                     <li><i class="icon-envelope"></i><a href="mailto:{{env('MAIL_USERNAME')}}">{{env('MAIL_USERNAME')}}</a></li>
-                    <li><i class="icon-globe2"></i><a href="{{env('APP_URL')}}" target="_blank">{{str_replace('https://', 'www.', env('APP_URL'))}}</a></li>
+                    <li><i class="icon-globe2"></i><a href="{{env('APP_URL')}}" target="_blank">{{str_replace('https://', '', env('APP_URL'))}}</a></li>
+                    <li class="text-lowercase"><i class="icon-instagram"></i><a href="https://instagram.com/kariernesia" target="_blank">instagram.com/kariernesia</a></li>
                 </ul>
-                <h3 class="section-title">Ikuti Kami</h3>
-                <ul class="social-media">
-                    <li><a href="https://fb.com/kariernesia" class="facebook" target="_blank"><i class="icon-facebook"></i></a>
-                    </li>
-                    <li><a href="https://twitter.com/kariernesia" class="twitter" target="_blank"><i
-                                    class="icon-twitter"></i></a></li>
-                    <li><a href="https://instagram.com/kariernesia" class="instagram" target="_blank"><i
-                                    class="icon-instagram"></i></a></li>
-                    <li><a href="https://github.com/Fq2112/siska-laramen" class="github" target="_blank"><i
-                                    class="icon-github"></i></a></li>
-                </ul>
+                <h3 class="section-title" style="padding-bottom: 0">Payment Partner</h3>
+                <img class="zoom img-responsive" src="{{asset('images/logo-midtrans-color.svg')}}">
             </div>
 
             <div class="col-lg-4">
-                <h3 class="section-title">Tinggalkan Kami Pesan</h3>
+                <h3 class="section-title">Drop us a line</h3>
                 <form class="contact-form" method="post" action="{{route('contact.submit')}}">
                     {{csrf_field()}}
                     <div class="form-group">
