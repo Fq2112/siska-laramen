@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
 
         foreach (Role::ALL as $role) {
             if ($role == Role::AGENCY) {
-                for ($c = 0; $c < (($role == Role::AGENCY) ? 25 : 2); $c++) {
+                for ($c = 0; $c < (($role == Role::AGENCY) ? 6 : 2); $c++) {
                     $user = User::create([
                         'ava' => 'agency.png',
                         'name' => $faker->company,
@@ -70,180 +70,226 @@ class UserSeeder extends Seeder
                         'agency_id' => $agency->id,
                         'image' => 'c3.jpg',
                     ]);
-
-                    Vacancies::create([
-                        'judul' => Factory::create()->jobTitle,
-                        'cities_id' => rand(Cities::min('id'), Cities::max('id')),
-                        'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'pengalaman' => $faker->randomDigitNotNull,
-                        'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
-                        'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
-                        'industry_id' => $agency->industri_id,
-                        'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
-                        'agency_id' => $agency->id,
-                        'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
-                        'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                        'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                        'plan_id' => 1,
-                        'isPost' => true,
-                        'active_period' => today()->addMonth(),
-                        'recruitmentDate_start' => today(),
-                        'recruitmentDate_end' => today()->addMonth(),
-                        'interview_date' => today()->addMonth()->addWeek(),
-                    ]);
-
-                    Vacancies::create([
-                        'judul' => Factory::create()->jobTitle,
-                        'cities_id' => rand(Cities::min('id'), Cities::max('id')),
-                        'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'pengalaman' => $faker->randomDigitNotNull,
-                        'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
-                        'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
-                        'industry_id' => $agency->industri_id,
-                        'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
-                        'agency_id' => $agency->id,
-                        'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
-                        'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                        'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                        'plan_id' => 2,
-                        'passing_grade' => $faker->randomFloat(8, 60, 80),
-                        'quiz_applicant' => 75,
-                        'isPost' => true,
-                        'active_period' => today()->addMonth(),
-                        'recruitmentDate_start' => today(),
-                        'recruitmentDate_end' => today()->addMonth(),
-                        'quizDate_start' => today()->addMonth()->addDay(),
-                        'quizDate_end' => today()->addMonth()->addDays(8),
-                        'interview_date' => today()->addMonth()->addDays(15),
-                    ]);
-                    Vacancies::create([
-                        'judul' => Factory::create()->jobTitle,
-                        'cities_id' => rand(Cities::min('id'), Cities::max('id')),
-                        'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'pengalaman' => $faker->randomDigitNotNull,
-                        'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
-                        'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
-                        'industry_id' => $agency->industri_id,
-                        'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
-                        'agency_id' => $agency->id,
-                        'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
-                        'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                        'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                        'plan_id' => 2,
-                        'passing_grade' => $faker->randomFloat(8, 60, 80),
-                        'quiz_applicant' => 75,
-                        'isPost' => true,
-                        'active_period' => today()->addMonth(),
-                        'recruitmentDate_start' => today(),
-                        'recruitmentDate_end' => today()->addMonth(),
-                        'quizDate_start' => today()->addMonth()->addDay(),
-                        'quizDate_end' => today()->addMonth()->addDays(8),
-                        'interview_date' => today()->addMonth()->addDays(15),
-                    ]);
-
-                    Vacancies::create([
-                        'judul' => Factory::create()->jobTitle,
-                        'cities_id' => rand(Cities::min('id'), Cities::max('id')),
-                        'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'pengalaman' => $faker->randomDigitNotNull,
-                        'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
-                        'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
-                        'industry_id' => $agency->industri_id,
-                        'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
-                        'agency_id' => $agency->id,
-                        'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
-                        'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                        'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                        'plan_id' => 3,
-                        'passing_grade' => $faker->randomFloat(8, 70, 80),
-                        'quiz_applicant' => 75,
-                        'psychoTest_applicant' => 5,
-                        'isPost' => true,
-                        'active_period' => today()->addMonth(),
-                        'recruitmentDate_start' => today(),
-                        'recruitmentDate_end' => today()->addMonth(),
-                        'quizDate_start' => today()->addMonth()->addDay(),
-                        'quizDate_end' => today()->addMonth()->addDays(8),
-                        'psychoTestDate_start' => today()->addMonth()->addDays(9),
-                        'psychoTestDate_end' => today()->addMonth()->addDays(16),
-                        'interview_date' => today()->addMonth()->addDays(23),
-                    ]);
-                    Vacancies::create([
-                        'judul' => Factory::create()->jobTitle,
-                        'cities_id' => rand(Cities::min('id'), Cities::max('id')),
-                        'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'pengalaman' => $faker->randomDigitNotNull,
-                        'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
-                        'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
-                        'industry_id' => $agency->industri_id,
-                        'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
-                        'agency_id' => $agency->id,
-                        'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
-                        'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                        'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                        'plan_id' => 3,
-                        'passing_grade' => $faker->randomFloat(8, 70, 80),
-                        'quiz_applicant' => 75,
-                        'psychoTest_applicant' => 5,
-                        'isPost' => true,
-                        'active_period' => today()->addMonth(),
-                        'recruitmentDate_start' => today(),
-                        'recruitmentDate_end' => today()->addMonth(),
-                        'quizDate_start' => today()->addMonth()->addDay(),
-                        'quizDate_end' => today()->addMonth()->addDays(8),
-                        'psychoTestDate_start' => today()->addMonth()->addDays(9),
-                        'psychoTestDate_end' => today()->addMonth()->addDays(16),
-                        'interview_date' => today()->addMonth()->addDays(23),
-                    ]);
-                    Vacancies::create([
-                        'judul' => Factory::create()->jobTitle,
-                        'cities_id' => rand(Cities::min('id'), Cities::max('id')),
-                        'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
-                            '</li></ul>',
-                        'pengalaman' => $faker->randomDigitNotNull,
-                        'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
-                        'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
-                        'industry_id' => $agency->industri_id,
-                        'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
-                        'agency_id' => $agency->id,
-                        'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
-                        'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
-                        'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
-                        'plan_id' => 3,
-                        'passing_grade' => $faker->randomFloat(8, 70, 80),
-                        'quiz_applicant' => 75,
-                        'psychoTest_applicant' => 5,
-                        'isPost' => true,
-                        'active_period' => today()->addMonth(),
-                        'recruitmentDate_start' => today(),
-                        'recruitmentDate_end' => today()->addMonth(),
-                        'quizDate_start' => today()->addMonth()->addDay(),
-                        'quizDate_end' => today()->addMonth()->addDays(8),
-                        'psychoTestDate_start' => today()->addMonth()->addDays(9),
-                        'psychoTestDate_end' => today()->addMonth()->addDays(16),
-                        'interview_date' => today()->addMonth()->addDays(23),
-                    ]);
                 }
 
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 1,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'interview_date' => today()->addMonth()->addWeek(),
+                ]);
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 1,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'interview_date' => today()->addMonth()->addWeek(),
+                ]);
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 1,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'interview_date' => today()->addMonth()->addWeek(),
+                ]);
+
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 2,
+                    'passing_grade' => $faker->randomFloat(8, 60, 80),
+                    'quiz_applicant' => 75,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'quizDate_start' => today()->addMonth()->addDay(),
+                    'quizDate_end' => today()->addMonth()->addDays(8),
+                    'interview_date' => today()->addMonth()->addDays(15),
+                ]);
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 2,
+                    'passing_grade' => $faker->randomFloat(8, 60, 80),
+                    'quiz_applicant' => 75,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'quizDate_start' => today()->addMonth()->addDay(),
+                    'quizDate_end' => today()->addMonth()->addDays(8),
+                    'interview_date' => today()->addMonth()->addDays(15),
+                ]);
+
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 3,
+                    'passing_grade' => $faker->randomFloat(8, 70, 80),
+                    'quiz_applicant' => 75,
+                    'psychoTest_applicant' => 5,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'quizDate_start' => today()->addMonth()->addDay(),
+                    'quizDate_end' => today()->addMonth()->addDays(8),
+                    'psychoTestDate_start' => today()->addMonth()->addDays(9),
+                    'psychoTestDate_end' => today()->addMonth()->addDays(16),
+                    'interview_date' => today()->addMonth()->addDays(23),
+                ]);
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 3,
+                    'passing_grade' => $faker->randomFloat(8, 70, 80),
+                    'quiz_applicant' => 75,
+                    'psychoTest_applicant' => 5,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'quizDate_start' => today()->addMonth()->addDay(),
+                    'quizDate_end' => today()->addMonth()->addDays(8),
+                    'psychoTestDate_start' => today()->addMonth()->addDays(9),
+                    'psychoTestDate_end' => today()->addMonth()->addDays(16),
+                    'interview_date' => today()->addMonth()->addDays(23),
+                ]);
+                Vacancies::create([
+                    'judul' => Factory::create()->jobTitle,
+                    'cities_id' => rand(Cities::min('id'), Cities::max('id')),
+                    'syarat' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'tanggungjawab' => '<ul><li>' . $faker->sentence($nbWords = 10, $variableNbWords = true) .
+                        '</li></ul>',
+                    'pengalaman' => $faker->randomDigitNotNull,
+                    'jobtype_id' => rand(JobType::min('id'), JobType::max('id')),
+                    'joblevel_id' => rand(JobLevel::min('id'), JobLevel::max('id')),
+                    'industry_id' => $agency->industri_id,
+                    'salary_id' => rand(Salaries::min('id'), Salaries::max('id')),
+                    'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                    'tingkatpend_id' => rand(Tingkatpend::min('id'), Tingkatpend::max('id')),
+                    'jurusanpend_id' => rand(Jurusanpend::min('id'), Jurusanpend::max('id')),
+                    'fungsikerja_id' => rand(FungsiKerja::min('id'), FungsiKerja::max('id')),
+                    'plan_id' => 3,
+                    'passing_grade' => $faker->randomFloat(8, 70, 80),
+                    'quiz_applicant' => 75,
+                    'psychoTest_applicant' => 5,
+                    'isPost' => true,
+                    'active_period' => today()->addMonth(),
+                    'recruitmentDate_start' => today(),
+                    'recruitmentDate_end' => today()->addMonth(),
+                    'quizDate_start' => today()->addMonth()->addDay(),
+                    'quizDate_end' => today()->addMonth()->addDays(8),
+                    'psychoTestDate_start' => today()->addMonth()->addDays(9),
+                    'psychoTestDate_end' => today()->addMonth()->addDays(16),
+                    'interview_date' => today()->addMonth()->addDays(23),
+                ]);
+
             } elseif ($role == Role::SEEKER) {
-                for ($c = 0; $c < (($role == Role::SEEKER) ? 50 : 2); $c++) {
+                for ($c = 0; $c < (($role == Role::SEEKER) ? 6 : 2); $c++) {
                     $user = User::create([
                         'ava' => 'seeker.png',
                         'name' => $faker->firstName . ' ' . $faker->lastName,
@@ -295,6 +341,12 @@ class UserSeeder extends Seeder
                     ]);
                     $seeker->update([
                         'total_exp' => Carbon::parse($exp->start_date)->diffInYears(Carbon::parse($exp->end_date))
+                    ]);
+
+                    \App\FavoriteAgency::create([
+                        'user_id' => $user->id,
+                        'agency_id' => rand(Agencies::min('id'), Agencies::max('id')),
+                        'isFavorite' => true
                     ]);
                 }
 
@@ -348,7 +400,7 @@ class UserSeeder extends Seeder
             'name' => 'Rabbit Media'
         ]);
 
-        User::find(26)->update([
+        User::find(7)->update([
             'email' => 'fiqy_a@icloud.com',
             'name' => 'Fiqy Ainuzzaqy'
         ]);

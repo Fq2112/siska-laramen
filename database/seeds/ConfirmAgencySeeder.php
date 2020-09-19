@@ -22,7 +22,7 @@ class ConfirmAgencySeeder extends Seeder
             $plan_price = $pl->price - ($pl->price * $pl->discount / 100);
             $totalAds = array_sum(str_split(filter_var($pl->job_ads, FILTER_SANITIZE_NUMBER_INT)));
 
-            $agencies = \App\Agencies::take(5)->get();
+            $agencies = \App\Agencies::all();
 
             foreach ($agencies as $agency) {
                 $vacancies = Vacancies::where('agency_id', $agency->id)->take($totalAds)->get()->pluck('id')->toArray();
