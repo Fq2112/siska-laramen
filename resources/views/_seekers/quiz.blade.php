@@ -516,7 +516,8 @@ $agency->user->name.' | '.env('APP_TITLE'))
                         title: 'Oops...',
                         text: 'Something went wrong! Please refresh the page.',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -543,7 +544,8 @@ $agency->user->name.' | '.env('APP_TITLE'))
                         title: 'Oops...',
                         text: 'Something went wrong! Please refresh the page.',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });

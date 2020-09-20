@@ -564,7 +564,8 @@
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Seeker.',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
             $("#favorite").prop('checked', false);
             @else
@@ -577,7 +578,8 @@
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Seeker.',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
             @else
             openLoginModal();

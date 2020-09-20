@@ -200,9 +200,15 @@
 
         setInterval(function () {
             if (check_candidate == false) {
-                swal("ATTENTION!", "The candidate, {{$seeker->user->name}}, hasn't been connected to this room yet! " +
-                    "Please, contact {{$seeker->gender == "female" ? 'her' : 'his'}} " +
-                    "phone: {{$seeker->phone}} or email: {{$seeker->user->email}}.", "warning");
+                swal({
+                    title: 'ATTENTION!',
+                    text: "The candidate, {{$seeker->user->name}}, hasn't been connected to this room yet! " +
+                        "Please, contact {{$seeker->gender == "female" ? 'her' : 'his'}} " +
+                        "phone: {{$seeker->phone}} or email: {{$seeker->user->email}}.",
+                    type: 'warning',
+                    timer: '7000',
+                    confirmButtonColor: '#fa5555',
+                });
             }
         }, 30000);
 
@@ -231,12 +237,23 @@
                                     $(".sticky-footer button").attr('disabled', 'disabled');
                                     $(".sticky-close").click();
 
-                                    swal("Success!", "Psycho Test with Room Code #{{$roomCode}} is " +
-                                        "successfully submitted!", "success");
+                                    swal({
+                                        title: 'Success!',
+                                        text: "Psycho Test with Room Code #{{$roomCode}} is successfully submitted!",
+                                        type: 'success',
+                                        timer: '5000',
+                                        confirmButtonColor: '#00adb5',
+                                    });
                                 },
                                 error: function () {
-                                    swal("Error!", "Psycho Test with Room Code #{{$roomCode}} is failed to submit! " +
-                                        "Something went wrong, please refresh the page.", "error");
+                                    swal({
+                                        title: 'Error!',
+                                        text: "Psycho Test with Room Code #{{$roomCode}} is failed to submit! " +
+                                            "Something went wrong, please refresh the page.",
+                                        type: 'error',
+                                        timer: '7000',
+                                        confirmButtonColor: '#fa5555',
+                                    });
                                 }
                             });
                         });
@@ -248,9 +265,15 @@
                 $("#form-scoring")[0].reset();
                 $(".sticky-close").click();
 
-                swal("ATTENTION!", "The candidate, {{$seeker->user->name}}, hasn't been connected to this room yet! " +
-                    "Please, contact {{$seeker->gender == "female" ? 'her' : 'his'}} " +
-                    "phone: {{$seeker->phone}} or email: {{$seeker->user->email}}.", "warning");
+                swal({
+                    title: 'ATTENTION!',
+                    text: "The candidate, {{$seeker->user->name}}, hasn't been connected to this room yet! " +
+                        "Please, contact {{$seeker->gender == "female" ? 'her' : 'his'}} " +
+                        "phone: {{$seeker->phone}} or email: {{$seeker->user->email}}.",
+                    type: 'warning',
+                    timer: '7000',
+                    confirmButtonColor: '#fa5555',
+                });
             }
 
             return false;

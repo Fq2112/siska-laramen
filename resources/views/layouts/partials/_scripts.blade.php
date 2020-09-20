@@ -132,16 +132,26 @@
     $("#form-login").on("submit", function (e) {
         if (grecaptcha.getResponse(recaptcha_login).length === 0) {
             e.preventDefault();
-            swal('ATTENTION!', 'Please confirm us that you\'re not a robot by clicking in ' +
-                'the reCAPTCHA dialog-box.', 'warning');
+            swal({
+                title: 'ATTENTION!',
+                text: 'Please confirm us that you\'re not a robot by clicking in the reCAPTCHA dialog-box.',
+                type: 'warning',
+                timer: '5500',
+                confirmButtonColor: '#fa5555',
+            });
         }
     });
 
     $("#form-register").on("submit", function (e) {
         if (grecaptcha.getResponse(recaptcha_register).length === 0) {
             e.preventDefault();
-            swal('ATTENTION!', 'Please confirm us that you\'re not a robot by clicking in ' +
-                'the reCAPTCHA dialog-box.', 'warning');
+            swal({
+                title: 'ATTENTION!',
+                text: 'Please confirm us that you\'re not a robot by clicking in the reCAPTCHA dialog-box.',
+                type: 'warning',
+                timer: '5500',
+                confirmButtonColor: '#fa5555',
+            });
         }
 
         if ($.trim($("#reg_email,#reg_name,#reg_password,#reg_password_confirm").val()) === "") {

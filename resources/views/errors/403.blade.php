@@ -419,7 +419,8 @@
                     title: 'ATTENTION!',
                     text: 'You\'re redirected here because you already have a score for this quiz.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
             </script>
         @elseif(Auth::user()->isSeeker() && \Illuminate\Support\Facades\Request::is('psychoTest'))
@@ -431,7 +432,8 @@
                     title: 'ATTENTION!',
                     text: 'You\'re redirected here because you already have a result for this psycho test.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
             </script>
         @else
@@ -444,7 +446,8 @@
                     title: 'ATTENTION!',
                     text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
                 @else
                 swal({
@@ -452,7 +455,8 @@
                     text: 'You\'re redirected here because you didn\'t signed in as a Job {{Auth::user()->isSeeker() ?
                 'Agency' : 'Seeker'}}.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
                 @endif
             </script>
@@ -469,7 +473,8 @@
                     title: 'ATTENTION!',
                     text: 'You\'re redirected here because this candidate already have a result for this psycho test.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
             </script>
             @else
@@ -509,7 +514,8 @@
                         title: 'ATTENTION!',
                         text: 'You\'re redirected here because you didn\'t signed in as {{$role}}.',
                         type: 'warning',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
                 </script>
             @endif
@@ -523,7 +529,8 @@
                     title: 'ATTENTION!',
                     text: 'You\'re redirected here because you didn\'t signed in as an Admin.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
                 @elseif(\Illuminate\Support\Facades\Request::is('seekers*'))
                 swal({
@@ -531,7 +538,8 @@
                     text: 'You\'re redirected here because the page you requested requires authentication, ' +
                         'please login to your account.',
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
                 @endif
             </script>

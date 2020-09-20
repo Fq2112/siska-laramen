@@ -144,7 +144,8 @@
                             title: 'Recommended Seeker',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -210,7 +211,8 @@
                             title: 'Recommended Seeker',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -425,7 +427,8 @@
                                 title: 'ATTENTION!',
                                 text: 'Please select one of your vacancies in order to offer it for this Job Seeker.',
                                 type: 'warning',
-                                timer: '3500'
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
                             });
                         }
                     });
@@ -435,7 +438,8 @@
                         title: 'Oops...',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     });
                 }
             });

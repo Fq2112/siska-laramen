@@ -308,7 +308,8 @@
                         title: 'ATTENTION!',
                         text: 'The quiz date of ' + judul + ' hasn\'t started yet.',
                         type: 'warning',
-                        timer: '5500'
+                        timer: '5500',
+                        confirmButtonColor: '#fa5555',
                     });
                 } else {
                     $('#form-access-quiz')[0].submit();

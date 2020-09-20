@@ -14,9 +14,4 @@ class PaymentMethod extends Model
     {
         return $this->belongsTo(PaymentCategory::class, 'payment_category_id');
     }
-
-    public function confirmAgencies()
-    {
-        return $this->hasMany(ConfirmAgency::class);
-    }
 }

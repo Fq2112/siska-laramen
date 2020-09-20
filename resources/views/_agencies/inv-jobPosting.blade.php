@@ -49,7 +49,7 @@
                     <tbody>
                     <tr style="margin-top: 8px; margin-bottom: 8px;">
                         <td>
-                            <img src="http://i66.tinypic.com/2iux5ph.png" alt="{{env('APP_NAME')}}" width="200">
+                            <img src="{{asset('images/logo/logotype.png')}}" alt="{{env('APP_NAME')}}" width="200">
                         </td>
                         <td style="text-align: right; padding-right: 15px;">
                             <a href="javascript:window.print()"
@@ -164,23 +164,18 @@
                             <table style="width: 100%; border-collapse: collapse;" width="100%" cellspacing="0"
                                    cellpadding="0">
                                 <tr>
-                                    <td style="font-size: 16px;padding: 3px 0;font-weight: 600">{{$pc->name}}</td>
+                                    <td style="font-size: 16px;padding: 3px 0;font-weight: 600">{{strtoupper(str_replace('_',' ',$confirmAgency->payment_type))}}</td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <table>
                                             <tr>
                                                 <td style="font-size: 13px">
-                                                    <img src="{{asset('images/paymentMethod/'.$pm->logo)}}"
-                                                         style="width: 35%;float:left;margin-right: 10px"
-                                                         alt="{{$pm->name}}">
-                                                    @if($pc->id == 1)
-                                                        {{number_format($pm->account_number,0," "," ")}}<br>
-                                                        a/n {{$pm->account_name}}
-                                                    @elseif($pc->id == 4)
-                                                        <strong style="font-size: 15px;text-transform: uppercase">
-                                                            {{$confirmAgency->payment_code}}</strong>
-                                                        <br>Payment Code
+                                                    <img src="{{asset('images/paymentMethod/'.$confirmAgency->payment_name.'.png')}}"
+                                                         style="width: 35%;float:left;margin-right: 10px" alt="icon">
+                                                    @if($confirmAgency->payment_type == 'credit_card' || $confirmAgency->payment_type == 'bank_transfer' || $confirmAgency->payment_type == 'cstore')
+                                                        {{$confirmAgency->payment_number}}<br>
+                                                        {{$confirmAgency->payment_type == 'bank_transfer' ? 'a/n '.env('APP_NAME') : 'Payment Code'}}
                                                     @endif
                                                 </td>
                                             </tr>
@@ -300,27 +295,40 @@
                         <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
                             Rp{{number_format($price_totalPsychoTest,2,",",".")}}</td>
                     </tr>
-                    <tr style="font-size: 13px;">
-                        <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">Unique
-                            Code
-                        </td>
-                        <td colspan="2" style="width: 120px;padding: 8px 5px"><strong>&ndash;</strong></td>
-                        <td style="width: 115px; padding: 8px 5px;" width="115">
-                            Rp{{$pc->id == 1 ? $confirmAgency->payment_code : 0}},00
-                        </td>
-                        <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
-                            -Rp{{$pc->id == 1 ? $confirmAgency->payment_code : 0}},00
-                        </td>
-                    </tr>
                     <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
                         <td colspan="4" style="font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
                             Subtotal
                         </td>
-                        <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
-                            width="115">Rp{{number_format($confirmAgency->total_payment,2,",",".")}}</td>
+                        <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;" width="115">Rp{{number_format($confirmAgency->is_discount == true ?
+                            $confirmAgency->total_payment + $confirmAgency->discount :
+                            $confirmAgency->total_payment,2,",",".")}}</td>
                     </tr>
                     </tbody>
                 </table>
+
+                @if($confirmAgency->is_discount == true)
+                    @php $promo = \App\PromoCode::where('promo_code', $confirmAgency->promo_code)->first(); @endphp
+                    <table style="width: 100%; text-align: center; padding: 0 0 15px 0;" width="100%" cellspacing="0"
+                           cellpadding="0">
+                        <tbody>
+                        <tr style="font-size: 13px;">
+                            <td style="width: 270px;font-weight: 600; text-align: left; padding: 8px 0 8px 15px;">Discount Voucher<br>Code: <strong>{{$promo->promo_code}}</strong></td>
+                            <td colspan="2" style="width: 120px;padding: 8px 5px;"><strong>1</strong></td>
+                            <td style="width: 115px; padding: 8px 5px;" width="115">-{{$promo->discount}}%</td>
+                            <td style="width: 115px; text-align: right; padding: 8px 30px 8px 5px;" width="115">
+                                -Rp{{number_format($confirmAgency->discount,2,",",".")}}</td>
+                        </tr>
+                        <tr style="font-size: 13px; background-color: rgba(0,0,0,0.1);" bgcolor="#F1F1F1">
+                            <td colspan="4" style="font-weight: 600; text-align: left; padding: 8px 5px 8px 15px;">
+                                Subtotal
+                            </td>
+                            <td style="width: 115px; font-weight: 600; text-align: right; padding: 8px 30px 8px 5px;"
+                                width="115">Rp{{number_format($confirmAgency->total_payment,2,",",".")}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                @endif
+
                 <table width="100%" cellspacing="0" cellpadding="0" style="width: 100%; padding: 0 0 20px;">
                     <tbody>
                     <tr>

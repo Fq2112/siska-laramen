@@ -82,7 +82,8 @@
                 title: 'ATTENTION!',
                 text: '{{$req_invoice}} has been expired.',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
                     @endif
                     @endif
@@ -136,7 +137,8 @@
                             title: 'Vacancy Status',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -201,7 +203,8 @@
                             title: 'Vacancy Status',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -416,7 +419,8 @@
                         title: 'Attention!',
                         text: "Your browser does not support new File API! Please upgrade.",
                         type: 'warning',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
 
                 } else {
@@ -425,7 +429,8 @@
                             title: 'Payment Proof',
                             text: file_name + " with total size " + filesize(files_size) + ", Allowed size is " + filesize(max_file_size) + ", Try smaller file!",
                             type: 'error',
-                            timer: '3500'
+                            timer: '3500',
+                            confirmButtonColor: '#fa5555',
                         });
                         $("#messages-" + id).html('Please upload a smaller file (< ' + filesize(max_file_size) + ').');
                         document.getElementById('file-image').classList.add("hidden");
@@ -438,7 +443,8 @@
                                 title: 'Payment Proof',
                                 text: file.name + " is unsupported file type!",
                                 type: 'error',
-                                timer: '3500'
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
                             });
                             document.getElementById('file-image').classList.add("hidden");
                             document.getElementById('notimage').classList.remove("hidden");
@@ -486,7 +492,8 @@
                                             'your vacancy is already posted or not, please check ' +
                                             'Vacancy Status in your dashboard.',
                                         type: 'success',
-                                        timer: '7000'
+                                        timer: '7000',
+                                        confirmButtonColor: '#00adb5',
                                     });
 
                                     setImage(data);
@@ -497,7 +504,8 @@
                                         title: 'Oops...',
                                         text: 'Something went wrong!',
                                         type: 'error',
-                                        timer: '1500'
+                                        timer: '1500',
+                                        confirmButtonColor: '#fa5555',
                                     })
                                 }
                             });

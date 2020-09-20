@@ -15,7 +15,6 @@ use App\JobLevel;
 use App\JobType;
 use App\Jurusanpend;
 use App\PartnerCredential;
-use App\PaymentMethod;
 use App\Plan;
 use App\Provinces;
 use App\Salaries;
@@ -401,7 +400,6 @@ class AccountController extends Controller
                 asset('images/stamp_unpaid.png');
 
             $plan = Plan::find($row['plans_id']);
-            $payment_method = PaymentMethod::find($row['payment_method_id']);
 
             $vacancies['vacancy_ids'] = Vacancies::whereIn('id', $row['vacancy_ids'])
                 ->select('id', 'judul', 'isPost')->get()->toArray();
@@ -409,8 +407,8 @@ class AccountController extends Controller
             $paid = array('ava' => $filename);
             $invoice = array('invoice' => '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $row['id']);
             $pl = array('plan' => $plan->name);
-            $pm = array('pm' => $payment_method->name);
-            $pc = array('pc' => $payment_method->paymentCategories->name);
+            $pm = array('pm' => $row['payment_name']);
+            $pc = array('pc' => strtoupper(str_replace('_',' ',$row['payment_type'])));
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());
             $created_at1DayAdd = array('add_day' => Carbon::parse($row['created_at'])->addDay());
             $status = array('expired' => now() >= Carbon::parse($row['created_at'])->addDay() ? true : false);

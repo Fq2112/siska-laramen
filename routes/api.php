@@ -254,6 +254,39 @@ $router->group(['prefix' => 'api', 'namespace' => 'Api'], function ($router) {
         'as' => 'get.vacancy'
     ]);
 
+    $router->group(['prefix' => 'midtrans'], function ($router) {
+
+        $router->get('snap', [
+            'uses' => 'MidtransController@snap',
+            'as' => 'get.midtrans.snap'
+        ]);
+
+        $router->group(['prefix' => 'callback'], function ($router) {
+
+            $router->get('finish', [
+                'uses' => 'MidtransController@finishCallback',
+                'as' => 'get.midtrans-callback.finish'
+            ]);
+
+            $router->get('unfinish', [
+                'uses' => 'MidtransController@unfinishCallback',
+                'as' => 'get.midtrans-callback.unfinish'
+            ]);
+
+            $router->get('error', [
+                'uses' => 'MidtransController@errorCallback',
+                'as' => 'get.midtrans-callback.error'
+            ]);
+
+            $router->post('payment', [
+                'uses' => 'MidtransController@notificationCallback',
+                'as' => 'post.midtrans-callback.notification'
+            ]);
+
+        });
+
+    });
+
     $router->group(['prefix' => 'auth'], function ($router) {
 
         $router->post('login', 'AuthController@login');

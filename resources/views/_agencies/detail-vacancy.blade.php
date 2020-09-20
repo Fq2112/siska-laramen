@@ -999,7 +999,8 @@
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Seeker.',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
             @endif
             @else
@@ -1009,7 +1010,8 @@
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Seeker.',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
             @else
             openLoginModal();
@@ -1029,14 +1031,16 @@
                             title: 'Work Experience Unqualified',
                             text: 'It seems that your work experience for {{$seeker->total_exp}} year(s) isn\'t sufficient for this vacancy.',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         });
                     } else if (data == 2) {
                         swal({
                             title: 'Education Degree Unqualified',
                             text: 'There seems to be none of your education history that has qualified for this vacancy.',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         });
                     } else if (data == 3) {
                         $("#applyModal").modal('hide');
@@ -1054,7 +1058,8 @@
                 title: 'ATTENTION!',
                 text: 'This feature only works when you\'re signed in as a Job Seeker.',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
             @else
             openLoginModal();

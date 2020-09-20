@@ -66,7 +66,8 @@
                 title: 'ATTENTION!',
                 text: 'About Us field can\'t be null!',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
 
         } else if (tinyMCE.get('alasan').getContent() == "") {
@@ -74,7 +75,8 @@
                 title: 'ATTENTION!',
                 text: 'Why Choose Us field can\'t be null!',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
 
         } else {
@@ -118,7 +120,8 @@
                 title: 'ATTENTION!',
                 text: 'Requirements field can\'t be null!',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
 
         } else if (tinyMCE.get('tanggungjawab').getContent() == "") {
@@ -126,7 +129,8 @@
                 title: 'ATTENTION!',
                 text: 'Responsibilities field can\'t be null!',
                 type: 'warning',
-                timer: '3500'
+                timer: '3500',
+                confirmButtonColor: '#fa5555',
             });
 
         } else {

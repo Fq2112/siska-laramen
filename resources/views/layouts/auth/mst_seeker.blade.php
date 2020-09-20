@@ -232,7 +232,7 @@
                 });
             }
         });
-
+        
         var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
             $SIDEBAR_MENU = $('#sidebar-menu'), $TREE_TOGGLE = $('.nav-header');
 

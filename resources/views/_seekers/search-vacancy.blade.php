@@ -645,7 +645,8 @@
                             title: 'Search Vacancy',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -714,7 +715,8 @@
                             title: 'Search Vacancy',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });

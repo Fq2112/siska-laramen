@@ -167,7 +167,8 @@
                             title: 'Recommended Vacancy',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -233,7 +234,8 @@
                             title: 'Recommended Vacancy',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -485,14 +487,16 @@
                                 title: 'ATTENTION!',
                                 text: 'The recruitment date of ' + data.judul + ' hasn\'t started yet.',
                                 type: 'warning',
-                                timer: '5500'
+                                timer: '5500',
+                                confirmButtonColor: '#fa5555',
                             });
                         } else if (data.recruitmentDate_end == null || today > data.recruitmentDate_end) {
                             swal({
                                 title: 'ATTENTION!',
                                 text: 'The recruitment date of ' + data.judul + ' has been ended.',
                                 type: 'warning',
-                                timer: '5500'
+                                timer: '5500',
+                                confirmButtonColor: '#fa5555',
                             });
                         } else if (today >= data.recruitmentDate_start && today <= data.recruitmentDate_end) {
                             @if(!\App\Experience::where('seeker_id',$seeker->id)->count() ||
@@ -511,7 +515,8 @@
                         title: 'Oops...',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     });
                 }
             });

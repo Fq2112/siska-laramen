@@ -1162,7 +1162,8 @@
                         title: 'ATTENTION!',
                         text: 'Please select one of your vacancies in order to offer it for this Job Seeker.',
                         type: 'warning',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
                 }
             });

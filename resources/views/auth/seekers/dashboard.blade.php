@@ -154,7 +154,8 @@
                             title: 'Application Status',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -219,7 +220,8 @@
                             title: 'Application Status',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -557,7 +559,8 @@
                         title: 'Compare Application',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });

@@ -13,7 +13,8 @@
                             title: 'Account Settings',
                             text: 'Your current password is incorrect!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         });
                         $("#error_curr_pass").addClass('has-error');
                         $("#error_new_pass").removeClass('has-error');
@@ -25,7 +26,8 @@
                             title: 'Account Settings',
                             text: 'Your password confirmation doesn\'t match!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         });
                         $("#error_curr_pass").removeClass('has-error');
                         $("#error_new_pass").addClass('has-error');
@@ -37,7 +39,8 @@
                             title: 'Account Settings',
                             text: 'Password successfully updated!',
                             type: 'success',
-                            timer: '3500'
+                            timer: '3500',
+                            confirmButtonColor: '#00adb5',
                         });
                         $("#form-password").trigger("reset");
                         $("#error_curr_pass").removeClass('has-error');
@@ -52,7 +55,8 @@
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     });
                 }
             });
@@ -70,7 +74,8 @@
                     title: 'Attention!',
                     text: "Your browser does not support new File API! Please upgrade.",
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
             } else {
                 if (files_size > max_file_size) {
@@ -78,7 +83,8 @@
                         title: 'AVA Settings',
                         text: file_name + " with total size " + filesize(files_size) + ", Allowed size is " + filesize(max_file_size) + ", Try smaller file!",
                         type: 'error',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
 
                 } else {
@@ -89,7 +95,8 @@
                                     title: 'AVA Settings',
                                     text: file_name + " is unsupported file type!",
                                     type: 'error',
-                                    timer: '3500'
+                                    timer: '3500',
+                                    confirmButtonColor: '#fa5555',
                                 });
                             } else {
                                 $.ajax({
@@ -130,7 +137,8 @@
                                             title: 'AVA Settings',
                                             text: 'Successfully update AVA!',
                                             type: 'success',
-                                            timer: '3500'
+                                            timer: '3500',
+                                            confirmButtonColor: '#00adb5',
                                         });
                                         $("#progress-upload-ava").css("display", "none");
                                     },
@@ -139,7 +147,8 @@
                                             title: 'Oops...',
                                             text: 'Something went wrong!',
                                             type: 'error',
-                                            timer: '1500'
+                                            timer: '1500',
+                                            confirmButtonColor: '#fa5555',
                                         })
                                     }
                                 });
@@ -150,7 +159,8 @@
                                 title: 'Oops...',
                                 text: 'Cancel clicked, there\'s no any file selected!',
                                 type: 'error',
-                                timer: '1500'
+                                timer: '1500',
+                                confirmButtonColor: '#fa5555',
                             })
                         }
                     });
@@ -187,7 +197,8 @@
                                     title: 'Profile Settings',
                                     text: 'Delete successfully!',
                                     type: 'success',
-                                    timer: '3500'
+                                    timer: '3500',
+                                    confirmButtonColor: '#00adb5',
                                 });
                                 $("#progress-upload-video").css("display", "none");
                                 $("#div_delVid").html("");
@@ -197,7 +208,8 @@
                                     title: 'Oops...',
                                     text: 'Something went wrong!',
                                     type: 'error',
-                                    timer: '1500'
+                                    timer: '1500',
+                                    confirmButtonColor: '#fa5555',
                                 })
                             }
                         });
@@ -251,7 +263,8 @@
                         title: 'Experience Settings',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -301,7 +314,8 @@
                         title: 'Education Settings',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -339,7 +353,8 @@
                         title: 'Training Settings',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -387,7 +402,8 @@
                         title: 'Organization Settings',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -424,7 +440,8 @@
                         title: 'Language Settings',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });
@@ -460,7 +477,8 @@
                         title: 'Skill Settings',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });

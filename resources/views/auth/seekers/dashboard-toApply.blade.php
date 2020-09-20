@@ -170,7 +170,8 @@
                             title: 'Job Invitation',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -235,7 +236,8 @@
                             title: 'Job Invitation',
                             text: 'Data not found!',
                             type: 'error',
-                            timer: '1500'
+                            timer: '1500',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 });
@@ -457,7 +459,8 @@
                             title: 'ATTENTION!',
                             text: 'It seems that the recruitment date of ' + title + ' hasn\'t started yet.',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         });
 
                     } else if (today > data.recruitmentDate_end) {
@@ -465,7 +468,8 @@
                             title: 'ATTENTION!',
                             text: 'It seems that the recruitment date of ' + title + ' has been ended.',
                             type: 'warning',
-                            timer: '7000'
+                            timer: '7000',
+                            confirmButtonColor: '#fa5555',
                         })
                     }
                 },
@@ -474,7 +478,8 @@
                         title: 'Job Invitation',
                         text: 'Data not found!',
                         type: 'error',
-                        timer: '1500'
+                        timer: '1500',
+                        confirmButtonColor: '#fa5555',
                     })
                 }
             });

@@ -267,7 +267,13 @@
             if (count > 0) {
                 $("#form-attachments")[0].submit();
             } else {
-                swal("Error!", "There's no any file selected...", "error");
+                swal({
+                    title: 'Error!',
+                    text: 'There\'s no any file selected...',
+                    type: 'error',
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
+                });
             }
         });
         $btnDelete.on('click', function () {

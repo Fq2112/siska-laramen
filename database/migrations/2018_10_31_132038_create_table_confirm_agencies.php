@@ -25,18 +25,13 @@ class CreateTableConfirmAgencies extends Migration
             $table->text('vacancy_ids');
             $table->integer('total_quiz');
             $table->integer('total_psychoTest');
-            $table->integer('payment_method_id')->unsigned();
-            $table->foreign('payment_method_id')->references('id')->on('payment_method')
-                ->onUpdate('CASCADE')->onDelete('CASCADE');
-            $table->string('payment_code');
-            $table->string('cc_number')->nullable();
-            $table->string('cc_name')->nullable();
-            $table->string('cc_expiry', '9')->nullable();
-            $table->string('cc_cvc', '4')->nullable();
             $table->string('promo_code')->nullable();
             $table->boolean('is_discount')->default(false);
             $table->string('discount')->nullable();
             $table->text('total_payment');
+            $table->string('payment_type')->nullable();
+            $table->string('payment_name')->nullable();
+            $table->string('payment_number')->nullable();
             $table->text('payment_proof')->nullable();
             $table->boolean('isPaid')->default(false);
             $table->dateTime('date_payment')->nullable();

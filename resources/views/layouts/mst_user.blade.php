@@ -386,6 +386,10 @@
             width: 100% !important;
         }
 
+        .swal2-modal .swal2-styled {
+            outline: none;
+        }
+
         .carousel-indicators {
             position: absolute;
             bottom: 10px;
@@ -440,7 +444,7 @@
             height: 12px;
             background-color: #fff;
         }
-
+        
         .anim-icon label {
             font-family: 'Font Awesome 5 Free';
             font-weight: 900;
@@ -602,7 +606,7 @@
     <!-- Modernizr JS -->
     <script src="{{asset('js/modernizr-2.6.2.min.js')}}"></script>
     <!-- FOR IE9 below -->
-<!--[if lt IE 9]>
+    <!--[if lt IE 9]>
     <script src="{{asset('js/respond.min.js')}}"></script>
     <![endif]-->
     <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit' async defer></script>
@@ -1078,9 +1082,9 @@
                         <a href="{{route('info.siska')}}#terms-conditions" target="_blank">Terms & Conditions</a><span> &middot; </span>
                         <a href="{{route('info.siska')}}#team" target="_blank">Meet The Team</a><span> &middot; </span>
                         <a href="{{route('info.siska')}}#faqs" target="_blank">FAQ</a><br>
-                        @endif
-                        &copy; {{now()->format('Y').' '.env('APP_NAME')}}. All Rights Reserved.<br>Designed by
-                        <a href="https://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
+                    @endif
+                    &copy; {{now()->format('Y').' '.env('APP_NAME')}}. All Rights Reserved.<br>Designed by
+                    <a href="https://rabbit-media.net/" target="_blank">Rabbit Media</a>.<br>
                 </p>
             </div>
 

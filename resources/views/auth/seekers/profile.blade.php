@@ -2053,7 +2053,8 @@
                     title: 'Attention!',
                     text: "Your browser does not support new File API! Please upgrade.",
                     type: 'warning',
-                    timer: '3500'
+                    timer: '3500',
+                    confirmButtonColor: '#fa5555',
                 });
             } else {
                 if (files_size > max_file_size) {
@@ -2061,7 +2062,8 @@
                         title: 'Background Settings',
                         text: file_name + " with total size " + filesize(files_size) + ", Allowed size is " + filesize(max_file_size) + ", Try smaller file!",
                         type: 'error',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
 
                 } else {
@@ -2072,7 +2074,8 @@
                                     title: 'Background Settings',
                                     text: file_name + " is unsupported file type!",
                                     type: 'error',
-                                    timer: '3500'
+                                    timer: '3500',
+                                    confirmButtonColor: '#fa5555',
                                 });
                             } else {
                                 $.ajax({
@@ -2115,7 +2118,8 @@
                                             title: 'Background Settings',
                                             text: 'Successfully update background!',
                                             type: 'success',
-                                            timer: '3500'
+                                            timer: '3500',
+                                            confirmButtonColor: '#00adb5',
                                         });
                                         $("#progress-upload").css("display", "none");
                                     },
@@ -2124,7 +2128,8 @@
                                             title: 'Oops...',
                                             text: 'Something went wrong!',
                                             type: 'error',
-                                            timer: '1500'
+                                            timer: '1500',
+                                            confirmButtonColor: '#fa5555',
                                         })
                                     }
                                 });
@@ -2135,7 +2140,8 @@
                                 title: 'Oops...',
                                 text: 'Cancel clicked, there\'s no any file selected!',
                                 type: 'error',
-                                timer: '1500'
+                                timer: '1500',
+                                confirmButtonColor: '#fa5555',
                             })
                         }
                     });
@@ -2188,7 +2194,8 @@
                         title: 'Attention!',
                         text: "Your browser does not support new File API! Please upgrade.",
                         type: 'warning',
-                        timer: '3500'
+                        timer: '3500',
+                        confirmButtonColor: '#fa5555',
                     });
                 } else {
                     if (files_size > max_file_size) {
@@ -2196,7 +2203,8 @@
                             title: 'Profile Settings',
                             text: file_name + " with total size " + filesize(files_size) + ", Allowed size is " + filesize(max_file_size) + ", Try smaller file!",
                             type: 'error',
-                            timer: '3500'
+                            timer: '3500',
+                            confirmButtonColor: '#fa5555',
                         });
                         $remove.click();
                         $("#progress-upload-video").css("display", "none");
@@ -2208,7 +2216,8 @@
                                 title: 'Profile Settings',
                                 text: file_name + " is unsupported file type!",
                                 type: 'error',
-                                timer: '3500'
+                                timer: '3500',
+                                confirmButtonColor: '#fa5555',
                             });
                             $remove.click();
                             $("#progress-upload-video").css("display", "none");
@@ -2259,7 +2268,8 @@
                                         title: 'Profile Settings',
                                         text: 'Update successfully!',
                                         type: 'success',
-                                        timer: '3500'
+                                        timer: '3500',
+                                        confirmButtonColor: '#00adb5',
                                     });
                                     $("#progress-upload-video").css("display", "none");
                                 },
@@ -2268,7 +2278,8 @@
                                         title: 'Oops...',
                                         text: 'Something went wrong!',
                                         type: 'error',
-                                        timer: '1500'
+                                        timer: '1500',
+                                        confirmButtonColor: '#fa5555',
                                     });
                                     $remove.click();
                                     $("#progress-upload-video").css("display", "none");

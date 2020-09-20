@@ -336,8 +336,6 @@ class AgencyController extends Controller
         $agency = Agencies::find($confirmAgency->agency_id);
         $user = User::find($agency->user_id);
 
-        $pm = PaymentMethod::find($confirmAgency->payment_method_id);
-        $pc = PaymentCategory::find($pm->payment_category_id);
         $pl = Plan::find($confirmAgency->plans_id);
 
         $plan_price = $pl->price - ($pl->price * $pl->discount / 100);
@@ -364,7 +362,7 @@ class AgencyController extends Controller
         $invoice = 'INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $confirmAgency->id;
 
         return view('_agencies.inv-jobPosting', compact('confirmAgency', 'vacancies', 'agency', 'user',
-            'pm', 'pc', 'pl', 'plan_price', 'totalVacancy', 'price_per_ads', 'price_totalVacancy', 'totalQuizApplicant',
+            'pl', 'plan_price', 'totalVacancy', 'price_per_ads', 'price_totalVacancy', 'totalQuizApplicant',
             'price_totalQuiz', 'totalPsychoTest', 'price_totalPsychoTest', 'invoice'));
     }
 
