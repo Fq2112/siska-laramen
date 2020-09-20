@@ -63,7 +63,9 @@ class SearchAPICOntroller extends Controller
             $query->wherein('tingkatpend_id', $array_deg);
         })->when($major, function ($query) use ($array_major) {
             $query->wherein('jurusanpend_id', $array_major);
-        })->where('judul', 'like', '%' . $q . '%')->where('isPost', true)->get()->take($limit)->toArray();
+        })->where('judul', 'like', '%' . $q . '%')->where('isPost', true)
+//            ->wherenotnull(['recruitmentDate_start','recruitmentDate_end'])
+            ->whereDate('recruitmentDate_end','>',today())->get()->take($limit)->toArray();
 
 
 

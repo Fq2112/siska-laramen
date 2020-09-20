@@ -537,6 +537,15 @@ class ProfileAPIController extends Controller
                 "job_desc" => $job_desc,
             ]);
 
+            $exp = Experience::where('seeker_id', $seeker->id)->get();
+            $totalExp = 0;
+            foreach ($exp as $row) {
+                $totalExp += Carbon::parse($row->start_date)->diffInYears(Carbon::parse($row->end_date));
+            }
+            $seeker->update([
+                'total_exp' => $totalExp
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'success' => true,
@@ -602,6 +611,15 @@ class ProfileAPIController extends Controller
                 "job_desc" => $job_desc,
             ]);
 
+            $exp = Experience::where('seeker_id', $seeker->id)->get();
+            $totalExp = 0;
+            foreach ($exp as $row) {
+                $totalExp += Carbon::parse($row->start_date)->diffInYears(Carbon::parse($row->end_date));
+            }
+            $seeker->update([
+                'total_exp' => $totalExp
+            ]);
+
             return response()->json([
                 'status' => 'success',
                 'success' => true,
@@ -622,6 +640,18 @@ class ProfileAPIController extends Controller
 
             $exp = Experience::findOrFail($id);
             $exp->delete();
+
+            $user = User::findOrFail($this->guard()->user()->id)->toArray();
+            $seeker = Seekers::where('user_id', $user['id'])->first();
+
+            $expSeek = Experience::where('seeker_id', $seeker->id)->get();
+            $totalExp = 0;
+            foreach ($expSeek as $row) {
+                $totalExp += Carbon::parse($row->start_date)->diffInYears(Carbon::parse($row->end_date));
+            }
+            $seeker->update([
+                'total_exp' => $totalExp
+            ]);
             return response()->json([
                 'status' => 'success',
                 'success' => true,

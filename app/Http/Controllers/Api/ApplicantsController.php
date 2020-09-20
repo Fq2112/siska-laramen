@@ -279,15 +279,15 @@ class ApplicantsController extends Controller
             $obj = json_decode($json, true);
 
             $id = $obj['id'];
-            $invite  = Invitation::findOrFail($id);
+            $invite = Invitation::findOrFail($id);
             $invite->update([
-               'isApply' => true
+                'isApply' => true
             ]);
 
             return response()->json([
                 "success" => true,
                 "message" => "Invitation Successfully Accepted"
-            ],200);
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
@@ -428,24 +428,36 @@ class ApplicantsController extends Controller
                 ->where('seeker_id', $seeker->id)->get();
 //        dd($check[0]->id);
             if ($check->count() == 1) {
-                if ($check[0]->isBookmark == true) {
-                    $check[0]->update([
-                        'isBookmark' => false
-                    ]);
-                    return response()->json([
-                        'status' => 'success',
-                        'success' => true,
-                        'message' => 'Bookmarks successfully remove!!'
-                    ], 200);
-                } elseif ($check[0]->isBookmark == false) {
-                    $check[0]->delete();
-                    return response()->json([
-                        'status' => 'success',
-                        'success' => true,
-                        'message' => 'Bookmarks successfully remove!!'
-                    ], 200);
+                if ($check[0]->isApply == true) {//jika data di apply
+                    if ($check[0]->isBookmark == true) {//jika data dibookmark dan di apply
+                        $check[0]->update([
+                            'isBookmark' => false
+                        ]);
+                        return response()->json([
+                            'status' => 'success',
+                            'success' => true,
+                            'message' => 'Bookmarks successfully remove!!'
+                        ], 200);
+                    } elseif ($check[0]->isBookmark == false) { //jika data diapply tapi tidak di bookmark
+                        $check[0]->update([
+                            'isBookmark' => true
+                        ]);
+                        return response()->json([
+                            'status' => 'success',
+                            'success' => true,
+                            'message' => 'Bookmarks successfully Bookmarked!!'
+                        ], 200);
+                    }
+                } else {//jika data tidak diapply
+                    if ($check[0]->isBookmark == true) { //jika data tidak diapply tapi tidak di bookmark
+                        $check[0]->delete();
+                        return response()->json([
+                            'status' => 'success',
+                            'success' => true,
+                            'message' => 'Bookmarks successfully remove!!'
+                        ], 200);
+                    }
                 }
-
             } elseif ($check->count() == 0) {
                 Accepting::create([
                     'seeker_id' => $seeker->id,
