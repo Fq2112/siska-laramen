@@ -217,7 +217,8 @@
                                                             <i class="icon-trash-o ml-1" data-toggle="tooltip"
                                                                data-placement="right" title="HAPUS"
                                                                style="cursor:pointer;float:none"></i>
-                                                            <b class="float-right" style="color: #fa5555">-Rp{{number_format($price,2,',','.')}}</b>
+                                                            <b class="float-right" style="color: #fa5555">
+                                                                -Rp{{number_format($price,2,',','.')}}</b>
                                                         </li>
                                                     </ul>
                                                     <hr class="stats-billing hr-divider my-0"
@@ -413,7 +414,8 @@
                                                         </li>
                                                         <li class="discount list-group-item border-none" style="display: none">
                                                             Discount <strong></strong>
-                                                            <b class="float-right">-Rp{{number_format($price,2,',','.')}}</b>
+                                                            <b class="float-right" style="color: #fa5555">
+                                                                -Rp{{number_format($price,2,',','.')}}</b>
                                                         </li>
                                                     </ul>
                                                     <hr class="stats-billing hr-divider my-0"
@@ -1227,6 +1229,23 @@
                                         swal.close();
                                         $("#payment_method .next").click();
                                         $(".msform").css('width', '75%');
+
+                                        if(isPaid == 1) {
+                                            swal({
+                                                title: "Payment Succeed!",
+                                                type: 'success',
+                                                allowOutsideClick: false,
+                                                closeOnEsc: false,
+                                                closeOnClickOutside: false,
+                                                confirmButtonColor: '#00adb5',
+
+                                                preConfirm: function () {
+                                                    return new Promise(function (resolve) {
+                                                        location.href = '{{route('agency.vacancy.status')}}'
+                                                    });
+                                                },
+                                            });
+                                        }
                                     });
                                 },
                             });
@@ -1367,9 +1386,5 @@
             }
         };
         Countdown.init();
-
-        $(window).on('beforeunload', function () {
-            return "You have attempted to leave this page. Are you sure?";
-        });
     </script>
 @endpush

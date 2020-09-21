@@ -407,7 +407,7 @@ class AccountController extends Controller
             $paid = array('ava' => $filename);
             $invoice = array('invoice' => '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $row['id']);
             $pl = array('plan' => $plan->name);
-            $pm = array('pm' => $row['payment_name']);
+            $pm = array('pm' => $row['payment_type'] == 'credit_card' ? $row['payment_number'] : $row['payment_name']);
             $pc = array('pc' => strtoupper(str_replace('_',' ',$row['payment_type'])));
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());
             $created_at1DayAdd = array('add_day' => Carbon::parse($row['created_at'])->addDay());

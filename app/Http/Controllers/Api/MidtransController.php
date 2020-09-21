@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Agencies;
+use App\Cities;
 use App\ConfirmAgency;
+use App\FungsiKerja;
 use App\Http\Controllers\Controller;
+use App\Industri;
+use App\JobLevel;
+use App\JobType;
+use App\Jurusanpend;
 use App\Mail\Agencies\InvoiceMail;
+use App\PartnerCredential;
 use App\Plan;
+use App\Salaries;
 use App\Support\RomanConverter;
+use App\Tingkatpend;
 use App\User;
 use App\Vacancies;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Midtrans\Config;
@@ -99,7 +112,7 @@ class MidtransController extends Controller
 
         if ($request->discount > 0) {
             $arr_items[] = [
-                'id' => 'DISC-' . strtoupper(uniqid(ConfirmAgency::count() + 1)),
+                'id' => 'DISC-' . strtoupper(uniqid((ConfirmAgency::count() + 1).'-')),
                 'price' => ceil($request->discount_price * -1),
                 'quantity' => 1,
                 'name' => 'Discount ' . $request->discount . '%'
@@ -109,7 +122,7 @@ class MidtransController extends Controller
         return Snap::getSnapToken([
             'enabled_payments' => $this->channels,
             'transaction_details' => [
-                'order_id' => strtoupper(uniqid(ConfirmAgency::count() + 1)),
+                'order_id' => strtoupper(uniqid((ConfirmAgency::count() + 1).'-')),
                 'gross_amount' => ceil($request->total_payment),
             ],
             'customer_details' => [
@@ -134,6 +147,7 @@ class MidtransController extends Controller
                 ],
             ],
             'item_details' => $arr_items,
+            'custom_field1' => $agency->id,
         ]);
     }
 
@@ -141,6 +155,74 @@ class MidtransController extends Controller
     {
         $data_tr = collect(Transaction::status($request->transaction_id))->toArray();
         $code = $data_tr['order_id'];
+        $agency = Agencies::find($data_tr['custom_field1']);
+        $user = $agency->user;
+
+        $data = $this->vacancyPayment('unfinish', $code, $data_tr, $user, $agency, $request);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted as soon as your payment is completed.',
+            'data' => $data
+        ], 200);
+    }
+
+    public function finishCallback(Request $request)
+    {
+        $data_tr = collect(Transaction::status($request->transaction_id))->toArray();
+        $code = $data_tr['order_id'];
+        $agency = Agencies::find($data_tr['custom_field1']);
+        $user = $agency->user;
+
+        try {
+            if (!array_key_exists('fraud_status', $data_tr) ||
+                (array_key_exists('fraud_status', $data_tr) && $data_tr['fraud_status'] == 'accept')) {
+
+                if ($data_tr['payment_type'] == 'credit_card' &&
+                    ($data_tr['transaction_status'] == 'capture' || $data_tr['transaction_status'] == 'settlement')) {
+
+                    $data = $this->vacancyPayment('finish', $code, $data_tr, $user, $agency, $request);
+
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted soon.',
+                        'data' => $data
+                    ], 200);
+                }
+            }
+
+        } catch (\Exception $exception) {
+            return response()->json($exception, 500);
+        }
+    }
+
+    public function notificationCallback()
+    {
+        $notif = new Notification();
+        $data_tr = collect(Transaction::status($notif->transaction_id))->toArray();
+        $confirmAgency = ConfirmAgency::find(strtok($notif->order_id,'-'));
+        $user = $confirmAgency->GetAgency->user;
+
+        try {
+            if (!array_key_exists('fraud_status', $data_tr) ||
+                (array_key_exists('fraud_status', $data_tr) && $data_tr['fraud_status'] == 'accept')) {
+
+                if ($data_tr['payment_type'] != 'credit_card' &&
+                    ($data_tr['transaction_status'] == 'capture' || $data_tr['transaction_status'] == 'settlement')) {
+
+                    $this->mailPayment($confirmAgency, $user, $notif->order_id, null);
+
+                    return 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted soon.';
+                }
+            }
+
+        } catch (\Exception $exception) {
+            return response()->json($exception, 500);
+        }
+    }
+
+    private function vacancyPayment($status, $code, $data_tr, $user, $agency, $request)
+    {
         if ($data_tr['payment_type'] == 'credit_card') {
             $type = $data_tr['payment_type'];
             $bank = $data_tr['card_type'];
@@ -173,8 +255,13 @@ class MidtransController extends Controller
             $account = null;
         }
 
-        $user = User::find($request->user_id);
-        $agency = $user->agencies;
+        if ($request->pdf_url == "" || $request->pdf_url == '' || is_null($request->pdf_url)) {
+            $instruction = null;
+        } else {
+            $instruction = $code . '-instruction.pdf';
+            Storage::put('public/users/agencies/payment/' . $instruction, file_get_contents($request->pdf_url));
+        }
+
         $vac_ids = $request->vacancy_ids;
         sort($vac_ids);
 
@@ -190,6 +277,15 @@ class MidtransController extends Controller
                 'passing_grade' => $value[1] != 0.00 ? $value[1] : null,
                 'quiz_applicant' => $value[2] != 0 ? $value[2] : null,
                 'psychoTest_applicant' => $value[3] != 0 ? $value[3] : null,
+                'isPost' => $status == 'unfinish' ? false : true,
+                'active_period' => $status == 'unfinish' ? null : today()->addMonth(),
+                'recruitmentDate_start' => null,
+                'recruitmentDate_end' => null,
+                'quizDate_start' => null,
+                'quizDate_end' => null,
+                'psychoTestDate_start' => null,
+                'psychoTestDate_end' => null,
+                'interview_date' => null,
             ]);
         }
 
@@ -200,20 +296,25 @@ class MidtransController extends Controller
             'vacancy_ids' => $request->vacancy_ids,
             'total_quiz' => $request->total_quiz,
             'total_psychoTest' => $request->total_psychoTest,
-            'promo_code' => $request->promo_code,
-            'is_discount' => !is_null($request->discount_price) ? 1 : 0,
-            'discount' => $request->discount_price,
+            'promo_code' => $request->discount > 0 ? $request->promo_code : null,
+            'is_discount' => $request->discount > 0 ? 1 : 0,
+            'discount' => $request->discount > 0 ? $request->discount_price : null,
             'total_payment' => $request->total_payment,
             'payment_type' => $type,
             'payment_name' => $bank,
             'payment_number' => $account,
-            'isPaid' => false,
+            'isPaid' => $status == 'unfinish' ? false : true,
+            'date_payment' => $status == 'unfinish' ? null : now(),
         ]);
-        $plan = $confirmAgency->getPlan;
 
+        return $this->mailPayment($confirmAgency, $user, $code, $instruction);
+    }
+
+    private function mailPayment($confirmAgency, $user, $code, $instruction)
+    {
+        $plan = $confirmAgency->getPlan;
         $date = $confirmAgency->created_at;
         $romanDate = RomanConverter::numberToRoman($date->format('y')).'/'. RomanConverter::numberToRoman($date->format('m'));
-
         $price_per_ads = Plan::find(1)->price - (Plan::find(1)->price * Plan::find(1)->discount / 100);
 
         $old_totalVacancy = array_sum(str_split(filter_var($plan->job_ads, FILTER_SANITIZE_NUMBER_INT)));
@@ -249,87 +350,71 @@ class MidtransController extends Controller
             'price_totalPsychoTest' => $price_totalPsychoTest,
         ]);
 
-        $this->invoiceMail($code, $user, $request->pdf_url, $data);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted as soon as your payment is completed.',
-            'data' => $data
-        ], 200);
-    }
-
-    public function finishCallback(Request $request)
-    {
-        $data_tr = collect(Transaction::status($request->transaction_id))->toArray();
-        $code = $data_tr['order_id'];
-
-        try {
-            if (!array_key_exists('fraud_status', $data_tr) ||
-                (array_key_exists('fraud_status', $data_tr) && $data_tr['fraud_status'] == 'accept')) {
-
-                if ($data_tr['payment_type'] == 'credit_card' &&
-                    ($data_tr['transaction_status'] == 'capture' || $data_tr['transaction_status'] == 'settlement')) {
-
-                    // same process with unfinish
-
-                    $this->updatePayment($code);
-
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted soon.',
-                        'data' => $data
-                    ], 200);
-                }
-            }
-
-        } catch (\Exception $exception) {
-            return response()->json($exception, 500);
-        }
-    }
-
-    public function notificationCallback()
-    {
-        $notif = new Notification();
-        $data_tr = collect(Transaction::status($notif->transaction_id))->toArray();
-
-        try {
-            if (!array_key_exists('fraud_status', $data_tr) ||
-                (array_key_exists('fraud_status', $data_tr) && $data_tr['fraud_status'] == 'accept')) {
-
-                if ($data_tr['payment_type'] != 'credit_card' &&
-                    ($data_tr['transaction_status'] == 'capture' || $data_tr['transaction_status'] == 'settlement')) {
-
-                    // same process with unfinish
-
-                    $this->updatePayment($notif->order_id);
-
-                    return response()->json([
-                        'status' => true,
-                        'message' => 'We have sent your payment details to ' . $user->email . '. Your vacancy will be posted soon.',
-                        'data' => $data
-                    ], 200);
-                }
-            }
-
-        } catch (\Exception $exception) {
-            return response()->json($exception, 500);
-        }
-    }
-
-    private function updatePayment($code)
-    {
-       // ADMIN APPROVE
-    }
-
-    private function invoiceMail($code, $user, $pdf_url, $data)
-    {
-        if (!is_null($pdf_url)) {
-            $instruction = $code . '-instruction.pdf';
-            Storage::put('public/users/agencies/payment/' . $instruction, file_get_contents($pdf_url));
-        } else {
-            $instruction = null;
-        }
-
         Mail::to($user->email)->send(new InvoiceMail($code, $data, $instruction));
+
+        if ($confirmAgency->isPaid == 1) {
+            $this->partnershipVacancy($confirmAgency);
+        }
+
+        return $data;
+    }
+
+    private function partnershipVacancy($confirmAgency)
+    {
+        $result = Vacancies::whereIn('id', $confirmAgency->vacancy_ids)->get()->toArray();
+        foreach ($result as $i => $row) {
+            $cities = substr(Cities::find($row['cities_id'])->name, 0, 2) == "Ko" ?
+                substr(Cities::find($row['cities_id'])->name, 5) :
+                substr(Cities::find($row['cities_id'])->name, 10);
+            $agency = Agencies::findOrFail($row['agency_id']);
+            $user = $agency->user;
+            $filename = $user->ava == "agency.png" || $user->ava == "" ? asset('images/agency.png') :
+                asset('storage/users/' . $user->ava);
+
+            $city = array('city' => $cities);
+            $degrees = array('degrees' => Tingkatpend::findOrFail($row['tingkatpend_id'])->name);
+            $majors = array('majors' => Jurusanpend::findOrFail($row['jurusanpend_id'])->name);
+            $jobfunc = array('job_func' => FungsiKerja::findOrFail($row['fungsikerja_id'])->nama);
+            $industry = array('industry' => Industri::findOrFail($row['industry_id'])->nama);
+            $jobtype = array('job_type' => JobType::findOrFail($row['jobtype_id'])->name);
+            $joblevel = array('job_level' => JobLevel::findOrFail($row['joblevel_id'])->name);
+            $salary = array('salary' => Salaries::findOrFail($row['salary_id'])->name);
+            $ava['agency'] = array('ava' => $filename, 'company' => $user->name, 'email' => $user->email,
+                'kantor_pusat' => $agency->kantor_pusat, 'industry_id' => $agency->industri_id,
+                'tentang' => $agency->tentang, 'alasan' => $agency->alasan, 'link' => $agency->link,
+                'alamat' => $agency->alamat, 'phone' => $agency->phone,
+                'hari_kerja' => $agency->hari_kerja, 'jam_kerja' => $agency->jam_kerja,
+                'lat' => $agency->lat, 'long' => $agency->long, 'isSISKA' => true);
+            $update_at = array('updated_at' => \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $row['updated_at'])
+                ->diffForHumans());
+
+            $result[$i] = array_replace($ava, $result[$i], $city, $degrees, $majors, $jobfunc,
+                $industry, $jobtype, $joblevel, $salary, $update_at);
+        }
+
+        $partners = PartnerCredential::where('status', true)->where('isSync', true)
+            ->whereDate('api_expiry', '>=', today())->get();
+        if (count($partners) > 0) {
+            foreach ($partners as $partner) {
+                $client = new Client([
+                    'base_uri' => $partner->uri,
+                    'defaults' => [
+                        'exceptions' => false
+                    ]
+                ]);
+
+                try {
+                    $client->post($partner->uri . '/api/SISKA/vacancies/create', [
+                        'form_params' => [
+                            'key' => $partner->api_key,
+                            'secret' => $partner->api_secret,
+                            'vacancies' => $result,
+                        ]
+                    ]);
+                } catch (ConnectException $e) {
+                    //
+                }
+            }
+        }
     }
 }
