@@ -285,7 +285,7 @@
                 <div class="navbar nav_title" style="border: 0;">
                     <a href="{{$auth->isInterviewer() ? route('dashboard.interviewer') : route('home-admin')}}"
                        class="site_title"><i class="fa fa-user-{{$auth->isInterviewer() ? 'tie' : 'secret'}}"></i>
-                        <span>{{env('APP_NAME')}} {{$auth->isInterviewer() ? 'Interviewer' : 'Admins'}}</span></a>
+                        <span style="letter-spacing: 3px">{{env('APP_NAME')}}</span></a>
                 </div>
 
                 <div class="clearfix"></div>
@@ -297,8 +297,8 @@
                         asset('storage/admins/'.$auth->ava)}}" alt="..." class="img-circle profile_img">
                     </div>
                     <div class="profile_info">
-                        <span>Welcome,</span>
-                        <h2>{{$auth->name}}</h2>
+                        <span>{{strtoupper(str_replace('_', '  ',$auth->role))}}</span>
+                        <h2 style="font-weight: unset">{{$auth->name}}</h2>
                     </div>
                 </div>
                 <!-- /menu profile quick info -->

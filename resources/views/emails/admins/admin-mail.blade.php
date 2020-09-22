@@ -1,3 +1,1 @@
-<div>
-    {!! $bodymessage !!}
-</div>
+{!! $data !!}

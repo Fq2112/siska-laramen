@@ -9,6 +9,7 @@ use App\Blog;
 use App\ConfirmAgency;
 use App\Feedback;
 use App\Http\Controllers\Controller;
+use App\Mail\Admins\ComposeMail;
 use App\PartnerCredential;
 use App\PsychoTestInfo;
 use App\QuizInfo;
@@ -83,22 +84,14 @@ class AdminController extends Controller
     public function composeInbox(Request $request)
     {
         $this->validate($request, [
-            'inbox_to' => 'required|string|email|max:255',
+            'inbox_to' => 'required',
             'inbox_subject' => 'string|min:3',
             'inbox_message' => 'required'
         ]);
-        $data = array(
-            'email' => $request->inbox_to,
-            'subject' => $request->inbox_subject,
-            'bodymessage' => $request->inbox_message
-        );
-        Mail::send('emails.admins.admin-mail', $data, function ($message) use ($data) {
-            $message->from(env('MAIL_USERNAME'));
-            $message->to($data['email']);
-            $message->subject($data['subject']);
-        });
 
-        return back()->with('success', 'Successfully send a message to ' . $data['email'] . '!');
+        Mail::to(explode(',', $request->inbox_to))->send(new ComposeMail($request->inbox_subject,$request->inbox_message));
+
+        return back()->with('success', 'Successfully send a message to ' . str_replace(',',', ',$request->inbox_to) . '!');
     }
 
     public function deleteInbox(Request $request)

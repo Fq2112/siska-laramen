@@ -1,5 +1,45 @@
 @extends('layouts.mst_admin')
 @section('title', 'Inbox &ndash; '.env('APP_NAME').' Admins | '.env('APP_TITLE'))
+@push('styles')
+    <link rel="stylesheet" href="{{asset('bootstrap-tagsinput/bootstrap-tagsinput.css')}}">
+    <style>
+        .bootstrap-tagsinput {
+            padding: 1em;
+            border-radius: 0;
+        }
+
+        .bootstrap-tagsinput .tag {
+            border-radius: 0;
+        }
+
+        .bootstrap-tagsinput .tag [data-role="remove"]:after {
+            font-family: "Font Awesome 5 Free";
+            content: "\f00d";
+            font-weight: 900;
+        }
+
+        .bootstrap-multiemail {
+            min-height: 100px;
+            width: 100%;
+            cursor: text;
+            margin-bottom: 0;
+        }
+
+        .bootstrap-multiemail .tag {
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: #555 !important;
+            padding: 1px 5px;
+            line-height: 27px;
+        }
+
+        .bootstrap-multiemail .tag.invalid {
+            color: #fa5555 !important;
+            border-color: #fa5555;
+        }
+    </style>
+@endpush
 @section('content')
     <div class="right_col" role="main" id="inbox">
         <div class="row">
@@ -83,7 +123,7 @@
     </div>
     <!-- compose -->
     <div class="compose col-md-6 col-xs-12">
-        <form action="{{route('admin.compose.inbox')}}" method="post" id="form-compose">
+        <form action="{{route('admin.compose.inbox')}}" method="post" id="form-compose" novalidate>
             {{csrf_field()}}
             <div class="compose-header">
                 <strong id="compose_title">New Message</strong>
@@ -95,8 +135,7 @@
             <div class="compose-body" style="margin: 1em">
                 <div class="row form-group">
                     <div class="col-lg-12 has-feedback">
-                        <input class="form-control" id="inbox_to" type="email" name="inbox_to" placeholder="To:"
-                               required>
+                        <input class="form-control" id="inbox_to" type="email" name="inbox_to" placeholder="To:">
                         <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
                     </div>
                 </div>
@@ -123,7 +162,11 @@
     <!-- /compose -->
 @endsection
 @push("scripts")
+    <script src="{{asset('bootstrap-tagsinput/bootstrap-tagsinput.js')}}"></script>
+    <script src="{{asset('bootstrap-tagsinput/bootstrap-multiEmail.js')}}"></script>
     <script>
+        var inbox_to = $("#inbox_to"), multiEmailInput = inbox_to.multiEmail();
+
         $(function () {
             @if($findMessage != null)
             $("#{{$findMessage}}").click();
@@ -210,16 +253,44 @@
 
         $("#form-compose").on('submit', function (e) {
             e.preventDefault();
-            if (tinyMCE.get('inbox_message').getContent() == "") {
+            if (!inbox_to.val()) {
                 swal({
                     title: 'ATTENTION!',
-                    text: 'You have to write some messages!',
+                    text: 'You have to write the recipient\'s email!',
                     type: 'warning',
                     timer: '3500'
                 });
 
             } else {
-                $(this)[0].submit();
+                if (!$("#inbox_subject").val()) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: 'You have to write the email subject!',
+                        type: 'warning',
+                        timer: '3500'
+                    });
+
+                } else {
+                    if (tinyMCE.get('inbox_message').getContent() == "") {
+                        swal({
+                            title: 'ATTENTION!',
+                            text: 'You have to write some messages!',
+                            type: 'warning',
+                            timer: '3500'
+                        });
+
+                    } else {
+                        var validEmails = $.grep(inbox_to.tagsinput('items'), function (email, index) {
+                            return multiEmailInput[0].validEmail(email);
+                        });
+                        multiEmailInput[0].removeAll();
+                        $.each(validEmails, function (i, val) {
+                            multiEmailInput[0].add(val);
+                        });
+
+                        $(this)[0].submit();
+                    }
+                }
             }
         });
     </script>
