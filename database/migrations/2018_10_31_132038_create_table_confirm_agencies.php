@@ -29,6 +29,7 @@ class CreateTableConfirmAgencies extends Migration
             $table->boolean('is_discount')->default(false);
             $table->string('discount')->nullable();
             $table->text('total_payment');
+            $table->string('uni_code')->unique();
             $table->string('payment_type')->nullable();
             $table->string('payment_name')->nullable();
             $table->string('payment_number')->nullable();

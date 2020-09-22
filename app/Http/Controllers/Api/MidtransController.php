@@ -112,7 +112,7 @@ class MidtransController extends Controller
 
         if ($request->discount > 0) {
             $arr_items[] = [
-                'id' => 'DISC-' . strtoupper(uniqid((ConfirmAgency::count() + 1).'-')),
+                'id' => 'DISC-' . strtoupper(uniqid('PYM') . now()->timestamp),
                 'price' => ceil($request->discount_price * -1),
                 'quantity' => 1,
                 'name' => 'Discount ' . $request->discount . '%'
@@ -122,7 +122,7 @@ class MidtransController extends Controller
         return Snap::getSnapToken([
             'enabled_payments' => $this->channels,
             'transaction_details' => [
-                'order_id' => strtoupper(uniqid((ConfirmAgency::count() + 1).'-')),
+                'order_id' => strtoupper(uniqid('PYM') . now()->timestamp),
                 'gross_amount' => ceil($request->total_payment),
             ],
             'customer_details' => [
@@ -200,7 +200,7 @@ class MidtransController extends Controller
     {
         $notif = new Notification();
         $data_tr = collect(Transaction::status($notif->transaction_id))->toArray();
-        $confirmAgency = ConfirmAgency::find(strtok($notif->order_id,'-'));
+        $confirmAgency = ConfirmAgency::where('uni_code', $notif->order_id)->first();
         $user = $confirmAgency->GetAgency->user;
 
         try {
@@ -209,6 +209,19 @@ class MidtransController extends Controller
 
                 if ($data_tr['payment_type'] != 'credit_card' &&
                     ($data_tr['transaction_status'] == 'capture' || $data_tr['transaction_status'] == 'settlement')) {
+
+                    $vacancies = Vacancies::whereIn('id', $confirmAgency->vacancy_ids)->get();
+                    foreach ($vacancies as $vacancy) {
+                        $vacancy->update([
+                            'isPost' => true,
+                            'active_period' => today()->addMonth(),
+                        ]);
+                    }
+
+                    $confirmAgency->update([
+                        'isPaid' => true,
+                        'date_payment' => now(),
+                    ]);
 
                     $this->mailPayment($confirmAgency, $user, $notif->order_id, null);
 
@@ -300,6 +313,7 @@ class MidtransController extends Controller
             'is_discount' => $request->discount > 0 ? 1 : 0,
             'discount' => $request->discount > 0 ? $request->discount_price : null,
             'total_payment' => $request->total_payment,
+            'uni_code' => $code,
             'payment_type' => $type,
             'payment_name' => $bank,
             'payment_number' => $account,

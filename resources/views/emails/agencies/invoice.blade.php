@@ -526,7 +526,7 @@
                                                         <td>
                                                             <small><strong>Payment Reference</strong></small>
                                                             <hr class="hr-divider">
-                                                            <span>{{strtoupper(uniqid($data['id']))}}</span>
+                                                            <span>#{{$code}}</span>
                                                         </td>
                                                     </tr>
                                                 </table>

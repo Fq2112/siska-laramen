@@ -37,10 +37,10 @@ class InvoiceMail extends Mailable
         $instruction = $this->instruction;
 
         if ($data['isPaid'] == false) {
-            $this->subject('Waiting for ' . $data['payment_type'] . ' Payment '.$data['invoice']);
+            $this->subject('Waiting for ' . $data['payment_type'] . ' Payment #'.$code);
 
         } else {
-            $this->subject('Checkout Orders with ' . $data['payment_type'] . ' Payment Successfully Confirmed on ' .
+            $this->subject('Checkout Orders with Payment ID #' . $code . ' is Successfully Confirmed on ' .
                 Carbon::parse($data['date_payment'])->format('j F Y') .
                 ' at ' . Carbon::parse($data['date_payment'])->format('H:i'));
         }

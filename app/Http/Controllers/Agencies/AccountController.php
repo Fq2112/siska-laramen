@@ -406,7 +406,17 @@ class AccountController extends Controller
 
             $paid = array('ava' => $filename);
             $invoice = array('invoice' => '#INV/' . $date->format('Ymd') . '/' . $romanDate . '/' . $row['id']);
-            $pl = array('plan' => $plan->name);
+
+            if($row['payment_type'] == 'credit_card' || $row['payment_type'] == 'cstore') {
+                $payment =  strtoupper(str_replace('_',' ',$row['payment_type'])).
+                    ' &ndash; <strong style="text-transform: uppercase">' .$row['payment_number']. '</strong>';
+            } elseif($row['payment_type'] == 'bank_transfer' || $row['payment_type'] == 'echannel') {
+                $payment =  strtoupper($row['payment_name']). ' &ndash; <strong style="text-transform: uppercase">' .$row['payment_number']. '</strong>';
+            } else {
+                $payment =  '<strong style="text-transform: uppercase">' .$row['payment_name']. '</strong>';
+            }
+
+            $pl = array('plan' => $plan->name, 'payment' => $payment);
             $pm = array('pm' => $row['payment_type'] == 'credit_card' ? $row['payment_number'] : $row['payment_name']);
             $pc = array('pc' => strtoupper(str_replace('_',' ',$row['payment_type'])));
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());

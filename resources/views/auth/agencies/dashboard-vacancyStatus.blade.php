@@ -85,8 +85,8 @@
                 timer: '3500',
                 confirmButtonColor: '#fa5555',
             });
-                    @endif
-                    @endif
+            @endif
+            @endif
 
             var start = moment().startOf('month'), end = moment().endOf('month');
 
@@ -289,8 +289,7 @@
                 $("#vacancies" + val.id).html($vacancies +
                     '<li><a class="tag tag-plans"><i class="fa fa-thumbtack"></i>&ensp;Plan: ' +
                     '<strong style="text-transform: uppercase">' + val.plan + '</strong> Package</a></li>' +
-                    '<li><a class="tag tag-plans"><i class="fa fa-credit-card"></i>&ensp;Payment: ' + val.pc + ' &ndash; ' +
-                    '<strong style="text-transform: uppercase">' + val.pm + '</strong></a></li>'
+                    '<li><a class="tag tag-plans"><i class="fa fa-credit-card"></i>&ensp;Payment: '+val.payment+'</a></li>'
                 );
             });
             $('[data-toggle="tooltip"]').tooltip();
