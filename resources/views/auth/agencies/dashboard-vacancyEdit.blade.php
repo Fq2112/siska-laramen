@@ -63,12 +63,18 @@
                                                                 $majors = \App\Jurusanpend::find($row->jurusanpend_id);
                                                                 $applicants = \App\Accepting::where('vacancy_id', $row->id)
                                                                 ->where('isApply', true)->count();
+
+                                                                if($row->isPost == true && $row->active_period != "" && $row->plan_id != ""){
+                                                                    if($row->recruitmentDate_start != "" || $row->recruitmentDate_end != "" || $row->interview_date != "") {
+                                                                        $color = '#eee';
+                                                                    } else {
+                                                                        $color = '#00adb5';
+                                                                    }
+                                                                } else {
+                                                                    $color = '#fa5555';
+                                                                }
                                                             @endphp
-                                                            <div class="row" style="border: {{$row->isPost == true &&
-                                                        $row->active_period != "" && $row->plan_id != "" &&
-                                                        ($row->recruitmentDate_start == "" ||
-                                                        $row->recruitmentDate_end == "" || $row->interview_date == "")
-                                                        ? '2px solid #00ADB5' : 'none'}};">
+                                                            <div class="row">
                                                                 <div class="col-lg-12">
                                                                     <div class="media">
                                                                         <div class="media-left media-middle">
@@ -109,11 +115,7 @@
                                                                         </span>
                                                                             </small>
                                                                             <blockquote
-                                                                                    style="font-size: 12px; color: #7f7f7f; border-left: 5px solid {{$row->isPost == true &&
-                                                        $row->active_period != "" && $row->plan_id != "" &&
-                                                        ($row->recruitmentDate_start == "" ||
-                                                        $row->recruitmentDate_end == "" || $row->interview_date == "")
-                                                        ? '#00ADB5' : '#eee'}};" class="ulTinyMCE">
+                                                                                    style="font-size:12px;color:#7f7f7f; border-left: 5px solid {{$color}};" class="ulTinyMCE">
                                                                                 <ul class="list-inline">
                                                                                     <li>
                                                                                         <a class="tag" target="_blank"
