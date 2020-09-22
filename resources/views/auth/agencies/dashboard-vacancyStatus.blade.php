@@ -251,24 +251,19 @@
                     '<img width="100" class="media-object" src="' + val.ava + '"></div>' +
                     '<div class="media-body">' +
                     '<small class="media-heading">' +
-                    '<a style="color: ' + $color + '" target="_blank" ' +
-                    'href="{{route('invoice.job.posting',['id'=> ''])}}/' + val.encryptID + '">' +
+                    '<a style="color: ' + $color + '" target="_blank" href="'+val.inv_route+'">' +
                     '<i class="fa fa-file-invoice-dollar"></i>&ensp;' + val.invoice + '</a>' +
                     '<sub>&ndash; ' + val.created_at + '</sub></small>' +
                     '<blockquote style="font-size: 12px;color: #7f7f7f">' +
-                    '<form style="display: ' + $display + '" class="pull-right" id="form-paymentProof-' + val.id + '" ' +
-                    'method="post" action="{{route('upload.paymentProof')}}">{{csrf_field()}}' +
-                    '<div class="anim-icon anim-icon-md upload ' + $class + '" ' +
-                    'onclick="uploadPaymentProof(' + $param + ')" data-toggle="tooltip" data-placement="bottom" ' +
-                    'title="Payment Proof" style="font-size: 25px">' +
-                    '<input type="hidden" name="confirmAgency_id" value="' + val.id + '">' +
-                    '<input id="upload' + val.id + '" type="checkbox" checked>' +
-                    '<label for="upload' + val.id + '"></label></div></form>' +
+                    '<a class="pull-right" href="'+val.inv_route+'" onclick="window.open(\''+val.inv_route+'\', \'_blank\')">' +
+                    '<div class="anim-icon anim-icon-md invoice ld ld-breath" data-toggle="tooltip" ' +
+                    'data-placement="bottom" title="INVOICE" style="font-size: 25px">' +
+                    '<input id="invoice' + val.id + '" type="checkbox" checked>' +
+                    '<label for="invoice' + val.id + '"></label></div></a>' +
                     '<ul class="list-inline" id="vacancies' + val.id + '"></ul>' +
                     '<small>' + $label + '</small>' +
                     '<a id="btnDel_jobPosting' + val.id + '" style="display: ' + $display + '" ' +
-                    'href="{{route('delete.job.posting',['id'=>''])}}/' + val.encryptID + '" ' +
-                    'onclick="deleteJobPosting(' + $param2 + ')">' +
+                    'href="' +val.del_route+ '" onclick="deleteJobPosting(' + $param2 + ')">' +
                     '<div class="anim-icon anim-icon-md apply ld ld-heartbeat" data-toggle="tooltip" ' +
                     'data-placement="right" title="Click here to abort this order!" style="font-size: 15px">' +
                     '<input id="apply' + val.id + '" type="checkbox" checked>' +

@@ -119,6 +119,24 @@
         #vac-tab-content .tab-pane {
             margin: 0 15px;
         }
+
+        .invoice label {
+            box-shadow: 0 0 0 0 rgba(0, 173, 181, 0.5);
+        }
+
+        .invoice input:checked + label {
+            background-color: #00ADB5;
+            border-color: #00ADB5;
+            box-shadow: 0 0 0 0.5em rgba(13, 165, 142, 0);
+        }
+
+        .invoice input:checked + label:after {
+            color: #00ADB5;
+        }
+
+        .invoice label:after {
+            content: "\f571";
+        }
     </style>
 @endpush
 @section('content')
@@ -231,7 +249,7 @@
     <script src="{{ asset('js/filter-gridList.js') }}"></script>
     <script>
         $(function () {
-            if($(".nicescrolls").length > 0) {
+            if ($(".nicescrolls").length > 0) {
                 $(".nicescrolls").niceScroll({
                     cursorcolor: "{{Auth::user()->isAgency() ? 'rgb(0,173,181)' : 'rgb(255,85,85)'}}",
                     cursorwidth: "8px",
@@ -242,7 +260,7 @@
                 });
             }
         });
-        
+
         var CURRENT_URL = window.location.href.split('#')[0].split('?')[0],
             $SIDEBAR_MENU = $('#sidebar-menu'), $TREE_TOGGLE = $('.nav-header');
 

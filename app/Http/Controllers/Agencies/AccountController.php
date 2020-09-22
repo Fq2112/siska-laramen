@@ -416,7 +416,10 @@ class AccountController extends Controller
                 $payment =  '<strong style="text-transform: uppercase">' .$row['payment_name']. '</strong>';
             }
 
-            $pl = array('plan' => $plan->name, 'payment' => $payment);
+            $pl = array('plan' => $plan->name, 'payment' => $payment,
+                'inv_route' => route('invoice.job.posting',['id'=> encrypt($row['id'])]),
+                'del_route' => route('delete.job.posting',['id'=> encrypt($row['id'])]),
+            );
             $pm = array('pm' => $row['payment_type'] == 'credit_card' ? $row['payment_number'] : $row['payment_name']);
             $pc = array('pc' => strtoupper(str_replace('_',' ',$row['payment_type'])));
             $created_at = array('created_at' => Carbon::parse($row['created_at'])->diffForHumans());
