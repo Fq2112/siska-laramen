@@ -2,6 +2,7 @@
 @section('title', 'Inbox &ndash; '.env('APP_NAME').' Admins | '.env('APP_TITLE'))
 @push('styles')
     <link rel="stylesheet" href="{{asset('bootstrap-tagsinput/bootstrap-tagsinput.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap-fileinput/css/fileinput.min.css')}}">
     <style>
         .bootstrap-tagsinput {
             padding: 1em;
@@ -19,7 +20,6 @@
         }
 
         .bootstrap-multiemail {
-            min-height: 100px;
             width: 100%;
             cursor: text;
             margin-bottom: 0;
@@ -28,15 +28,25 @@
         .bootstrap-multiemail .tag {
             background-color: transparent;
             border: 1px solid #ccc;
-            border-radius: 3px;
+            border-radius: 10px;
             color: #555 !important;
             padding: 1px 5px;
-            line-height: 27px;
+            line-height: 18px;
         }
 
         .bootstrap-multiemail .tag.invalid {
-            color: #fa5555 !important;
-            border-color: #fa5555;
+            background-color: #E74C3C !important;
+            color: #fff !important;
+            border-color: #E74C3C !important;
+        }
+
+        #attach-div .input-group {
+            margin-bottom: 0;
+        }
+
+        #attach-div .file-preview {
+            border-radius: 0;
+            border-color: #ccc;
         }
     </style>
 @endpush
@@ -123,7 +133,8 @@
     </div>
     <!-- compose -->
     <div class="compose col-md-6 col-xs-12">
-        <form action="{{route('admin.compose.inbox')}}" method="post" id="form-compose" novalidate>
+        <form action="{{route('admin.compose.inbox')}}" method="post" id="form-compose"
+              enctype="multipart/form-data" novalidate>
             {{csrf_field()}}
             <div class="compose-header">
                 <strong id="compose_title">New Message</strong>
@@ -142,8 +153,27 @@
                 <div class="row form-group">
                     <div class="col-lg-12 has-feedback">
                         <input class="form-control" id="inbox_subject" type="text" name="inbox_subject"
-                               placeholder="Subject:" required>
+                               placeholder="Subject:">
                         <span class="fa fa-text-width form-control-feedback right" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-lg-12 has-feedback">
+                        <select class="form-control selectpicker" id="inbox_category" name="inbox_category"
+                                title="-- Choose Category --">
+                            <option value="promo">Promo</option>
+                            <option value="others">Others</option>
+                        </select>
+                        <span class="fa fa-tags form-control-feedback right" aria-hidden="true"></span>
+                    </div>
+                    <div class="col-lg-6 has-feedback" style="display: none">
+                        <select class="form-control selectpicker" id="inbox_promo" name="inbox_promo"
+                                title="-- Choose Promo --">
+                            @foreach($promo as $row)
+                                <option value="{{$row->promo_code}}" data-subtext="{{$row->description}}">{{$row->promo_code}}</option>
+                            @endforeach
+                        </select>
+                        <span class="fa fa-ticket-alt form-control-feedback right" aria-hidden="true"></span>
                     </div>
                 </div>
                 <div class="row form-group">
@@ -152,10 +182,21 @@
                         <span class="fa fa-text-height form-control-feedback right" aria-hidden="true"></span>
                     </div>
                 </div>
+                <div id="attach-div" class="row form-group" style="display: none">
+                    <div class="col-lg-12">
+                        <input accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.odt,.ppt,.pptx"
+                               type="file" name="attachments[]" multiple>
+                    </div>
+                </div>
             </div>
-
-            <div class="compose-footer">
-                <button id="send" class="btn btn-block btn-success" type="submit">Send</button>
+            <div class="row compose-footer">
+                <div class="col-lg-1">
+                    <button id="attach" class="btn btn-block btn-default" type="button">
+                        <i class="fa fa-paperclip"></i></button>
+                </div>
+                <div class="col-lg-11">
+                    <button id="send" class="btn btn-block btn-success" type="submit"><b>SEND MESSAGE</b></button>
+                </div>
             </div>
         </form>
     </div>
@@ -164,13 +205,124 @@
 @push("scripts")
     <script src="{{asset('bootstrap-tagsinput/bootstrap-tagsinput.js')}}"></script>
     <script src="{{asset('bootstrap-tagsinput/bootstrap-multiEmail.js')}}"></script>
+    <script src="{{asset('bootstrap-fileinput/js/plugins/piexif.min.js')}}"></script>
+    <script src="{{asset('bootstrap-fileinput/js/plugins/sortable.min.js')}}"></script>
+    <script src="{{asset('bootstrap-fileinput/js/plugins/purify.min.js')}}"></script>
+    <script src="{{asset('bootstrap-fileinput/js/fileinput.min.js')}}"></script>
     <script>
-        var inbox_to = $("#inbox_to"), multiEmailInput = inbox_to.multiEmail();
+        var inbox_to = $("#inbox_to"), multiEmailInput = inbox_to.multiEmail(),
+            inbox_category = $("#inbox_category"),
+            inbox_promo = $("#inbox_promo"),
+            btn_attach = $("#attach"), input_attach = $("#attach-div input[type=file]");
 
         $(function () {
             @if($findMessage != null)
             $("#{{$findMessage}}").click();
             @endif
+        });
+
+        $("#compose").on("click", function () {
+            $("#compose_title").text('New Message');
+            tinyMCE.get('inbox_message').setContent('');
+            inbox_category.parents('.has-feedback').addClass('col-lg-12').removeClass('col-lg-6').next().hide();
+            $("#inbox_category, #inbox_promo").val('default').selectpicker('refresh');
+            $("#form-compose")[0].reset();
+        });
+
+        inbox_category.on('change', function () {
+            inbox_promo.val('default').selectpicker('refresh');
+
+            if($(this).val() == 'promo') {
+                $(this).parents('.has-feedback').removeClass('col-lg-12').addClass('col-lg-6').next().show();
+            } else {
+                $(this).parents('.has-feedback').addClass('col-lg-12').removeClass('col-lg-6').next().hide();
+            }
+        });
+
+        btn_attach.on('click', function () {
+            $("#attach-div").toggle(300);
+            $(".file-input").hide().parents('label').find('.card-text').show();
+
+            input_attach.fileinput('destroy').fileinput({
+                showUpload: false,
+                showBrowse: false,
+                showCaption: true,
+                browseOnZoneClick: true,
+                showPreview: true,
+                initialPreviewAsData: true,
+                overwriteInitial: true,
+                initialCaption: "Choose file...",
+                dropZoneTitle: 'Drag & drop your design file here...',
+                dropZoneClickTitle: '<br>(or click to choose it)',
+                removeLabel: 'DELETE',
+                removeIcon: '<i class="fa fa-trash-alt mr-1"></i>',
+                removeClass: 'btn btn-danger btn-block m-0',
+                removeTitle: 'Click here to clear the file you selected!',
+                cancelLabel: 'CANCEL',
+                cancelIcon: '<i class="fa fa-undo mr-1"></i>',
+                cancelClass: 'btn btn-danger btn-block m-0',
+                cancelTitle: 'Click here to cancel your file upload process!',
+                allowedFileExtensions: ["jpg", "jpeg", "png", "tiff", "pdf", "doc", "docx"],
+                maxFileSize: 5120,
+                msgSizeTooLarge: 'File \"{name}\" (<b>{size} KB</b>) exceeds maximum allowed upload size of <b>{maxSize} KB (5 MB)</b>, try to upload smaller file!',
+                msgInvalidFileExtension: 'Invalid extension for file \"{name}\", only \"{extensions}\" files are supported!',
+            });
+
+            $(".file-input .file-caption-name").attr('disabled', 'disabled').removeAttr('title').css('cursor', 'text');
+            $(".file-input .file-caption").removeClass('icon-visible');
+        });
+
+        $("#form-compose").on('submit', function (e) {
+            e.preventDefault();
+            if (!inbox_to.val()) {
+                swal({
+                    title: 'ATTENTION!',
+                    text: 'You have to write the recipient\'s email!',
+                    type: 'warning',
+                    timer: '3500'
+                });
+
+            } else {
+                if (!$("#inbox_subject").val()) {
+                    swal({
+                        title: 'ATTENTION!',
+                        text: 'You have to write the email subject!',
+                        type: 'warning',
+                        timer: '3500'
+                    });
+
+                } else {
+                    if(inbox_category.val() == 'promo' && !inbox_promo.val()) {
+                        swal({
+                            title: 'ATTENTION!',
+                            text: 'You have to choose the promo code!',
+                            type: 'warning',
+                            timer: '3500'
+                        });
+
+                    } else {
+                        if (tinyMCE.get('inbox_message').getContent() == "") {
+                            swal({
+                                title: 'ATTENTION!',
+                                text: 'You have to write some messages!',
+                                type: 'warning',
+                                timer: '3500'
+                            });
+
+                        } else {
+                            var validEmails = $.grep(inbox_to.tagsinput('items'), function (email, index) {
+                                return multiEmailInput[0].validEmail(email);
+                            });
+                            multiEmailInput[0].removeAll();
+                            $.each(validEmails, function (i, val) {
+                                multiEmailInput[0].add(val);
+                            });
+
+                            $(this)[0].submit();
+                        }
+                    }
+                }
+            }
         });
 
         function viewMail(id, name, email, subject, message, date, deleteId) {
@@ -244,54 +396,5 @@
                 scrollTop: $('#inbox').offset().top
             }, 500);
         }
-
-        $("#compose").on("click", function () {
-            $("#compose_title").text('New Message');
-            tinyMCE.get('inbox_message').setContent('');
-            $("#form-compose")[0].reset();
-        });
-
-        $("#form-compose").on('submit', function (e) {
-            e.preventDefault();
-            if (!inbox_to.val()) {
-                swal({
-                    title: 'ATTENTION!',
-                    text: 'You have to write the recipient\'s email!',
-                    type: 'warning',
-                    timer: '3500'
-                });
-
-            } else {
-                if (!$("#inbox_subject").val()) {
-                    swal({
-                        title: 'ATTENTION!',
-                        text: 'You have to write the email subject!',
-                        type: 'warning',
-                        timer: '3500'
-                    });
-
-                } else {
-                    if (tinyMCE.get('inbox_message').getContent() == "") {
-                        swal({
-                            title: 'ATTENTION!',
-                            text: 'You have to write some messages!',
-                            type: 'warning',
-                            timer: '3500'
-                        });
-
-                    } else {
-                        var validEmails = $.grep(inbox_to.tagsinput('items'), function (email, index) {
-                            return multiEmailInput[0].validEmail(email);
-                        });
-                        multiEmailInput[0].removeAll();
-                        $.each(validEmails, function (i, val) {
-                            multiEmailInput[0].add(val);
-                        });
-
-                        $(this)[0].submit();
-                    }
-                }
-            }
-        });
     </script>
 @endpush

@@ -11,6 +11,7 @@ use App\Feedback;
 use App\Http\Controllers\Controller;
 use App\Mail\Admins\ComposeMail;
 use App\PartnerCredential;
+use App\PromoCode;
 use App\PsychoTestInfo;
 use App\QuizInfo;
 use App\QuizResult;
@@ -58,7 +59,7 @@ class AdminController extends Controller
 
         $blogs = Blog::all();
 
-        if($request->has('period')){
+        if ($request->has('period')) {
             $period = $request->period;
         } else {
             $period = null;
@@ -71,6 +72,7 @@ class AdminController extends Controller
     public function showInbox(Request $request)
     {
         $contacts = Feedback::orderByDesc('id')->get();
+        $promo = PromoCode::where('end','>',now()->subDay())->orderBy('promo_code')->get();
 
         if ($request->has("id")) {
             $findMessage = $request->id;
@@ -78,20 +80,48 @@ class AdminController extends Controller
             $findMessage = null;
         }
 
-        return view('_admins.inbox', compact('contacts', 'findMessage'));
+        return view('_admins.inbox', compact('contacts', 'findMessage', 'promo'));
     }
 
     public function composeInbox(Request $request)
     {
         $this->validate($request, [
             'inbox_to' => 'required',
-            'inbox_subject' => 'string|min:3',
-            'inbox_message' => 'required'
+            'inbox_subject' => 'required|string|min:3',
+            'inbox_category' => 'required|string',
+            'inbox_promo' => 'string',
+            'inbox_message' => 'required',
+            'attachments' => 'array',
+            'attachments.*' => 'max:5120'
         ]);
 
-        Mail::to(explode(',', $request->inbox_to))->send(new ComposeMail($request->inbox_subject,$request->inbox_message));
+        $data = [
+            'subject' => $request->inbox_subject,
+            'category' => $request->inbox_category,
+            'promo_code' => $request->inbox_promo,
+            'body-message' => $request->inbox_message,
+            'attachments' => [],
+        ];
 
-        return back()->with('success', 'Successfully send a message to ' . str_replace(',',', ',$request->inbox_to) . '!');
+        if ($request->hasFile('attachments')) {
+            foreach ($request->file('attachments') as $row) {
+                array_push($data['attachments'], $row->getClientOriginalName());
+                $row->storeAs('public/admins/attachments', $row->getClientOriginalName());
+            }
+        }
+
+        $emails = explode(',', $request->inbox_to);
+        foreach ($emails as $email) {
+            Mail::to($email)->send(new ComposeMail($data));
+        }
+
+        if (count($data['attachments']) > 0) {
+            foreach ($data['attachments'] as $filename) {
+                Storage::delete('public/admins/attachments', $filename);
+            }
+        }
+
+        return back()->with('success', 'Successfully sent a message to ' . implode(', ',$emails) . '!');
     }
 
     public function deleteInbox(Request $request)

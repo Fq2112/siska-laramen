@@ -2,6 +2,7 @@
 
 namespace App\Mail\Admins;
 
+use App\PromoCode;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -10,17 +11,16 @@ class ComposeMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $subject, $message;
+    public $data;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($subject, $message)
+    public function __construct($data)
     {
-        $this->subject = $subject;
-        $this->message = $message;
+        $this->data = $data;
     }
 
     /**
@@ -30,9 +30,18 @@ class ComposeMail extends Mailable
      */
     public function build()
     {
-        $data = $this->message;
+        $data = $this->data;
+        $promo = PromoCode::where('promo_code', $data['promo_code'])->first();
 
-        return $this->from(env('MAIL_USERNAME'), env('APP_TITLE'))->subject($this->subject)
-            ->view('emails.admins.admin-mail', compact('data'));
+        $this->subject($data['subject']);
+
+        if (count($data['attachments']) > 0) {
+            foreach ($data['attachments'] as $filename) {
+                $this->attach(public_path('storage/admins/attachments/' . $filename));
+            }
+        }
+
+        return $this->from(env('MAIL_USERNAME'), env('APP_TITLE'))
+            ->view('emails.admins.admin-mail', compact('data', 'promo'));
     }
 }
