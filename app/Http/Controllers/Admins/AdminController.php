@@ -17,10 +17,12 @@ use App\QuizInfo;
 use App\QuizResult;
 use App\QuizType;
 use App\Seekers;
+use App\Sent;
 use App\Support\Role;
 use App\User;
 use App\Vacancies;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -69,18 +71,23 @@ class AdminController extends Controller
             'users', 'agencies', 'seekers', 'mitras', 'interviewers', 'blogs', 'period'));
     }
 
-    public function showInbox(Request $request)
+    public function getRead(Request $request)
     {
-        $contacts = Feedback::orderByDesc('id')->get();
-        $promo = PromoCode::where('end','>',now()->subDay())->orderBy('promo_code')->get();
-
-        if ($request->has("id")) {
-            $findMessage = $request->id;
+        if ($request->type == 'sent') {
+            $data = Sent::find(decrypt($request->id))->toArray();
         } else {
-            $findMessage = null;
+            $data = Feedback::find(decrypt($request->id))->toArray();
         }
 
-        return view('_admins.inbox', compact('contacts', 'findMessage', 'promo'));
+        $data = array_replace($data, [
+            'created_at' => Carbon::parse($data['created_at'])->format('l, j F Y') . ' at ' .
+                Carbon::parse($data['created_at'])->format('H:i'),
+            'encryptID' => encrypt($data['id']),
+            'del_route' => $request->type == 'sent' ? route('admin.delete.sent' , ['id' => encrypt($data['id'])]) :
+                route('admin.delete.inbox' , ['id' => encrypt($data['id'])]),
+        ]);
+
+        return $data;
     }
 
     public function composeInbox(Request $request)
@@ -112,16 +119,39 @@ class AdminController extends Controller
 
         $emails = explode(',', $request->inbox_to);
         foreach ($emails as $email) {
+            Sent::create([
+                'recipients' => $email,
+                'subject' => $data['subject'],
+                'category' => $data['category'],
+                'promo_code' => $data['promo_code'],
+                'message' => $data['body-message'],
+                'attachments' => $data['attachments'],
+            ]);
+
             Mail::to($email)->send(new ComposeMail($data));
         }
 
-        if (count($data['attachments']) > 0) {
+        /*if (count($data['attachments']) > 0) {
             foreach ($data['attachments'] as $filename) {
-                Storage::delete('public/admins/attachments', $filename);
+                Storage::delete('public/admins/attachments/' . $filename);
             }
+        }*/
+
+        return back()->with('success', 'Successfully sent a message to ' . implode(', ', $emails) . '!');
+    }
+
+    public function showInbox(Request $request)
+    {
+        $contacts = Feedback::orderByDesc('id')->get();
+        $promo = PromoCode::where('end', '>', now()->subDay())->orderBy('promo_code')->get();
+
+        if ($request->has("id")) {
+            $findMessage = $request->id;
+        } else {
+            $findMessage = null;
         }
 
-        return back()->with('success', 'Successfully sent a message to ' . implode(', ',$emails) . '!');
+        return view('_admins.inbox', compact('contacts', 'findMessage', 'promo'));
     }
 
     public function deleteInbox(Request $request)
@@ -130,6 +160,34 @@ class AdminController extends Controller
         $contact->delete();
 
         return back()->with('success', 'Feedback from ' . $contact->name . ' <' . $contact->email . '> is successfully deleted!');
+    }
+
+    public function showSent(Request $request)
+    {
+        $sents = Sent::orderByDesc('id')->get();
+        $promo = PromoCode::where('end', '>', now()->subDay())->orderBy('promo_code')->get();
+
+        if ($request->has("id")) {
+            $findMessage = $request->id;
+        } else {
+            $findMessage = null;
+        }
+
+        return view('_admins.sent', compact('sents', 'findMessage', 'promo'));
+    }
+
+    public function deleteSent(Request $request)
+    {
+        $sent = Sent::find(decrypt($request->id));
+        $sent->delete();
+
+        if (count($sent->attachments) > 0) {
+            foreach ($sent->attachments as $filename) {
+                Storage::delete('public/admins/attachments/' . $filename);
+            }
+        }
+
+        return back()->with('success', 'Message for ' . $sent->recipients . ' is successfully deleted!');
     }
 
     public function updateProfile(Request $request)

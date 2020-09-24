@@ -1,5 +1,5 @@
 @extends('layouts.mst_admin')
-@section('title', 'Inbox ('.count($contacts) > 1 ? count($contacts).' messages ' : count($contacts).' message) &ndash; '.env('APP_NAME').' Admins | '.env('APP_TITLE'))
+@section('title', 'Sent ('.count($sents) > 1 ? count($sents).' messages ' : count($sents).' message) &ndash; '.env('APP_NAME').' Admins | '.env('APP_TITLE'))
 @push('styles')
     <link rel="stylesheet" href="{{asset('bootstrap-tagsinput/bootstrap-tagsinput.css')}}">
     <link rel="stylesheet" href="{{asset('bootstrap-fileinput/css/fileinput.min.css')}}">
@@ -68,7 +68,7 @@
             <div class="col-md-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Inbox
+                        <h2>Sent
                             <small>Mail</small>
                         </h2>
                         <ul class="nav navbar-right panel_toolbox">
@@ -83,35 +83,21 @@
                                 <button id="compose" class="btn btn-sm btn-success btn-block" type="button">
                                     <strong><i class="fa fa-edit"></i>&ensp;COMPOSE</strong>
                                 </button>
-                                @if(count($contacts) > 0)
-                                    @foreach($contacts as $contact)
-                                        @php $user = \App\User::where('email',$contact->email); @endphp
-                                        <a style="cursor: pointer" id="{{$contact->id}}" onclick="viewMail('{{route('admin.get.read', ['id' => encrypt($contact->id), 'type' => 'inbox'])}}')">
+                                @if(count($sents) > 0)
+                                    @foreach($sents as $sent)
+                                        <a style="cursor: pointer" id="{{$sent->id}}"
+                                           onclick="viewMail('{{route('admin.get.read', ['id' => encrypt($sent->id), 'type' => 'sent'])}}')">
                                             <div class="mail_list">
                                                 <div class="left">
-                                                    @if($user->count())
-                                                        @if($user->first()->ava == "" || $user->first()->ava == "seeker.png")
-                                                            <img class="img-responsive"
-                                                                 src="{{asset('images/seeker.png')}}">
-                                                        @elseif($user->first()->ava == "agency.png")
-                                                            <img class="img-responsive"
-                                                                 src="{{asset('images/agency.png')}}">
-                                                        @else
-                                                            <img class="img-responsive"
-                                                                 src="{{asset('storage/users/'.$user->first()->ava)}}">
-                                                        @endif
-                                                    @else
-                                                        <img class="img-responsive"
-                                                             src="{{asset('images/avatar.png')}}">
-                                                    @endif
+                                                    <img src="{{Auth::guard('admin')->user()->ava == "" || Auth::guard('admin')->user()->ava == "avatar.png" ? asset('images/avatar.png') : asset('storage/admins/'.Auth::guard('admin')->user()->ava)}}"
+                                                         alt="avatar" class="img-responsive">
                                                 </div>
                                                 <div class="right">
-                                                    <h3>{{$contact->name}}
-                                                        <small>{{\Carbon\Carbon::parse($contact->created_at)
-                                                    ->formatLocalized('%d %b %y')}}</small>
+                                                    <h3>{{$sent->recipients}}
+                                                        <small>{{\Carbon\Carbon::parse($sent->created_at)->formatLocalized('%d %b %y')}}</small>
                                                     </h3>
                                                     <p>
-                                                        <strong>{{$contact->subject}}</strong>&nbsp;&ndash;&nbsp;{{$contact->message}}
+                                                        <strong>{{$sent->subject}}</strong>&nbsp;&ndash;&nbsp;{{$sent->category}}
                                                     </p>
                                                 </div>
                                             </div>
@@ -120,7 +106,7 @@
                                 @else
                                     <a style="cursor: default">
                                         <div class="mail_list">
-                                            <p><em>There seems to be none of the feedback was found&hellip;</em></p>
+                                            <p><em>There seems to be none of the sent mail was found&hellip;</em></p>
                                         </div>
                                     </a>
                                 @endif
@@ -179,7 +165,8 @@
                         <select class="form-control selectpicker" id="inbox_promo" name="inbox_promo"
                                 title="-- Choose Promo --">
                             @foreach($promo as $row)
-                                <option value="{{$row->promo_code}}" data-subtext="{{$row->description}}">{{$row->promo_code}}</option>
+                                <option value="{{$row->promo_code}}"
+                                        data-subtext="{{$row->description}}">{{$row->promo_code}}</option>
                             @endforeach
                         </select>
                         <span class="fa fa-ticket-alt form-control-feedback right" aria-hidden="true"></span>
@@ -241,7 +228,7 @@
         inbox_category.on('change', function () {
             inbox_promo.val('default').selectpicker('refresh');
 
-            if($(this).val() == 'promo') {
+            if ($(this).val() == 'promo') {
                 $(this).parents('.has-feedback').removeClass('col-lg-12').addClass('col-lg-6').next().show();
             } else {
                 $(this).parents('.has-feedback').addClass('col-lg-12').removeClass('col-lg-6').next().hide();
@@ -301,7 +288,7 @@
                     });
 
                 } else {
-                    if(inbox_category.val() == 'promo' && !inbox_promo.val()) {
+                    if (inbox_category.val() == 'promo' && !inbox_promo.val()) {
                         swal({
                             title: 'ATTENTION!',
                             text: 'You have to choose the promo code!',
@@ -352,7 +339,16 @@
                         $('#content_mail').show();
                     },
                     success: function (data) {
+                        var content = '', attachs = '';
                         $("#" + data.id).find('.mail_list').addClass('active');
+
+                        if(data.attachments != null && data.attachments.length > 0) {
+                            $.each(data.attachments, function (i, val) {
+                                attachs += '<a href="{{asset('storage/admins/attachments')}}/'+val+'" target="_blank">'+val+'</a>, '
+                            });
+
+                            content='<br><small><i class="fa fa-paperclip"></i>&ensp;'+attachs+'</small>'
+                        }
 
                         $("#content_mail").html(
                             '<div class="mail_heading row">' +
@@ -365,11 +361,11 @@
                             '<a class="btn btn-sm btn-danger btn_delete_inbox' + data.id + '" type="button" data-toggle="tooltip" ' +
                             'data-original-title="Delete"><i class="fa fa-trash-alt"></i></a></div></div>' +
                             '<div class="col-md-4 text-right"><p class="date">' + data.created_at + '</p></div>' +
-                            '<div class="col-md-12"><h4>' + data.subject + '</h4></div></div>' +
+                            '<div class="col-md-12"><h4>' + data.subject + content+'</h4></div></div>' +
                             '<div class="sender-info">' +
                             '<div class="row">' +
                             '<div class="col-md-12">' +
-                            '<strong>' + data.name + '</strong> <span>(' + data.email + ')</span> to <strong>me</strong></div></div></div>' +
+                            '<span>to: </span> <strong>' + data.recipients + '</strong> <span>(' + data.category + ')</span></div></div></div>' +
                             '<div class="view-mail"><p>' + data.message + '</p></div>' +
                             '<div class="btn-group">' +
                             '<button class="btn btn-sm btn-primary btn_reply' + data.id + '" type="button">' +
