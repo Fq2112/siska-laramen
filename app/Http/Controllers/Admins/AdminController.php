@@ -85,6 +85,8 @@ class AdminController extends Controller
             'encryptID' => encrypt($data['id']),
             'del_route' => $request->type == 'sent' ? route('admin.delete.sent' , ['id' => encrypt($data['id'])]) :
                 route('admin.delete.inbox' , ['id' => encrypt($data['id'])]),
+            'str_attach' => $request->type == 'sent' && !is_null($data['attachments']) ?
+                count($data['attachments']).' attachment(s): '.implode(', ', $data['attachments']) : null,
         ]);
 
         return $data;
@@ -125,17 +127,17 @@ class AdminController extends Controller
                 'category' => $data['category'],
                 'promo_code' => $data['promo_code'],
                 'message' => $data['body-message'],
-                'attachments' => $data['attachments'],
+                'attachments' => count($data['attachments']) > 0 ? $data['attachments'] : null,
             ]);
 
             Mail::to($email)->send(new ComposeMail($data));
         }
 
-        /*if (count($data['attachments']) > 0) {
+        if (count($data['attachments']) > 0) {
             foreach ($data['attachments'] as $filename) {
                 Storage::delete('public/admins/attachments/' . $filename);
             }
-        }*/
+        }
 
         return back()->with('success', 'Successfully sent a message to ' . implode(', ', $emails) . '!');
     }
@@ -180,12 +182,6 @@ class AdminController extends Controller
     {
         $sent = Sent::find(decrypt($request->id));
         $sent->delete();
-
-        if (count($sent->attachments) > 0) {
-            foreach ($sent->attachments as $filename) {
-                Storage::delete('public/admins/attachments/' . $filename);
-            }
-        }
 
         return back()->with('success', 'Message for ' . $sent->recipients . ' is successfully deleted!');
     }

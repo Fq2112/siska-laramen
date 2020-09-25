@@ -339,15 +339,11 @@
                         $('#content_mail').show();
                     },
                     success: function (data) {
-                        var content = '', attachs = '';
+                        var content = '';
                         $("#" + data.id).find('.mail_list').addClass('active');
 
-                        if(data.attachments != null && data.attachments.length > 0) {
-                            $.each(data.attachments, function (i, val) {
-                                attachs += '<a href="{{asset('storage/admins/attachments')}}/'+val+'" target="_blank">'+val+'</a>, '
-                            });
-
-                            content='<br><small><i class="fa fa-paperclip"></i>&ensp;'+attachs+'</small>'
+                        if(data.str_attach != null) {
+                            content='<br><small><i class="fa fa-paperclip"></i>&ensp;'+data.str_attach+'</small>'
                         }
 
                         $("#content_mail").html(
