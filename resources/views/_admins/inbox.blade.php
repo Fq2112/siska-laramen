@@ -233,6 +233,7 @@
         $("#compose").on("click", function () {
             $("#compose_title").text('New Message');
             tinyMCE.get('inbox_message').setContent('');
+            inbox_to.tagsinput('removeAll');
             inbox_category.parents('.has-feedback').addClass('col-lg-12').removeClass('col-lg-6').next().hide();
             $("#inbox_category, #inbox_promo").val('default').selectpicker('refresh');
             $("#form-compose")[0].reset();
@@ -301,33 +302,43 @@
                     });
 
                 } else {
-                    if(inbox_category.val() == 'promo' && !inbox_promo.val()) {
+                    if(!inbox_category.val()) {
                         swal({
                             title: 'ATTENTION!',
-                            text: 'You have to choose the promo code!',
+                            text: 'You have to choose the category!',
                             type: 'warning',
                             timer: '3500'
                         });
 
                     } else {
-                        if (tinyMCE.get('inbox_message').getContent() == "") {
+                        if(inbox_category.val() == 'promo' && !inbox_promo.val()) {
                             swal({
                                 title: 'ATTENTION!',
-                                text: 'You have to write some messages!',
+                                text: 'You have to choose the promo code!',
                                 type: 'warning',
                                 timer: '3500'
                             });
 
                         } else {
-                            var validEmails = $.grep(inbox_to.tagsinput('items'), function (email, index) {
-                                return multiEmailInput[0].validEmail(email);
-                            });
-                            multiEmailInput[0].removeAll();
-                            $.each(validEmails, function (i, val) {
-                                multiEmailInput[0].add(val);
-                            });
+                            if (tinyMCE.get('inbox_message').getContent() == "") {
+                                swal({
+                                    title: 'ATTENTION!',
+                                    text: 'You have to write some messages!',
+                                    type: 'warning',
+                                    timer: '3500'
+                                });
 
-                            $(this)[0].submit();
+                            } else {
+                                var validEmails = $.grep(inbox_to.tagsinput('items'), function (email, index) {
+                                    return multiEmailInput[0].validEmail(email);
+                                });
+                                multiEmailInput[0].removeAll();
+                                $.each(validEmails, function (i, val) {
+                                    multiEmailInput[0].add(val);
+                                });
+
+                                $(this)[0].submit();
+                            }
                         }
                     }
                 }
@@ -380,7 +391,7 @@
 
                         $(".btn_reply" + data.id).on("click", function () {
                             $("#compose_title").text('Reply Message');
-                            $("#inbox_to").val(data.email);
+                            inbox_to.tagsinput('add', data.email);
                             $("#inbox_subject").val('Re: ' + data.subject);
                             tinyMCE.get('inbox_message').setContent('');
                             $(".compose").slideToggle();
@@ -388,7 +399,7 @@
 
                         $(".btn_forward" + data.id).on("click", function () {
                             $("#compose_title").text('Forward Message');
-                            $("#inbox_to").val('');
+                            inbox_to.tagsinput('removeAll');
                             $("#inbox_subject").val('Fwd: ' + data.subject);
                             tinyMCE.get('inbox_message').setContent(data.message);
                             $(".compose").slideToggle();
