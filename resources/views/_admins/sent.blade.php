@@ -383,7 +383,8 @@
 
                         $(".btn_reply" + data.id).on("click", function () {
                             $("#compose_title").text('Reply Message');
-                            inbox_to.tagsinput('add', data.email);
+                            inbox_to.tagsinput('removeAll');
+                            inbox_to.tagsinput('add', data.recipients);
                             $("#inbox_subject").val('Re: ' + data.subject);
                             tinyMCE.get('inbox_message').setContent('');
                             $(".compose").slideToggle();
